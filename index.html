@@ -11,6 +11,8 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <!-- Tambahkan library jsQR untuk memindai QR Code -->
     <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+    <!-- Tambahkan library JSZip untuk membuat file .zip -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script>
         // Tailwind config for dark mode
         tailwind.config = {
@@ -109,10 +111,11 @@
                         </div>
                     </div>
                     <h1 class="text-4xl font-bold text-gray-900 dark:text-white">Scanner Pintar</h1>
-                    <p class="text-gray-500 dark:text-gray-400 mt-2">Scanner Kartu Nama & QR Code Berbasis AI. 99% AKURAT</p>
+                    <p class="text-gray-500 dark:text-gray-400 mt-2">Scanner Kartu Nama & QR Code Berbasis AI</p>
                 </div>
                 <div class="w-full flex flex-col gap-4">
-                     <button id="start-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-6 rounded-full shadow-lg transition-transform transform hover:scale-105 flex items-center justify-center gap-3 text-lg"><i data-lucide="camera" class="w-6 h-6"></i>Scan Kartu Nama</button>
+                     <button id="start-batch-btn" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-4 px-6 rounded-full shadow-lg transition-transform transform hover:scale-105 flex items-center justify-center gap-3 text-lg"><i data-lucide="layers" class="w-6 h-6"></i>Scan Berseri</button>
+                     <button id="start-single-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-6 rounded-full shadow-lg transition-transform transform hover:scale-105 flex items-center justify-center gap-3 text-lg"><i data-lucide="camera" class="w-6 h-6"></i>Scan Tunggal</button>
                      <button id="upload-btn" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-4 px-6 rounded-full shadow-lg transition-transform transform hover:scale-105 flex items-center justify-center gap-3 text-lg"><i data-lucide="image" class="w-6 h-6"></i>Unggah dari Galeri</button>
                 </div>
                 <input type="file" id="image-upload-input" class="hidden" accept="image/*">
@@ -147,11 +150,24 @@
             <!-- Results Screen -->
             <div id="results-screen" class="hidden screen flex flex-col">
                 <header class="p-6 pr-20 flex justify-between items-center">
-                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Hasil Scan</h2>
-                    <button id="rescan-btn" class="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 font-semibold hover:bg-gray-300 dark:hover:bg-gray-600 py-2 px-4 rounded-full text-sm">Scan Ulang</button>
+                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Hasil Pindai</h2>
+                    <button id="finish-btn" class="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 font-semibold hover:bg-gray-300 dark:hover:bg-gray-600 py-2 px-4 rounded-full text-sm">Selesai</button>
                 </header>
                 <div class="flex-grow p-6 pt-0 overflow-y-auto">
                     <form id="data-form" class="space-y-4">
+                        <!-- Event Info -->
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="result-item bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 rounded-xl flex items-center gap-4">
+                                <i data-lucide="party-popper" class="w-6 h-6 text-gray-500 dark:text-gray-400"></i>
+                                <div class="w-full"><label for="acara" class="block text-xs font-medium text-gray-500 dark:text-gray-400">Nama Acara</label><input type="text" id="acara" name="acara" class="w-full text-md font-semibold bg-transparent border-none text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-0" placeholder="Nama Acara"></div>
+                            </div>
+                            <div class="result-item bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 rounded-xl flex items-center gap-4">
+                                <i data-lucide="calendar-days" class="w-6 h-6 text-gray-500 dark:text-gray-400"></i>
+                                <div class="w-full"><label for="tanggal" class="block text-xs font-medium text-gray-500 dark:text-gray-400">Tanggal</label><input type="date" id="tanggal" name="tanggal" class="w-full text-md font-semibold bg-transparent border-none text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-0"></div>
+                            </div>
+                        </div>
+                        <hr class="border-gray-200 dark:border-gray-700"/>
+                        <!-- Contact Info -->
                         <div class="result-item bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 rounded-xl flex items-center gap-4">
                             <i data-lucide="user" class="w-6 h-6 text-gray-500 dark:text-gray-400"></i>
                             <div class="w-full"><label for="nama" class="block text-xs font-medium text-gray-500 dark:text-gray-400">Nama Lengkap</label><input type="text" id="nama" name="nama" class="w-full text-lg font-semibold bg-transparent border-none text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-0" placeholder="Nama tidak terdeteksi"></div>
@@ -178,13 +194,25 @@
                         </div>
                     </form>
                 </div>
-                <footer class="p-6">
-                    <div class="flex flex-col sm:flex-row gap-4">
-                        <button id="save-vcard-btn" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-6 rounded-full shadow-lg transition-transform transform hover:scale-105 flex items-center justify-center gap-3 text-lg"><i data-lucide="contact" class="w-6 h-6"></i>Simpan vCard</button>
-                        <button id="save-csv-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-6 rounded-full shadow-lg transition-transform transform hover:scale-105 flex items-center justify-center gap-3 text-lg"><i data-lucide="file-spreadsheet" class="w-6 h-6"></i>Simpan CSV</button>
-                    </div>
+                <footer id="results-footer" class="p-6">
+                    <!-- Buttons will be dynamically inserted here -->
                 </footer>
             </div>
+
+             <!-- Batch Export Screen -->
+            <div id="batch-export-screen" class="hidden screen p-8 flex flex-col justify-center items-center text-center flex-grow">
+                <div class="p-6 bg-green-600/10 dark:bg-green-600/20 rounded-full mb-8">
+                    <i data-lucide="check-check" class="w-20 h-20 text-green-500 dark:text-green-400"></i>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-900 dark:text-white">Scan Berseri Selesai</h2>
+                <p class="text-gray-500 dark:text-gray-400 mt-2 mb-8"><span id="batch-count">0</span> kontak berhasil dipindai dan siap untuk diekspor.</p>
+                <div class="w-full flex flex-col gap-4">
+                    <button id="export-zip-btn" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-6 rounded-full shadow-lg flex items-center justify-center gap-3 text-lg"><i data-lucide="archive" class="w-6 h-6"></i>Ekspor Semua (.zip)</button>
+                    <button id="export-csv-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-6 rounded-full shadow-lg flex items-center justify-center gap-3 text-lg"><i data-lucide="file-spreadsheet" class="w-6 h-6"></i>Ekspor Semua (.csv)</button>
+                    <button id="back-to-home-btn" class="w-full text-indigo-600 dark:text-indigo-400 font-semibold py-3 px-6 rounded-full hover:bg-gray-200 dark:hover:bg-gray-800 mt-4">Kembali ke Menu Utama</button>
+                </div>
+            </div>
+
 
         </main>
         <footer class="text-center p-4 text-xs text-gray-400 dark:text-gray-600 flex justify-between items-center">
@@ -201,7 +229,6 @@
         <div class="bg-white dark:bg-gray-800 rounded-t-xl shadow-2xl border-t border-gray-200 dark:border-gray-700">
             <div class="flex justify-between items-center p-3 border-b border-gray-200 dark:border-gray-700">
                 <h3 class="font-semibold text-gray-800 dark:text-gray-200">Developer Log</h3>
-                <!-- FIX: Added a close button with an X icon -->
                 <div class="flex items-center gap-2">
                     <button id="copy-log-btn" class="text-xs bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 py-1 px-2 rounded-md">Salin</button>
                     <button id="close-log-btn" class="p-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full">
@@ -222,15 +249,22 @@
         const scannerScreen = document.getElementById('scanner-screen');
         const processingScreen = document.getElementById('processing-screen');
         const resultsScreen = document.getElementById('results-screen');
-        const allScreens = [initialScreen, scannerScreen, processingScreen, resultsScreen];
-        const startBtn = document.getElementById('start-btn');
+        const batchExportScreen = document.getElementById('batch-export-screen');
+        const allScreens = [initialScreen, scannerScreen, processingScreen, resultsScreen, batchExportScreen];
+        
+        const startSingleBtn = document.getElementById('start-single-btn');
+        const startBatchBtn = document.getElementById('start-batch-btn');
         const uploadBtn = document.getElementById('upload-btn');
         const imageUploadInput = document.getElementById('image-upload-input');
         const captureBtn = document.getElementById('capture-btn');
         const cancelScanBtn = document.getElementById('cancel-scan-btn');
-        const saveCsvBtn = document.getElementById('save-csv-btn');
-        const saveVCardBtn = document.getElementById('save-vcard-btn');
-        const rescanBtn = document.getElementById('rescan-btn');
+        const finishBtn = document.getElementById('finish-btn');
+        const resultsFooter = document.getElementById('results-footer');
+        const batchCountEl = document.getElementById('batch-count');
+        const exportZipBtn = document.getElementById('export-zip-btn');
+        const exportCsvBtn = document.getElementById('export-csv-btn');
+        const backToHomeBtn = document.getElementById('back-to-home-btn');
+
         const video = document.getElementById('video');
         const canvas = document.getElementById('canvas');
         const progressTitle = document.getElementById('progress-title');
@@ -242,6 +276,8 @@
         const phoneKantorInput = document.getElementById('telepon_kantor');
         const whatsappInput = document.getElementById('whatsapp');
         const emailInput = document.getElementById('email');
+        const acaraInput = document.getElementById('acara');
+        const tanggalInput = document.getElementById('tanggal');
         const qrFeedback = document.getElementById('qr-feedback');
         
         const themeToggleBtn = document.getElementById('theme-toggle');
@@ -252,10 +288,12 @@
         const logOutput = document.getElementById('log-output');
         const logToggleBtn = document.getElementById('log-toggle-btn');
         const copyLogBtn = document.getElementById('copy-log-btn');
-        const closeLogBtn = document.getElementById('close-log-btn'); // FIX: New element reference
+        const closeLogBtn = document.getElementById('close-log-btn');
 
         let stream;
         let qrScanAnimation;
+        let isBatchMode = false;
+        let batchResults = [];
 
         // --- Functions ---
         function logMessage(message) {
@@ -268,6 +306,17 @@
             logMessage(`Navigating to screen: ${screenId}`);
             allScreens.forEach(screen => screen.classList.add('hidden'));
             document.getElementById(screenId).classList.remove('hidden');
+        }
+
+        function startScan(batchMode = false) {
+            isBatchMode = batchMode;
+            if (isBatchMode) {
+                logMessage("Starting Batch Scan mode.");
+                batchResults = []; // Mulai sesi baru
+            } else {
+                logMessage("Starting Single Scan mode.");
+            }
+            startCamera();
         }
 
         async function startCamera() {
@@ -307,15 +356,14 @@
                 const context = canvas.getContext('2d', { willReadFrequently: true });
                 context.drawImage(video, 0, 0, canvas.width, canvas.height);
                 const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-                const code = jsQR(imageData.data, imageData.width, imageData.height, {
-                    inversionAttempts: "dontInvert",
-                });
+                const code = jsQR(imageData.data, imageData.width, imageData.height, { inversionAttempts: "dontInvert" });
 
                 if (code && code.data.startsWith('BEGIN:VCARD')) {
                     logMessage("QR Code (vCard) detected.");
                     qrFeedback.classList.remove('hidden');
                     stopCamera();
                     parseVCard(code.data);
+                    updateResultsUI();
                     showScreen('results-screen');
                     return;
                 }
@@ -325,40 +373,34 @@
 
         function parseVCard(vcardString) {
             logMessage("Parsing vCard data...");
-            form.reset();
+            clearContactForm();
             const lines = vcardString.split('\n');
             let name = '';
             lines.forEach(line => {
                 const cleanLine = line.trim();
-                if (cleanLine.startsWith('FN:')) {
-                    name = cleanLine.substring(3).trim();
-                } else if (cleanLine.startsWith('N:')) {
-                    if (!name) {
-                        const nameParts = cleanLine.substring(2).split(';');
-                        name = `${nameParts[1]} ${nameParts[0]}`.trim();
-                    }
-                } else if (cleanLine.startsWith('TITLE:')) {
-                    positionInput.value = cleanLine.substring(6).trim();
-                } else if (cleanLine.startsWith('ORG:')) {
-                    companyInput.value = cleanLine.substring(4).trim();
-                } else if (cleanLine.startsWith('TEL')) {
-                    if (cleanLine.includes('TYPE=CELL') || cleanLine.includes('TYPE=VOICE')) {
-                        whatsappInput.value = cleanLine.substring(cleanLine.indexOf(':') + 1).trim();
-                    } else if (cleanLine.includes('TYPE=WORK')) {
-                        phoneKantorInput.value = cleanLine.substring(cleanLine.indexOf(':') + 1).trim();
-                    } else {
-                        if (!whatsappInput.value) {
-                            whatsappInput.value = cleanLine.substring(cleanLine.indexOf(':') + 1).trim();
-                        } else {
-                            phoneKantorInput.value = cleanLine.substring(cleanLine.indexOf(':') + 1).trim();
-                        }
-                    }
-                } else if (cleanLine.startsWith('EMAIL')) {
-                    emailInput.value = cleanLine.substring(cleanLine.indexOf(':') + 1).trim();
-                }
+                if (cleanLine.startsWith('FN:')) name = cleanLine.substring(3).trim();
+                else if (cleanLine.startsWith('N:')) { if (!name) { const p = cleanLine.substring(2).split(';'); name = `${p[1]} ${p[0]}`.trim(); } }
+                else if (cleanLine.startsWith('TITLE:')) positionInput.value = cleanLine.substring(6).trim();
+                else if (cleanLine.startsWith('ORG:')) companyInput.value = cleanLine.substring(4).trim();
+                else if (cleanLine.startsWith('TEL')) {
+                    const phone = cleanLine.substring(cleanLine.indexOf(':') + 1).trim();
+                    if (cleanLine.includes('TYPE=CELL')) whatsappInput.value = phone;
+                    else if (cleanLine.includes('TYPE=WORK')) phoneKantorInput.value = phone;
+                    else if (!whatsappInput.value) whatsappInput.value = phone;
+                    else phoneKantorInput.value = phone;
+                } else if (cleanLine.startsWith('EMAIL')) emailInput.value = cleanLine.substring(cleanLine.indexOf(':') + 1).trim();
             });
             nameInput.value = name;
             logMessage("vCard parsing complete.");
+        }
+        
+        function clearContactForm() {
+            nameInput.value = '';
+            positionInput.value = '';
+            companyInput.value = '';
+            phoneKantorInput.value = '';
+            whatsappInput.value = '';
+            emailInput.value = '';
         }
 
         async function captureAndProcess() {
@@ -375,6 +417,7 @@
             showScreen('processing-screen');
             try {
                 await extractDataWithLlama(imageDataUrl);
+                updateResultsUI();
                 showScreen('results-screen');
             } catch (error) {
                 logMessage(`Image processing failed: ${error.message}`);
@@ -385,11 +428,8 @@
         }
 
         async function extractDataWithLlama(imageDataUrl) {
-            form.reset();
-            progressTitle.textContent = 'AI Menganalisis Gambar...';
-            progressStatus.textContent = 'Mengirim gambar ke Llama 4...';
+            clearContactForm();
             logMessage("Sending image to backend for Llama 4 analysis...");
-            
             try {
                 const response = await fetch(BACKEND_API_URL, {
                     method: 'POST',
@@ -434,55 +474,85 @@
             }
         }
 
-        function saveAsCSV() {
-            logMessage("Saving contact as CSV...");
-            const headers = ['Nama', 'Jabatan', 'Perusahaan', 'Telepon Kantor', 'WhatsApp', 'Email'];
-            const data = [nameInput.value, positionInput.value, companyInput.value, phoneKantorInput.value, whatsappInput.value, emailInput.value];
-            const escapeCSV = (field) => `"${String(field).replace(/"/g, '""')}"`;
-            const csvContent = [headers.join(','), data.map(escapeCSV).join(',')].join('\n');
-            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement("a");
-            if (link.download !== undefined) {
-                const url = URL.createObjectURL(blob);
-                const filename = (nameInput.value || 'kontak').replace(/\s+/g, '_').toLowerCase();
-                link.setAttribute("href", url);
-                link.setAttribute("download", `${filename}.csv`);
-                link.style.visibility = 'hidden';
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-            }
+        function getCurrentContactData() {
+            return {
+                nama: nameInput.value,
+                jabatan: positionInput.value,
+                perusahaan: companyInput.value,
+                telepon_kantor: phoneKantorInput.value,
+                whatsapp: whatsappInput.value,
+                email: emailInput.value,
+                acara: acaraInput.value,
+                tanggal: tanggalInput.value,
+            };
         }
 
-        function saveAsVCard() {
-            logMessage("Saving contact as vCard...");
-            let vCardString = `BEGIN:VCARD
-VERSION:3.0
-FN:${nameInput.value}
-ORG:${companyInput.value}
-TITLE:${positionInput.value}
-`;
-            if (phoneKantorInput.value) {
-                vCardString += `TEL;TYPE=WORK,VOICE:${phoneKantorInput.value}\n`;
-            }
-            if (whatsappInput.value) {
-                vCardString += `TEL;TYPE=CELL,VOICE:${whatsappInput.value}\n`;
-            }
-            vCardString += `EMAIL:${emailInput.value}
-END:VCARD`;
+        function saveBatchData() {
+            logMessage("Saving current contact to batch list.");
+            const currentData = getCurrentContactData();
+            batchResults.push(currentData);
+            logMessage(`${batchResults.length} contacts in current batch.`);
+        }
 
-            const blob = new Blob([vCardString], { type: 'text/vcard;charset=utf-8;' });
+        function showBatchExportScreen() {
+            logMessage("Showing batch export screen.");
+            batchCountEl.textContent = batchResults.length;
+            showScreen('batch-export-screen');
+        }
+
+        function generateFilename() {
+            const acara = acaraInput.value.replace(/\s+/g, '_') || 'acara';
+            const date = new Date(tanggalInput.value);
+            const ddmmyy = `${String(date.getDate()).padStart(2, '0')}${String(date.getMonth() + 1).padStart(2, '0')}${String(date.getFullYear()).slice(-2)}`;
+            return `${acara}_${ddmmyy}`;
+        }
+
+        function saveBatchCSV() {
+            logMessage("Generating batch CSV file...");
+            const headers = ['Nama', 'Jabatan', 'Perusahaan', 'Telepon Kantor', 'WhatsApp', 'Email', 'Acara', 'Tanggal'];
+            let csvContent = headers.join(',') + '\n';
+            
+            const escapeCSV = (field) => `"${String(field || '').replace(/"/g, '""')}"`;
+
+            batchResults.forEach(contact => {
+                const row = [contact.nama, contact.jabatan, contact.perusahaan, contact.telepon_kantor, contact.whatsapp, contact.email, contact.acara, contact.tanggal];
+                csvContent += row.map(escapeCSV).join(',') + '\n';
+            });
+
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
             const link = document.createElement("a");
-            if (link.download !== undefined) {
-                const url = URL.createObjectURL(blob);
-                const filename = (nameInput.value || 'kontak').replace(/\s+/g, '_').toLowerCase();
-                link.setAttribute("href", url);
-                link.setAttribute("download", `${filename}.vcf`);
-                link.style.visibility = 'hidden';
-                document.body.appendChild(link);
+            link.href = URL.createObjectURL(blob);
+            link.download = `kartunama_${generateFilename()}.csv`;
+            link.click();
+        }
+
+        function saveBatchZIP() {
+            logMessage("Generating batch ZIP file with vCards...");
+            const zip = new JSZip();
+            
+            batchResults.forEach((contact, index) => {
+                let vCardString = `BEGIN:VCARD
+VERSION:3.0
+FN:${contact.nama}
+ORG:${contact.perusahaan}
+TITLE:${contact.jabatan}
+`;
+                if (contact.telepon_kantor) vCardString += `TEL;TYPE=WORK,VOICE:${contact.telepon_kantor}\n`;
+                if (contact.whatsapp) vCardString += `TEL;TYPE=CELL,VOICE:${contact.whatsapp}\n`;
+                vCardString += `EMAIL:${contact.email}\n`;
+                if (contact.acara || contact.tanggal) vCardString += `NOTE:Diperoleh di acara ${contact.acara || ''} pada tanggal ${contact.tanggal || ''}\n`;
+                vCardString += `END:VCARD`;
+
+                const filename = (contact.nama || `kontak_${index + 1}`).replace(/\s+/g, '_').toLowerCase() + '.vcf';
+                zip.file(filename, vCardString);
+            });
+
+            zip.generateAsync({ type: "blob" }).then(content => {
+                const link = document.createElement("a");
+                link.href = URL.createObjectURL(content);
+                link.download = `kontak_${generateFilename()}.zip`;
                 link.click();
-                document.body.removeChild(link);
-            }
+            });
         }
         
         function resetApp() {
@@ -490,10 +560,14 @@ END:VCARD`;
             stopCamera();
             form.reset();
             qrFeedback.classList.add('hidden');
+            // Repopulate event info
+            acaraInput.value = localStorage.getItem('savedAcara') || '';
+            tanggalInput.value = localStorage.getItem('savedTanggal') || new Date().toISOString().slice(0, 10);
             showScreen('initial-screen');
         }
 
         function handleImageUpload(event) {
+            isBatchMode = false; // Upload is always single mode
             const file = event.target.files[0];
             if (!file || !file.type.startsWith('image/')) {
                 logMessage("Invalid file type uploaded.");
@@ -518,11 +592,78 @@ END:VCARD`;
             }
         }
 
-        // FIX: Reusable function to close the log window
         function closeLog() {
             logContainer.classList.add('opacity-0', 'translate-y-full', 'pointer-events-none');
         }
 
+        function updateResultsUI() {
+            resultsFooter.innerHTML = ''; // Clear previous buttons
+            if (isBatchMode) {
+                const nextButton = document.createElement('button');
+                nextButton.id = 'next-scan-btn';
+                nextButton.className = 'w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-6 rounded-full shadow-lg flex items-center justify-center gap-3 text-lg';
+                nextButton.innerHTML = `<i data-lucide="contact" class="w-6 h-6"></i>Simpan & Scan Berikutnya`;
+                nextButton.onclick = () => {
+                    saveBatchData();
+                    startCamera();
+                };
+                resultsFooter.appendChild(nextButton);
+            } else {
+                const vCardButton = document.createElement('button');
+                vCardButton.id = 'save-vcard-btn';
+                vCardButton.className = 'w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-6 rounded-full shadow-lg flex items-center justify-center gap-3 text-lg';
+                vCardButton.innerHTML = `<i data-lucide="contact" class="w-6 h-6"></i>Simpan vCard`;
+                vCardButton.onclick = () => {
+                    saveAsVCard();
+                    resetApp();
+                };
+
+                const csvButton = document.createElement('button');
+                csvButton.id = 'save-csv-btn';
+                csvButton.className = 'w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-6 rounded-full shadow-lg flex items-center justify-center gap-3 text-lg';
+                csvButton.innerHTML = `<i data-lucide="file-spreadsheet" class="w-6 h-6"></i>Simpan CSV`;
+                csvButton.onclick = () => {
+                    saveAsCSV();
+                    resetApp();
+                };
+                
+                const buttonContainer = document.createElement('div');
+                buttonContainer.className = 'flex flex-col sm:flex-row gap-4';
+                buttonContainer.appendChild(vCardButton);
+                buttonContainer.appendChild(csvButton);
+                resultsFooter.appendChild(buttonContainer);
+            }
+            lucide.createIcons();
+        }
+
+        // --- Event Listeners ---
+        startSingleBtn.addEventListener('click', () => startScan(false));
+        startBatchBtn.addEventListener('click', () => startScan(true));
+        uploadBtn.addEventListener('click', () => imageUploadInput.click());
+        imageUploadInput.addEventListener('change', handleImageUpload);
+        captureBtn.addEventListener('click', captureAndProcess);
+        
+        cancelScanBtn.addEventListener('click', () => {
+            stopCamera();
+            if (isBatchMode && batchResults.length > 0) {
+                showBatchExportScreen();
+            } else {
+                showScreen('initial-screen');
+            }
+        });
+        
+        finishBtn.addEventListener('click', () => {
+            if (isBatchMode && batchResults.length > 0) {
+                showBatchExportScreen();
+            } else {
+                resetApp();
+            }
+        });
+
+        exportCsvBtn.addEventListener('click', saveBatchCSV);
+        exportZipBtn.addEventListener('click', saveBatchZIP);
+        backToHomeBtn.addEventListener('click', resetApp);
+        
         themeToggleBtn.addEventListener('click', () => {
             const isDark = document.documentElement.classList.contains('dark');
             const newTheme = isDark ? 'light' : 'dark';
@@ -531,15 +672,6 @@ END:VCARD`;
             logMessage(`Theme changed to ${newTheme}`);
         });
 
-        startBtn.addEventListener('click', startCamera);
-        uploadBtn.addEventListener('click', () => imageUploadInput.click());
-        imageUploadInput.addEventListener('change', handleImageUpload);
-        captureBtn.addEventListener('click', captureAndProcess);
-        cancelScanBtn.addEventListener('click', () => { stopCamera(); showScreen('initial-screen'); });
-        saveCsvBtn.addEventListener('click', saveAsCSV);
-        saveVCardBtn.addEventListener('click', saveAsVCard);
-        rescanBtn.addEventListener('click', resetApp);
-        
         logToggleBtn.addEventListener('click', () => {
             const isHidden = logContainer.classList.contains('opacity-0');
             if (isHidden) {
@@ -549,7 +681,6 @@ END:VCARD`;
             }
         });
 
-        // FIX: Added event listener for the new close button
         closeLogBtn.addEventListener('click', closeLog);
 
         copyLogBtn.addEventListener('click', () => {
@@ -561,18 +692,31 @@ END:VCARD`;
             });
         });
 
+        acaraInput.addEventListener('input', (e) => {
+            localStorage.setItem('savedAcara', e.target.value);
+        });
+        tanggalInput.addEventListener('input', (e) => {
+            localStorage.setItem('savedTanggal', e.target.value);
+        });
+
         document.addEventListener('DOMContentLoaded', () => {
             lucide.createIcons();
             
+            const savedAcara = localStorage.getItem('savedAcara');
+            const savedTanggal = localStorage.getItem('savedTanggal');
+            if (savedAcara) acaraInput.value = savedAcara;
+            if (savedTanggal) {
+                tanggalInput.value = savedTanggal;
+            } else {
+                const today = new Date();
+                tanggalInput.value = today.toISOString().slice(0, 10);
+            }
+
             const savedTheme = localStorage.getItem('theme');
             const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            if (savedTheme) {
-                applyTheme(savedTheme);
-            } else if (prefersDark) {
-                applyTheme('dark');
-            } else {
-                applyTheme('light');
-            }
+            if (savedTheme) applyTheme(savedTheme);
+            else if (prefersDark) applyTheme('dark');
+            else applyTheme('light');
 
             logMessage("App initialized.");
             showScreen('initial-screen');
@@ -581,4 +725,3 @@ END:VCARD`;
     </script>
 </body>
 </html>
-
