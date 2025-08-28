@@ -80,6 +80,10 @@
             z-index: 20;
             transition: opacity 0.3s ease;
         }
+        /* Log Container Styles */
+        #log-container {
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
     </style>
 </head>
 <body class="bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200">
@@ -179,9 +183,24 @@
             </div>
 
         </main>
-        <footer class="text-center p-4 text-xs text-gray-400 dark:text-gray-600">
-            <p>&copy; 2025 SCANNER PINTAR oleh ISPARMO</p>
+        <footer class="text-center p-4 text-xs text-gray-400 dark:text-gray-600 flex justify-between items-center">
+            <button id="log-toggle-btn" class="p-2 hover:bg-gray-200 dark:hover:bg-gray-800 rounded-full">
+                <i data-lucide="notebook-pen" class="w-5 h-5"></i>
+            </button>
+            <span>&copy; 2025 SCANNER PINTAR oleh ISPARMO</span>
+            <div class="w-9"></div> <!-- Spacer -->
         </footer>
+    </div>
+
+    <!-- Log Container -->
+    <div id="log-container" class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-lg p-4 z-50 opacity-0 transform translate-y-full pointer-events-none">
+        <div class="bg-white dark:bg-gray-800 rounded-t-xl shadow-2xl border-t border-gray-200 dark:border-gray-700">
+            <div class="flex justify-between items-center p-3 border-b border-gray-200 dark:border-gray-700">
+                <h3 class="font-semibold text-gray-800 dark:text-gray-200">Developer Log</h3>
+                <button id="copy-log-btn" class="text-xs bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 py-1 px-2 rounded-md">Salin</button>
+            </div>
+            <pre id="log-output" class="h-48 overflow-y-auto p-3 text-xs text-gray-600 dark:text-gray-400 font-mono"></pre>
+        </div>
     </div>
 
     <script>
@@ -218,26 +237,42 @@
         const sunIcon = document.getElementById('theme-toggle-sun-icon');
         const moonIcon = document.getElementById('theme-toggle-moon-icon');
 
+        const logContainer = document.getElementById('log-container');
+        const logOutput = document.getElementById('log-output');
+        const logToggleBtn = document.getElementById('log-toggle-btn');
+        const copyLogBtn = document.getElementById('copy-log-btn');
+
         let stream;
         let qrScanAnimation;
 
+        // --- Functions ---
+        function logMessage(message) {
+            const timestamp = new Date().toLocaleTimeString();
+            logOutput.textContent += `[${timestamp}] ${message}\n`;
+            logOutput.scrollTop = logOutput.scrollHeight; // Auto-scroll to bottom
+        }
+
         function showScreen(screenId) {
+            logMessage(`Navigating to screen: ${screenId}`);
             allScreens.forEach(screen => screen.classList.add('hidden'));
             document.getElementById(screenId).classList.remove('hidden');
         }
 
         async function startCamera() {
+            logMessage("Attempting to start camera...");
             try {
                 if (stream) { stream.getTracks().forEach(track => track.stop()); }
                 stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
                 video.srcObject = stream;
                 video.onloadedmetadata = () => {
+                    logMessage("Camera stream started.");
                     canvas.width = video.videoWidth;
                     canvas.height = video.videoHeight;
                     qrScanAnimation = requestAnimationFrame(scanQRCode);
                 };
                 showScreen('scanner-screen');
             } catch (err) {
+                logMessage(`Error starting camera: ${err.message}`);
                 console.error("Error accessing camera:", err);
                 alert("Tidak dapat mengakses kamera. Pastikan Anda memberikan izin.");
                 showScreen('initial-screen');
@@ -250,13 +285,13 @@
                 qrScanAnimation = null;
             }
             if (stream) {
+                logMessage("Stopping camera stream.");
                 stream.getTracks().forEach(track => track.stop());
             }
         }
 
         function scanQRCode() {
             if (video.readyState === video.HAVE_ENOUGH_DATA) {
-                // FIX: Menambahkan atribut willReadFrequently untuk optimasi
                 const context = canvas.getContext('2d', { willReadFrequently: true });
                 context.drawImage(video, 0, 0, canvas.width, canvas.height);
                 const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
@@ -265,6 +300,7 @@
                 });
 
                 if (code && code.data.startsWith('BEGIN:VCARD')) {
+                    logMessage("QR Code (vCard) detected.");
                     qrFeedback.classList.remove('hidden');
                     stopCamera();
                     parseVCard(code.data);
@@ -276,6 +312,7 @@
         }
 
         function parseVCard(vcardString) {
+            logMessage("Parsing vCard data...");
             form.reset();
             const lines = vcardString.split('\n');
             let name = '';
@@ -299,9 +336,11 @@
                 }
             });
             nameInput.value = name;
+            logMessage("vCard parsing complete.");
         }
 
         async function captureAndProcess() {
+            logMessage("Capture button pressed.");
             stopCamera();
             const context = canvas.getContext('2d');
             context.drawImage(video, 0, 0, canvas.width, canvas.height);
@@ -310,11 +349,13 @@
         }
 
         async function processImage(imageDataUrl) {
+            logMessage("Processing image...");
             showScreen('processing-screen');
             try {
                 await extractDataWithLlama(imageDataUrl);
                 showScreen('results-screen');
             } catch (error) {
+                logMessage(`Image processing failed: ${error.message}`);
                 console.error("Processing Error:", error);
                 alert(`Gagal memproses gambar: ${error.message}`);
                 resetApp();
@@ -325,6 +366,7 @@
             form.reset();
             progressTitle.textContent = 'AI Menganalisis Gambar...';
             progressStatus.textContent = 'Mengirim gambar ke Llama 4...';
+            logMessage("Sending image to backend for Llama 4 analysis...");
             
             try {
                 const response = await fetch(BACKEND_API_URL, {
@@ -332,7 +374,8 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ imageDataUrl: imageDataUrl })
                 });
-
+                
+                logMessage(`Backend response status: ${response.status}`);
                 if (!response.ok) {
                     const errorBody = await response.json();
                     throw new Error(`Backend Error: ${response.status}. ${errorBody.error || 'Unknown error'}`);
@@ -340,16 +383,19 @@
                 
                 const result = await response.json();
                 const jsonString = result.data;
+                logMessage("Received JSON string from backend.");
                 
                 if (jsonString) {
                     try {
                         const extractedData = JSON.parse(jsonString);
+                        logMessage("Successfully parsed JSON from backend.");
                         nameInput.value = extractedData.nama || extractedData.name || '';
                         positionInput.value = extractedData.jabatan || extractedData.position || '';
                         companyInput.value = extractedData.perusahaan || extractedData.company || '';
                         phoneInput.value = extractedData.telepon || extractedData.phone || '';
                         emailInput.value = extractedData.email || '';
                     } catch (e) {
+                         logMessage(`Failed to parse JSON: ${e.message}`);
                          console.error("Gagal parse JSON dari Backend:", e);
                          alert("Backend tidak mengembalikan JSON yang valid. Cek console untuk detail.");
                          nameInput.value = jsonString;
@@ -358,6 +404,7 @@
                     throw new Error("Respons dari Backend tidak valid atau kosong.");
                 }
             } catch (error) {
+                logMessage(`Backend call failed: ${error.message}`);
                 console.error("Backend Call Failed:", error);
                 alert(`Gagal menghubungi backend: ${error.message}`);
                 showScreen('initial-screen');
@@ -365,6 +412,7 @@
         }
 
         function saveAsCSV() {
+            logMessage("Saving contact as CSV...");
             const headers = ['Nama', 'Jabatan', 'Perusahaan', 'No. HP/WA', 'Email'];
             const data = [nameInput.value, positionInput.value, companyInput.value, phoneInput.value, emailInput.value];
             const escapeCSV = (field) => `"${String(field).replace(/"/g, '""')}"`;
@@ -384,6 +432,7 @@
         }
 
         function saveAsVCard() {
+            logMessage("Saving contact as vCard...");
             const vCardString = `BEGIN:VCARD
 VERSION:3.0
 FN:${nameInput.value}
@@ -408,6 +457,7 @@ END:VCARD`;
         }
         
         function resetApp() {
+            logMessage("Resetting application state.");
             stopCamera();
             form.reset();
             qrFeedback.classList.add('hidden');
@@ -417,9 +467,11 @@ END:VCARD`;
         function handleImageUpload(event) {
             const file = event.target.files[0];
             if (!file || !file.type.startsWith('image/')) {
+                logMessage("Invalid file type uploaded.");
                 alert('Silakan unggah file gambar (JPG, PNG, dll).');
                 return;
             }
+            logMessage(`Image uploaded: ${file.name}`);
             const reader = new FileReader();
             reader.onload = (e) => processImage(e.target.result);
             reader.readAsDataURL(file);
@@ -442,6 +494,7 @@ END:VCARD`;
             const newTheme = isDark ? 'light' : 'dark';
             localStorage.setItem('theme', newTheme);
             applyTheme(newTheme);
+            logMessage(`Theme changed to ${newTheme}`);
         });
 
         startBtn.addEventListener('click', startCamera);
@@ -453,6 +506,24 @@ END:VCARD`;
         saveVCardBtn.addEventListener('click', saveAsVCard);
         rescanBtn.addEventListener('click', resetApp);
         
+        logToggleBtn.addEventListener('click', () => {
+            const isHidden = logContainer.classList.contains('opacity-0');
+            if (isHidden) {
+                logContainer.classList.remove('opacity-0', 'translate-y-full', 'pointer-events-none');
+            } else {
+                logContainer.classList.add('opacity-0', 'translate-y-full', 'pointer-events-none');
+            }
+        });
+
+        copyLogBtn.addEventListener('click', () => {
+            navigator.clipboard.writeText(logOutput.textContent).then(() => {
+                copyLogBtn.textContent = 'Disalin!';
+                setTimeout(() => { copyLogBtn.textContent = 'Salin'; }, 2000);
+            }).catch(err => {
+                logMessage(`Failed to copy log: ${err}`);
+            });
+        });
+
         document.addEventListener('DOMContentLoaded', () => {
             lucide.createIcons();
             
@@ -466,6 +537,7 @@ END:VCARD`;
                 applyTheme('light');
             }
 
+            logMessage("App initialized.");
             showScreen('initial-screen');
         });
 
