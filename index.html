@@ -164,9 +164,14 @@
                             <i data-lucide="building-2" class="w-6 h-6 text-gray-500 dark:text-gray-400"></i>
                             <div class="w-full"><label for="perusahaan" class="block text-xs font-medium text-gray-500 dark:text-gray-400">Perusahaan</label><input type="text" id="perusahaan" name="perusahaan" class="w-full text-lg font-semibold bg-transparent border-none text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-0" placeholder="Perusahaan tidak terdeteksi"></div>
                         </div>
+                        <!-- NEW: Phone and WhatsApp fields separated -->
                         <div class="result-item bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 rounded-xl flex items-center gap-4">
                             <i data-lucide="phone" class="w-6 h-6 text-gray-500 dark:text-gray-400"></i>
-                            <div class="w-full"><label for="telepon" class="block text-xs font-medium text-gray-500 dark:text-gray-400">Telepon / WhatsApp</label><input type="tel" id="telepon" name="telepon" class="w-full text-lg font-semibold bg-transparent border-none text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-0" placeholder="Telepon tidak terdeteksi"></div>
+                            <div class="w-full"><label for="telepon_kantor" class="block text-xs font-medium text-gray-500 dark:text-gray-400">Telepon Kantor</label><input type="tel" id="telepon_kantor" name="telepon_kantor" class="w-full text-lg font-semibold bg-transparent border-none text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-0" placeholder="Telepon tidak terdeteksi"></div>
+                        </div>
+                        <div class="result-item bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 rounded-xl flex items-center gap-4">
+                            <i data-lucide="smartphone" class="w-6 h-6 text-gray-500 dark:text-gray-400"></i>
+                            <div class="w-full"><label for="whatsapp" class="block text-xs font-medium text-gray-500 dark:text-gray-400">No. HP / WhatsApp</label><input type="tel" id="whatsapp" name="whatsapp" class="w-full text-lg font-semibold bg-transparent border-none text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-0" placeholder="WhatsApp tidak terdeteksi"></div>
                         </div>
                         <div class="result-item bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 rounded-xl flex items-center gap-4">
                             <i data-lucide="at-sign" class="w-6 h-6 text-gray-500 dark:text-gray-400"></i>
@@ -229,7 +234,8 @@
         const nameInput = document.getElementById('nama');
         const positionInput = document.getElementById('jabatan');
         const companyInput = document.getElementById('perusahaan');
-        const phoneInput = document.getElementById('telepon');
+        const phoneKantorInput = document.getElementById('telepon_kantor');
+        const whatsappInput = document.getElementById('whatsapp');
         const emailInput = document.getElementById('email');
         const qrFeedback = document.getElementById('qr-feedback');
         
@@ -330,7 +336,17 @@
                 } else if (cleanLine.startsWith('ORG:')) {
                     companyInput.value = cleanLine.substring(4).trim();
                 } else if (cleanLine.startsWith('TEL')) {
-                    phoneInput.value = cleanLine.substring(cleanLine.indexOf(':') + 1).trim();
+                    if (cleanLine.includes('TYPE=CELL') || cleanLine.includes('TYPE=VOICE')) {
+                        whatsappInput.value = cleanLine.substring(cleanLine.indexOf(':') + 1).trim();
+                    } else if (cleanLine.includes('TYPE=WORK')) {
+                        phoneKantorInput.value = cleanLine.substring(cleanLine.indexOf(':') + 1).trim();
+                    } else {
+                        if (!whatsappInput.value) {
+                            whatsappInput.value = cleanLine.substring(cleanLine.indexOf(':') + 1).trim();
+                        } else {
+                            phoneKantorInput.value = cleanLine.substring(cleanLine.indexOf(':') + 1).trim();
+                        }
+                    }
                 } else if (cleanLine.startsWith('EMAIL')) {
                     emailInput.value = cleanLine.substring(cleanLine.indexOf(':') + 1).trim();
                 }
@@ -389,10 +405,11 @@
                     try {
                         const extractedData = JSON.parse(jsonString);
                         logMessage("Successfully parsed JSON from backend.");
-                        nameInput.value = extractedData.nama || extractedData.name || '';
-                        positionInput.value = extractedData.jabatan || extractedData.position || '';
-                        companyInput.value = extractedData.perusahaan || extractedData.company || '';
-                        phoneInput.value = extractedData.telepon || extractedData.phone || '';
+                        nameInput.value = extractedData.nama || '';
+                        positionInput.value = extractedData.jabatan || '';
+                        companyInput.value = extractedData.perusahaan || '';
+                        phoneKantorInput.value = extractedData.telepon_kantor || '';
+                        whatsappInput.value = extractedData.whatsapp || '';
                         emailInput.value = extractedData.email || '';
                     } catch (e) {
                          logMessage(`Failed to parse JSON: ${e.message}`);
@@ -413,8 +430,8 @@
 
         function saveAsCSV() {
             logMessage("Saving contact as CSV...");
-            const headers = ['Nama', 'Jabatan', 'Perusahaan', 'No. HP/WA', 'Email'];
-            const data = [nameInput.value, positionInput.value, companyInput.value, phoneInput.value, emailInput.value];
+            const headers = ['Nama', 'Jabatan', 'Perusahaan', 'Telepon Kantor', 'WhatsApp', 'Email'];
+            const data = [nameInput.value, positionInput.value, companyInput.value, phoneKantorInput.value, whatsappInput.value, emailInput.value];
             const escapeCSV = (field) => `"${String(field).replace(/"/g, '""')}"`;
             const csvContent = [headers.join(','), data.map(escapeCSV).join(',')].join('\n');
             const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
@@ -433,13 +450,19 @@
 
         function saveAsVCard() {
             logMessage("Saving contact as vCard...");
-            const vCardString = `BEGIN:VCARD
+            let vCardString = `BEGIN:VCARD
 VERSION:3.0
 FN:${nameInput.value}
 ORG:${companyInput.value}
 TITLE:${positionInput.value}
-TEL;TYPE=WORK,VOICE:${phoneInput.value}
-EMAIL:${emailInput.value}
+`;
+            if (phoneKantorInput.value) {
+                vCardString += `TEL;TYPE=WORK,VOICE:${phoneKantorInput.value}\n`;
+            }
+            if (whatsappInput.value) {
+                vCardString += `TEL;TYPE=CELL,VOICE:${whatsappInput.value}\n`;
+            }
+            vCardString += `EMAIL:${emailInput.value}
 END:VCARD`;
 
             const blob = new Blob([vCardString], { type: 'text/vcard;charset=utf-8;' });
