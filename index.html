@@ -132,7 +132,6 @@
                     </div>
                 </div>
                 <canvas id="canvas" class="hidden"></canvas>
-                <!-- FIX: src dikosongkan untuk mencegah error loading -->
                 <audio id="snap-sound" class="snap-sound" src=""></audio>
             </div>
             
@@ -207,7 +206,6 @@
         const rescanBtn = document.getElementById('rescan-btn');
         const video = document.getElementById('video');
         const canvas = document.getElementById('canvas');
-        const snapSound = document.getElementById('snap-sound');
         const progressTitle = document.getElementById('progress-title');
         const progressStatus = document.getElementById('progress-status');
         const form = document.getElementById('data-form');
@@ -260,7 +258,8 @@
 
         function scanQRCode() {
             if (video.readyState === video.HAVE_ENOUGH_DATA) {
-                const context = canvas.getContext('2d');
+                // FIX 1: Menambahkan atribut willReadFrequently untuk optimasi
+                const context = canvas.getContext('2d', { willReadFrequently: true });
                 context.drawImage(video, 0, 0, canvas.width, canvas.height);
                 const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
                 const code = jsQR(imageData.data, imageData.width, imageData.height, {
@@ -306,7 +305,8 @@
 
         async function captureAndProcess() {
             stopCamera();
-            // snapSound.play(); // Efek suara dinonaktifkan untuk mencegah error
+            // FIX 2: Menghapus pemanggilan .play() untuk mencegah error
+            // snapSound.play();
             const context = canvas.getContext('2d');
             context.drawImage(video, 0, 0, canvas.width, canvas.height);
             const imageDataUrl = canvas.toDataURL('image/jpeg', 0.9);
