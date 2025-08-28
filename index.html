@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scanner Pintar | Scan Kartu Nama & QR Code Berbasis AI</title>
+    <title>Scanner Pintar | Scan Kartu Nama & QR Code</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,7 +21,6 @@
         body {
             font-family: 'Inter', sans-serif;
         }
-        .snap-sound { display: none; }
         .loader {
             border: 4px solid rgba(255, 255, 255, 0.2);
             border-top: 4px solid #4f46e5; /* indigo-600 */
@@ -106,7 +105,7 @@
                         </div>
                     </div>
                     <h1 class="text-4xl font-bold text-gray-900 dark:text-white">Scanner Pintar</h1>
-                    <p class="text-gray-500 dark:text-gray-400 mt-2">Scanner Kartu Nama & QR Code Berbasis AI</p>
+                    <p class="text-gray-500 dark:text-gray-400 mt-2">Scanner Kartu Nama & QR Code Berbasis AI. 99% AKURAT</p>
                 </div>
                 <div class="w-full flex flex-col gap-4">
                      <button id="start-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-6 rounded-full shadow-lg transition-transform transform hover:scale-105 flex items-center justify-center gap-3 text-lg"><i data-lucide="camera" class="w-6 h-6"></i>Scan Kartu Nama</button>
@@ -132,7 +131,6 @@
                     </div>
                 </div>
                 <canvas id="canvas" class="hidden"></canvas>
-                <audio id="snap-sound" class="snap-sound" src=""></audio>
             </div>
             
             <!-- Processing Screen -->
@@ -258,7 +256,7 @@
 
         function scanQRCode() {
             if (video.readyState === video.HAVE_ENOUGH_DATA) {
-                // FIX 1: Menambahkan atribut willReadFrequently untuk optimasi
+                // FIX: Menambahkan atribut willReadFrequently untuk optimasi
                 const context = canvas.getContext('2d', { willReadFrequently: true });
                 context.drawImage(video, 0, 0, canvas.width, canvas.height);
                 const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
@@ -305,8 +303,6 @@
 
         async function captureAndProcess() {
             stopCamera();
-            // FIX 2: Menghapus pemanggilan .play() untuk mencegah error
-            // snapSound.play();
             const context = canvas.getContext('2d');
             context.drawImage(video, 0, 0, canvas.width, canvas.height);
             const imageDataUrl = canvas.toDataURL('image/jpeg', 0.9);
@@ -476,4 +472,3 @@ END:VCARD`;
     </script>
 </body>
 </html>
-
