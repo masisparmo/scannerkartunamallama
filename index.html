@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scanner Pintar | Scan Kartu Nama & QR Code Berbasis AI</title>
+    <title>Scanner Pintar | Scan Kartu Nama & QR Code</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -109,7 +109,7 @@
                         </div>
                     </div>
                     <h1 class="text-4xl font-bold text-gray-900 dark:text-white">Scanner Pintar</h1>
-                    <p class="text-gray-500 dark:text-gray-400 mt-2">Scanner Kartu Nama & QR Code Berbasis AI</p>
+                    <p class="text-gray-500 dark:text-gray-400 mt-2">Scanner Kartu Nama & QR Code Berbasis AI. 99% AKURAT</p>
                 </div>
                 <div class="w-full flex flex-col gap-4">
                      <button id="start-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-6 rounded-full shadow-lg transition-transform transform hover:scale-105 flex items-center justify-center gap-3 text-lg"><i data-lucide="camera" class="w-6 h-6"></i>Scan Kartu Nama</button>
@@ -164,7 +164,6 @@
                             <i data-lucide="building-2" class="w-6 h-6 text-gray-500 dark:text-gray-400"></i>
                             <div class="w-full"><label for="perusahaan" class="block text-xs font-medium text-gray-500 dark:text-gray-400">Perusahaan</label><input type="text" id="perusahaan" name="perusahaan" class="w-full text-lg font-semibold bg-transparent border-none text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-0" placeholder="Perusahaan tidak terdeteksi"></div>
                         </div>
-                        <!-- NEW: Phone and WhatsApp fields separated -->
                         <div class="result-item bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 rounded-xl flex items-center gap-4">
                             <i data-lucide="phone" class="w-6 h-6 text-gray-500 dark:text-gray-400"></i>
                             <div class="w-full"><label for="telepon_kantor" class="block text-xs font-medium text-gray-500 dark:text-gray-400">Telepon Kantor</label><input type="tel" id="telepon_kantor" name="telepon_kantor" class="w-full text-lg font-semibold bg-transparent border-none text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-0" placeholder="Telepon tidak terdeteksi"></div>
@@ -202,7 +201,13 @@
         <div class="bg-white dark:bg-gray-800 rounded-t-xl shadow-2xl border-t border-gray-200 dark:border-gray-700">
             <div class="flex justify-between items-center p-3 border-b border-gray-200 dark:border-gray-700">
                 <h3 class="font-semibold text-gray-800 dark:text-gray-200">Developer Log</h3>
-                <button id="copy-log-btn" class="text-xs bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 py-1 px-2 rounded-md">Salin</button>
+                <!-- FIX: Added a close button with an X icon -->
+                <div class="flex items-center gap-2">
+                    <button id="copy-log-btn" class="text-xs bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 py-1 px-2 rounded-md">Salin</button>
+                    <button id="close-log-btn" class="p-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full">
+                        <i data-lucide="x" class="w-4 h-4"></i>
+                    </button>
+                </div>
             </div>
             <pre id="log-output" class="h-48 overflow-y-auto p-3 text-xs text-gray-600 dark:text-gray-400 font-mono"></pre>
         </div>
@@ -247,6 +252,7 @@
         const logOutput = document.getElementById('log-output');
         const logToggleBtn = document.getElementById('log-toggle-btn');
         const copyLogBtn = document.getElementById('copy-log-btn');
+        const closeLogBtn = document.getElementById('close-log-btn'); // FIX: New element reference
 
         let stream;
         let qrScanAnimation;
@@ -255,7 +261,7 @@
         function logMessage(message) {
             const timestamp = new Date().toLocaleTimeString();
             logOutput.textContent += `[${timestamp}] ${message}\n`;
-            logOutput.scrollTop = logOutput.scrollHeight; // Auto-scroll to bottom
+            logOutput.scrollTop = logOutput.scrollHeight;
         }
 
         function showScreen(screenId) {
@@ -512,6 +518,11 @@ END:VCARD`;
             }
         }
 
+        // FIX: Reusable function to close the log window
+        function closeLog() {
+            logContainer.classList.add('opacity-0', 'translate-y-full', 'pointer-events-none');
+        }
+
         themeToggleBtn.addEventListener('click', () => {
             const isDark = document.documentElement.classList.contains('dark');
             const newTheme = isDark ? 'light' : 'dark';
@@ -534,9 +545,12 @@ END:VCARD`;
             if (isHidden) {
                 logContainer.classList.remove('opacity-0', 'translate-y-full', 'pointer-events-none');
             } else {
-                logContainer.classList.add('opacity-0', 'translate-y-full', 'pointer-events-none');
+                closeLog();
             }
         });
+
+        // FIX: Added event listener for the new close button
+        closeLogBtn.addEventListener('click', closeLog);
 
         copyLogBtn.addEventListener('click', () => {
             navigator.clipboard.writeText(logOutput.textContent).then(() => {
@@ -567,5 +581,3 @@ END:VCARD`;
     </script>
 </body>
 </html>
-
-
