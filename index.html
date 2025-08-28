@@ -316,9 +316,60 @@
         let stream;
         let qrScanAnimation;
         let isBatchMode = false;
-        let batchResults = [];
+        
+        // --- IndexedDB Functions ---
+        let db;
+        function initDB() {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open('ScannerPintarDB', 1);
+                request.onerror = (event) => {
+                    logMessage("IndexedDB error: " + event.target.errorCode);
+                    reject("Database error");
+                };
+                request.onupgradeneeded = (event) => {
+                    const db = event.target.result;
+                    db.createObjectStore('contacts', { keyPath: 'id', autoIncrement: true });
+                    logMessage("Object store 'contacts' created.");
+                };
+                request.onsuccess = (event) => {
+                    db = event.target.result;
+                    logMessage("Database initialized successfully.");
+                    resolve(db);
+                };
+            });
+        }
 
-        // --- Functions ---
+        function addContact(contact) {
+            return new Promise((resolve, reject) => {
+                const transaction = db.transaction(['contacts'], 'readwrite');
+                const store = transaction.objectStore('contacts');
+                const request = store.add(contact);
+                request.onsuccess = () => resolve();
+                request.onerror = (event) => reject("Error adding contact: " + event.target.error);
+            });
+        }
+
+        function getAllContacts() {
+            return new Promise((resolve, reject) => {
+                const transaction = db.transaction(['contacts'], 'readonly');
+                const store = transaction.objectStore('contacts');
+                const request = store.getAll();
+                request.onsuccess = () => resolve(request.result);
+                request.onerror = (event) => reject("Error fetching contacts: " + event.target.error);
+            });
+        }
+
+        function clearContacts() {
+            return new Promise((resolve, reject) => {
+                const transaction = db.transaction(['contacts'], 'readwrite');
+                const store = transaction.objectStore('contacts');
+                const request = store.clear();
+                request.onsuccess = () => resolve();
+                request.onerror = (event) => reject("Error clearing contacts: " + event.target.error);
+            });
+        }
+
+        // --- Main App Functions ---
         function logMessage(message) {
             const timestamp = new Date().toLocaleTimeString();
             logOutput.textContent += `[${timestamp}] ${message}\n`;
@@ -331,16 +382,14 @@
             document.getElementById(screenId).classList.remove('hidden');
         }
 
-        function startScan(batchMode = false) {
+        async function startScan(batchMode = false) {
             isBatchMode = batchMode;
-            if (isBatchMode && batchResults.length === 0) {
-                logMessage("Starting new Batch Scan session.");
-                batchResults = []; 
-            } else if (isBatchMode) {
-                logMessage("Continuing Batch Scan session.");
+            if (isBatchMode) {
+                logMessage("Starting/Continuing Batch Scan session.");
+                await updateSessionList(); // Muat data sesi yang ada
             } else {
                 logMessage("Starting Single Scan mode.");
-                batchResults = []; // Clear results for single mode
+                await clearContacts(); // Hapus sesi lama untuk mode tunggal
             }
             startCamera();
         }
@@ -443,13 +492,13 @@
             showScreen('processing-screen');
             try {
                 await extractDataWithLlama(imageDataUrl);
-                updateResultsUI();
+                await updateResultsUI();
                 showScreen('results-screen');
             } catch (error) {
                 logMessage(`Image processing failed: ${error.message}`);
                 console.error("Processing Error:", error);
                 alert(`Gagal memproses gambar: ${error.message}`);
-                resetApp();
+                await resetApp();
             }
         }
 
@@ -513,12 +562,13 @@
             };
         }
 
-        function updateSessionList() {
-            sessionCountEl.textContent = batchResults.length;
+        async function updateSessionList() {
+            const contacts = await getAllContacts();
+            sessionCountEl.textContent = contacts.length;
             sessionResultsList.innerHTML = '';
-            if (batchResults.length > 0) {
+            if (contacts.length > 0) {
                 batchResultsContainer.classList.remove('hidden');
-                batchResults.forEach(contact => {
+                contacts.forEach(contact => {
                     const contactCard = document.createElement('div');
                     contactCard.className = 'result-item bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-3 rounded-xl text-left';
                     contactCard.innerHTML = `
@@ -532,12 +582,13 @@
             }
         }
 
-        function showBatchExportScreen() {
+        async function showBatchExportScreen() {
             logMessage("Showing batch export screen.");
-            batchCountEl.textContent = batchResults.length;
+            const contacts = await getAllContacts();
+            batchCountEl.textContent = contacts.length;
             
             batchResultsList.innerHTML = '';
-            batchResults.forEach(contact => {
+            contacts.forEach(contact => {
                 const contactCard = document.createElement('div');
                 contactCard.className = 'result-item bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-3 rounded-xl text-left';
                 contactCard.innerHTML = `
@@ -557,7 +608,7 @@
             return `${acara}_${ddmmyy}`;
         }
 
-        function saveAsCSV(contacts) {
+        async function saveAsCSV(contacts) {
             logMessage("Generating CSV file...");
             const headers = ['Nama', 'Jabatan', 'Perusahaan', 'Telepon Kantor', 'WhatsApp', 'Email', 'Acara', 'Tanggal'];
             let csvContent = headers.join(',') + '\n';
@@ -573,7 +624,7 @@
             link.click();
         }
 
-        function saveAsVCard(contacts) {
+        async function saveAsVCard(contacts) {
             logMessage("Generating ZIP file with vCards...");
             const zip = new JSZip();
             contacts.forEach((contact, index) => {
@@ -591,19 +642,18 @@ TITLE:${contact.jabatan}
                 const filename = (contact.nama || `kontak_${index + 1}`).replace(/\s+/g, '_').toLowerCase() + '.vcf';
                 zip.file(filename, vCardString);
             });
-            zip.generateAsync({ type: "blob" }).then(content => {
-                const link = document.createElement("a");
-                link.href = URL.createObjectURL(content);
-                link.download = `kontak_${generateFilename()}.zip`;
-                link.click();
-            });
+            const content = await zip.generateAsync({ type: "blob" });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(content);
+            link.download = `kontak_${generateFilename()}.zip`;
+            link.click();
         }
         
-        function resetApp() {
+        async function resetApp() {
             logMessage("Resetting application state.");
             stopCamera();
             form.reset();
-            batchResults = []; // Clear batch data on full reset
+            await clearContacts();
             qrFeedback.classList.add('hidden');
             acaraInput.value = localStorage.getItem('savedAcara') || '';
             tanggalInput.value = localStorage.getItem('savedTanggal') || new Date().toISOString().slice(0, 10);
@@ -639,16 +689,17 @@ TITLE:${contact.jabatan}
             logContainer.classList.add('opacity-0', 'translate-y-full', 'pointer-events-none');
         }
 
-        function updateResultsUI() {
+        async function updateResultsUI() {
             resultsFooter.innerHTML = ''; // Clear previous buttons
             if (isBatchMode) {
+                await updateSessionList();
                 batchResultsContainer.classList.remove('hidden');
                 const addButton = document.createElement('button');
                 addButton.className = 'w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-6 rounded-full shadow-lg flex items-center justify-center gap-3 text-lg';
                 addButton.innerHTML = `<i data-lucide="plus-circle" class="w-6 h-6"></i>Tambah ke Sesi`;
-                addButton.onclick = () => {
-                    batchResults.push(getCurrentContactData());
-                    updateSessionList();
+                addButton.onclick = async () => {
+                    await addContact(getCurrentContactData());
+                    await updateSessionList();
                     clearContactForm();
                     logMessage("Contact added to session. Ready for next scan.");
                 };
@@ -658,19 +709,19 @@ TITLE:${contact.jabatan}
                 const vCardButton = document.createElement('button');
                 vCardButton.className = 'w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-6 rounded-full shadow-lg flex items-center justify-center gap-3 text-lg';
                 vCardButton.innerHTML = `<i data-lucide="contact" class="w-6 h-6"></i>Simpan vCard`;
-                vCardButton.onclick = () => {
+                vCardButton.onclick = async () => {
                     const singleContact = [getCurrentContactData()];
-                    saveAsVCard(singleContact);
-                    resetApp();
+                    await saveAsVCard(singleContact);
+                    await resetApp();
                 };
 
                 const csvButton = document.createElement('button');
                 csvButton.className = 'w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-6 rounded-full shadow-lg flex items-center justify-center gap-3 text-lg';
                 csvButton.innerHTML = `<i data-lucide="file-spreadsheet" class="w-6 h-6"></i>Simpan CSV`;
-                csvButton.onclick = () => {
+                csvButton.onclick = async () => {
                     const singleContact = [getCurrentContactData()];
-                    saveAsCSV(singleContact);
-                    resetApp();
+                    await saveAsCSV(singleContact);
+                    await resetApp();
                 };
                 
                 const buttonContainer = document.createElement('div');
@@ -686,30 +737,31 @@ TITLE:${contact.jabatan}
         startSingleBtn.addEventListener('click', () => startScan(false));
         startBatchBtn.addEventListener('click', () => startScan(true));
         uploadBtn.addEventListener('click', () => {
-            // FIX: Check if a batch session is active, if not, start a new single-mode session
             if (!isBatchMode) {
                 isBatchMode = false;
-                batchResults = [];
+                clearContacts();
             }
             imageUploadInput.click()
         });
         imageUploadInput.addEventListener('change', handleImageUpload);
         captureBtn.addEventListener('click', captureAndProcess);
         
-        cancelScanBtn.addEventListener('click', () => {
+        cancelScanBtn.addEventListener('click', async () => {
             stopCamera();
-            if (isBatchMode && batchResults.length > 0) {
+            const contacts = await getAllContacts();
+            if (isBatchMode && contacts.length > 0) {
                 showBatchExportScreen();
             } else {
                 showScreen('initial-screen');
             }
         });
         
-        finishBtn.addEventListener('click', () => {
-            if (isBatchMode && batchResults.length > 0) {
+        finishBtn.addEventListener('click', async () => {
+            const contacts = await getAllContacts();
+            if (isBatchMode && contacts.length > 0) {
                 showBatchExportScreen();
             } else {
-                resetApp();
+                await resetApp();
             }
         });
         
@@ -718,8 +770,14 @@ TITLE:${contact.jabatan}
             showScreen('initial-screen');
         });
 
-        exportCsvBtn.addEventListener('click', () => saveAsCSV(batchResults));
-        exportZipBtn.addEventListener('click', () => saveAsVCard(batchResults));
+        exportCsvBtn.addEventListener('click', async () => {
+            const contacts = await getAllContacts();
+            saveAsCSV(contacts);
+        });
+        exportZipBtn.addEventListener('click', async () => {
+            const contacts = await getAllContacts();
+            saveAsVCard(contacts);
+        });
         backToHomeBtn.addEventListener('click', resetApp);
         
         themeToggleBtn.addEventListener('click', () => {
@@ -757,8 +815,9 @@ TITLE:${contact.jabatan}
             localStorage.setItem('savedTanggal', e.target.value);
         });
 
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', async () => {
             lucide.createIcons();
+            await initDB();
             
             const savedAcara = localStorage.getItem('savedAcara');
             const savedTanggal = localStorage.getItem('savedTanggal');
