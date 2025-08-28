@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scanner Pintar | Scan Kartu Nama & QR Code</title>
+    <title>Scanner Pintar | Scan Kartu Nama & QR Code berbasis AI</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -149,9 +149,12 @@
             
             <!-- Results Screen -->
             <div id="results-screen" class="hidden screen flex flex-col">
-                <header class="p-6 pr-20 flex justify-between items-center">
-                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Hasil Pindai</h2>
-                    <button id="finish-btn" class="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 font-semibold hover:bg-gray-300 dark:hover:bg-gray-600 py-2 px-4 rounded-full text-sm">Selesai</button>
+                <header class="p-6 pr-4 flex justify-between items-center gap-2">
+                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Hasil Scan</h2>
+                    <div class="flex items-center gap-2">
+                        <button id="rescan-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-full text-sm flex items-center gap-2"><i data-lucide="scan-search" class="w-4 h-4"></i>Scan / Unggah Lagi</button>
+                        <button id="finish-btn" class="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 font-semibold hover:bg-gray-300 dark:hover:bg-gray-600 py-2 px-4 rounded-full text-sm">Selesai</button>
+                    </div>
                 </header>
                 <div class="flex-grow p-6 pt-0 overflow-y-auto">
                     <form id="data-form" class="space-y-4">
@@ -168,31 +171,40 @@
                         </div>
                         <hr class="border-gray-200 dark:border-gray-700"/>
                         <!-- Contact Info -->
-                        <div class="result-item bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 rounded-xl flex items-center gap-4">
-                            <i data-lucide="user" class="w-6 h-6 text-gray-500 dark:text-gray-400"></i>
-                            <div class="w-full"><label for="nama" class="block text-xs font-medium text-gray-500 dark:text-gray-400">Nama Lengkap</label><input type="text" id="nama" name="nama" class="w-full text-lg font-semibold bg-transparent border-none text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-0" placeholder="Nama tidak terdeteksi"></div>
-                        </div>
-                        <div class="result-item bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 rounded-xl flex items-center gap-4">
-                            <i data-lucide="briefcase" class="w-6 h-6 text-gray-500 dark:text-gray-400"></i>
-                            <div class="w-full"><label for="jabatan" class="block text-xs font-medium text-gray-500 dark:text-gray-400">Jabatan</label><input type="text" id="jabatan" name="jabatan" class="w-full text-lg font-semibold bg-transparent border-none text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-0" placeholder="Jabatan tidak terdeteksi"></div>
-                        </div>
-                        <div class="result-item bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 rounded-xl flex items-center gap-4">
-                            <i data-lucide="building-2" class="w-6 h-6 text-gray-500 dark:text-gray-400"></i>
-                            <div class="w-full"><label for="perusahaan" class="block text-xs font-medium text-gray-500 dark:text-gray-400">Perusahaan</label><input type="text" id="perusahaan" name="perusahaan" class="w-full text-lg font-semibold bg-transparent border-none text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-0" placeholder="Perusahaan tidak terdeteksi"></div>
-                        </div>
-                        <div class="result-item bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 rounded-xl flex items-center gap-4">
-                            <i data-lucide="phone" class="w-6 h-6 text-gray-500 dark:text-gray-400"></i>
-                            <div class="w-full"><label for="telepon_kantor" class="block text-xs font-medium text-gray-500 dark:text-gray-400">Telepon Kantor</label><input type="tel" id="telepon_kantor" name="telepon_kantor" class="w-full text-lg font-semibold bg-transparent border-none text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-0" placeholder="Telepon tidak terdeteksi"></div>
-                        </div>
-                        <div class="result-item bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 rounded-xl flex items-center gap-4">
-                            <i data-lucide="smartphone" class="w-6 h-6 text-gray-500 dark:text-gray-400"></i>
-                            <div class="w-full"><label for="whatsapp" class="block text-xs font-medium text-gray-500 dark:text-gray-400">No. HP / WhatsApp</label><input type="tel" id="whatsapp" name="whatsapp" class="w-full text-lg font-semibold bg-transparent border-none text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-0" placeholder="WhatsApp tidak terdeteksi"></div>
-                        </div>
-                        <div class="result-item bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 rounded-xl flex items-center gap-4">
-                            <i data-lucide="at-sign" class="w-6 h-6 text-gray-500 dark:text-gray-400"></i>
-                            <div class="w-full"><label for="email" class="block text-xs font-medium text-gray-500 dark:text-gray-400">Email</label><input type="email" id="email" name="email" class="w-full text-lg font-semibold bg-transparent border-none text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-0" placeholder="Email tidak terdeteksi"></div>
+                        <div id="contact-form-fields">
+                            <div class="result-item bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 rounded-xl flex items-center gap-4 mt-4">
+                                <i data-lucide="user" class="w-6 h-6 text-gray-500 dark:text-gray-400"></i>
+                                <div class="w-full"><label for="nama" class="block text-xs font-medium text-gray-500 dark:text-gray-400">Nama Lengkap</label><input type="text" id="nama" name="nama" class="w-full text-lg font-semibold bg-transparent border-none text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-0" placeholder="Nama tidak terdeteksi"></div>
+                            </div>
+                            <div class="result-item bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 rounded-xl flex items-center gap-4 mt-4">
+                                <i data-lucide="briefcase" class="w-6 h-6 text-gray-500 dark:text-gray-400"></i>
+                                <div class="w-full"><label for="jabatan" class="block text-xs font-medium text-gray-500 dark:text-gray-400">Jabatan</label><input type="text" id="jabatan" name="jabatan" class="w-full text-lg font-semibold bg-transparent border-none text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-0" placeholder="Jabatan tidak terdeteksi"></div>
+                            </div>
+                            <div class="result-item bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 rounded-xl flex items-center gap-4 mt-4">
+                                <i data-lucide="building-2" class="w-6 h-6 text-gray-500 dark:text-gray-400"></i>
+                                <div class="w-full"><label for="perusahaan" class="block text-xs font-medium text-gray-500 dark:text-gray-400">Perusahaan</label><input type="text" id="perusahaan" name="perusahaan" class="w-full text-lg font-semibold bg-transparent border-none text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-0" placeholder="Perusahaan tidak terdeteksi"></div>
+                            </div>
+                            <div class="result-item bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 rounded-xl flex items-center gap-4 mt-4">
+                                <i data-lucide="phone" class="w-6 h-6 text-gray-500 dark:text-gray-400"></i>
+                                <div class="w-full"><label for="telepon_kantor" class="block text-xs font-medium text-gray-500 dark:text-gray-400">Telepon Kantor</label><input type="tel" id="telepon_kantor" name="telepon_kantor" class="w-full text-lg font-semibold bg-transparent border-none text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-0" placeholder="Telepon tidak terdeteksi"></div>
+                            </div>
+                            <div class="result-item bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 rounded-xl flex items-center gap-4 mt-4">
+                                <i data-lucide="smartphone" class="w-6 h-6 text-gray-500 dark:text-gray-400"></i>
+                                <div class="w-full"><label for="whatsapp" class="block text-xs font-medium text-gray-500 dark:text-gray-400">No. HP / WhatsApp</label><input type="tel" id="whatsapp" name="whatsapp" class="w-full text-lg font-semibold bg-transparent border-none text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-0" placeholder="WhatsApp tidak terdeteksi"></div>
+                            </div>
+                            <div class="result-item bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 rounded-xl flex items-center gap-4 mt-4">
+                                <i data-lucide="at-sign" class="w-6 h-6 text-gray-500 dark:text-gray-400"></i>
+                                <div class="w-full"><label for="email" class="block text-xs font-medium text-gray-500 dark:text-gray-400">Email</label><input type="email" id="email" name="email" class="w-full text-lg font-semibold bg-transparent border-none text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-0" placeholder="Email tidak terdeteksi"></div>
+                            </div>
                         </div>
                     </form>
+                    <!-- Batch Results List -->
+                    <div id="batch-results-container" class="mt-6 hidden">
+                        <h3 class="font-bold text-gray-900 dark:text-white mb-2">Kontak di Sesi Ini (<span id="session-count">0</span>)</h3>
+                        <div id="session-results-list" class="space-y-2">
+                            <!-- Session results will be inserted here -->
+                        </div>
+                    </div>
                 </div>
                 <footer id="results-footer" class="p-6">
                     <!-- Buttons will be dynamically inserted here -->
@@ -200,12 +212,18 @@
             </div>
 
              <!-- Batch Export Screen -->
-            <div id="batch-export-screen" class="hidden screen p-8 flex flex-col justify-center items-center text-center flex-grow">
-                <div class="p-6 bg-green-600/10 dark:bg-green-600/20 rounded-full mb-8">
-                    <i data-lucide="check-check" class="w-20 h-20 text-green-500 dark:text-green-400"></i>
+            <div id="batch-export-screen" class="hidden screen p-8 flex flex-col justify-between items-center text-center flex-grow">
+                <div>
+                    <div class="p-6 bg-green-600/10 dark:bg-green-600/20 rounded-full mb-8 mt-12">
+                        <i data-lucide="check-check" class="w-20 h-20 text-green-500 dark:text-green-400"></i>
+                    </div>
+                    <h2 class="text-3xl font-bold text-gray-900 dark:text-white">Scan Berseri Selesai</h2>
+                    <p class="text-gray-500 dark:text-gray-400 mt-2 mb-4"><span id="batch-count">0</span> kontak berhasil dipindai.</p>
                 </div>
-                <h2 class="text-3xl font-bold text-gray-900 dark:text-white">Scan Berseri Selesai</h2>
-                <p class="text-gray-500 dark:text-gray-400 mt-2 mb-8"><span id="batch-count">0</span> kontak berhasil dipindai dan siap untuk diekspor.</p>
+                <!-- Batch Results List -->
+                <div id="batch-results-list" class="w-full my-4 flex-grow overflow-y-auto space-y-2">
+                    <!-- Batch results will be inserted here -->
+                </div>
                 <div class="w-full flex flex-col gap-4">
                     <button id="export-zip-btn" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-6 rounded-full shadow-lg flex items-center justify-center gap-3 text-lg"><i data-lucide="archive" class="w-6 h-6"></i>Ekspor Semua (.zip)</button>
                     <button id="export-csv-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-6 rounded-full shadow-lg flex items-center justify-center gap-3 text-lg"><i data-lucide="file-spreadsheet" class="w-6 h-6"></i>Ekspor Semua (.csv)</button>
@@ -259,8 +277,13 @@
         const captureBtn = document.getElementById('capture-btn');
         const cancelScanBtn = document.getElementById('cancel-scan-btn');
         const finishBtn = document.getElementById('finish-btn');
+        const rescanBtn = document.getElementById('rescan-btn');
         const resultsFooter = document.getElementById('results-footer');
         const batchCountEl = document.getElementById('batch-count');
+        const sessionCountEl = document.getElementById('session-count');
+        const batchResultsContainer = document.getElementById('batch-results-container');
+        const sessionResultsList = document.getElementById('session-results-list');
+        const batchResultsList = document.getElementById('batch-results-list');
         const exportZipBtn = document.getElementById('export-zip-btn');
         const exportCsvBtn = document.getElementById('export-csv-btn');
         const backToHomeBtn = document.getElementById('back-to-home-btn');
@@ -312,7 +335,8 @@
             isBatchMode = batchMode;
             if (isBatchMode) {
                 logMessage("Starting Batch Scan mode.");
-                batchResults = []; // Mulai sesi baru
+                batchResults = []; 
+                updateSessionList();
             } else {
                 logMessage("Starting Single Scan mode.");
             }
@@ -487,16 +511,40 @@
             };
         }
 
-        function saveBatchData() {
-            logMessage("Saving current contact to batch list.");
-            const currentData = getCurrentContactData();
-            batchResults.push(currentData);
-            logMessage(`${batchResults.length} contacts in current batch.`);
+        function updateSessionList() {
+            sessionCountEl.textContent = batchResults.length;
+            sessionResultsList.innerHTML = '';
+            if (batchResults.length > 0) {
+                batchResultsContainer.classList.remove('hidden');
+                batchResults.forEach(contact => {
+                    const contactCard = document.createElement('div');
+                    contactCard.className = 'result-item bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-3 rounded-xl text-left';
+                    contactCard.innerHTML = `
+                        <p class="font-bold text-gray-900 dark:text-white">${contact.nama || 'Tanpa Nama'}</p>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">${contact.jabatan || ''} di ${contact.perusahaan || ''}</p>
+                    `;
+                    sessionResultsList.appendChild(contactCard);
+                });
+            } else {
+                batchResultsContainer.classList.add('hidden');
+            }
         }
 
         function showBatchExportScreen() {
             logMessage("Showing batch export screen.");
             batchCountEl.textContent = batchResults.length;
+            
+            batchResultsList.innerHTML = '';
+            batchResults.forEach(contact => {
+                const contactCard = document.createElement('div');
+                contactCard.className = 'result-item bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-3 rounded-xl text-left';
+                contactCard.innerHTML = `
+                    <p class="font-bold text-gray-900 dark:text-white">${contact.nama || 'Tanpa Nama'}</p>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">${contact.jabatan || ''} di ${contact.perusahaan || ''}</p>
+                `;
+                batchResultsList.appendChild(contactCard);
+            });
+
             showScreen('batch-export-screen');
         }
 
@@ -560,14 +608,13 @@ TITLE:${contact.jabatan}
             stopCamera();
             form.reset();
             qrFeedback.classList.add('hidden');
-            // Repopulate event info
             acaraInput.value = localStorage.getItem('savedAcara') || '';
             tanggalInput.value = localStorage.getItem('savedTanggal') || new Date().toISOString().slice(0, 10);
             showScreen('initial-screen');
         }
 
         function handleImageUpload(event) {
-            isBatchMode = false; // Upload is always single mode
+            isBatchMode = false; 
             const file = event.target.files[0];
             if (!file || !file.type.startsWith('image/')) {
                 logMessage("Invalid file type uploaded.");
@@ -599,31 +646,34 @@ TITLE:${contact.jabatan}
         function updateResultsUI() {
             resultsFooter.innerHTML = ''; // Clear previous buttons
             if (isBatchMode) {
-                const nextButton = document.createElement('button');
-                nextButton.id = 'next-scan-btn';
-                nextButton.className = 'w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-6 rounded-full shadow-lg flex items-center justify-center gap-3 text-lg';
-                nextButton.innerHTML = `<i data-lucide="contact" class="w-6 h-6"></i>Simpan & Scan Berikutnya`;
-                nextButton.onclick = () => {
-                    saveBatchData();
-                    startCamera();
+                batchResultsContainer.classList.remove('hidden');
+                const addButton = document.createElement('button');
+                addButton.className = 'w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-6 rounded-full shadow-lg flex items-center justify-center gap-3 text-lg';
+                addButton.innerHTML = `<i data-lucide="plus-circle" class="w-6 h-6"></i>Tambah ke Sesi`;
+                addButton.onclick = () => {
+                    batchResults.push(getCurrentContactData());
+                    updateSessionList();
+                    clearContactForm();
+                    logMessage("Contact added to session. Ready for next scan.");
                 };
-                resultsFooter.appendChild(nextButton);
+                resultsFooter.appendChild(addButton);
             } else {
+                batchResultsContainer.classList.add('hidden');
                 const vCardButton = document.createElement('button');
-                vCardButton.id = 'save-vcard-btn';
                 vCardButton.className = 'w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-6 rounded-full shadow-lg flex items-center justify-center gap-3 text-lg';
                 vCardButton.innerHTML = `<i data-lucide="contact" class="w-6 h-6"></i>Simpan vCard`;
                 vCardButton.onclick = () => {
-                    saveAsVCard();
+                    const singleContact = [getCurrentContactData()];
+                    saveAsVCard(singleContact);
                     resetApp();
                 };
 
                 const csvButton = document.createElement('button');
-                csvButton.id = 'save-csv-btn';
                 csvButton.className = 'w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-6 rounded-full shadow-lg flex items-center justify-center gap-3 text-lg';
                 csvButton.innerHTML = `<i data-lucide="file-spreadsheet" class="w-6 h-6"></i>Simpan CSV`;
                 csvButton.onclick = () => {
-                    saveAsCSV();
+                    const singleContact = [getCurrentContactData()];
+                    saveAsCSV(singleContact);
                     resetApp();
                 };
                 
@@ -659,6 +709,8 @@ TITLE:${contact.jabatan}
                 resetApp();
             }
         });
+        
+        rescanBtn.addEventListener('click', startCamera);
 
         exportCsvBtn.addEventListener('click', saveBatchCSV);
         exportZipBtn.addEventListener('click', saveBatchZIP);
