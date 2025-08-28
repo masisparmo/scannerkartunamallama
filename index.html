@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scanner Pintar | Scan Kartu Nama Berbasis AI</title>
+    <title>Scanner Pintar | Scan Kartu Nama Berbasis AI/title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -144,10 +144,8 @@
             
             <!-- Results Screen -->
             <div id="results-screen" class="hidden screen flex flex-col">
-                <!-- FIX: Header layout adjusted to prevent overlap -->
                 <header class="p-6 pr-20 flex justify-between items-center">
                     <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Hasil Pindai</h2>
-                    <!-- FIX: Button text and styling updated -->
                     <button id="rescan-btn" class="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 font-semibold hover:bg-gray-300 dark:hover:bg-gray-600 py-2 px-4 rounded-full text-sm">Scan Ulang</button>
                 </header>
                 <div class="flex-grow p-6 pt-0 overflow-y-auto">
@@ -174,8 +172,12 @@
                         </div>
                     </form>
                 </div>
+                <!-- Footer dengan dua tombol simpan -->
                 <footer class="p-6">
-                    <button id="save-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-6 rounded-full shadow-lg transition-transform transform hover:scale-105 flex items-center justify-center gap-3 text-lg"><i data-lucide="save" class="w-6 h-6"></i>Simpan Kontak (CSV)</button>
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <button id="save-vcard-btn" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-6 rounded-full shadow-lg transition-transform transform hover:scale-105 flex items-center justify-center gap-3 text-lg"><i data-lucide="contact" class="w-6 h-6"></i>Simpan vCard</button>
+                        <button id="save-csv-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-6 rounded-full shadow-lg transition-transform transform hover:scale-105 flex items-center justify-center gap-3 text-lg"><i data-lucide="file-spreadsheet" class="w-6 h-6"></i>Simpan CSV</button>
+                    </div>
                 </footer>
             </div>
 
@@ -200,7 +202,8 @@
         const imageUploadInput = document.getElementById('image-upload-input');
         const captureBtn = document.getElementById('capture-btn');
         const cancelScanBtn = document.getElementById('cancel-scan-btn');
-        const saveBtn = document.getElementById('save-btn');
+        const saveCsvBtn = document.getElementById('save-csv-btn');
+        const saveVCardBtn = document.getElementById('save-vcard-btn');
         const rescanBtn = document.getElementById('rescan-btn');
         const video = document.getElementById('video');
         const canvas = document.getElementById('canvas');
@@ -236,7 +239,6 @@
                 video.onloadedmetadata = () => {
                     canvas.width = video.videoWidth;
                     canvas.height = video.videoHeight;
-                    // Mulai memindai QR code secara terus-menerus
                     qrScanAnimation = requestAnimationFrame(scanQRCode);
                 };
                 showScreen('scanner-screen');
@@ -271,10 +273,9 @@
                     stopCamera();
                     parseVCard(code.data);
                     showScreen('results-screen');
-                    return; // Hentikan loop jika QR code ditemukan
+                    return;
                 }
             }
-            // Lanjutkan loop jika tidak ada QR code
             qrScanAnimation = requestAnimationFrame(scanQRCode);
         }
 
@@ -283,28 +284,29 @@
             const lines = vcardString.split('\n');
             let name = '';
             lines.forEach(line => {
-                if (line.startsWith('FN:')) {
-                    name = line.substring(3).trim();
-                } else if (line.startsWith('N:')) {
-                    if (!name) { // Fallback jika FN tidak ada
-                        const nameParts = line.substring(2).split(';');
+                const cleanLine = line.trim();
+                if (cleanLine.startsWith('FN:')) {
+                    name = cleanLine.substring(3).trim();
+                } else if (cleanLine.startsWith('N:')) {
+                    if (!name) {
+                        const nameParts = cleanLine.substring(2).split(';');
                         name = `${nameParts[1]} ${nameParts[0]}`.trim();
                     }
-                } else if (line.startsWith('TITLE:')) {
-                    positionInput.value = line.substring(6).trim();
-                } else if (line.startsWith('ORG:')) {
-                    companyInput.value = line.substring(4).trim();
-                } else if (line.startsWith('TEL')) {
-                    phoneInput.value = line.substring(line.indexOf(':') + 1).trim();
-                } else if (line.startsWith('EMAIL')) {
-                    emailInput.value = line.substring(line.indexOf(':') + 1).trim();
+                } else if (cleanLine.startsWith('TITLE:')) {
+                    positionInput.value = cleanLine.substring(6).trim();
+                } else if (cleanLine.startsWith('ORG:')) {
+                    companyInput.value = cleanLine.substring(4).trim();
+                } else if (cleanLine.startsWith('TEL')) {
+                    phoneInput.value = cleanLine.substring(cleanLine.indexOf(':') + 1).trim();
+                } else if (cleanLine.startsWith('EMAIL')) {
+                    emailInput.value = cleanLine.substring(cleanLine.indexOf(':') + 1).trim();
                 }
             });
             nameInput.value = name;
         }
 
         async function captureAndProcess() {
-            stopCamera(); // Hentikan pemindaian QR sebelum memproses gambar
+            stopCamera();
             snapSound.play();
             const context = canvas.getContext('2d');
             context.drawImage(video, 0, 0, canvas.width, canvas.height);
@@ -385,6 +387,30 @@
                 document.body.removeChild(link);
             }
         }
+
+        function saveAsVCard() {
+            const vCardString = `BEGIN:VCARD
+VERSION:3.0
+FN:${nameInput.value}
+ORG:${companyInput.value}
+TITLE:${positionInput.value}
+TEL;TYPE=WORK,VOICE:${phoneInput.value}
+EMAIL:${emailInput.value}
+END:VCARD`;
+
+            const blob = new Blob([vCardString], { type: 'text/vcard;charset=utf-8;' });
+            const link = document.createElement("a");
+            if (link.download !== undefined) {
+                const url = URL.createObjectURL(blob);
+                const filename = (nameInput.value || 'kontak').replace(/\s+/g, '_').toLowerCase();
+                link.setAttribute("href", url);
+                link.setAttribute("download", `${filename}.vcf`);
+                link.style.visibility = 'hidden';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+        }
         
         function resetApp() {
             stopCamera();
@@ -428,7 +454,8 @@
         imageUploadInput.addEventListener('change', handleImageUpload);
         captureBtn.addEventListener('click', captureAndProcess);
         cancelScanBtn.addEventListener('click', () => { stopCamera(); showScreen('initial-screen'); });
-        saveBtn.addEventListener('click', saveAsCSV);
+        saveCsvBtn.addEventListener('click', saveAsCSV);
+        saveVCardBtn.addEventListener('click', saveAsVCard);
         rescanBtn.addEventListener('click', resetApp);
         
         document.addEventListener('DOMContentLoaded', () => {
