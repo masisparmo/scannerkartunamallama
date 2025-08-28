@@ -340,6 +340,7 @@
                 logMessage("Continuing Batch Scan session.");
             } else {
                 logMessage("Starting Single Scan mode.");
+                batchResults = []; // Clear results for single mode
             }
             startCamera();
         }
@@ -602,6 +603,7 @@ TITLE:${contact.jabatan}
             logMessage("Resetting application state.");
             stopCamera();
             form.reset();
+            batchResults = []; // Clear batch data on full reset
             qrFeedback.classList.add('hidden');
             acaraInput.value = localStorage.getItem('savedAcara') || '';
             tanggalInput.value = localStorage.getItem('savedTanggal') || new Date().toISOString().slice(0, 10);
@@ -684,8 +686,10 @@ TITLE:${contact.jabatan}
         startSingleBtn.addEventListener('click', () => startScan(false));
         startBatchBtn.addEventListener('click', () => startScan(true));
         uploadBtn.addEventListener('click', () => {
-            if(!isBatchMode) {
-                isBatchMode = false; // Ensure single mode for direct upload
+            // FIX: Check if a batch session is active, if not, start a new single-mode session
+            if (!isBatchMode) {
+                isBatchMode = false;
+                batchResults = [];
             }
             imageUploadInput.click()
         });
