@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scanner Pintar | Scanner Kartu Nama Powered by AI</title>
+    <title>Scanner Pintar | Scan Kartu Nama Berbasis AI</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
-    <script src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js'></script>
+    <!-- Tesseract.js Dihapus -->
     <script>
         // Tailwind config for dark mode
         tailwind.config = {
@@ -75,8 +75,8 @@
         <!-- Theme Toggle Button -->
         <div class="absolute top-5 right-5 z-50">
             <button id="theme-toggle" class="p-2 rounded-full bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300">
-                <i id="theme-toggle-sun-icon" data-lucide="sun" class="w-5 h-5 hidden"></i>
-                <i id="theme-toggle-moon-icon" data-lucide="moon" class="w-5 h-5 hidden"></i>
+                <i id="theme-toggle-sun-icon" data-lucide="sun" class="w-5 h-5"></i>
+                <i id="theme-toggle-moon-icon" data-lucide="moon" class="w-5 h-5"></i>
             </button>
         </div>
 
@@ -91,7 +91,7 @@
                         </div>
                     </div>
                     <h1 class="text-4xl font-bold text-gray-900 dark:text-white">Scanner Pintar</h1>
-                    <p class="text-gray-500 dark:text-gray-400 mt-2">Scanner Kartu Nama Berbasis AI.</p>
+                    <p class="text-gray-500 dark:text-gray-400 mt-2">Scanner Kartu Nama Berbasis AI. 99% AKURAT</p>
                 </div>
                 <div class="w-full flex flex-col gap-4">
                      <button id="start-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-6 rounded-full shadow-lg transition-transform transform hover:scale-105 flex items-center justify-center gap-3 text-lg"><i data-lucide="camera" class="w-6 h-6"></i>Pindai Kartu</button>
@@ -121,8 +121,8 @@
             <!-- Processing Screen -->
             <div id="processing-screen" class="hidden screen justify-center items-center text-center p-8 flex-grow">
                 <div class="loader mb-6"></div>
-                <h2 id="progress-title" class="text-2xl font-bold text-gray-900 dark:text-white animate-pulse">AI Sedang Bekerja...</h2>
-                <p id="progress-status" class="text-gray-500 dark:text-gray-400 mt-2">Mohon tunggu sebentar...</p>
+                <h2 id="progress-title" class="text-2xl font-bold text-gray-900 dark:text-white animate-pulse">AI Menganalisis Gambar...</h2>
+                <p id="progress-status" class="text-gray-500 dark:text-gray-400 mt-2">Mengirim gambar ke Llama 4...</p>
             </div>
             
             <!-- Results Screen -->
@@ -154,7 +154,7 @@
                             <div class="w-full"><label for="email" class="block text-xs font-medium text-gray-500 dark:text-gray-400">Email</label><input type="email" id="email" name="email" class="w-full text-lg font-semibold bg-transparent border-none text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-0" placeholder="Email tidak terdeteksi"></div>
                         </div>
                     </form>
-                    <div id="raw-text-container" class="mt-6 hidden"><h3 class="text-sm font-semibold text-gray-500 dark:text-gray-400 mb-2">Teks Mentah Hasil OCR</h3><pre id="raw-text" class="text-xs bg-gray-200 dark:bg-gray-800 p-3 rounded-md max-h-40 overflow-y-auto whitespace-pre-wrap text-gray-600 dark:text-gray-400"></pre></div>
+                    <!-- Raw Text Container Dihapus karena tidak relevan lagi -->
                 </div>
                 <footer class="p-6">
                     <button id="save-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-6 rounded-full shadow-lg transition-transform transform hover:scale-105 flex items-center justify-center gap-3 text-lg"><i data-lucide="save" class="w-6 h-6"></i>Simpan Kontak (CSV)</button>
@@ -163,7 +163,7 @@
 
         </main>
         <footer class="text-center p-4 text-xs text-gray-400 dark:text-gray-600">
-            <p>&copy; 2025 Scanner Pintar dibuat oleh ISPARMO</p>
+            <p>&copy; 2025 SCANNER PINTAR oleh ISPARMO</p>
         </footer>
     </div>
 
@@ -187,8 +187,6 @@
         const video = document.getElementById('video');
         const canvas = document.getElementById('canvas');
         const snapSound = document.getElementById('snap-sound');
-        const rawTextContainer = document.getElementById('raw-text-container');
-        const rawTextEl = document.getElementById('raw-text');
         const progressTitle = document.getElementById('progress-title');
         const progressStatus = document.getElementById('progress-status');
         const form = document.getElementById('data-form');
@@ -198,7 +196,6 @@
         const phoneInput = document.getElementById('telepon');
         const emailInput = document.getElementById('email');
         
-        // --- Theme Toggle Elements ---
         const themeToggleBtn = document.getElementById('theme-toggle');
         const sunIcon = document.getElementById('theme-toggle-sun-icon');
         const moonIcon = document.getElementById('theme-toggle-moon-icon');
@@ -253,30 +250,18 @@
             }
         }
 
+        // --- FUNGSI UTAMA YANG DIMODIFIKASI ---
         async function extractDataWithLlama(imageDataUrl) {
             form.reset();
-            progressTitle.textContent = 'AI Sedang Bekerja...';
-            
-            progressStatus.textContent = 'Membaca teks dari gambar (OCR)...';
-            const worker = await Tesseract.createWorker('ind');
-            const ret = await worker.recognize(imageDataUrl);
-            const ocrText = ret.data.text;
-            await worker.terminate();
-            
-            rawTextEl.textContent = ocrText;
-            rawTextContainer.classList.remove('hidden');
-
-            if (!ocrText.trim()) {
-                throw new Error("OCR tidak dapat mendeteksi teks apapun pada gambar.");
-            }
-
-            progressStatus.textContent = 'Mengirim teks ke Llama 4 via Backend...';
+            progressTitle.textContent = 'AI Menganalisis Gambar...';
+            progressStatus.textContent = 'Mengirim gambar ke Llama 4...';
             
             try {
+                // Frontend sekarang mengirim gambar langsung ke backend
                 const response = await fetch(BACKEND_API_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ ocrText: ocrText })
+                    body: JSON.stringify({ imageDataUrl: imageDataUrl }) // Mengirim base64 data URL
                 });
 
                 if (!response.ok) {
@@ -332,8 +317,6 @@
         function resetApp() {
             stopCamera();
             form.reset();
-            rawTextContainer.classList.add('hidden');
-            rawTextEl.textContent = '';
             showScreen('initial-screen');
         }
 
@@ -348,7 +331,6 @@
             reader.readAsDataURL(file);
         }
         
-        // --- Theme Toggle Logic ---
         function applyTheme(theme) {
             if (theme === 'dark') {
                 document.documentElement.classList.add('dark');
@@ -368,7 +350,6 @@
             applyTheme(newTheme);
         });
 
-        // --- Event Listeners ---
         startBtn.addEventListener('click', startCamera);
         uploadBtn.addEventListener('click', () => imageUploadInput.click());
         imageUploadInput.addEventListener('change', handleImageUpload);
@@ -380,7 +361,6 @@
         document.addEventListener('DOMContentLoaded', () => {
             lucide.createIcons();
             
-            // Initialize theme
             const savedTheme = localStorage.getItem('theme');
             const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
             if (savedTheme) {
