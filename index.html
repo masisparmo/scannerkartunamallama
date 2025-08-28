@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- FIX: Corrected the closing title tag -->
-    <title>Scanner Pintar | Scan Kartu Nama Berbasis AI</title>
+    <title>Scanner Pintar | Scan Kartu Nama & QR Code Berbasis AI</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -107,7 +106,7 @@
                         </div>
                     </div>
                     <h1 class="text-4xl font-bold text-gray-900 dark:text-white">Scanner Pintar</h1>
-                    <p class="text-gray-500 dark:text-gray-400 mt-2">Scanner Kartu Nama Berbasis AI. 99% AKURAT</p>
+                    <p class="text-gray-500 dark:text-gray-400 mt-2">Scanner Kartu Nama & QR Code Berbasis AI. 99% AKURAT</p>
                 </div>
                 <div class="w-full flex flex-col gap-4">
                      <button id="start-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-6 rounded-full shadow-lg transition-transform transform hover:scale-105 flex items-center justify-center gap-3 text-lg"><i data-lucide="camera" class="w-6 h-6"></i>Scan Kartu Nama</button>
@@ -133,7 +132,8 @@
                     </div>
                 </div>
                 <canvas id="canvas" class="hidden"></canvas>
-                <audio id="snap-sound" class="snap-sound" src="https://www.soundjay.com/button/camera-shutter-click-01.mp3"></audio>
+                <!-- FIX: src dikosongkan untuk mencegah error loading -->
+                <audio id="snap-sound" class="snap-sound" src=""></audio>
             </div>
             
             <!-- Processing Screen -->
@@ -173,7 +173,6 @@
                         </div>
                     </form>
                 </div>
-                <!-- Footer dengan dua tombol simpan -->
                 <footer class="p-6">
                     <div class="flex flex-col sm:flex-row gap-4">
                         <button id="save-vcard-btn" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-6 rounded-full shadow-lg transition-transform transform hover:scale-105 flex items-center justify-center gap-3 text-lg"><i data-lucide="contact" class="w-6 h-6"></i>Simpan vCard</button>
@@ -224,9 +223,8 @@
         const moonIcon = document.getElementById('theme-toggle-moon-icon');
 
         let stream;
-        let qrScanAnimation; // Untuk menyimpan ID dari requestAnimationFrame
+        let qrScanAnimation;
 
-        // --- Functions ---
         function showScreen(screenId) {
             allScreens.forEach(screen => screen.classList.add('hidden'));
             document.getElementById(screenId).classList.remove('hidden');
@@ -308,7 +306,7 @@
 
         async function captureAndProcess() {
             stopCamera();
-            snapSound.play();
+            // snapSound.play(); // Efek suara dinonaktifkan untuk mencegah error
             const context = canvas.getContext('2d');
             context.drawImage(video, 0, 0, canvas.width, canvas.height);
             const imageDataUrl = canvas.toDataURL('image/jpeg', 0.9);
