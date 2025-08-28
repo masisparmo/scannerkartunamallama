@@ -333,10 +333,11 @@
 
         function startScan(batchMode = false) {
             isBatchMode = batchMode;
-            if (isBatchMode) {
-                logMessage("Starting Batch Scan mode.");
+            if (isBatchMode && batchResults.length === 0) {
+                logMessage("Starting new Batch Scan session.");
                 batchResults = []; 
-                updateSessionList();
+            } else if (isBatchMode) {
+                logMessage("Continuing Batch Scan session.");
             } else {
                 logMessage("Starting Single Scan mode.");
             }
@@ -555,18 +556,15 @@
             return `${acara}_${ddmmyy}`;
         }
 
-        function saveBatchCSV() {
-            logMessage("Generating batch CSV file...");
+        function saveAsCSV(contacts) {
+            logMessage("Generating CSV file...");
             const headers = ['Nama', 'Jabatan', 'Perusahaan', 'Telepon Kantor', 'WhatsApp', 'Email', 'Acara', 'Tanggal'];
             let csvContent = headers.join(',') + '\n';
-            
             const escapeCSV = (field) => `"${String(field || '').replace(/"/g, '""')}"`;
-
-            batchResults.forEach(contact => {
+            contacts.forEach(contact => {
                 const row = [contact.nama, contact.jabatan, contact.perusahaan, contact.telepon_kantor, contact.whatsapp, contact.email, contact.acara, contact.tanggal];
                 csvContent += row.map(escapeCSV).join(',') + '\n';
             });
-
             const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
             const link = document.createElement("a");
             link.href = URL.createObjectURL(blob);
@@ -574,11 +572,10 @@
             link.click();
         }
 
-        function saveBatchZIP() {
-            logMessage("Generating batch ZIP file with vCards...");
+        function saveAsVCard(contacts) {
+            logMessage("Generating ZIP file with vCards...");
             const zip = new JSZip();
-            
-            batchResults.forEach((contact, index) => {
+            contacts.forEach((contact, index) => {
                 let vCardString = `BEGIN:VCARD
 VERSION:3.0
 FN:${contact.nama}
@@ -590,11 +587,9 @@ TITLE:${contact.jabatan}
                 vCardString += `EMAIL:${contact.email}\n`;
                 if (contact.acara || contact.tanggal) vCardString += `NOTE:Diperoleh di acara ${contact.acara || ''} pada tanggal ${contact.tanggal || ''}\n`;
                 vCardString += `END:VCARD`;
-
                 const filename = (contact.nama || `kontak_${index + 1}`).replace(/\s+/g, '_').toLowerCase() + '.vcf';
                 zip.file(filename, vCardString);
             });
-
             zip.generateAsync({ type: "blob" }).then(content => {
                 const link = document.createElement("a");
                 link.href = URL.createObjectURL(content);
@@ -614,7 +609,6 @@ TITLE:${contact.jabatan}
         }
 
         function handleImageUpload(event) {
-            isBatchMode = false; 
             const file = event.target.files[0];
             if (!file || !file.type.startsWith('image/')) {
                 logMessage("Invalid file type uploaded.");
@@ -689,7 +683,12 @@ TITLE:${contact.jabatan}
         // --- Event Listeners ---
         startSingleBtn.addEventListener('click', () => startScan(false));
         startBatchBtn.addEventListener('click', () => startScan(true));
-        uploadBtn.addEventListener('click', () => imageUploadInput.click());
+        uploadBtn.addEventListener('click', () => {
+            if(!isBatchMode) {
+                isBatchMode = false; // Ensure single mode for direct upload
+            }
+            imageUploadInput.click()
+        });
         imageUploadInput.addEventListener('change', handleImageUpload);
         captureBtn.addEventListener('click', captureAndProcess);
         
@@ -710,10 +709,13 @@ TITLE:${contact.jabatan}
             }
         });
         
-        rescanBtn.addEventListener('click', startCamera);
+        rescanBtn.addEventListener('click', () => {
+            logMessage("Rescan button clicked.");
+            showScreen('initial-screen');
+        });
 
-        exportCsvBtn.addEventListener('click', saveBatchCSV);
-        exportZipBtn.addEventListener('click', saveBatchZIP);
+        exportCsvBtn.addEventListener('click', () => saveAsCSV(batchResults));
+        exportZipBtn.addEventListener('click', () => saveAsVCard(batchResults));
         backToHomeBtn.addEventListener('click', resetApp);
         
         themeToggleBtn.addEventListener('click', () => {
