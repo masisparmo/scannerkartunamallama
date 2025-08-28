@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scanner Pintar | Scan Kartu Nama Berbasis AI</title>
+    <title>Scanner Pintar | Scan Kartu Nama & QR Code</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- Tesseract.js Dihapus -->
+    <!-- Tambahkan library jsQR untuk memindai QR Code -->
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
     <script>
         // Tailwind config for dark mode
         tailwind.config = {
@@ -62,9 +63,23 @@
             left: 50%;
             transform: translate(-50%, -50%);
             width: 90%;
-            height: 50%;
+            max-width: 400px;
+            aspect-ratio: 1.6 / 1;
             border: 2px dashed rgba(255,255,255,0.5);
             border-radius: 1.5rem;
+        }
+        #qr-feedback {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 8px 16px;
+            background-color: rgba(20, 184, 166, 0.8);
+            color: white;
+            border-radius: 99px;
+            font-weight: 500;
+            z-index: 20;
+            transition: opacity 0.3s ease;
         }
     </style>
 </head>
@@ -91,7 +106,7 @@
                         </div>
                     </div>
                     <h1 class="text-4xl font-bold text-gray-900 dark:text-white">Scanner Pintar</h1>
-                    <p class="text-gray-500 dark:text-gray-400 mt-2">Scanner Kartu Nama Berbasis AI. 99% AKURAT</p>
+                    <p class="text-gray-500 dark:text-gray-400 mt-2">Scanner Kartu Nama & QR Code Berbasis AI. 99% AKURAT</p>
                 </div>
                 <div class="w-full flex flex-col gap-4">
                      <button id="start-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-6 rounded-full shadow-lg transition-transform transform hover:scale-105 flex items-center justify-center gap-3 text-lg"><i data-lucide="camera" class="w-6 h-6"></i>Scan Kartu Nama</button>
@@ -104,8 +119,10 @@
             <div id="scanner-screen" class="hidden screen relative bg-black flex-grow">
                 <video id="video" autoplay playsinline></video>
                 <div class="scan-frame"></div>
+                <div id="qr-feedback" class="hidden">QR Code Terdeteksi!</div>
                 <div class="camera-overlay p-6">
-                    <div class="flex justify-end">
+                    <div class="flex justify-between items-center">
+                        <p class="text-white font-medium text-sm bg-black/50 px-3 py-1 rounded-full">Arahkan ke Kartu Nama atau QR Code</p>
                         <button id="cancel-scan-btn" class="p-3 bg-black/50 rounded-full text-white hover:bg-black/80"><i data-lucide="x" class="w-6 h-6"></i></button>
                     </div>
                     <div class="flex justify-center items-center">
@@ -154,7 +171,6 @@
                             <div class="w-full"><label for="email" class="block text-xs font-medium text-gray-500 dark:text-gray-400">Email</label><input type="email" id="email" name="email" class="w-full text-lg font-semibold bg-transparent border-none text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-0" placeholder="Email tidak terdeteksi"></div>
                         </div>
                     </form>
-                    <!-- Raw Text Container Dihapus karena tidak relevan lagi -->
                 </div>
                 <footer class="p-6">
                     <button id="save-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-6 rounded-full shadow-lg transition-transform transform hover:scale-105 flex items-center justify-center gap-3 text-lg"><i data-lucide="save" class="w-6 h-6"></i>Simpan Kontak (CSV)</button>
@@ -195,12 +211,14 @@
         const companyInput = document.getElementById('perusahaan');
         const phoneInput = document.getElementById('telepon');
         const emailInput = document.getElementById('email');
+        const qrFeedback = document.getElementById('qr-feedback');
         
         const themeToggleBtn = document.getElementById('theme-toggle');
         const sunIcon = document.getElementById('theme-toggle-sun-icon');
         const moonIcon = document.getElementById('theme-toggle-moon-icon');
 
         let stream;
+        let qrScanAnimation; // Untuk menyimpan ID dari requestAnimationFrame
 
         // --- Functions ---
         function showScreen(screenId) {
@@ -216,6 +234,8 @@
                 video.onloadedmetadata = () => {
                     canvas.width = video.videoWidth;
                     canvas.height = video.videoHeight;
+                    // Mulai memindai QR code secara terus-menerus
+                    qrScanAnimation = requestAnimationFrame(scanQRCode);
                 };
                 showScreen('scanner-screen');
             } catch (err) {
@@ -226,14 +246,66 @@
         }
 
         function stopCamera() {
-            if (stream) { stream.getTracks().forEach(track => track.stop()); }
+            if (qrScanAnimation) {
+                cancelAnimationFrame(qrScanAnimation);
+                qrScanAnimation = null;
+            }
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+            }
+        }
+
+        function scanQRCode() {
+            if (video.readyState === video.HAVE_ENOUGH_DATA) {
+                const context = canvas.getContext('2d');
+                context.drawImage(video, 0, 0, canvas.width, canvas.height);
+                const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+                const code = jsQR(imageData.data, imageData.width, imageData.height, {
+                    inversionAttempts: "dontInvert",
+                });
+
+                if (code && code.data.startsWith('BEGIN:VCARD')) {
+                    qrFeedback.classList.remove('hidden');
+                    stopCamera();
+                    parseVCard(code.data);
+                    showScreen('results-screen');
+                    return; // Hentikan loop jika QR code ditemukan
+                }
+            }
+            // Lanjutkan loop jika tidak ada QR code
+            qrScanAnimation = requestAnimationFrame(scanQRCode);
+        }
+
+        function parseVCard(vcardString) {
+            form.reset();
+            const lines = vcardString.split('\n');
+            let name = '';
+            lines.forEach(line => {
+                if (line.startsWith('FN:')) {
+                    name = line.substring(3).trim();
+                } else if (line.startsWith('N:')) {
+                    if (!name) { // Fallback jika FN tidak ada
+                        const nameParts = line.substring(2).split(';');
+                        name = `${nameParts[1]} ${nameParts[0]}`.trim();
+                    }
+                } else if (line.startsWith('TITLE:')) {
+                    positionInput.value = line.substring(6).trim();
+                } else if (line.startsWith('ORG:')) {
+                    companyInput.value = line.substring(4).trim();
+                } else if (line.startsWith('TEL')) {
+                    phoneInput.value = line.substring(line.indexOf(':') + 1).trim();
+                } else if (line.startsWith('EMAIL')) {
+                    emailInput.value = line.substring(line.indexOf(':') + 1).trim();
+                }
+            });
+            nameInput.value = name;
         }
 
         async function captureAndProcess() {
+            stopCamera(); // Hentikan pemindaian QR sebelum memproses gambar
             snapSound.play();
             const context = canvas.getContext('2d');
             context.drawImage(video, 0, 0, canvas.width, canvas.height);
-            stopCamera();
             const imageDataUrl = canvas.toDataURL('image/jpeg', 0.9);
             await processImage(imageDataUrl);
         }
@@ -250,18 +322,16 @@
             }
         }
 
-        // --- FUNGSI UTAMA YANG DIMODIFIKASI ---
         async function extractDataWithLlama(imageDataUrl) {
             form.reset();
             progressTitle.textContent = 'AI Menganalisis Gambar...';
             progressStatus.textContent = 'Mengirim gambar ke Llama 4...';
             
             try {
-                // Frontend sekarang mengirim gambar langsung ke backend
                 const response = await fetch(BACKEND_API_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ imageDataUrl: imageDataUrl }) // Mengirim base64 data URL
+                    body: JSON.stringify({ imageDataUrl: imageDataUrl })
                 });
 
                 if (!response.ok) {
@@ -317,6 +387,7 @@
         function resetApp() {
             stopCamera();
             form.reset();
+            qrFeedback.classList.add('hidden');
             showScreen('initial-screen');
         }
 
