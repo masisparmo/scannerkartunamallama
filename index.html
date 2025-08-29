@@ -200,10 +200,10 @@
             </form>
             <div class="mt-6 flex justify-between items-center gap-3">
                 <button id="delete-contact-btn" class="modal-button bg-red-600 hover:bg-red-700 text-white flex-1 flex items-center justify-center gap-2">
-                    <i data-lucide="trash-2" class="w-4 h-4"></i>Hapus
+                    <i data-lucide="trash-2" class="w-4 h-4"></i>HAPUS
                 </button>
-                <button id="cancel-edit-btn" class="modal-button bg-blue-600 hover:bg-blue-700 text-white flex-1">Batal</button>
-                <button id="save-edit-btn" class="modal-button bg-green-600 hover:bg-green-700 text-white flex-1">Simpan</button>
+                <button id="cancel-edit-btn" class="modal-button bg-blue-600 hover:bg-blue-700 text-white flex-1">BATAL</button>
+                <button id="save-edit-btn" class="modal-button bg-green-600 hover:bg-green-700 text-white flex-1">SIMPAN</button>
             </div>
         </div>
     </div>
@@ -493,15 +493,15 @@
 
                 if (count === 1) {
                     exportButtonsContainer.innerHTML = `
-                        <button id="export-csv-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-full shadow-lg flex items-center justify-center gap-2 text-base"><i data-lucide="file-spreadsheet" class="w-5 h-5"></i>Simpan .csv</button>
-                        <button id="export-vcf-btn" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-full shadow-lg flex items-center justify-center gap-2 text-base"><i data-lucide="contact" class="w-5 h-5"></i>Simpan .vcf</button>
+                        <button id="export-csv-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-full shadow-lg flex items-center justify-center gap-2 text-base"><i data-lucide="file-spreadsheet" class="w-5 h-5"></i>SIMPAN .csv</button>
+                        <button id="export-vcf-btn" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-full shadow-lg flex items-center justify-center gap-2 text-base"><i data-lucide="contact" class="w-5 h-5"></i>SIMPAN .vcf</button>
                     `;
                     document.getElementById('export-csv-btn').addEventListener('click', () => exportCSV(contacts));
                     document.getElementById('export-vcf-btn').addEventListener('click', () => exportVCF(contacts[0]));
                 } else {
                     exportButtonsContainer.innerHTML = `
-                        <button id="export-csv-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-full shadow-lg flex items-center justify-center gap-2 text-base"><i data-lucide="file-spreadsheet" class="w-5 h-5"></i>Simpan .csv</button>
-                        <button id="export-zip-btn" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-full shadow-lg flex items-center justify-center gap-2 text-base"><i data-lucide="archive" class="w-5 h-5"></i>Simpan VCF .zip</button>
+                        <button id="export-csv-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-full shadow-lg flex items-center justify-center gap-2 text-base"><i data-lucide="file-spreadsheet" class="w-5 h-5"></i>SIMPAN .csv</button>
+                        <button id="export-zip-btn" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-full shadow-lg flex items-center justify-center gap-2 text-base"><i data-lucide="archive" class="w-5 h-5"></i>SIMPAN VCF .zip</button>
                     `;
                     document.getElementById('export-csv-btn').addEventListener('click', () => exportCSV(contacts));
                     document.getElementById('export-zip-btn').addEventListener('click', () => exportZIP(contacts));
@@ -719,3 +719,4 @@
     </script>
 </body>
 </html>
+
