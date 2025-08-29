@@ -50,6 +50,14 @@
 
     <div class="app-container max-w-lg mx-auto shadow-2xl min-h-screen flex flex-col bg-gray-50 dark:bg-[#0D1117]">
         
+        <!-- Theme Toggle Button -->
+        <div class="absolute top-5 right-5 z-50">
+            <button id="theme-toggle" class="p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
+                <i id="theme-icon-sun" data-lucide="sun" class="w-5 h-5"></i>
+                <i id="theme-icon-moon" data-lucide="moon" class="w-5 h-5"></i>
+            </button>
+        </div>
+
         <main class="main-content flex-grow flex flex-col">
 
             <div id="initial-screen" class="screen p-8 flex flex-col justify-center items-center text-center flex-grow">
@@ -63,7 +71,6 @@
                     <p class="text-gray-500 dark:text-gray-400 mt-2">Scanner Kartu Nama Berbasis AI</p>
                 </div>
                 
-                <!-- Session Info Form -->
                 <div class="w-full text-left my-8 space-y-4">
                     <div>
                         <label for="session-acara" class="text-sm font-medium text-gray-600 dark:text-gray-400">Nama Acara</label>
@@ -194,12 +201,9 @@
     </div>
 
     <script>
-        // Wait for the DOM to be fully loaded before running the script
         document.addEventListener('DOMContentLoaded', () => {
-            // --- Ganti dengan URL Cloud Function Anda ---
             const BACKEND_API_URL = 'https://asia-southeast1-scanner-kartu-nama-llama.cloudfunctions.net/processBusinessCard';
 
-            // --- DOM Elements ---
             const screens = { initial: document.getElementById('initial-screen'), scanner: document.getElementById('scanner-screen'), processing: document.getElementById('processing-screen'), results: document.getElementById('results-screen'), };
             const startScanBtn = document.getElementById('start-scan-btn');
             const uploadBtn = document.getElementById('upload-btn');
@@ -218,27 +222,28 @@
             const toast = document.getElementById('toast');
             const toastMessage = document.getElementById('toast-message');
             
-            // Session Info Elements
             const sessionAcaraInput = document.getElementById('session-acara');
             const sessionTanggalInput = document.getElementById('session-tanggal');
             const sessionCatatanInput = document.getElementById('session-catatan');
 
-            // Edit Modal Elements
             const editModal = document.getElementById('edit-modal');
             const editModalContent = editModal.querySelector('.modal-content');
             const editForm = document.getElementById('edit-form');
             const cancelEditBtn = document.getElementById('cancel-edit-btn');
             const saveEditBtn = document.getElementById('save-edit-btn');
             const deleteContactBtn = document.getElementById('delete-contact-btn');
+
+            const themeToggleBtn = document.getElementById('theme-toggle');
+            const themeIconSun = document.getElementById('theme-icon-sun');
+            const themeIconMoon = document.getElementById('theme-icon-moon');
             
             let stream;
 
-            // --- IndexedDB ---
             const dbLogic = {
                 db: null,
                 init: function() {
                     return new Promise((resolve, reject) => {
-                        const request = indexedDB.open('SmartScannerDB', 2); // Version updated for schema change
+                        const request = indexedDB.open('SmartScannerDB', 2);
                         request.onerror = (event) => { console.error("Database error:", event.target.errorCode); reject("Database error"); };
                         request.onsuccess = (event) => { this.db = event.target.result; resolve(); };
                         request.onupgradeneeded = (event) => {
@@ -300,7 +305,6 @@
                 }
             };
 
-            // --- Functions ---
             function showToast(message) {
                 toastMessage.textContent = message;
                 toast.classList.remove('opacity-0', 'translate-y-5');
@@ -359,7 +363,6 @@
                     const jsonString = result.data;
                     if (jsonString) {
                         const extractedData = JSON.parse(jsonString);
-                        // Add session data to the contact
                         extractedData.acara = sessionAcaraInput.value;
                         extractedData.tanggal = sessionTanggalInput.value;
                         extractedData.catatan = sessionCatatanInput.value;
@@ -576,6 +579,18 @@
                 });
             }
 
+            function applyTheme(theme) {
+                if (theme === 'dark') {
+                    document.documentElement.classList.add('dark');
+                    themeIconMoon.classList.add('hidden');
+                    themeIconSun.classList.remove('hidden');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                    themeIconSun.classList.add('hidden');
+                    themeIconMoon.classList.remove('hidden');
+                }
+            }
+
             // --- Event Listeners ---
             startScanBtn.addEventListener('click', startCamera);
             uploadBtn.addEventListener('click', () => imageUploadInput.click());
@@ -595,17 +610,29 @@
             cancelEditBtn.addEventListener('click', closeEditModal);
             deleteContactBtn.addEventListener('click', handleDeleteContact);
 
-            // Save session info to localStorage on input
             sessionAcaraInput.addEventListener('input', (e) => localStorage.setItem('sessionAcara', e.target.value));
             sessionTanggalInput.addEventListener('input', (e) => localStorage.setItem('sessionTanggal', e.target.value));
             sessionCatatanInput.addEventListener('input', (e) => localStorage.setItem('sessionCatatan', e.target.value));
 
+            themeToggleBtn.addEventListener('click', () => {
+                const isDark = document.documentElement.classList.contains('dark');
+                const newTheme = isDark ? 'light' : 'dark';
+                localStorage.setItem('theme', newTheme);
+                applyTheme(newTheme);
+            });
 
             // --- App Initialization ---
             async function initializeApp() {
                 lucide.createIcons();
                 
-                // Load session info from localStorage
+                const savedTheme = localStorage.getItem('theme');
+                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                if (savedTheme) {
+                    applyTheme(savedTheme);
+                } else {
+                    applyTheme(prefersDark ? 'dark' : 'light');
+                }
+
                 sessionAcaraInput.value = localStorage.getItem('sessionAcara') || '';
                 sessionTanggalInput.value = localStorage.getItem('sessionTanggal') || new Date().toISOString().slice(0, 10);
                 sessionCatatanInput.value = localStorage.getItem('sessionCatatan') || '';
