@@ -32,18 +32,17 @@
         .toast { transition: opacity 0.3s ease, transform 0.3s ease; }
         .modal-backdrop { transition: opacity 0.3s ease; }
         .modal-content { transition: transform 0.3s ease, opacity 0.3s ease; }
-        /* Consistent button height and padding */
         .modal-button {
-            padding: 0.75rem 1.25rem; /* py-3 px-5 */
-            height: 48px; /* Fixed height for consistency */
+            padding: 0.75rem 1.25rem;
+            height: 48px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             text-align: center;
-            font-weight: 600; /* semibold */
-            border-radius: 0.5rem; /* rounded-lg */
+            font-weight: 600;
+            border-radius: 0.5rem;
             transition: all 0.2s ease-in-out;
-            white-space: nowrap; /* Prevent text wrapping */
+            white-space: nowrap;
         }
     </style>
 </head>
@@ -55,15 +54,34 @@
 
             <div id="initial-screen" class="screen p-8 flex flex-col justify-center items-center text-center flex-grow">
                 <div class="w-full">
-                    <div class="flex justify-center mt-12 mb-8">
-                        <div class="p-6 bg-indigo-600/10 dark:bg-indigo-600/20 rounded-full">
-                            <i data-lucide="contact-2" class="w-20 h-20 text-indigo-500 dark:text-indigo-400"></i>
+                    <div class="flex justify-center mb-8">
+                        <div class="p-4 bg-indigo-600/10 dark:bg-indigo-600/20 rounded-full">
+                            <i data-lucide="contact-2" class="w-12 h-12 text-indigo-500 dark:text-indigo-400"></i>
                         </div>
                     </div>
-                    <h1 class="text-4xl font-bold text-gray-900 dark:text-white">Scanner Pintar</h1>
-                    <p class="text-gray-500 dark:text-gray-400 mt-2">Scanner Kartu Nama dan QR Code Berbasis AI</p>
+                    <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Scanner Pintar</h1>
+                    <p class="text-gray-500 dark:text-gray-400 mt-2">Scanner Kartu Nama Berbasis AI</p>
                 </div>
-                <div class="w-full flex flex-col gap-4 mt-12">
+                
+                <!-- Session Info Form -->
+                <div class="w-full text-left my-8 space-y-4">
+                    <div>
+                        <label for="session-acara" class="text-sm font-medium text-gray-600 dark:text-gray-400">Nama Acara</label>
+                        <input type="text" id="session-acara" placeholder="Contoh: Pameran Konstruksi 2025" class="w-full mt-1 p-3 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label for="session-tanggal" class="text-sm font-medium text-gray-600 dark:text-gray-400">Tanggal</label>
+                            <input type="date" id="session-tanggal" class="w-full mt-1 p-3 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                        </div>
+                         <div>
+                            <label for="session-catatan" class="text-sm font-medium text-gray-600 dark:text-gray-400">Catatan</label>
+                            <input type="text" id="session-catatan" placeholder="Opsional" class="w-full mt-1 p-3 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="w-full flex flex-col gap-4">
                      <button id="start-scan-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-6 rounded-full shadow-lg transition-transform transform hover:scale-105 flex items-center justify-center gap-3 text-lg"><i data-lucide="camera" class="w-6 h-6"></i>Scan Kartu Nama</button>
                      <button id="upload-btn" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-4 px-6 rounded-full shadow-lg transition-transform transform hover:scale-105 flex items-center justify-center gap-3 text-lg"><i data-lucide="image" class="w-6 h-6"></i>Unggah dari Galeri</button>
                      <button id="view-results-btn" class="w-full text-indigo-600 dark:text-indigo-400 font-semibold py-3 px-6 rounded-full hover:bg-gray-200 dark:hover:bg-gray-800 mt-4 flex items-center justify-center gap-2">Lihat Hasil Scan <span id="home-contact-count" class="bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-300 text-xs font-bold px-2 py-0.5 rounded-full">0</span></button>
@@ -101,12 +119,10 @@
                 </header>
                 <div class="flex-grow p-6 pt-4 overflow-y-auto">
                     <p class="text-gray-600 dark:text-gray-400 mb-4">Total <span id="results-contact-count" class="font-bold">0</span> kontak tersimpan.</p>
-                    <div id="results-list" class="space-y-3">
-                        </div>
+                    <div id="results-list" class="space-y-3"></div>
                 </div>
                 <footer id="results-footer" class="p-6 border-t border-gray-200 dark:border-gray-700">
-                    <div id="export-buttons-container" class="grid grid-cols-2 gap-4">
-                        </div>
+                    <div id="export-buttons-container" class="grid grid-cols-2 gap-4"></div>
                     <button id="clear-all-btn" class="col-span-2 w-full text-red-600 dark:text-red-400 font-semibold py-2 px-6 rounded-full hover:bg-red-100 dark:hover:bg-red-900/50 mt-4 flex items-center justify-center gap-2">
                         <i data-lucide="trash-2" class="w-4 h-4"></i>Hapus Semua Data
                     </button>
@@ -147,6 +163,21 @@
                     <label for="edit-email" class="text-sm font-medium text-gray-600 dark:text-gray-400">Email</label>
                     <input type="email" id="edit-email" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500">
                 </div>
+                 <hr class="border-gray-200 dark:border-gray-600 !my-4">
+                <div>
+                    <label for="edit-acara" class="text-sm font-medium text-gray-600 dark:text-gray-400">Acara</label>
+                    <input type="text" id="edit-acara" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label for="edit-tanggal" class="text-sm font-medium text-gray-600 dark:text-gray-400">Tanggal</label>
+                        <input type="date" id="edit-tanggal" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                    </div>
+                    <div>
+                        <label for="edit-catatan" class="text-sm font-medium text-gray-600 dark:text-gray-400">Catatan</label>
+                        <input type="text" id="edit-catatan" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                    </div>
+                </div>
             </form>
             <div class="mt-6 flex justify-between items-center gap-3">
                 <button id="delete-contact-btn" class="modal-button bg-red-600 hover:bg-red-700 text-white flex-1 flex items-center justify-center gap-2">
@@ -163,384 +194,433 @@
     </div>
 
     <script>
-        // --- Ganti dengan URL Cloud Function Anda ---
-        const BACKEND_API_URL = 'https://asia-southeast1-scanner-kartu-nama-llama.cloudfunctions.net/processBusinessCard';
+        // Wait for the DOM to be fully loaded before running the script
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- Ganti dengan URL Cloud Function Anda ---
+            const BACKEND_API_URL = 'https://asia-southeast1-scanner-kartu-nama-llama.cloudfunctions.net/processBusinessCard';
 
-        // --- DOM Elements ---
-        const screens = { initial: document.getElementById('initial-screen'), scanner: document.getElementById('scanner-screen'), processing: document.getElementById('processing-screen'), results: document.getElementById('results-screen'), };
-        const startScanBtn = document.getElementById('start-scan-btn');
-        const uploadBtn = document.getElementById('upload-btn');
-        const viewResultsBtn = document.getElementById('view-results-btn');
-        const imageUploadInput = document.getElementById('image-upload-input');
-        const captureBtn = document.getElementById('capture-btn');
-        const cancelScanBtn = document.getElementById('cancel-scan-btn');
-        const backToHomeBtn = document.getElementById('back-to-home-btn');
-        const exportButtonsContainer = document.getElementById('export-buttons-container');
-        const clearAllBtn = document.getElementById('clear-all-btn');
-        const homeContactCount = document.getElementById('home-contact-count');
-        const resultsContactCount = document.getElementById('results-contact-count');
-        const resultsList = document.getElementById('results-list');
-        const video = document.getElementById('video');
-        const canvas = document.getElementById('canvas');
-        const toast = document.getElementById('toast');
-        const toastMessage = document.getElementById('toast-message');
-        const editModal = document.getElementById('edit-modal');
-        const editModalContent = editModal.querySelector('.modal-content');
-        const editForm = document.getElementById('edit-form');
-        const cancelEditBtn = document.getElementById('cancel-edit-btn');
-        const saveEditBtn = document.getElementById('save-edit-btn');
-        const deleteContactBtn = document.getElementById('delete-contact-btn');
-        
-        let stream;
+            // --- DOM Elements ---
+            const screens = { initial: document.getElementById('initial-screen'), scanner: document.getElementById('scanner-screen'), processing: document.getElementById('processing-screen'), results: document.getElementById('results-screen'), };
+            const startScanBtn = document.getElementById('start-scan-btn');
+            const uploadBtn = document.getElementById('upload-btn');
+            const viewResultsBtn = document.getElementById('view-results-btn');
+            const imageUploadInput = document.getElementById('image-upload-input');
+            const captureBtn = document.getElementById('capture-btn');
+            const cancelScanBtn = document.getElementById('cancel-scan-btn');
+            const backToHomeBtn = document.getElementById('back-to-home-btn');
+            const exportButtonsContainer = document.getElementById('export-buttons-container');
+            const clearAllBtn = document.getElementById('clear-all-btn');
+            const homeContactCount = document.getElementById('home-contact-count');
+            const resultsContactCount = document.getElementById('results-contact-count');
+            const resultsList = document.getElementById('results-list');
+            const video = document.getElementById('video');
+            const canvas = document.getElementById('canvas');
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toast-message');
+            
+            // Session Info Elements
+            const sessionAcaraInput = document.getElementById('session-acara');
+            const sessionTanggalInput = document.getElementById('session-tanggal');
+            const sessionCatatanInput = document.getElementById('session-catatan');
 
-        // --- IndexedDB ---
-        const dbLogic = {
-            db: null,
-            init: function() {
-                return new Promise((resolve, reject) => {
-                    const request = indexedDB.open('SmartScannerDB', 1);
-                    request.onerror = (event) => { console.error("Database error:", event.target.errorCode); reject("Database error"); };
-                    request.onsuccess = (event) => { this.db = event.target.result; resolve(); };
-                    request.onupgradeneeded = (event) => {
-                        const db = event.target.result;
-                        if (!db.objectStoreNames.contains('contacts')) { db.createObjectStore('contacts', { keyPath: 'id', autoIncrement: true }); }
-                    };
-                });
-            },
-            addContact: function(contact) {
-                return new Promise((resolve, reject) => {
-                    const transaction = this.db.transaction(['contacts'], 'readwrite');
-                    const store = transaction.objectStore('contacts');
-                    const request = store.add(contact);
-                    request.onsuccess = resolve; request.onerror = reject;
-                });
-            },
-            getContact: function(id) {
-                return new Promise((resolve, reject) => {
-                    const transaction = this.db.transaction(['contacts'], 'readonly');
-                    const store = transaction.objectStore('contacts');
-                    const request = store.get(id);
-                    request.onsuccess = (event) => resolve(event.target.result); request.onerror = reject;
-                });
-            },
-            updateContact: function(contact) {
-                return new Promise((resolve, reject) => {
-                    const transaction = this.db.transaction(['contacts'], 'readwrite');
-                    const store = transaction.objectStore('contacts');
-                    const request = store.put(contact);
-                    request.onsuccess = resolve; request.onerror = reject;
-                });
-            },
-            deleteContact: function(id) {
-                return new Promise((resolve, reject) => {
-                    const transaction = this.db.transaction(['contacts'], 'readwrite');
-                    const store = transaction.objectStore('contacts');
-                    const request = store.delete(id);
-                    request.onsuccess = resolve;
-                    request.onerror = reject;
-                });
-            },
-            getAllContacts: function() {
-                return new Promise((resolve, reject) => {
-                    const transaction = this.db.transaction(['contacts'], 'readonly');
-                    const store = transaction.objectStore('contacts');
-                    const request = store.getAll();
-                    request.onsuccess = (event) => resolve(event.target.result); request.onerror = reject;
-                });
-            },
-            clearAllContacts: function() {
-                return new Promise((resolve, reject) => {
-                    const transaction = this.db.transaction(['contacts'], 'readwrite');
-                    const store = transaction.objectStore('contacts');
-                    const request = store.clear();
-                    request.onsuccess = resolve; request.onerror = reject;
-                });
-            }
-        };
+            // Edit Modal Elements
+            const editModal = document.getElementById('edit-modal');
+            const editModalContent = editModal.querySelector('.modal-content');
+            const editForm = document.getElementById('edit-form');
+            const cancelEditBtn = document.getElementById('cancel-edit-btn');
+            const saveEditBtn = document.getElementById('save-edit-btn');
+            const deleteContactBtn = document.getElementById('delete-contact-btn');
+            
+            let stream;
 
-        // --- Functions ---
-        function showToast(message) {
-            toastMessage.textContent = message;
-            toast.classList.remove('opacity-0', 'translate-y-5');
-            setTimeout(() => { toast.classList.add('opacity-0', 'translate-y-5'); }, 3000);
-        }
-
-        function showScreen(screenName) {
-            Object.values(screens).forEach(screen => screen.classList.add('hidden'));
-            screens[screenName].classList.remove('hidden');
-        }
-
-        async function startCamera() {
-            try {
-                if (stream) { stream.getTracks().forEach(track => track.stop()); }
-                stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
-                video.srcObject = stream;
-                showScreen('scanner');
-            } catch (err) {
-                console.error("Error accessing camera:", err);
-                alert("Tidak dapat mengakses kamera. Pastikan Anda memberikan izin.");
-                showScreen('initial');
-            }
-        }
-
-        function stopCamera() {
-            if (stream) { stream.getTracks().forEach(track => track.stop()); }
-        }
-
-        async function captureAndProcess() {
-            stopCamera();
-            const context = canvas.getContext('2d');
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            context.drawImage(video, 0, 0, canvas.width, canvas.height);
-            const imageDataUrl = canvas.toDataURL('image/jpeg', 0.9);
-            await processImage(imageDataUrl);
-        }
-
-        async function processImage(imageDataUrl) {
-            showScreen('processing');
-            try {
-                const response = await fetch(BACKEND_API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ imageDataUrl })
-                });
-                if (!response.ok) {
-                    const errorBody = await response.json();
-                    throw new Error(`Backend Error: ${response.status}. ${errorBody.error || 'Unknown error'}`);
+            // --- IndexedDB ---
+            const dbLogic = {
+                db: null,
+                init: function() {
+                    return new Promise((resolve, reject) => {
+                        const request = indexedDB.open('SmartScannerDB', 2); // Version updated for schema change
+                        request.onerror = (event) => { console.error("Database error:", event.target.errorCode); reject("Database error"); };
+                        request.onsuccess = (event) => { this.db = event.target.result; resolve(); };
+                        request.onupgradeneeded = (event) => {
+                            const db = event.target.result;
+                            if (!db.objectStoreNames.contains('contacts')) { 
+                                db.createObjectStore('contacts', { keyPath: 'id', autoIncrement: true });
+                            }
+                        };
+                    });
+                },
+                addContact: function(contact) {
+                    return new Promise((resolve, reject) => {
+                        const transaction = this.db.transaction(['contacts'], 'readwrite');
+                        const store = transaction.objectStore('contacts');
+                        const request = store.add(contact);
+                        request.onsuccess = resolve; request.onerror = reject;
+                    });
+                },
+                getContact: function(id) {
+                    return new Promise((resolve, reject) => {
+                        const transaction = this.db.transaction(['contacts'], 'readonly');
+                        const store = transaction.objectStore('contacts');
+                        const request = store.get(id);
+                        request.onsuccess = (event) => resolve(event.target.result); request.onerror = reject;
+                    });
+                },
+                updateContact: function(contact) {
+                    return new Promise((resolve, reject) => {
+                        const transaction = this.db.transaction(['contacts'], 'readwrite');
+                        const store = transaction.objectStore('contacts');
+                        const request = store.put(contact);
+                        request.onsuccess = resolve; request.onerror = reject;
+                    });
+                },
+                deleteContact: function(id) {
+                    return new Promise((resolve, reject) => {
+                        const transaction = this.db.transaction(['contacts'], 'readwrite');
+                        const store = transaction.objectStore('contacts');
+                        const request = store.delete(id);
+                        request.onsuccess = resolve;
+                        request.onerror = reject;
+                    });
+                },
+                getAllContacts: function() {
+                    return new Promise((resolve, reject) => {
+                        const transaction = this.db.transaction(['contacts'], 'readonly');
+                        const store = transaction.objectStore('contacts');
+                        const request = store.getAll();
+                        request.onsuccess = (event) => resolve(event.target.result); request.onerror = reject;
+                    });
+                },
+                clearAllContacts: function() {
+                    return new Promise((resolve, reject) => {
+                        const transaction = this.db.transaction(['contacts'], 'readwrite');
+                        const store = transaction.objectStore('contacts');
+                        const request = store.clear();
+                        request.onsuccess = resolve; request.onerror = reject;
+                    });
                 }
-                const result = await response.json();
-                const jsonString = result.data;
-                if (jsonString) {
-                    const extractedData = JSON.parse(jsonString);
-                    await dbLogic.addContact(extractedData);
-                    showToast('Kontak berhasil disimpan!');
-                    await refreshResults();
-                    showScreen('results');
-                } else { throw new Error("Respons dari Backend tidak valid."); }
-            } catch (error) {
-                console.error("Processing Error:", error);
-                alert(`Gagal memproses gambar: ${error.message}`);
-                showScreen('initial');
-            }
-        }
-        
-        async function refreshResults() {
-            const contacts = await dbLogic.getAllContacts();
-            const count = contacts.length;
-
-            homeContactCount.textContent = count;
-            resultsContactCount.textContent = count;
-            
-            resultsList.innerHTML = '';
-            if (count === 0) {
-                resultsList.innerHTML = `<p class="text-center text-gray-500 dark:text-gray-400 py-8">Belum ada data tersimpan.</p>`;
-            } else {
-                contacts.reverse().forEach(contact => {
-                    const card = document.createElement('div');
-                    card.className = 'bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 rounded-xl flex justify-between items-start';
-                    card.innerHTML = `
-                        <div>
-                            <p class="font-bold text-lg text-gray-900 dark:text-white">${contact.nama || 'Tanpa Nama'}</p>
-                            <p class="text-sm text-gray-600 dark:text-gray-400">${contact.jabatan || ''}</p>
-                            <p class="text-sm text-gray-600 dark:text-gray-400 font-medium">${contact.perusahaan || ''}</p>
-                            <div class="mt-2 text-xs text-gray-500 dark:text-gray-400">
-                                ${contact.whatsapp ? `<span>HP: ${contact.whatsapp}</span>` : ''}
-                                ${contact.email ? `<span class="ml-2">Email: ${contact.email}</span>` : ''}
-                            </div>
-                        </div>
-                        <button class="edit-btn p-2 text-gray-500 hover:text-indigo-600 dark:hover:text-indigo-400" data-id="${contact.id}">
-                            <i data-lucide="edit" class="w-5 h-5"></i>
-                        </button>
-                    `;
-                    resultsList.appendChild(card);
-                });
-                lucide.createIcons();
-                document.querySelectorAll('.edit-btn').forEach(btn => btn.addEventListener('click', (e) => openEditModal(parseInt(e.currentTarget.dataset.id))));
-            }
-            updateExportButtons(contacts);
-        }
-
-        function updateExportButtons(contacts) {
-            exportButtonsContainer.innerHTML = '';
-            const count = contacts.length;
-
-            if (count === 0) {
-                exportButtonsContainer.classList.add('hidden');
-                return;
-            }
-            
-            exportButtonsContainer.classList.remove('hidden');
-
-            if (count === 1) {
-                // Tombol untuk 1 data
-                exportButtonsContainer.innerHTML = `
-                    <button id="export-csv-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-full shadow-lg flex items-center justify-center gap-2 text-base"><i data-lucide="file-spreadsheet" class="w-5 h-5"></i>Simpan .csv</button>
-                    <button id="export-vcf-btn" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-full shadow-lg flex items-center justify-center gap-2 text-base"><i data-lucide="contact" class="w-5 h-5"></i>Simpan .vcf</button>
-                `;
-                document.getElementById('export-csv-btn').addEventListener('click', () => exportCSV(contacts));
-                document.getElementById('export-vcf-btn').addEventListener('click', () => exportVCF(contacts[0]));
-            } else {
-                // Tombol untuk > 1 data
-                exportButtonsContainer.innerHTML = `
-                    <button id="export-csv-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-full shadow-lg flex items-center justify-center gap-2 text-base"><i data-lucide="file-spreadsheet" class="w-5 h-5"></i>Simpan .csv</button>
-                    <button id="export-zip-btn" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-full shadow-lg flex items-center justify-center gap-2 text-base"><i data-lucide="archive" class="w-5 h-5"></i>Simpan VCF .zip</button>
-                `;
-                document.getElementById('export-csv-btn').addEventListener('click', () => exportCSV(contacts));
-                document.getElementById('export-zip-btn').addEventListener('click', () => exportZIP(contacts));
-            }
-            lucide.createIcons();
-        }
-
-        function handleImageUpload(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = (e) => processImage(e.target.result);
-            reader.readAsDataURL(file);
-            imageUploadInput.value = '';
-        }
-
-        async function openEditModal(id) {
-            const contact = await dbLogic.getContact(id);
-            if (!contact) return;
-            
-            document.getElementById('edit-contact-id').value = contact.id;
-            document.getElementById('edit-nama').value = contact.nama || '';
-            document.getElementById('edit-jabatan').value = contact.jabatan || '';
-            document.getElementById('edit-perusahaan').value = contact.perusahaan || '';
-            document.getElementById('edit-telepon_kantor').value = contact.telepon_kantor || '';
-            document.getElementById('edit-whatsapp').value = contact.whatsapp || '';
-            document.getElementById('edit-email').value = contact.email || '';
-            
-            editModal.classList.remove('hidden');
-            setTimeout(() => {
-                editModal.classList.remove('opacity-0');
-                editModalContent.classList.remove('scale-95', 'opacity-0');
-            }, 10);
-        }
-
-        function closeEditModal() {
-            editModal.classList.add('opacity-0');
-            editModalContent.classList.add('scale-95', 'opacity-0');
-            setTimeout(() => { editModal.classList.add('hidden'); }, 300);
-        }
-
-        async function saveContactChanges() {
-            const id = parseInt(document.getElementById('edit-contact-id').value);
-            const updatedContact = {
-                id: id,
-                nama: document.getElementById('edit-nama').value,
-                jabatan: document.getElementById('edit-jabatan').value,
-                perusahaan: document.getElementById('edit-perusahaan').value,
-                telepon_kantor: document.getElementById('edit-telepon_kantor').value,
-                whatsapp: document.getElementById('edit-whatsapp').value,
-                email: document.getElementById('edit-email').value,
             };
-            await dbLogic.updateContact(updatedContact);
-            showToast("Kontak berhasil diperbarui!");
-            closeEditModal();
-            await refreshResults();
-        }
 
-        async function handleDeleteContact() {
-            const id = parseInt(document.getElementById('edit-contact-id').value);
-            if (confirm("Apakah Anda yakin ingin menghapus kontak ini? Tindakan ini tidak dapat dibatalkan.")) {
-                try {
-                    await dbLogic.deleteContact(id);
-                    showToast("Kontak berhasil dihapus.");
-                    closeEditModal();
-                    await refreshResults();
-                } catch (error) {
-                    console.error("Gagal menghapus kontak:", error);
-                    showToast("Gagal menghapus kontak.");
+            // --- Functions ---
+            function showToast(message) {
+                toastMessage.textContent = message;
+                toast.classList.remove('opacity-0', 'translate-y-5');
+                setTimeout(() => { toast.classList.add('opacity-0', 'translate-y-5'); }, 3000);
+            }
+
+            function showScreen(screenName) {
+                Object.values(screens).forEach(screen => {
+                    if (screen) screen.classList.add('hidden');
+                });
+                if (screens[screenName]) {
+                    screens[screenName].classList.remove('hidden');
                 }
             }
-        }
 
-        function exportCSV(contacts) {
-            if (contacts.length === 0) { showToast("Tidak ada data untuk diekspor."); return; }
-            const headers = ['Nama', 'Jabatan', 'Perusahaan', 'Telepon Kantor', 'WhatsApp', 'Email'];
-            let csvContent = headers.join(',') + '\n';
-            const escapeCSV = (field) => `"${String(field || '').replace(/"/g, '""')}"`;
-            contacts.forEach(c => {
-                const row = [c.nama, c.jabatan, c.perusahaan, c.telepon_kantor, c.whatsapp, c.email];
-                csvContent += row.map(escapeCSV).join(',') + '\n';
-            });
-            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement("a");
-            link.href = URL.createObjectURL(blob);
-            link.download = `kontak_kartunama_${new Date().toISOString().slice(0,10)}.csv`;
-            link.click();
-            showToast("File CSV sedang diunduh.");
-        }
+            async function startCamera() {
+                try {
+                    if (stream) { stream.getTracks().forEach(track => track.stop()); }
+                    stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+                    video.srcObject = stream;
+                    showScreen('scanner');
+                } catch (err) {
+                    console.error("Error accessing camera:", err);
+                    alert("Tidak dapat mengakses kamera. Pastikan Anda memberikan izin.");
+                    showScreen('initial');
+                }
+            }
 
-        function exportVCF(contact) {
-            let vCard = `BEGIN:VCARD\nVERSION:3.0\nFN:${contact.nama || ''}\nORG:${contact.perusahaan || ''}\nTITLE:${contact.jabatan || ''}\n`;
-            if (contact.telepon_kantor) vCard += `TEL;TYPE=WORK,VOICE:${contact.telepon_kantor}\n`;
-            if (contact.whatsapp) vCard += `TEL;TYPE=CELL,VOICE:${contact.whatsapp}\n`;
-            if (contact.email) vCard += `EMAIL:${contact.email}\n`;
-            vCard += `END:VCARD`;
-            const blob = new Blob([vCard], { type: 'text/vcard;charset=utf-8;' });
-            const link = document.createElement("a");
-            link.href = URL.createObjectURL(blob);
-            const filename = (contact.nama || `kontak`).replace(/\s+/g, '_').toLowerCase();
-            link.download = `${filename}.vcf`;
-            link.click();
-            showToast("File VCF sedang diunduh.");
-        }
+            function stopCamera() {
+                if (stream) { stream.getTracks().forEach(track => track.stop()); }
+            }
 
-        function exportZIP(contacts) {
-            if (contacts.length === 0) { showToast("Tidak ada data untuk diekspor."); return; }
-            const zip = new JSZip();
-            contacts.forEach((c, i) => {
-                let vCard = `BEGIN:VCARD\nVERSION:3.0\nFN:${c.nama || ''}\nORG:${c.perusahaan || ''}\nTITLE:${c.jabatan || ''}\n`;
-                if (c.telepon_kantor) vCard += `TEL;TYPE=WORK,VOICE:${c.telepon_kantor}\n`;
-                if (c.whatsapp) vCard += `TEL;TYPE=CELL,VOICE:${c.whatsapp}\n`;
-                if (c.email) vCard += `EMAIL:${c.email}\n`;
-                vCard += `END:VCARD`;
-                const filename = (c.nama || `kontak_${i + 1}`).replace(/\s+/g, '_').toLowerCase() + '.vcf';
-                zip.file(filename, vCard);
-            });
-            zip.generateAsync({ type: "blob" }).then(content => {
+            async function captureAndProcess() {
+                stopCamera();
+                const context = canvas.getContext('2d');
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                context.drawImage(video, 0, 0, canvas.width, canvas.height);
+                const imageDataUrl = canvas.toDataURL('image/jpeg', 0.9);
+                await processImage(imageDataUrl);
+            }
+
+            async function processImage(imageDataUrl) {
+                showScreen('processing');
+                try {
+                    const response = await fetch(BACKEND_API_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ imageDataUrl })
+                    });
+                    if (!response.ok) {
+                        const errorBody = await response.json();
+                        throw new Error(`Backend Error: ${response.status}. ${errorBody.error || 'Unknown error'}`);
+                    }
+                    const result = await response.json();
+                    const jsonString = result.data;
+                    if (jsonString) {
+                        const extractedData = JSON.parse(jsonString);
+                        // Add session data to the contact
+                        extractedData.acara = sessionAcaraInput.value;
+                        extractedData.tanggal = sessionTanggalInput.value;
+                        extractedData.catatan = sessionCatatanInput.value;
+
+                        await dbLogic.addContact(extractedData);
+                        showToast('Kontak berhasil disimpan!');
+                        await refreshResults();
+                        showScreen('results');
+                    } else { throw new Error("Respons dari Backend tidak valid."); }
+                } catch (error) {
+                    console.error("Processing Error:", error);
+                    alert(`Gagal memproses gambar: ${error.message}`);
+                    showScreen('initial');
+                }
+            }
+            
+            async function refreshResults() {
+                const contacts = await dbLogic.getAllContacts();
+                const count = contacts.length;
+
+                homeContactCount.textContent = count;
+                resultsContactCount.textContent = count;
+                
+                resultsList.innerHTML = '';
+                if (count === 0) {
+                    resultsList.innerHTML = `<p class="text-center text-gray-500 dark:text-gray-400 py-8">Belum ada data tersimpan.</p>`;
+                } else {
+                    contacts.reverse().forEach(contact => {
+                        const card = document.createElement('div');
+                        card.className = 'bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 rounded-xl flex justify-between items-start';
+                        card.innerHTML = `
+                            <div>
+                                <p class="font-bold text-lg text-gray-900 dark:text-white">${contact.nama || 'Tanpa Nama'}</p>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">${contact.jabatan || ''} di ${contact.perusahaan || ''}</p>
+                                <div class="mt-2 text-xs text-gray-500 dark:text-gray-400">
+                                    ${contact.whatsapp ? `<span>HP: ${contact.whatsapp}</span>` : ''}
+                                    ${contact.email ? `<span class="ml-2">Email: ${contact.email}</span>` : ''}
+                                </div>
+                                ${(contact.acara || contact.catatan) ? `
+                                <div class="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700 text-xs text-gray-500 dark:text-gray-400">
+                                    ${contact.acara ? `<p><strong>Acara:</strong> ${contact.acara} (${contact.tanggal || ''})</p>` : ''}
+                                    ${contact.catatan ? `<p><strong>Catatan:</strong> ${contact.catatan}</p>` : ''}
+                                </div>
+                                ` : ''}
+                            </div>
+                            <button class="edit-btn p-2 text-gray-500 hover:text-indigo-600 dark:hover:text-indigo-400" data-id="${contact.id}">
+                                <i data-lucide="edit" class="w-5 h-5"></i>
+                            </button>
+                        `;
+                        resultsList.appendChild(card);
+                    });
+                    lucide.createIcons();
+                    document.querySelectorAll('.edit-btn').forEach(btn => btn.addEventListener('click', (e) => openEditModal(parseInt(e.currentTarget.dataset.id))));
+                }
+                updateExportButtons(contacts);
+            }
+
+            function updateExportButtons(contacts) {
+                exportButtonsContainer.innerHTML = '';
+                const count = contacts.length;
+
+                if (count === 0) {
+                    exportButtonsContainer.classList.add('hidden');
+                    return;
+                }
+                
+                exportButtonsContainer.classList.remove('hidden');
+
+                if (count === 1) {
+                    exportButtonsContainer.innerHTML = `
+                        <button id="export-csv-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-full shadow-lg flex items-center justify-center gap-2 text-base"><i data-lucide="file-spreadsheet" class="w-5 h-5"></i>Simpan .csv</button>
+                        <button id="export-vcf-btn" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-full shadow-lg flex items-center justify-center gap-2 text-base"><i data-lucide="contact" class="w-5 h-5"></i>Simpan .vcf</button>
+                    `;
+                    document.getElementById('export-csv-btn').addEventListener('click', () => exportCSV(contacts));
+                    document.getElementById('export-vcf-btn').addEventListener('click', () => exportVCF(contacts[0]));
+                } else {
+                    exportButtonsContainer.innerHTML = `
+                        <button id="export-csv-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-full shadow-lg flex items-center justify-center gap-2 text-base"><i data-lucide="file-spreadsheet" class="w-5 h-5"></i>Simpan .csv</button>
+                        <button id="export-zip-btn" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-full shadow-lg flex items-center justify-center gap-2 text-base"><i data-lucide="archive" class="w-5 h-5"></i>Simpan VCF .zip</button>
+                    `;
+                    document.getElementById('export-csv-btn').addEventListener('click', () => exportCSV(contacts));
+                    document.getElementById('export-zip-btn').addEventListener('click', () => exportZIP(contacts));
+                }
+                lucide.createIcons();
+            }
+
+            function handleImageUpload(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = (e) => processImage(e.target.result);
+                reader.readAsDataURL(file);
+                imageUploadInput.value = '';
+            }
+
+            async function openEditModal(id) {
+                const contact = await dbLogic.getContact(id);
+                if (!contact) return;
+                
+                document.getElementById('edit-contact-id').value = contact.id;
+                document.getElementById('edit-nama').value = contact.nama || '';
+                document.getElementById('edit-jabatan').value = contact.jabatan || '';
+                document.getElementById('edit-perusahaan').value = contact.perusahaan || '';
+                document.getElementById('edit-telepon_kantor').value = contact.telepon_kantor || '';
+                document.getElementById('edit-whatsapp').value = contact.whatsapp || '';
+                document.getElementById('edit-email').value = contact.email || '';
+                document.getElementById('edit-acara').value = contact.acara || '';
+                document.getElementById('edit-tanggal').value = contact.tanggal || '';
+                document.getElementById('edit-catatan').value = contact.catatan || '';
+                
+                editModal.classList.remove('hidden');
+                setTimeout(() => {
+                    editModal.classList.remove('opacity-0');
+                    editModalContent.classList.remove('scale-95', 'opacity-0');
+                }, 10);
+            }
+
+            function closeEditModal() {
+                editModal.classList.add('opacity-0');
+                editModalContent.classList.add('scale-95', 'opacity-0');
+                setTimeout(() => { editModal.classList.add('hidden'); }, 300);
+            }
+
+            async function saveContactChanges() {
+                const id = parseInt(document.getElementById('edit-contact-id').value);
+                const updatedContact = {
+                    id: id,
+                    nama: document.getElementById('edit-nama').value,
+                    jabatan: document.getElementById('edit-jabatan').value,
+                    perusahaan: document.getElementById('edit-perusahaan').value,
+                    telepon_kantor: document.getElementById('edit-telepon_kantor').value,
+                    whatsapp: document.getElementById('edit-whatsapp').value,
+                    email: document.getElementById('edit-email').value,
+                    acara: document.getElementById('edit-acara').value,
+                    tanggal: document.getElementById('edit-tanggal').value,
+                    catatan: document.getElementById('edit-catatan').value,
+                };
+                await dbLogic.updateContact(updatedContact);
+                showToast("Kontak berhasil diperbarui!");
+                closeEditModal();
+                await refreshResults();
+            }
+
+            async function handleDeleteContact() {
+                const id = parseInt(document.getElementById('edit-contact-id').value);
+                if (confirm("Apakah Anda yakin ingin menghapus kontak ini? Tindakan ini tidak dapat dibatalkan.")) {
+                    try {
+                        await dbLogic.deleteContact(id);
+                        showToast("Kontak berhasil dihapus.");
+                        closeEditModal();
+                        await refreshResults();
+                    } catch (error) {
+                        console.error("Gagal menghapus kontak:", error);
+                        showToast("Gagal menghapus kontak.");
+                    }
+                }
+            }
+
+            function exportCSV(contacts) {
+                if (contacts.length === 0) { showToast("Tidak ada data untuk diekspor."); return; }
+                const headers = ['Nama', 'Jabatan', 'Perusahaan', 'Telepon Kantor', 'WhatsApp', 'Email', 'Acara', 'Tanggal', 'Catatan'];
+                let csvContent = headers.join(',') + '\n';
+                const escapeCSV = (field) => `"${String(field || '').replace(/"/g, '""')}"`;
+                contacts.forEach(c => {
+                    const row = [c.nama, c.jabatan, c.perusahaan, c.telepon_kantor, c.whatsapp, c.email, c.acara, c.tanggal, c.catatan];
+                    csvContent += row.map(escapeCSV).join(',') + '\n';
+                });
+                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
                 const link = document.createElement("a");
-                link.href = URL.createObjectURL(content);
-                link.download = `kontak_vcf_${new Date().toISOString().slice(0,10)}.zip`;
+                link.href = URL.createObjectURL(blob);
+                link.download = `kontak_kartunama_${new Date().toISOString().slice(0,10)}.csv`;
                 link.click();
-                showToast("File ZIP sedang diunduh.");
+                showToast("File CSV sedang diunduh.");
+            }
+
+            function createVCardString(contact) {
+                let vCard = `BEGIN:VCARD\nVERSION:3.0\nFN:${contact.nama || ''}\nORG:${contact.perusahaan || ''}\nTITLE:${contact.jabatan || ''}\n`;
+                if (contact.telepon_kantor) vCard += `TEL;TYPE=WORK,VOICE:${contact.telepon_kantor}\n`;
+                if (contact.whatsapp) vCard += `TEL;TYPE=CELL,VOICE:${contact.whatsapp}\n`;
+                if (contact.email) vCard += `EMAIL:${contact.email}\n`;
+                let note = [];
+                if (contact.acara) note.push(`Acara: ${contact.acara} (${contact.tanggal || ''})`);
+                if (contact.catatan) note.push(`Catatan: ${contact.catatan}`);
+                if (note.length > 0) vCard += `NOTE:${note.join(' | ')}\n`;
+                vCard += `END:VCARD`;
+                return vCard;
+            }
+
+            function exportVCF(contact) {
+                const vCardString = createVCardString(contact);
+                const blob = new Blob([vCardString], { type: 'text/vcard;charset=utf-8;' });
+                const link = document.createElement("a");
+                link.href = URL.createObjectURL(blob);
+                const filename = (contact.nama || `kontak`).replace(/\s+/g, '_').toLowerCase();
+                link.download = `${filename}.vcf`;
+                link.click();
+                showToast("File VCF sedang diunduh.");
+            }
+
+            function exportZIP(contacts) {
+                if (contacts.length === 0) { showToast("Tidak ada data untuk diekspor."); return; }
+                const zip = new JSZip();
+                contacts.forEach((c, i) => {
+                    const vCardString = createVCardString(c);
+                    const filename = (c.nama || `kontak_${i + 1}`).replace(/\s+/g, '_').toLowerCase() + '.vcf';
+                    zip.file(filename, vCardString);
+                });
+                zip.generateAsync({ type: "blob" }).then(content => {
+                    const link = document.createElement("a");
+                    link.href = URL.createObjectURL(content);
+                    link.download = `kontak_vcf_${new Date().toISOString().slice(0,10)}.zip`;
+                    link.click();
+                    showToast("File ZIP sedang diunduh.");
+                });
+            }
+
+            // --- Event Listeners ---
+            startScanBtn.addEventListener('click', startCamera);
+            uploadBtn.addEventListener('click', () => imageUploadInput.click());
+            imageUploadInput.addEventListener('change', handleImageUpload);
+            captureBtn.addEventListener('click', captureAndProcess);
+            cancelScanBtn.addEventListener('click', () => { stopCamera(); showScreen('initial'); });
+            viewResultsBtn.addEventListener('click', () => showScreen('results'));
+            backToHomeBtn.addEventListener('click', () => showScreen('initial'));
+            clearAllBtn.addEventListener('click', async () => {
+                if (confirm("Apakah Anda yakin ingin menghapus semua data kontak? Tindakan ini tidak dapat dibatalkan.")) {
+                    await dbLogic.clearAllContacts();
+                    await refreshResults();
+                    showToast("Semua data telah dihapus.");
+                }
             });
-        }
+            saveEditBtn.addEventListener('click', saveContactChanges);
+            cancelEditBtn.addEventListener('click', closeEditModal);
+            deleteContactBtn.addEventListener('click', handleDeleteContact);
 
-        // --- Event Listeners ---
-        startScanBtn.addEventListener('click', startCamera);
-        uploadBtn.addEventListener('click', () => imageUploadInput.click());
-        imageUploadInput.addEventListener('change', handleImageUpload);
-        captureBtn.addEventListener('click', captureAndProcess);
-        cancelScanBtn.addEventListener('click', () => { stopCamera(); showScreen('initial'); });
-        viewResultsBtn.addEventListener('click', () => showScreen('results'));
-        backToHomeBtn.addEventListener('click', () => showScreen('initial'));
-        clearAllBtn.addEventListener('click', async () => {
-            if (confirm("Apakah Anda yakin ingin menghapus semua data kontak? Tindakan ini tidak dapat dibatalkan.")) {
-                await dbLogic.clearAllContacts();
-                await refreshResults();
-                showToast("Semua data telah dihapus.");
-            }
-        });
-        saveEditBtn.addEventListener('click', saveContactChanges);
-        cancelEditBtn.addEventListener('click', closeEditModal);
-        deleteContactBtn.addEventListener('click', handleDeleteContact);
+            // Save session info to localStorage on input
+            sessionAcaraInput.addEventListener('input', (e) => localStorage.setItem('sessionAcara', e.target.value));
+            sessionTanggalInput.addEventListener('input', (e) => localStorage.setItem('sessionTanggal', e.target.value));
+            sessionCatatanInput.addEventListener('input', (e) => localStorage.setItem('sessionCatatan', e.target.value));
 
-        // --- App Initialization ---
-        document.addEventListener('DOMContentLoaded', async () => {
-            lucide.createIcons();
-            try {
-                await dbLogic.init();
-                await refreshResults();
-                showScreen('initial');
-            } catch (error) {
-                console.error("Failed to initialize the app:", error);
-                document.body.innerHTML = `<div class="text-center p-8 text-red-500">Gagal memuat database. Aplikasi tidak dapat berjalan.</div>`;
+
+            // --- App Initialization ---
+            async function initializeApp() {
+                lucide.createIcons();
+                
+                // Load session info from localStorage
+                sessionAcaraInput.value = localStorage.getItem('sessionAcara') || '';
+                sessionTanggalInput.value = localStorage.getItem('sessionTanggal') || new Date().toISOString().slice(0, 10);
+                sessionCatatanInput.value = localStorage.getItem('sessionCatatan') || '';
+
+                try {
+                    await dbLogic.init();
+                    await refreshResults();
+                    showScreen('initial');
+                } catch (error) {
+                    console.error("Failed to initialize the app:", error);
+                    document.body.innerHTML = `<div class="text-center p-8 text-red-500">Gagal memuat database. Aplikasi tidak dapat berjalan.</div>`;
+                }
             }
+
+            initializeApp();
         });
     </script>
 </body>
