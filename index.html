@@ -102,7 +102,8 @@
                 <button id="close-log-viewer-btn" class="p-1 hover:bg-gray-700 rounded-full"><i data-lucide="x" class="w-5 h-5"></i></button>
             </header>
             <div id="log-list" class="flex-grow p-4 overflow-y-auto font-mono text-sm space-y-2"></div>
-            <footer class="p-3 border-t border-gray-700 flex-shrink-0">
+            <footer class="p-3 border-t border-gray-700 flex-shrink-0 flex justify-between">
+                <button id="copy-logs-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md text-xs flex items-center gap-2"><i data-lucide="copy" class="w-4 h-4"></i>Copy Logs</button>
                 <button id="clear-logs-btn" class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-md text-xs">Clear Logs</button>
             </footer>
         </div>
@@ -122,6 +123,7 @@
             const logViewerModal = document.getElementById('log-viewer-modal');
             const closeLogViewerBtn = document.getElementById('close-log-viewer-btn');
             const clearLogsBtn = document.getElementById('clear-logs-btn');
+            const copyLogsBtn = document.getElementById('copy-logs-btn');
             const logList = document.getElementById('log-list');
 
             // --- Other Selectors ---
@@ -765,6 +767,15 @@
             clearLogsBtn.addEventListener('click', () => {
                 errorLogs = [];
                 renderLogs();
+            });
+            copyLogsBtn.addEventListener('click', () => {
+                const logText = errorLogs.map(log => `[${log.timestamp}] ${log.message}\n${log.details}`).join('\n\n');
+                navigator.clipboard.writeText(logText).then(() => {
+                    showToast('Logs copied to clipboard!');
+                }).catch(err => {
+                    logError('Failed to copy logs', err);
+                    showToast('Could not copy logs.');
+                });
             });
 
 
