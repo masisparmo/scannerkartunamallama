@@ -32,6 +32,19 @@
         .toast { transition: opacity 0.3s ease, transform 0.3s ease; }
         .modal-backdrop { transition: opacity 0.3s ease; }
         .modal-content { transition: transform 0.3s ease, opacity 0.3s ease; }
+        /* Consistent button height and padding */
+        .modal-button {
+            padding: 0.75rem 1.25rem; /* py-3 px-5 */
+            height: 48px; /* Fixed height for consistency */
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-weight: 600; /* semibold */
+            border-radius: 0.5rem; /* rounded-lg */
+            transition: all 0.2s ease-in-out;
+            white-space: nowrap; /* Prevent text wrapping */
+        }
     </style>
 </head>
 <body class="bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200">
@@ -40,7 +53,6 @@
         
         <main class="main-content flex-grow flex flex-col">
 
-            <!-- Initial Screen -->
             <div id="initial-screen" class="screen p-8 flex flex-col justify-center items-center text-center flex-grow">
                 <div class="w-full">
                     <div class="flex justify-center mt-12 mb-8">
@@ -59,7 +71,6 @@
                 <input type="file" id="image-upload-input" class="hidden" accept="image/*">
             </div>
 
-            <!-- Scanner Screen -->
             <div id="scanner-screen" class="hidden screen relative bg-black flex-grow">
                 <video id="video" autoplay playsinline></video>
                 <div class="scan-frame"></div>
@@ -77,14 +88,12 @@
                 <canvas id="canvas" class="hidden"></canvas>
             </div>
             
-            <!-- Processing Screen -->
             <div id="processing-screen" class="hidden screen justify-center items-center text-center p-8 flex-grow">
                 <div class="loader mb-6"></div>
                 <h2 class="text-2xl font-bold text-gray-900 dark:text-white animate-pulse">AI Menganalisis Gambar...</h2>
                 <p class="text-gray-500 dark:text-gray-400 mt-2">Mohon tunggu sebentar...</p>
             </div>
             
-            <!-- Results Screen -->
             <div id="results-screen" class="hidden screen flex flex-col">
                 <header class="p-6 pr-4 flex justify-between items-center gap-2 border-b border-gray-200 dark:border-gray-700">
                     <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Hasil Scan</h2>
@@ -93,13 +102,11 @@
                 <div class="flex-grow p-6 pt-4 overflow-y-auto">
                     <p class="text-gray-600 dark:text-gray-400 mb-4">Total <span id="results-contact-count" class="font-bold">0</span> kontak tersimpan.</p>
                     <div id="results-list" class="space-y-3">
-                        <!-- Hasil scan akan ditampilkan di sini -->
-                    </div>
+                        </div>
                 </div>
                 <footer id="results-footer" class="p-6 border-t border-gray-200 dark:border-gray-700">
                     <div id="export-buttons-container" class="grid grid-cols-2 gap-4">
-                        <!-- Tombol ekspor dinamis akan muncul di sini -->
-                    </div>
+                        </div>
                     <button id="clear-all-btn" class="col-span-2 w-full text-red-600 dark:text-red-400 font-semibold py-2 px-6 rounded-full hover:bg-red-100 dark:hover:bg-red-900/50 mt-4 flex items-center justify-center gap-2">
                         <i data-lucide="trash-2" class="w-4 h-4"></i>Hapus Semua Data
                     </button>
@@ -111,7 +118,6 @@
         </footer>
     </div>
 
-    <!-- Edit Modal -->
     <div id="edit-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center p-4 z-50 hidden opacity-0">
         <div class="modal-content bg-white dark:bg-gray-800 rounded-2xl shadow-xl w-full max-w-md p-6 transform scale-95 opacity-0">
             <h3 class="text-xl font-bold mb-4">Edit Kontak</h3>
@@ -142,26 +148,16 @@
                     <input type="email" id="edit-email" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500">
                 </div>
             </form>
-            <div class="mt-6 flex w-full justify-between items-center">
-                <!-- Tombol Hapus (Destructive, di kiri) -->
-                <button id="delete-contact-btn" class="flex items-center justify-center gap-2 rounded-lg border border-red-500 px-5 py-2 text-sm font-medium text-red-500 transition-colors hover:bg-red-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 dark:border-red-600 dark:text-red-600 dark:hover:bg-red-600 dark:hover:text-white dark:focus:ring-offset-gray-800">
-                    <i data-lucide="trash-2" class="h-4 w-4"></i>
-                    <span>Hapus</span>
+            <div class="mt-6 flex justify-between items-center gap-3">
+                <button id="delete-contact-btn" class="modal-button bg-red-600 hover:bg-red-700 text-white flex-1 flex items-center justify-center gap-2">
+                    <i data-lucide="trash-2" class="w-4 h-4"></i>Hapus
                 </button>
-            
-                <!-- Grup Tombol Batal & Simpan (di kanan) -->
-                <div class="flex items-center gap-3">
-                    <!-- Tombol Batal (Secondary) -->
-                    <button id="cancel-edit-btn" class="rounded-lg border border-gray-300 px-5 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700 dark:focus:ring-offset-gray-800">Batal</button>
-                    
-                    <!-- Tombol Simpan (Primary) -->
-                    <button id="save-edit-btn" class="rounded-lg border border-transparent bg-indigo-600 px-5 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800">Simpan Perubahan</button>
-                </div>
+                <button id="cancel-edit-btn" class="modal-button bg-blue-600 hover:bg-blue-700 text-white flex-1">Batal</button>
+                <button id="save-edit-btn" class="modal-button bg-green-600 hover:bg-green-700 text-white flex-1">Simpan</button>
             </div>
         </div>
     </div>
 
-    <!-- Toast Notification -->
     <div id="toast" class="toast fixed bottom-5 right-5 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 py-3 px-5 rounded-full shadow-lg opacity-0 transform translate-y-5 pointer-events-none">
         <p id="toast-message"></p>
     </div>
