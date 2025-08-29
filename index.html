@@ -1,109 +1,47 @@
 <!DOCTYPE html>
-<html lang="id" class="dark"> <!-- Default to dark mode -->
+<html lang="id" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scanner Pintar | Scan Kartu Nama & QR Code berbasis AI</title>
+    <title>Scanner Pintar | Sederhana & Andal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- Tambahkan library jsQR untuk memindai QR Code -->
     <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
-    <!-- Tambahkan library JSZip untuk membuat file .zip -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script>
-        // Tailwind config for dark mode
-        tailwind.config = {
-            darkMode: 'class',
-        }
+        tailwind.config = { darkMode: 'class' }
     </script>
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-        }
+        body { font-family: 'Inter', sans-serif; }
         .loader {
-            border: 4px solid rgba(255, 255, 255, 0.2);
-            border-top: 4px solid #4f46e5; /* indigo-600 */
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-top-color: #4f46e5;
             border-radius: 50%;
             width: 40px;
             height: 40px;
             animation: spin 1s linear infinite;
         }
-        .dark .loader {
-             border: 4px solid rgba(255, 255, 255, 0.2);
-             border-top-color: #4f46e5;
-        }
-        .light .loader {
-             border: 4px solid rgba(0, 0, 0, 0.1);
-             border-top-color: #4f46e5;
-        }
-
+        .dark .loader { border-color: rgba(255, 255, 255, 0.2); border-top-color: #6366f1; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-        #video {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .camera-overlay {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.4), transparent, rgba(0,0,0,0.6));
-        }
-        .scan-frame {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 90%;
-            max-width: 400px;
-            aspect-ratio: 1.6 / 1;
-            border: 2px dashed rgba(255,255,255,0.5);
-            border-radius: 1.5rem;
-        }
-        #qr-feedback {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            padding: 8px 16px;
-            background-color: rgba(20, 184, 166, 0.8);
-            color: white;
-            border-radius: 99px;
-            font-weight: 500;
-            z-index: 20;
-            transition: opacity 0.3s ease;
-        }
-        /* Log Container Styles */
-        #log-container {
-            transition: opacity 0.3s ease, transform 0.3s ease;
-        }
+        #video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
+        .camera-overlay { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: space-between; background: linear-gradient(to bottom, rgba(0,0,0,0.4), transparent, rgba(0,0,0,0.6)); }
+        .scan-frame { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90%; max-width: 400px; aspect-ratio: 1.6 / 1; border: 2px dashed rgba(255,255,255,0.5); border-radius: 1.5rem; }
+        .toast { transition: opacity 0.3s ease, transform 0.3s ease; }
+        .modal-backdrop { transition: opacity 0.3s ease; }
+        .modal-content { transition: transform 0.3s ease, opacity 0.3s ease; }
     </style>
 </head>
 <body class="bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200">
 
     <div class="app-container max-w-lg mx-auto shadow-2xl min-h-screen flex flex-col bg-gray-50 dark:bg-[#0D1117]">
         
-        <!-- Theme Toggle Button -->
-        <div class="absolute top-5 right-5 z-50">
-            <button id="theme-toggle" class="p-2 rounded-full bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300">
-                <i id="theme-toggle-sun-icon" data-lucide="sun" class="w-5 h-5"></i>
-                <i id="theme-toggle-moon-icon" data-lucide="moon" class="w-5 h-5"></i>
-            </button>
-        </div>
-
         <main class="main-content flex-grow flex flex-col">
 
             <!-- Initial Screen -->
-            <div id="initial-screen" class="screen p-8 flex flex-col justify-between items-center text-center flex-grow">
+            <div id="initial-screen" class="screen p-8 flex flex-col justify-center items-center text-center flex-grow">
                 <div class="w-full">
                     <div class="flex justify-center mt-12 mb-8">
                         <div class="p-6 bg-indigo-600/10 dark:bg-indigo-600/20 rounded-full">
@@ -111,12 +49,12 @@
                         </div>
                     </div>
                     <h1 class="text-4xl font-bold text-gray-900 dark:text-white">Scanner Pintar</h1>
-                    <p class="text-gray-500 dark:text-gray-400 mt-2">Scanner Kartu Nama & QR Code Berbasis AI</p>
+                    <p class="text-gray-500 dark:text-gray-400 mt-2">Ekstrak info dari kartu nama dengan AI</p>
                 </div>
-                <div class="w-full flex flex-col gap-4">
-                     <button id="start-batch-btn" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-4 px-6 rounded-full shadow-lg transition-transform transform hover:scale-105 flex items-center justify-center gap-3 text-lg"><i data-lucide="layers" class="w-6 h-6"></i>Scan Berseri</button>
-                     <button id="start-single-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-6 rounded-full shadow-lg transition-transform transform hover:scale-105 flex items-center justify-center gap-3 text-lg"><i data-lucide="camera" class="w-6 h-6"></i>Scan Tunggal</button>
+                <div class="w-full flex flex-col gap-4 mt-12">
+                     <button id="start-scan-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-6 rounded-full shadow-lg transition-transform transform hover:scale-105 flex items-center justify-center gap-3 text-lg"><i data-lucide="camera" class="w-6 h-6"></i>Scan Kartu Nama</button>
                      <button id="upload-btn" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-4 px-6 rounded-full shadow-lg transition-transform transform hover:scale-105 flex items-center justify-center gap-3 text-lg"><i data-lucide="image" class="w-6 h-6"></i>Unggah dari Galeri</button>
+                     <button id="view-results-btn" class="w-full text-indigo-600 dark:text-indigo-400 font-semibold py-3 px-6 rounded-full hover:bg-gray-200 dark:hover:bg-gray-800 mt-4 flex items-center justify-center gap-2">Lihat Hasil Scan <span id="home-contact-count" class="bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-300 text-xs font-bold px-2 py-0.5 rounded-full">0</span></button>
                 </div>
                 <input type="file" id="image-upload-input" class="hidden" accept="image/*">
             </div>
@@ -125,10 +63,9 @@
             <div id="scanner-screen" class="hidden screen relative bg-black flex-grow">
                 <video id="video" autoplay playsinline></video>
                 <div class="scan-frame"></div>
-                <div id="qr-feedback" class="hidden">QR Code Terdeteksi!</div>
                 <div class="camera-overlay p-6">
                     <div class="flex justify-between items-center">
-                        <p class="text-white font-medium text-sm bg-black/50 px-3 py-1 rounded-full">Arahkan ke Kartu Nama atau QR Code</p>
+                        <p class="text-white font-medium text-sm bg-black/50 px-3 py-1 rounded-full">Arahkan ke Kartu Nama</p>
                         <button id="cancel-scan-btn" class="p-3 bg-black/50 rounded-full text-white hover:bg-black/80"><i data-lucide="x" class="w-6 h-6"></i></button>
                     </div>
                     <div class="flex justify-center items-center">
@@ -143,702 +80,434 @@
             <!-- Processing Screen -->
             <div id="processing-screen" class="hidden screen justify-center items-center text-center p-8 flex-grow">
                 <div class="loader mb-6"></div>
-                <h2 id="progress-title" class="text-2xl font-bold text-gray-900 dark:text-white animate-pulse">AI Menganalisis Gambar...</h2>
-                <p id="progress-status" class="text-gray-500 dark:text-gray-400 mt-2">Mengirim gambar ke Llama 4...</p>
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-white animate-pulse">AI Menganalisis Gambar...</h2>
+                <p class="text-gray-500 dark:text-gray-400 mt-2">Mohon tunggu sebentar...</p>
             </div>
             
             <!-- Results Screen -->
             <div id="results-screen" class="hidden screen flex flex-col">
-                <header class="p-6 pr-4 flex justify-between items-center gap-2">
+                <header class="p-6 pr-4 flex justify-between items-center gap-2 border-b border-gray-200 dark:border-gray-700">
                     <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Hasil Scan</h2>
-                    <div class="flex items-center gap-2">
-                        <button id="rescan-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-full text-sm flex items-center gap-2"><i data-lucide="scan-search" class="w-4 h-4"></i>Scan / Unggah Lagi</button>
-                        <button id="finish-btn" class="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 font-semibold hover:bg-gray-300 dark:hover:bg-gray-600 py-2 px-4 rounded-full text-sm">Selesai</button>
-                    </div>
+                    <button id="back-to-home-btn" class="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 font-semibold hover:bg-gray-300 dark:hover:bg-gray-600 py-2 px-4 rounded-full text-sm">Menu Utama</button>
                 </header>
-                <div class="flex-grow p-6 pt-0 overflow-y-auto">
-                    <form id="data-form" class="space-y-4">
-                        <!-- Event Info -->
-                        <div class="grid grid-cols-2 gap-4">
-                            <div class="result-item bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 rounded-xl flex items-center gap-4">
-                                <i data-lucide="party-popper" class="w-6 h-6 text-gray-500 dark:text-gray-400"></i>
-                                <div class="w-full"><label for="acara" class="block text-xs font-medium text-gray-500 dark:text-gray-400">Nama Acara</label><input type="text" id="acara" name="acara" class="w-full text-md font-semibold bg-transparent border-none text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-0" placeholder="Nama Acara"></div>
-                            </div>
-                            <div class="result-item bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 rounded-xl flex items-center gap-4">
-                                <i data-lucide="calendar-days" class="w-6 h-6 text-gray-500 dark:text-gray-400"></i>
-                                <div class="w-full"><label for="tanggal" class="block text-xs font-medium text-gray-500 dark:text-gray-400">Tanggal</label><input type="date" id="tanggal" name="tanggal" class="w-full text-md font-semibold bg-transparent border-none text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-0"></div>
-                            </div>
-                        </div>
-                        <hr class="border-gray-200 dark:border-gray-700"/>
-                        <!-- Contact Info -->
-                        <div id="contact-form-fields">
-                            <div class="result-item bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 rounded-xl flex items-center gap-4 mt-4">
-                                <i data-lucide="user" class="w-6 h-6 text-gray-500 dark:text-gray-400"></i>
-                                <div class="w-full"><label for="nama" class="block text-xs font-medium text-gray-500 dark:text-gray-400">Nama Lengkap</label><input type="text" id="nama" name="nama" class="w-full text-lg font-semibold bg-transparent border-none text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-0" placeholder="Nama tidak terdeteksi"></div>
-                            </div>
-                            <div class="result-item bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 rounded-xl flex items-center gap-4 mt-4">
-                                <i data-lucide="briefcase" class="w-6 h-6 text-gray-500 dark:text-gray-400"></i>
-                                <div class="w-full"><label for="jabatan" class="block text-xs font-medium text-gray-500 dark:text-gray-400">Jabatan</label><input type="text" id="jabatan" name="jabatan" class="w-full text-lg font-semibold bg-transparent border-none text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-0" placeholder="Jabatan tidak terdeteksi"></div>
-                            </div>
-                            <div class="result-item bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 rounded-xl flex items-center gap-4 mt-4">
-                                <i data-lucide="building-2" class="w-6 h-6 text-gray-500 dark:text-gray-400"></i>
-                                <div class="w-full"><label for="perusahaan" class="block text-xs font-medium text-gray-500 dark:text-gray-400">Perusahaan</label><input type="text" id="perusahaan" name="perusahaan" class="w-full text-lg font-semibold bg-transparent border-none text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-0" placeholder="Perusahaan tidak terdeteksi"></div>
-                            </div>
-                            <div class="result-item bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 rounded-xl flex items-center gap-4 mt-4">
-                                <i data-lucide="phone" class="w-6 h-6 text-gray-500 dark:text-gray-400"></i>
-                                <div class="w-full"><label for="telepon_kantor" class="block text-xs font-medium text-gray-500 dark:text-gray-400">Telepon Kantor</label><input type="tel" id="telepon_kantor" name="telepon_kantor" class="w-full text-lg font-semibold bg-transparent border-none text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-0" placeholder="Telepon tidak terdeteksi"></div>
-                            </div>
-                            <div class="result-item bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 rounded-xl flex items-center gap-4 mt-4">
-                                <i data-lucide="smartphone" class="w-6 h-6 text-gray-500 dark:text-gray-400"></i>
-                                <div class="w-full"><label for="whatsapp" class="block text-xs font-medium text-gray-500 dark:text-gray-400">No. HP / WhatsApp</label><input type="tel" id="whatsapp" name="whatsapp" class="w-full text-lg font-semibold bg-transparent border-none text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-0" placeholder="WhatsApp tidak terdeteksi"></div>
-                            </div>
-                            <div class="result-item bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 rounded-xl flex items-center gap-4 mt-4">
-                                <i data-lucide="at-sign" class="w-6 h-6 text-gray-500 dark:text-gray-400"></i>
-                                <div class="w-full"><label for="email" class="block text-xs font-medium text-gray-500 dark:text-gray-400">Email</label><input type="email" id="email" name="email" class="w-full text-lg font-semibold bg-transparent border-none text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-0" placeholder="Email tidak terdeteksi"></div>
-                            </div>
-                        </div>
-                    </form>
-                    <!-- Batch Results List -->
-                    <div id="batch-results-container" class="mt-6 hidden">
-                        <h3 class="font-bold text-gray-900 dark:text-white mb-2">Kontak di Sesi Ini (<span id="session-count">0</span>)</h3>
-                        <div id="session-results-list" class="space-y-2">
-                            <!-- Session results will be inserted here -->
-                        </div>
+                <div class="flex-grow p-6 pt-4 overflow-y-auto">
+                    <p class="text-gray-600 dark:text-gray-400 mb-4">Total <span id="results-contact-count" class="font-bold">0</span> kontak tersimpan.</p>
+                    <div id="results-list" class="space-y-3">
+                        <!-- Hasil scan akan ditampilkan di sini -->
                     </div>
                 </div>
-                <footer id="results-footer" class="p-6">
-                    <!-- Buttons will be dynamically inserted here -->
+                <footer id="results-footer" class="p-6 border-t border-gray-200 dark:border-gray-700">
+                    <div id="export-buttons-container" class="grid grid-cols-2 gap-4">
+                        <!-- Tombol ekspor dinamis akan muncul di sini -->
+                    </div>
+                    <button id="clear-all-btn" class="col-span-2 w-full text-red-600 dark:text-red-400 font-semibold py-2 px-6 rounded-full hover:bg-red-100 dark:hover:bg-red-900/50 mt-4 flex items-center justify-center gap-2">
+                        <i data-lucide="trash-2" class="w-4 h-4"></i>Hapus Semua Data
+                    </button>
                 </footer>
             </div>
-
-             <!-- Batch Export Screen -->
-            <div id="batch-export-screen" class="hidden screen p-8 flex flex-col justify-between items-center text-center flex-grow">
-                <div>
-                    <div class="p-6 bg-green-600/10 dark:bg-green-600/20 rounded-full mb-8 mt-12">
-                        <i data-lucide="check-check" class="w-20 h-20 text-green-500 dark:text-green-400"></i>
-                    </div>
-                    <h2 class="text-3xl font-bold text-gray-900 dark:text-white">Scan Berseri Selesai</h2>
-                    <p class="text-gray-500 dark:text-gray-400 mt-2 mb-4"><span id="batch-count">0</span> kontak berhasil dipindai.</p>
-                </div>
-                <!-- Batch Results List -->
-                <div id="batch-results-list" class="w-full my-4 flex-grow overflow-y-auto space-y-2">
-                    <!-- Batch results will be inserted here -->
-                </div>
-                <div class="w-full flex flex-col gap-4">
-                    <button id="export-zip-btn" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-6 rounded-full shadow-lg flex items-center justify-center gap-3 text-lg"><i data-lucide="archive" class="w-6 h-6"></i>Ekspor Semua (.zip)</button>
-                    <button id="export-csv-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-6 rounded-full shadow-lg flex items-center justify-center gap-3 text-lg"><i data-lucide="file-spreadsheet" class="w-6 h-6"></i>Ekspor Semua (.csv)</button>
-                    <button id="back-to-home-btn" class="w-full text-indigo-600 dark:text-indigo-400 font-semibold py-3 px-6 rounded-full hover:bg-gray-200 dark:hover:bg-gray-800 mt-4">Kembali ke Menu Utama</button>
-                </div>
-            </div>
-
-
         </main>
-        <footer class="text-center p-4 text-xs text-gray-400 dark:text-gray-600 flex justify-between items-center">
-            <button id="log-toggle-btn" class="p-2 hover:bg-gray-200 dark:hover:bg-gray-800 rounded-full">
-                <i data-lucide="notebook-pen" class="w-5 h-5"></i>
-            </button>
+        <footer class="text-center p-4 text-xs text-gray-400 dark:text-gray-600">
             <span>&copy; 2025 SCANNER PINTAR oleh ISPARMO</span>
-            <div class="w-9"></div> <!-- Spacer -->
         </footer>
     </div>
 
-    <!-- Log Container -->
-    <div id="log-container" class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-lg p-4 z-50 opacity-0 transform translate-y-full pointer-events-none">
-        <div class="bg-white dark:bg-gray-800 rounded-t-xl shadow-2xl border-t border-gray-200 dark:border-gray-700">
-            <div class="flex justify-between items-center p-3 border-b border-gray-200 dark:border-gray-700">
-                <h3 class="font-semibold text-gray-800 dark:text-gray-200">Developer Log</h3>
-                <div class="flex items-center gap-2">
-                    <button id="copy-log-btn" class="text-xs bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 py-1 px-2 rounded-md">Salin</button>
-                    <button id="close-log-btn" class="p-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full">
-                        <i data-lucide="x" class="w-4 h-4"></i>
-                    </button>
+    <!-- Edit Modal -->
+    <div id="edit-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center p-4 z-50 hidden opacity-0">
+        <div class="modal-content bg-white dark:bg-gray-800 rounded-2xl shadow-xl w-full max-w-md p-6 transform scale-95 opacity-0">
+            <h3 class="text-xl font-bold mb-4">Edit Kontak</h3>
+            <form id="edit-form" class="space-y-3">
+                <input type="hidden" id="edit-contact-id">
+                <div>
+                    <label for="edit-nama" class="text-sm font-medium text-gray-600 dark:text-gray-400">Nama</label>
+                    <input type="text" id="edit-nama" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500">
                 </div>
+                <div>
+                    <label for="edit-jabatan" class="text-sm font-medium text-gray-600 dark:text-gray-400">Jabatan</label>
+                    <input type="text" id="edit-jabatan" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                </div>
+                <div>
+                    <label for="edit-perusahaan" class="text-sm font-medium text-gray-600 dark:text-gray-400">Perusahaan</label>
+                    <input type="text" id="edit-perusahaan" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                </div>
+                <div>
+                    <label for="edit-telepon_kantor" class="text-sm font-medium text-gray-600 dark:text-gray-400">Telepon Kantor</label>
+                    <input type="tel" id="edit-telepon_kantor" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                </div>
+                <div>
+                    <label for="edit-whatsapp" class="text-sm font-medium text-gray-600 dark:text-gray-400">WhatsApp</label>
+                    <input type="tel" id="edit-whatsapp" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                </div>
+                <div>
+                    <label for="edit-email" class="text-sm font-medium text-gray-600 dark:text-gray-400">Email</label>
+                    <input type="email" id="edit-email" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                </div>
+            </form>
+            <div class="mt-6 flex justify-end gap-3">
+                <button id="cancel-edit-btn" class="px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-500 font-semibold">Batal</button>
+                <button id="save-edit-btn" class="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-semibold">Simpan Perubahan</button>
             </div>
-            <pre id="log-output" class="h-48 overflow-y-auto p-3 text-xs text-gray-600 dark:text-gray-400 font-mono"></pre>
         </div>
     </div>
 
+    <!-- Toast Notification -->
+    <div id="toast" class="toast fixed bottom-5 right-5 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 py-3 px-5 rounded-full shadow-lg opacity-0 transform translate-y-5 pointer-events-none">
+        <p id="toast-message"></p>
+    </div>
+
     <script>
-        // --- Ganti dengan URL Cloud Function Anda setelah di-deploy ---
+        // --- Ganti dengan URL Cloud Function Anda ---
         const BACKEND_API_URL = 'https://asia-southeast1-scanner-kartu-nama-llama.cloudfunctions.net/processBusinessCard';
 
         // --- DOM Elements ---
-        const initialScreen = document.getElementById('initial-screen');
-        const scannerScreen = document.getElementById('scanner-screen');
-        const processingScreen = document.getElementById('processing-screen');
-        const resultsScreen = document.getElementById('results-screen');
-        const batchExportScreen = document.getElementById('batch-export-screen');
-        const allScreens = [initialScreen, scannerScreen, processingScreen, resultsScreen, batchExportScreen];
-        
-        const startSingleBtn = document.getElementById('start-single-btn');
-        const startBatchBtn = document.getElementById('start-batch-btn');
+        const screens = { initial: document.getElementById('initial-screen'), scanner: document.getElementById('scanner-screen'), processing: document.getElementById('processing-screen'), results: document.getElementById('results-screen'), };
+        const startScanBtn = document.getElementById('start-scan-btn');
         const uploadBtn = document.getElementById('upload-btn');
+        const viewResultsBtn = document.getElementById('view-results-btn');
         const imageUploadInput = document.getElementById('image-upload-input');
         const captureBtn = document.getElementById('capture-btn');
         const cancelScanBtn = document.getElementById('cancel-scan-btn');
-        const finishBtn = document.getElementById('finish-btn');
-        const rescanBtn = document.getElementById('rescan-btn');
-        const resultsFooter = document.getElementById('results-footer');
-        const batchCountEl = document.getElementById('batch-count');
-        const sessionCountEl = document.getElementById('session-count');
-        const batchResultsContainer = document.getElementById('batch-results-container');
-        const sessionResultsList = document.getElementById('session-results-list');
-        const batchResultsList = document.getElementById('batch-results-list');
-        const exportZipBtn = document.getElementById('export-zip-btn');
-        const exportCsvBtn = document.getElementById('export-csv-btn');
         const backToHomeBtn = document.getElementById('back-to-home-btn');
-
+        const exportButtonsContainer = document.getElementById('export-buttons-container');
+        const clearAllBtn = document.getElementById('clear-all-btn');
+        const homeContactCount = document.getElementById('home-contact-count');
+        const resultsContactCount = document.getElementById('results-contact-count');
+        const resultsList = document.getElementById('results-list');
         const video = document.getElementById('video');
         const canvas = document.getElementById('canvas');
-        const progressTitle = document.getElementById('progress-title');
-        const progressStatus = document.getElementById('progress-status');
-        const form = document.getElementById('data-form');
-        const nameInput = document.getElementById('nama');
-        const positionInput = document.getElementById('jabatan');
-        const companyInput = document.getElementById('perusahaan');
-        const phoneKantorInput = document.getElementById('telepon_kantor');
-        const whatsappInput = document.getElementById('whatsapp');
-        const emailInput = document.getElementById('email');
-        const acaraInput = document.getElementById('acara');
-        const tanggalInput = document.getElementById('tanggal');
-        const qrFeedback = document.getElementById('qr-feedback');
+        const toast = document.getElementById('toast');
+        const toastMessage = document.getElementById('toast-message');
+        const editModal = document.getElementById('edit-modal');
+        const editModalContent = editModal.querySelector('.modal-content');
+        const editForm = document.getElementById('edit-form');
+        const cancelEditBtn = document.getElementById('cancel-edit-btn');
+        const saveEditBtn = document.getElementById('save-edit-btn');
         
-        const themeToggleBtn = document.getElementById('theme-toggle');
-        const sunIcon = document.getElementById('theme-toggle-sun-icon');
-        const moonIcon = document.getElementById('theme-toggle-moon-icon');
-
-        const logContainer = document.getElementById('log-container');
-        const logOutput = document.getElementById('log-output');
-        const logToggleBtn = document.getElementById('log-toggle-btn');
-        const copyLogBtn = document.getElementById('copy-log-btn');
-        const closeLogBtn = document.getElementById('close-log-btn');
-
         let stream;
-        let qrScanAnimation;
-        let isBatchMode = false;
-        
-        // --- IndexedDB Functions ---
-        let db;
-        function initDB() {
-            return new Promise((resolve, reject) => {
-                const request = indexedDB.open('ScannerPintarDB', 1);
-                request.onerror = (event) => {
-                    logMessage("IndexedDB error: " + event.target.errorCode);
-                    reject("Database error");
-                };
-                request.onupgradeneeded = (event) => {
-                    const db = event.target.result;
-                    db.createObjectStore('contacts', { keyPath: 'id', autoIncrement: true });
-                    logMessage("Object store 'contacts' created.");
-                };
-                request.onsuccess = (event) => {
-                    db = event.target.result;
-                    logMessage("Database initialized successfully.");
-                    resolve(db);
-                };
-            });
-        }
 
-        function addContact(contact) {
-            return new Promise((resolve, reject) => {
-                const transaction = db.transaction(['contacts'], 'readwrite');
-                const store = transaction.objectStore('contacts');
-                const request = store.add(contact);
-                request.onsuccess = () => resolve();
-                request.onerror = (event) => reject("Error adding contact: " + event.target.error);
-            });
-        }
-
-        function getAllContacts() {
-            return new Promise((resolve, reject) => {
-                const transaction = db.transaction(['contacts'], 'readonly');
-                const store = transaction.objectStore('contacts');
-                const request = store.getAll();
-                request.onsuccess = () => resolve(request.result);
-                request.onerror = (event) => reject("Error fetching contacts: " + event.target.error);
-            });
-        }
-
-        function clearContacts() {
-            return new Promise((resolve, reject) => {
-                const transaction = db.transaction(['contacts'], 'readwrite');
-                const store = transaction.objectStore('contacts');
-                const request = store.clear();
-                request.onsuccess = () => resolve();
-                request.onerror = (event) => reject("Error clearing contacts: " + event.target.error);
-            });
-        }
-
-        // --- Main App Functions ---
-        function logMessage(message) {
-            const timestamp = new Date().toLocaleTimeString();
-            logOutput.textContent += `[${timestamp}] ${message}\n`;
-            logOutput.scrollTop = logOutput.scrollHeight;
-        }
-
-        function showScreen(screenId) {
-            logMessage(`Navigating to screen: ${screenId}`);
-            allScreens.forEach(screen => screen.classList.add('hidden'));
-            document.getElementById(screenId).classList.remove('hidden');
-        }
-
-        async function startScan(batchMode = false) {
-            isBatchMode = batchMode;
-            if (isBatchMode) {
-                logMessage("Starting/Continuing Batch Scan session.");
-                await updateSessionList(); // Muat data sesi yang ada
-            } else {
-                logMessage("Starting Single Scan mode.");
-                await clearContacts(); // Hapus sesi lama untuk mode tunggal
+        // --- IndexedDB ---
+        const dbLogic = {
+            db: null,
+            init: function() {
+                return new Promise((resolve, reject) => {
+                    const request = indexedDB.open('SmartScannerDB', 1);
+                    request.onerror = (event) => { console.error("Database error:", event.target.errorCode); reject("Database error"); };
+                    request.onsuccess = (event) => { this.db = event.target.result; resolve(); };
+                    request.onupgradeneeded = (event) => {
+                        const db = event.target.result;
+                        if (!db.objectStoreNames.contains('contacts')) { db.createObjectStore('contacts', { keyPath: 'id', autoIncrement: true }); }
+                    };
+                });
+            },
+            addContact: function(contact) {
+                return new Promise((resolve, reject) => {
+                    const transaction = this.db.transaction(['contacts'], 'readwrite');
+                    const store = transaction.objectStore('contacts');
+                    const request = store.add(contact);
+                    request.onsuccess = resolve; request.onerror = reject;
+                });
+            },
+            getContact: function(id) {
+                return new Promise((resolve, reject) => {
+                    const transaction = this.db.transaction(['contacts'], 'readonly');
+                    const store = transaction.objectStore('contacts');
+                    const request = store.get(id);
+                    request.onsuccess = (event) => resolve(event.target.result); request.onerror = reject;
+                });
+            },
+            updateContact: function(contact) {
+                return new Promise((resolve, reject) => {
+                    const transaction = this.db.transaction(['contacts'], 'readwrite');
+                    const store = transaction.objectStore('contacts');
+                    const request = store.put(contact);
+                    request.onsuccess = resolve; request.onerror = reject;
+                });
+            },
+            getAllContacts: function() {
+                return new Promise((resolve, reject) => {
+                    const transaction = this.db.transaction(['contacts'], 'readonly');
+                    const store = transaction.objectStore('contacts');
+                    const request = store.getAll();
+                    request.onsuccess = (event) => resolve(event.target.result); request.onerror = reject;
+                });
+            },
+            clearAllContacts: function() {
+                return new Promise((resolve, reject) => {
+                    const transaction = this.db.transaction(['contacts'], 'readwrite');
+                    const store = transaction.objectStore('contacts');
+                    const request = store.clear();
+                    request.onsuccess = resolve; request.onerror = reject;
+                });
             }
-            startCamera();
+        };
+
+        // --- Functions ---
+        function showToast(message) {
+            toastMessage.textContent = message;
+            toast.classList.remove('opacity-0', 'translate-y-5');
+            setTimeout(() => { toast.classList.add('opacity-0', 'translate-y-5'); }, 3000);
+        }
+
+        function showScreen(screenName) {
+            Object.values(screens).forEach(screen => screen.classList.add('hidden'));
+            screens[screenName].classList.remove('hidden');
         }
 
         async function startCamera() {
-            logMessage("Attempting to start camera...");
             try {
                 if (stream) { stream.getTracks().forEach(track => track.stop()); }
                 stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
                 video.srcObject = stream;
-                video.onloadedmetadata = () => {
-                    logMessage("Camera stream started.");
-                    canvas.width = video.videoWidth;
-                    canvas.height = video.videoHeight;
-                    qrScanAnimation = requestAnimationFrame(scanQRCode);
-                };
-                showScreen('scanner-screen');
+                showScreen('scanner');
             } catch (err) {
-                logMessage(`Error starting camera: ${err.message}`);
                 console.error("Error accessing camera:", err);
                 alert("Tidak dapat mengakses kamera. Pastikan Anda memberikan izin.");
-                showScreen('initial-screen');
+                showScreen('initial');
             }
         }
 
         function stopCamera() {
-            if (qrScanAnimation) {
-                cancelAnimationFrame(qrScanAnimation);
-                qrScanAnimation = null;
-            }
-            if (stream) {
-                logMessage("Stopping camera stream.");
-                stream.getTracks().forEach(track => track.stop());
-            }
-        }
-
-        function scanQRCode() {
-            if (video.readyState === video.HAVE_ENOUGH_DATA) {
-                const context = canvas.getContext('2d', { willReadFrequently: true });
-                context.drawImage(video, 0, 0, canvas.width, canvas.height);
-                const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-                const code = jsQR(imageData.data, imageData.width, imageData.height, { inversionAttempts: "dontInvert" });
-
-                if (code && code.data.startsWith('BEGIN:VCARD')) {
-                    logMessage("QR Code (vCard) detected.");
-                    qrFeedback.classList.remove('hidden');
-                    stopCamera();
-                    parseVCard(code.data);
-                    updateResultsUI();
-                    showScreen('results-screen');
-                    return;
-                }
-            }
-            qrScanAnimation = requestAnimationFrame(scanQRCode);
-        }
-
-        function parseVCard(vcardString) {
-            logMessage("Parsing vCard data...");
-            clearContactForm();
-            const lines = vcardString.split('\n');
-            let name = '';
-            lines.forEach(line => {
-                const cleanLine = line.trim();
-                if (cleanLine.startsWith('FN:')) name = cleanLine.substring(3).trim();
-                else if (cleanLine.startsWith('N:')) { if (!name) { const p = cleanLine.substring(2).split(';'); name = `${p[1]} ${p[0]}`.trim(); } }
-                else if (cleanLine.startsWith('TITLE:')) positionInput.value = cleanLine.substring(6).trim();
-                else if (cleanLine.startsWith('ORG:')) companyInput.value = cleanLine.substring(4).trim();
-                else if (cleanLine.startsWith('TEL')) {
-                    const phone = cleanLine.substring(cleanLine.indexOf(':') + 1).trim();
-                    if (cleanLine.includes('TYPE=CELL')) whatsappInput.value = phone;
-                    else if (cleanLine.includes('TYPE=WORK')) phoneKantorInput.value = phone;
-                    else if (!whatsappInput.value) whatsappInput.value = phone;
-                    else phoneKantorInput.value = phone;
-                } else if (cleanLine.startsWith('EMAIL')) emailInput.value = cleanLine.substring(cleanLine.indexOf(':') + 1).trim();
-            });
-            nameInput.value = name;
-            logMessage("vCard parsing complete.");
-        }
-        
-        function clearContactForm() {
-            nameInput.value = '';
-            positionInput.value = '';
-            companyInput.value = '';
-            phoneKantorInput.value = '';
-            whatsappInput.value = '';
-            emailInput.value = '';
+            if (stream) { stream.getTracks().forEach(track => track.stop()); }
         }
 
         async function captureAndProcess() {
-            logMessage("Capture button pressed.");
             stopCamera();
             const context = canvas.getContext('2d');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
             context.drawImage(video, 0, 0, canvas.width, canvas.height);
             const imageDataUrl = canvas.toDataURL('image/jpeg', 0.9);
             await processImage(imageDataUrl);
         }
 
         async function processImage(imageDataUrl) {
-            logMessage("Processing image...");
-            showScreen('processing-screen');
-            try {
-                await extractDataWithLlama(imageDataUrl);
-                await updateResultsUI();
-                showScreen('results-screen');
-            } catch (error) {
-                logMessage(`Image processing failed: ${error.message}`);
-                console.error("Processing Error:", error);
-                alert(`Gagal memproses gambar: ${error.message}`);
-                await resetApp();
-            }
-        }
-
-        async function extractDataWithLlama(imageDataUrl) {
-            clearContactForm();
-            logMessage("Sending image to backend for Llama 4 analysis...");
+            showScreen('processing');
             try {
                 const response = await fetch(BACKEND_API_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ imageDataUrl: imageDataUrl })
+                    body: JSON.stringify({ imageDataUrl })
                 });
-                
-                logMessage(`Backend response status: ${response.status}`);
                 if (!response.ok) {
                     const errorBody = await response.json();
                     throw new Error(`Backend Error: ${response.status}. ${errorBody.error || 'Unknown error'}`);
                 }
-                
                 const result = await response.json();
                 const jsonString = result.data;
-                logMessage("Received JSON string from backend.");
-                
                 if (jsonString) {
-                    try {
-                        const extractedData = JSON.parse(jsonString);
-                        logMessage("Successfully parsed JSON from backend.");
-                        nameInput.value = extractedData.nama || '';
-                        positionInput.value = extractedData.jabatan || '';
-                        companyInput.value = extractedData.perusahaan || '';
-                        phoneKantorInput.value = extractedData.telepon_kantor || '';
-                        whatsappInput.value = extractedData.whatsapp || '';
-                        emailInput.value = extractedData.email || '';
-                    } catch (e) {
-                         logMessage(`Failed to parse JSON: ${e.message}`);
-                         console.error("Gagal parse JSON dari Backend:", e);
-                         alert("Backend tidak mengembalikan JSON yang valid. Cek console untuk detail.");
-                         nameInput.value = jsonString;
-                    }
-                } else {
-                    throw new Error("Respons dari Backend tidak valid atau kosong.");
-                }
+                    const extractedData = JSON.parse(jsonString);
+                    await dbLogic.addContact(extractedData);
+                    showToast('Kontak berhasil disimpan!');
+                    await refreshResults();
+                    showScreen('results');
+                } else { throw new Error("Respons dari Backend tidak valid."); }
             } catch (error) {
-                logMessage(`Backend call failed: ${error.message}`);
-                console.error("Backend Call Failed:", error);
-                alert(`Gagal menghubungi backend: ${error.message}`);
-                showScreen('initial-screen');
+                console.error("Processing Error:", error);
+                alert(`Gagal memproses gambar: ${error.message}`);
+                showScreen('initial');
             }
         }
+        
+        async function refreshResults() {
+            const contacts = await dbLogic.getAllContacts();
+            const count = contacts.length;
 
-        function getCurrentContactData() {
-            return {
-                nama: nameInput.value,
-                jabatan: positionInput.value,
-                perusahaan: companyInput.value,
-                telepon_kantor: phoneKantorInput.value,
-                whatsapp: whatsappInput.value,
-                email: emailInput.value,
-                acara: acaraInput.value,
-                tanggal: tanggalInput.value,
-            };
-        }
-
-        async function updateSessionList() {
-            const contacts = await getAllContacts();
-            sessionCountEl.textContent = contacts.length;
-            sessionResultsList.innerHTML = '';
-            if (contacts.length > 0) {
-                batchResultsContainer.classList.remove('hidden');
-                contacts.forEach(contact => {
-                    const contactCard = document.createElement('div');
-                    contactCard.className = 'result-item bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-3 rounded-xl text-left';
-                    contactCard.innerHTML = `
-                        <p class="font-bold text-gray-900 dark:text-white">${contact.nama || 'Tanpa Nama'}</p>
-                        <p class="text-sm text-gray-600 dark:text-gray-400">${contact.jabatan || ''} di ${contact.perusahaan || ''}</p>
-                    `;
-                    sessionResultsList.appendChild(contactCard);
-                });
-            } else {
-                batchResultsContainer.classList.add('hidden');
-            }
-        }
-
-        async function showBatchExportScreen() {
-            logMessage("Showing batch export screen.");
-            const contacts = await getAllContacts();
-            batchCountEl.textContent = contacts.length;
+            homeContactCount.textContent = count;
+            resultsContactCount.textContent = count;
             
-            batchResultsList.innerHTML = '';
-            contacts.forEach(contact => {
-                const contactCard = document.createElement('div');
-                contactCard.className = 'result-item bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-3 rounded-xl text-left';
-                contactCard.innerHTML = `
-                    <p class="font-bold text-gray-900 dark:text-white">${contact.nama || 'Tanpa Nama'}</p>
-                    <p class="text-sm text-gray-600 dark:text-gray-400">${contact.jabatan || ''} di ${contact.perusahaan || ''}</p>
+            resultsList.innerHTML = '';
+            if (count === 0) {
+                resultsList.innerHTML = `<p class="text-center text-gray-500 dark:text-gray-400 py-8">Belum ada data tersimpan.</p>`;
+            } else {
+                contacts.reverse().forEach(contact => {
+                    const card = document.createElement('div');
+                    card.className = 'bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 rounded-xl flex justify-between items-start';
+                    card.innerHTML = `
+                        <div>
+                            <p class="font-bold text-lg text-gray-900 dark:text-white">${contact.nama || 'Tanpa Nama'}</p>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">${contact.jabatan || ''}</p>
+                            <p class="text-sm text-gray-600 dark:text-gray-400 font-medium">${contact.perusahaan || ''}</p>
+                            <div class="mt-2 text-xs text-gray-500 dark:text-gray-400">
+                                ${contact.whatsapp ? `<span>HP: ${contact.whatsapp}</span>` : ''}
+                                ${contact.email ? `<span class="ml-2">Email: ${contact.email}</span>` : ''}
+                            </div>
+                        </div>
+                        <button class="edit-btn p-2 text-gray-500 hover:text-indigo-600 dark:hover:text-indigo-400" data-id="${contact.id}">
+                            <i data-lucide="edit" class="w-5 h-5"></i>
+                        </button>
+                    `;
+                    resultsList.appendChild(card);
+                });
+                lucide.createIcons();
+                document.querySelectorAll('.edit-btn').forEach(btn => btn.addEventListener('click', (e) => openEditModal(parseInt(e.currentTarget.dataset.id))));
+            }
+            updateExportButtons(contacts);
+        }
+
+        function updateExportButtons(contacts) {
+            exportButtonsContainer.innerHTML = '';
+            const count = contacts.length;
+
+            if (count === 0) {
+                exportButtonsContainer.classList.add('hidden');
+                return;
+            }
+            
+            exportButtonsContainer.classList.remove('hidden');
+
+            if (count === 1) {
+                // Tombol untuk 1 data
+                exportButtonsContainer.innerHTML = `
+                    <button id="export-csv-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-full shadow-lg flex items-center justify-center gap-2 text-base"><i data-lucide="file-spreadsheet" class="w-5 h-5"></i>Simpan .csv</button>
+                    <button id="export-vcf-btn" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-full shadow-lg flex items-center justify-center gap-2 text-base"><i data-lucide="contact" class="w-5 h-5"></i>Simpan .vcf</button>
                 `;
-                batchResultsList.appendChild(contactCard);
-            });
-
-            showScreen('batch-export-screen');
+                document.getElementById('export-csv-btn').addEventListener('click', () => exportCSV(contacts));
+                document.getElementById('export-vcf-btn').addEventListener('click', () => exportVCF(contacts[0]));
+            } else {
+                // Tombol untuk > 1 data
+                exportButtonsContainer.innerHTML = `
+                    <button id="export-csv-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-full shadow-lg flex items-center justify-center gap-2 text-base"><i data-lucide="file-spreadsheet" class="w-5 h-5"></i>Simpan .csv</button>
+                    <button id="export-zip-btn" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-full shadow-lg flex items-center justify-center gap-2 text-base"><i data-lucide="archive" class="w-5 h-5"></i>Simpan VCF .zip</button>
+                `;
+                document.getElementById('export-csv-btn').addEventListener('click', () => exportCSV(contacts));
+                document.getElementById('export-zip-btn').addEventListener('click', () => exportZIP(contacts));
+            }
+            lucide.createIcons();
         }
 
-        function generateFilename() {
-            const acara = acaraInput.value.replace(/\s+/g, '_') || 'acara';
-            const date = new Date(tanggalInput.value);
-            const ddmmyy = `${String(date.getDate()).padStart(2, '0')}${String(date.getMonth() + 1).padStart(2, '0')}${String(date.getFullYear()).slice(-2)}`;
-            return `${acara}_${ddmmyy}`;
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (e) => processImage(e.target.result);
+            reader.readAsDataURL(file);
+            imageUploadInput.value = '';
         }
 
-        async function saveAsCSV(contacts) {
-            logMessage("Generating CSV file...");
-            const headers = ['Nama', 'Jabatan', 'Perusahaan', 'Telepon Kantor', 'WhatsApp', 'Email', 'Acara', 'Tanggal'];
+        async function openEditModal(id) {
+            const contact = await dbLogic.getContact(id);
+            if (!contact) return;
+            
+            document.getElementById('edit-contact-id').value = contact.id;
+            document.getElementById('edit-nama').value = contact.nama || '';
+            document.getElementById('edit-jabatan').value = contact.jabatan || '';
+            document.getElementById('edit-perusahaan').value = contact.perusahaan || '';
+            document.getElementById('edit-telepon_kantor').value = contact.telepon_kantor || '';
+            document.getElementById('edit-whatsapp').value = contact.whatsapp || '';
+            document.getElementById('edit-email').value = contact.email || '';
+            
+            editModal.classList.remove('hidden');
+            setTimeout(() => {
+                editModal.classList.remove('opacity-0');
+                editModalContent.classList.remove('scale-95', 'opacity-0');
+            }, 10);
+        }
+
+        function closeEditModal() {
+            editModal.classList.add('opacity-0');
+            editModalContent.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => { editModal.classList.add('hidden'); }, 300);
+        }
+
+        async function saveContactChanges() {
+            const id = parseInt(document.getElementById('edit-contact-id').value);
+            const updatedContact = {
+                id: id,
+                nama: document.getElementById('edit-nama').value,
+                jabatan: document.getElementById('edit-jabatan').value,
+                perusahaan: document.getElementById('edit-perusahaan').value,
+                telepon_kantor: document.getElementById('edit-telepon_kantor').value,
+                whatsapp: document.getElementById('edit-whatsapp').value,
+                email: document.getElementById('edit-email').value,
+            };
+            await dbLogic.updateContact(updatedContact);
+            showToast("Kontak berhasil diperbarui!");
+            closeEditModal();
+            await refreshResults();
+        }
+
+        function exportCSV(contacts) {
+            if (contacts.length === 0) { showToast("Tidak ada data untuk diekspor."); return; }
+            const headers = ['Nama', 'Jabatan', 'Perusahaan', 'Telepon Kantor', 'WhatsApp', 'Email'];
             let csvContent = headers.join(',') + '\n';
             const escapeCSV = (field) => `"${String(field || '').replace(/"/g, '""')}"`;
-            contacts.forEach(contact => {
-                const row = [contact.nama, contact.jabatan, contact.perusahaan, contact.telepon_kantor, contact.whatsapp, contact.email, contact.acara, contact.tanggal];
+            contacts.forEach(c => {
+                const row = [c.nama, c.jabatan, c.perusahaan, c.telepon_kantor, c.whatsapp, c.email];
                 csvContent += row.map(escapeCSV).join(',') + '\n';
             });
             const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
             const link = document.createElement("a");
             link.href = URL.createObjectURL(blob);
-            link.download = `kartunama_${generateFilename()}.csv`;
+            link.download = `kontak_kartunama_${new Date().toISOString().slice(0,10)}.csv`;
             link.click();
+            showToast("File CSV sedang diunduh.");
         }
 
-        async function saveAsVCard(contacts) {
-            logMessage("Generating ZIP file with vCards...");
-            const zip = new JSZip();
-            contacts.forEach((contact, index) => {
-                let vCardString = `BEGIN:VCARD
-VERSION:3.0
-FN:${contact.nama}
-ORG:${contact.perusahaan}
-TITLE:${contact.jabatan}
-`;
-                if (contact.telepon_kantor) vCardString += `TEL;TYPE=WORK,VOICE:${contact.telepon_kantor}\n`;
-                if (contact.whatsapp) vCardString += `TEL;TYPE=CELL,VOICE:${contact.whatsapp}\n`;
-                vCardString += `EMAIL:${contact.email}\n`;
-                if (contact.acara || contact.tanggal) vCardString += `NOTE:Diperoleh di acara ${contact.acara || ''} pada tanggal ${contact.tanggal || ''}\n`;
-                vCardString += `END:VCARD`;
-                const filename = (contact.nama || `kontak_${index + 1}`).replace(/\s+/g, '_').toLowerCase() + '.vcf';
-                zip.file(filename, vCardString);
-            });
-            const content = await zip.generateAsync({ type: "blob" });
+        function exportVCF(contact) {
+            let vCard = `BEGIN:VCARD\nVERSION:3.0\nFN:${contact.nama || ''}\nORG:${contact.perusahaan || ''}\nTITLE:${contact.jabatan || ''}\n`;
+            if (contact.telepon_kantor) vCard += `TEL;TYPE=WORK,VOICE:${contact.telepon_kantor}\n`;
+            if (contact.whatsapp) vCard += `TEL;TYPE=CELL,VOICE:${contact.whatsapp}\n`;
+            if (contact.email) vCard += `EMAIL:${contact.email}\n`;
+            vCard += `END:VCARD`;
+            const blob = new Blob([vCard], { type: 'text/vcard;charset=utf-8;' });
             const link = document.createElement("a");
-            link.href = URL.createObjectURL(content);
-            link.download = `kontak_${generateFilename()}.zip`;
+            link.href = URL.createObjectURL(blob);
+            const filename = (contact.nama || `kontak`).replace(/\s+/g, '_').toLowerCase();
+            link.download = `${filename}.vcf`;
             link.click();
-        }
-        
-        async function resetApp() {
-            logMessage("Resetting application state.");
-            stopCamera();
-            form.reset();
-            await clearContacts();
-            qrFeedback.classList.add('hidden');
-            acaraInput.value = localStorage.getItem('savedAcara') || '';
-            tanggalInput.value = localStorage.getItem('savedTanggal') || new Date().toISOString().slice(0, 10);
-            showScreen('initial-screen');
+            showToast("File VCF sedang diunduh.");
         }
 
-        function handleImageUpload(event) {
-            const file = event.target.files[0];
-            if (!file || !file.type.startsWith('image/')) {
-                logMessage("Invalid file type uploaded.");
-                alert('Silakan unggah file gambar (JPG, PNG, dll).');
-                return;
-            }
-            logMessage(`Image uploaded: ${file.name}`);
-            const reader = new FileReader();
-            reader.onload = (e) => processImage(e.target.result);
-            reader.readAsDataURL(file);
-        }
-        
-        function applyTheme(theme) {
-            if (theme === 'dark') {
-                document.documentElement.classList.add('dark');
-                sunIcon.classList.remove('hidden');
-                moonIcon.classList.add('hidden');
-            } else {
-                document.documentElement.classList.remove('dark');
-                sunIcon.classList.add('hidden');
-                moonIcon.classList.remove('hidden');
-            }
-        }
-
-        function closeLog() {
-            logContainer.classList.add('opacity-0', 'translate-y-full', 'pointer-events-none');
-        }
-
-        async function updateResultsUI() {
-            resultsFooter.innerHTML = ''; // Clear previous buttons
-            if (isBatchMode) {
-                await updateSessionList();
-                batchResultsContainer.classList.remove('hidden');
-                const addButton = document.createElement('button');
-                addButton.className = 'w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-6 rounded-full shadow-lg flex items-center justify-center gap-3 text-lg';
-                addButton.innerHTML = `<i data-lucide="plus-circle" class="w-6 h-6"></i>Tambah ke Sesi`;
-                addButton.onclick = async () => {
-                    await addContact(getCurrentContactData());
-                    await updateSessionList();
-                    clearContactForm();
-                    logMessage("Contact added to session. Ready for next scan.");
-                };
-                resultsFooter.appendChild(addButton);
-            } else {
-                batchResultsContainer.classList.add('hidden');
-                const vCardButton = document.createElement('button');
-                vCardButton.className = 'w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-6 rounded-full shadow-lg flex items-center justify-center gap-3 text-lg';
-                vCardButton.innerHTML = `<i data-lucide="contact" class="w-6 h-6"></i>Simpan vCard`;
-                vCardButton.onclick = async () => {
-                    const singleContact = [getCurrentContactData()];
-                    await saveAsVCard(singleContact);
-                    await resetApp();
-                };
-
-                const csvButton = document.createElement('button');
-                csvButton.className = 'w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-6 rounded-full shadow-lg flex items-center justify-center gap-3 text-lg';
-                csvButton.innerHTML = `<i data-lucide="file-spreadsheet" class="w-6 h-6"></i>Simpan CSV`;
-                csvButton.onclick = async () => {
-                    const singleContact = [getCurrentContactData()];
-                    await saveAsCSV(singleContact);
-                    await resetApp();
-                };
-                
-                const buttonContainer = document.createElement('div');
-                buttonContainer.className = 'flex flex-col sm:flex-row gap-4';
-                buttonContainer.appendChild(vCardButton);
-                buttonContainer.appendChild(csvButton);
-                resultsFooter.appendChild(buttonContainer);
-            }
-            lucide.createIcons();
+        function exportZIP(contacts) {
+            if (contacts.length === 0) { showToast("Tidak ada data untuk diekspor."); return; }
+            const zip = new JSZip();
+            contacts.forEach((c, i) => {
+                let vCard = `BEGIN:VCARD\nVERSION:3.0\nFN:${c.nama || ''}\nORG:${c.perusahaan || ''}\nTITLE:${c.jabatan || ''}\n`;
+                if (c.telepon_kantor) vCard += `TEL;TYPE=WORK,VOICE:${c.telepon_kantor}\n`;
+                if (c.whatsapp) vCard += `TEL;TYPE=CELL,VOICE:${c.whatsapp}\n`;
+                if (c.email) vCard += `EMAIL:${c.email}\n`;
+                vCard += `END:VCARD`;
+                const filename = (c.nama || `kontak_${i + 1}`).replace(/\s+/g, '_').toLowerCase() + '.vcf';
+                zip.file(filename, vCard);
+            });
+            zip.generateAsync({ type: "blob" }).then(content => {
+                const link = document.createElement("a");
+                link.href = URL.createObjectURL(content);
+                link.download = `kontak_vcf_${new Date().toISOString().slice(0,10)}.zip`;
+                link.click();
+                showToast("File ZIP sedang diunduh.");
+            });
         }
 
         // --- Event Listeners ---
-        startSingleBtn.addEventListener('click', () => startScan(false));
-        startBatchBtn.addEventListener('click', () => startScan(true));
-        uploadBtn.addEventListener('click', () => {
-            if (!isBatchMode) {
-                isBatchMode = false;
-                clearContacts();
-            }
-            imageUploadInput.click()
-        });
+        startScanBtn.addEventListener('click', startCamera);
+        uploadBtn.addEventListener('click', () => imageUploadInput.click());
         imageUploadInput.addEventListener('change', handleImageUpload);
         captureBtn.addEventListener('click', captureAndProcess);
-        
-        cancelScanBtn.addEventListener('click', async () => {
-            stopCamera();
-            const contacts = await getAllContacts();
-            if (isBatchMode && contacts.length > 0) {
-                showBatchExportScreen();
-            } else {
-                showScreen('initial-screen');
+        cancelScanBtn.addEventListener('click', () => { stopCamera(); showScreen('initial'); });
+        viewResultsBtn.addEventListener('click', () => showScreen('results'));
+        backToHomeBtn.addEventListener('click', () => showScreen('initial'));
+        clearAllBtn.addEventListener('click', async () => {
+            if (confirm("Apakah Anda yakin ingin menghapus semua data kontak? Tindakan ini tidak dapat dibatalkan.")) {
+                await dbLogic.clearAllContacts();
+                await refreshResults();
+                showToast("Semua data telah dihapus.");
             }
         });
-        
-        finishBtn.addEventListener('click', async () => {
-            const contacts = await getAllContacts();
-            if (isBatchMode && contacts.length > 0) {
-                showBatchExportScreen();
-            } else {
-                await resetApp();
-            }
-        });
-        
-        rescanBtn.addEventListener('click', () => {
-            logMessage("Rescan button clicked.");
-            showScreen('initial-screen');
-        });
+        saveEditBtn.addEventListener('click', saveContactChanges);
+        cancelEditBtn.addEventListener('click', closeEditModal);
 
-        exportCsvBtn.addEventListener('click', async () => {
-            const contacts = await getAllContacts();
-            saveAsCSV(contacts);
-        });
-        exportZipBtn.addEventListener('click', async () => {
-            const contacts = await getAllContacts();
-            saveAsVCard(contacts);
-        });
-        backToHomeBtn.addEventListener('click', resetApp);
-        
-        themeToggleBtn.addEventListener('click', () => {
-            const isDark = document.documentElement.classList.contains('dark');
-            const newTheme = isDark ? 'light' : 'dark';
-            localStorage.setItem('theme', newTheme);
-            applyTheme(newTheme);
-            logMessage(`Theme changed to ${newTheme}`);
-        });
-
-        logToggleBtn.addEventListener('click', () => {
-            const isHidden = logContainer.classList.contains('opacity-0');
-            if (isHidden) {
-                logContainer.classList.remove('opacity-0', 'translate-y-full', 'pointer-events-none');
-            } else {
-                closeLog();
-            }
-        });
-
-        closeLogBtn.addEventListener('click', closeLog);
-
-        copyLogBtn.addEventListener('click', () => {
-            navigator.clipboard.writeText(logOutput.textContent).then(() => {
-                copyLogBtn.textContent = 'Disalin!';
-                setTimeout(() => { copyLogBtn.textContent = 'Salin'; }, 2000);
-            }).catch(err => {
-                logMessage(`Failed to copy log: ${err}`);
-            });
-        });
-
-        acaraInput.addEventListener('input', (e) => {
-            localStorage.setItem('savedAcara', e.target.value);
-        });
-        tanggalInput.addEventListener('input', (e) => {
-            localStorage.setItem('savedTanggal', e.target.value);
-        });
-
+        // --- App Initialization ---
         document.addEventListener('DOMContentLoaded', async () => {
             lucide.createIcons();
-            await initDB();
-            
-            const savedAcara = localStorage.getItem('savedAcara');
-            const savedTanggal = localStorage.getItem('savedTanggal');
-            if (savedAcara) acaraInput.value = savedAcara;
-            if (savedTanggal) {
-                tanggalInput.value = savedTanggal;
-            } else {
-                const today = new Date();
-                tanggalInput.value = today.toISOString().slice(0, 10);
+            try {
+                await dbLogic.init();
+                await refreshResults();
+                showScreen('initial');
+            } catch (error) {
+                console.error("Failed to initialize the app:", error);
+                document.body.innerHTML = `<div class="text-center p-8 text-red-500">Gagal memuat database. Aplikasi tidak dapat berjalan.</div>`;
             }
-
-            const savedTheme = localStorage.getItem('theme');
-            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            if (savedTheme) applyTheme(savedTheme);
-            else if (prefersDark) applyTheme('dark');
-            else applyTheme('light');
-
-            logMessage("App initialized.");
-            showScreen('initial-screen');
         });
-
     </script>
 </body>
 </html>
