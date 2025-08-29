@@ -142,9 +142,14 @@
                     <input type="email" id="edit-email" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500">
                 </div>
             </form>
-            <div class="mt-6 flex justify-end gap-3">
-                <button id="cancel-edit-btn" class="px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-500 font-semibold">Batal</button>
-                <button id="save-edit-btn" class="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-semibold">Simpan Perubahan</button>
+            <div class="mt-6 flex justify-between items-center">
+                <button id="delete-contact-btn" class="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white font-semibold flex items-center gap-2">
+                    <i data-lucide="trash-2" class="w-4 h-4"></i>Hapus
+                </button>
+                <div class="flex gap-3">
+                    <button id="cancel-edit-btn" class="px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-500 font-semibold">Batal</button>
+                    <button id="save-edit-btn" class="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-semibold">Simpan Perubahan</button>
+                </div>
             </div>
         </div>
     </div>
@@ -181,6 +186,7 @@
         const editForm = document.getElementById('edit-form');
         const cancelEditBtn = document.getElementById('cancel-edit-btn');
         const saveEditBtn = document.getElementById('save-edit-btn');
+        const deleteContactBtn = document.getElementById('delete-contact-btn');
         
         let stream;
 
@@ -220,6 +226,15 @@
                     const store = transaction.objectStore('contacts');
                     const request = store.put(contact);
                     request.onsuccess = resolve; request.onerror = reject;
+                });
+            },
+            deleteContact: function(id) {
+                return new Promise((resolve, reject) => {
+                    const transaction = this.db.transaction(['contacts'], 'readwrite');
+                    const store = transaction.objectStore('contacts');
+                    const request = store.delete(id);
+                    request.onsuccess = resolve;
+                    request.onerror = reject;
                 });
             },
             getAllContacts: function() {
@@ -425,6 +440,21 @@
             await refreshResults();
         }
 
+        async function handleDeleteContact() {
+            const id = parseInt(document.getElementById('edit-contact-id').value);
+            if (confirm("Apakah Anda yakin ingin menghapus kontak ini? Tindakan ini tidak dapat dibatalkan.")) {
+                try {
+                    await dbLogic.deleteContact(id);
+                    showToast("Kontak berhasil dihapus.");
+                    closeEditModal();
+                    await refreshResults();
+                } catch (error) {
+                    console.error("Gagal menghapus kontak:", error);
+                    showToast("Gagal menghapus kontak.");
+                }
+            }
+        }
+
         function exportCSV(contacts) {
             if (contacts.length === 0) { showToast("Tidak ada data untuk diekspor."); return; }
             const headers = ['Nama', 'Jabatan', 'Perusahaan', 'Telepon Kantor', 'WhatsApp', 'Email'];
@@ -495,6 +525,7 @@
         });
         saveEditBtn.addEventListener('click', saveContactChanges);
         cancelEditBtn.addEventListener('click', closeEditModal);
+        deleteContactBtn.addEventListener('click', handleDeleteContact);
 
         // --- App Initialization ---
         document.addEventListener('DOMContentLoaded', async () => {
