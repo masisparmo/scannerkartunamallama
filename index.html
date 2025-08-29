@@ -142,13 +142,20 @@
                     <input type="email" id="edit-email" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500">
                 </div>
             </form>
-            <div class="mt-6 flex justify-between items-center">
-                <button id="delete-contact-btn" class="px-4 py-2 rounded-lg border border-red-500 text-red-500 hover:bg-red-500 hover:text-white dark:border-red-600 dark:text-red-600 dark:hover:bg-red-600 dark:hover:text-white font-semibold flex items-center gap-2 transition-colors">
-                    <i data-lucide="trash-2" class="w-4 h-4"></i>Hapus
+            <div class="mt-6 flex w-full justify-between items-center">
+                <!-- Tombol Hapus (Destructive, di kiri) -->
+                <button id="delete-contact-btn" class="flex items-center justify-center gap-2 rounded-lg border border-red-500 px-5 py-2 text-sm font-medium text-red-500 transition-colors hover:bg-red-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 dark:border-red-600 dark:text-red-600 dark:hover:bg-red-600 dark:hover:text-white dark:focus:ring-offset-gray-800">
+                    <i data-lucide="trash-2" class="h-4 w-4"></i>
+                    <span>Hapus</span>
                 </button>
-                <div class="flex gap-3">
-                    <button id="cancel-edit-btn" class="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 font-semibold transition-colors">Batal</button>
-                    <button id="save-edit-btn" class="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-semibold transition-colors">Simpan Perubahan</button>
+            
+                <!-- Grup Tombol Batal & Simpan (di kanan) -->
+                <div class="flex items-center gap-3">
+                    <!-- Tombol Batal (Secondary) -->
+                    <button id="cancel-edit-btn" class="rounded-lg border border-gray-300 px-5 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700 dark:focus:ring-offset-gray-800">Batal</button>
+                    
+                    <!-- Tombol Simpan (Primary) -->
+                    <button id="save-edit-btn" class="rounded-lg border border-transparent bg-indigo-600 px-5 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800">Simpan Perubahan</button>
                 </div>
             </div>
         </div>
