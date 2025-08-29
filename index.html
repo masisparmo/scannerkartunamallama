@@ -48,18 +48,17 @@
 </head>
 <body class="bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200">
 
-    <div class="app-container max-w-lg mx-auto shadow-2xl min-h-screen flex flex-col bg-gray-50 dark:bg-[#0D1117]">
+    <div class="app-container max-w-lg mx-auto shadow-2xl min-h-screen flex flex-col bg-gray-50 dark:bg-[#0D1117] relative">
         
-        <div class="absolute top-5 right-5 z-50">
-            <button id="theme-toggle" class="p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
-                <i id="theme-icon-sun" data-lucide="sun" class="w-5 h-5"></i>
-                <i id="theme-icon-moon" data-lucide="moon" class="w-5 h-5"></i>
-            </button>
-        </div>
-
         <main class="main-content flex-grow flex flex-col">
 
             <div id="initial-screen" class="screen p-8 flex flex-col justify-center items-center text-center flex-grow">
+                 <div class="absolute top-5 right-5 z-10">
+                    <button id="theme-toggle-initial" class="p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
+                        <i data-lucide="sun" class="w-5 h-5"></i>
+                        <i data-lucide="moon" class="w-5 h-5"></i>
+                    </button>
+                </div>
                 <div class="w-full">
                     <div class="flex justify-center mb-8">
                         <div class="p-4 bg-indigo-600/10 dark:bg-indigo-600/20 rounded-full">
@@ -119,9 +118,13 @@
             </div>
             
             <div id="results-screen" class="hidden screen flex flex-col">
-                <header class="p-6 pr-4 flex justify-between items-center gap-2 border-b border-gray-200 dark:border-gray-700">
-                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Hasil Scan</h2>
-                    <button id="back-to-home-btn" class="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 font-semibold hover:bg-gray-300 dark:hover:bg-gray-600 py-2 px-4 rounded-full text-sm">Menu Utama</button>
+                <header class="p-6 flex justify-between items-center gap-4 border-b border-gray-200 dark:border-gray-700">
+                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white flex-grow">Hasil Scan</h2>
+                    <button id="back-to-home-btn" class="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 font-semibold hover:bg-gray-300 dark:hover:bg-gray-600 py-2 px-4 rounded-full text-sm whitespace-nowrap">Menu Utama</button>
+                    <button id="theme-toggle-results" class="p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
+                        <i data-lucide="sun" class="w-5 h-5"></i>
+                        <i data-lucide="moon" class="w-5 h-5"></i>
+                    </button>
                 </header>
                 <div class="flex-grow p-6 pt-4 overflow-y-auto">
                     <p class="text-gray-600 dark:text-gray-400 mb-4">Total <span id="results-contact-count" class="font-bold">0</span> kontak tersimpan.</p>
@@ -241,9 +244,8 @@
             const saveEditBtn = document.getElementById('save-edit-btn');
             const deleteContactBtn = document.getElementById('delete-contact-btn');
 
-            const themeToggleBtn = document.getElementById('theme-toggle');
-            const themeIconSun = document.getElementById('theme-icon-sun');
-            const themeIconMoon = document.getElementById('theme-icon-moon');
+            const themeToggleInitial = document.getElementById('theme-toggle-initial');
+            const themeToggleResults = document.getElementById('theme-toggle-results');
             
             let stream;
 
@@ -643,18 +645,32 @@
                 });
             }
 
-            function applyTheme(theme) {
-                if (theme === 'dark') {
-                    document.documentElement.classList.add('dark');
-                    themeIconMoon.classList.add('hidden');
-                    themeIconSun.classList.remove('hidden');
-                } else {
-                    document.documentElement.classList.remove('dark');
-                    themeIconSun.classList.add('hidden');
-                    themeIconMoon.classList.remove('hidden');
-                }
+            function applyTheme(isDark) {
+                const theme = isDark ? 'dark' : 'light';
+                document.documentElement.classList.toggle('dark', isDark);
+                
+                [themeToggleInitial, themeToggleResults].forEach(toggle => {
+                    const sunIcon = toggle.querySelector('[data-lucide="sun"]');
+                    const moonIcon = toggle.querySelector('[data-lucide="moon"]');
+                    if (isDark) {
+                        moonIcon.classList.add('hidden');
+                        sunIcon.classList.remove('hidden');
+                    } else {
+                        sunIcon.classList.add('hidden');
+                        moonIcon.classList.remove('hidden');
+                    }
+                });
+
+                localStorage.setItem('theme', theme);
             }
 
+            function toggleTheme() {
+                const isDark = document.documentElement.classList.contains('dark');
+                applyTheme(!isDark);
+            }
+
+            [themeToggleInitial, themeToggleResults].forEach(btn => btn.addEventListener('click', toggleTheme));
+            
             startScanBtn.addEventListener('click', startCamera);
             uploadBtn.addEventListener('click', () => imageUploadInput.click());
             imageUploadInput.addEventListener('change', handleImageUpload);
@@ -677,23 +693,12 @@
             sessionTanggalInput.addEventListener('input', (e) => localStorage.setItem('sessionTanggal', e.target.value));
             sessionCatatanInput.addEventListener('input', (e) => localStorage.setItem('sessionCatatan', e.target.value));
 
-            themeToggleBtn.addEventListener('click', () => {
-                const isDark = document.documentElement.classList.contains('dark');
-                const newTheme = isDark ? 'light' : 'dark';
-                localStorage.setItem('theme', newTheme);
-                applyTheme(newTheme);
-            });
-
             async function initializeApp() {
                 lucide.createIcons();
                 
                 const savedTheme = localStorage.getItem('theme');
                 const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-                if (savedTheme) {
-                    applyTheme(savedTheme);
-                } else {
-                    applyTheme(prefersDark ? 'dark' : 'light');
-                }
+                applyTheme(savedTheme ? savedTheme === 'dark' : prefersDark);
 
                 sessionAcaraInput.value = localStorage.getItem('sessionAcara') || '';
                 sessionTanggalInput.value = localStorage.getItem('sessionTanggal') || new Date().toISOString().slice(0, 10);
@@ -714,4 +719,3 @@
     </script>
 </body>
 </html>
-
