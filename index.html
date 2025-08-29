@@ -28,7 +28,17 @@
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         #video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
         .camera-overlay { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: space-between; background: linear-gradient(to bottom, rgba(0,0,0,0.4), transparent, rgba(0,0,0,0.6)); }
-        .scan-frame { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90%; max-width: 400px; aspect-ratio: 1.6 / 1; border: 2px dashed rgba(255,255,255,0.5); border-radius: 1.5rem; }
+        .scan-frame { 
+            position: absolute; 
+            top: 50%; 
+            left: 50%; 
+            transform: translate(-50%, -50%); 
+            width: 80%; 
+            max-width: 320px; 
+            aspect-ratio: 1 / 1; 
+            border: 2px dashed rgba(255,255,255,0.5); 
+            border-radius: 1.5rem; 
+        }
         .toast { transition: opacity 0.3s ease, transform 0.3s ease; }
         .modal-backdrop { transition: opacity 0.3s ease; }
         .modal-content { transition: transform 0.3s ease, opacity 0.3s ease; }
@@ -43,6 +53,9 @@
             border-radius: 0.5rem;
             transition: all 0.2s ease-in-out;
             white-space: nowrap;
+        }
+        #scan-mode-label {
+            transition: opacity 0.3s ease;
         }
     </style>
 </head>
@@ -66,7 +79,7 @@
                         </div>
                     </div>
                     <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Scanner Pintar</h1>
-                    <p class="text-gray-500 dark:text-gray-400 mt-2">Scanner Kartu Nama Berbasis AI</p>
+                    <p class="text-gray-500 dark:text-gray-400 mt-2">Scanner Kartu Nama & QR Code Berbasis AI</p>
                 </div>
                 
                 <div class="w-full text-left my-8 space-y-4">
@@ -87,7 +100,7 @@
                 </div>
 
                 <div class="w-full flex flex-col gap-4">
-                     <button id="start-scan-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-6 rounded-full shadow-lg transition-transform transform hover:scale-105 flex items-center justify-center gap-3 text-lg"><i data-lucide="camera" class="w-6 h-6"></i>Scan Kartu Nama</button>
+                     <button id="start-scan-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-6 rounded-full shadow-lg transition-transform transform hover:scale-105 flex items-center justify-center gap-3 text-lg"><i data-lucide="camera" class="w-6 h-6"></i>Buka Kamera Pindai</button>
                      <button id="upload-btn" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-4 px-6 rounded-full shadow-lg transition-transform transform hover:scale-105 flex items-center justify-center gap-3 text-lg"><i data-lucide="image" class="w-6 h-6"></i>Unggah dari Galeri</button>
                      <button id="view-results-btn" class="w-full text-indigo-600 dark:text-indigo-400 font-semibold py-3 px-6 rounded-full hover:bg-gray-200 dark:hover:bg-gray-800 mt-4 flex items-center justify-center gap-2">Lihat Hasil Scan <span id="home-contact-count" class="bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-300 text-xs font-bold px-2 py-0.5 rounded-full">0</span></button>
                 </div>
@@ -99,7 +112,7 @@
                 <div class="scan-frame"></div>
                 <div class="camera-overlay p-6">
                     <div class="flex justify-between items-center">
-                        <p class="text-white font-medium text-sm bg-black/50 px-3 py-1 rounded-full">Arahkan ke Kartu Nama</p>
+                        <p id="scan-mode-label" class="text-white font-medium text-sm bg-black/50 px-3 py-1 rounded-full">Arahkan ke Kartu Nama atau QR Code</p>
                         <button id="cancel-scan-btn" class="p-3 bg-black/50 rounded-full text-white hover:bg-black/80"><i data-lucide="x" class="w-6 h-6"></i></button>
                     </div>
                     <div class="flex justify-center items-center">
@@ -113,7 +126,7 @@
             
             <div id="processing-screen" class="hidden screen justify-center items-center text-center p-8 flex-grow">
                 <div class="loader mb-6"></div>
-                <h2 class="text-2xl font-bold text-gray-900 dark:text-white animate-pulse">AI Menganalisis Gambar...</h2>
+                <h2 id="processing-title" class="text-2xl font-bold text-gray-900 dark:text-white animate-pulse">AI Menganalisis Gambar...</h2>
                 <p class="text-gray-500 dark:text-gray-400 mt-2">Mohon tunggu sebentar...</p>
             </div>
             
@@ -233,7 +246,9 @@
             const canvas = document.getElementById('canvas');
             const toast = document.getElementById('toast');
             const toastMessage = document.getElementById('toast-message');
-            
+            const processingTitle = document.getElementById('processing-title');
+            const scanModeLabel = document.getElementById('scan-mode-label');
+
             const sessionAcaraInput = document.getElementById('session-acara');
             const sessionTanggalInput = document.getElementById('session-tanggal');
             const sessionCatatanInput = document.getElementById('session-catatan');
@@ -248,6 +263,7 @@
             const themeToggleResults = document.getElementById('theme-toggle-results');
             
             let stream;
+            let qrScanInterval;
 
             const dbLogic = {
                 db: null,
@@ -329,12 +345,37 @@
                     screens[screenName].classList.remove('hidden');
                 }
             }
+            
+            // --- QR Code Scan Function ---
+            function scanQRCode() {
+                if (!video.srcObject || video.readyState !== video.HAVE_ENOUGH_DATA) {
+                    return;
+                }
+                const context = canvas.getContext('2d');
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                context.drawImage(video, 0, 0, canvas.width, canvas.height);
+                const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+                const code = jsQR(imageData.data, imageData.width, imageData.height, {
+                    inversionAttempts: "dontInvert",
+                });
+
+                if (code) {
+                    stopCamera(); // Stop camera and interval
+                    processQRCode(code.data);
+                }
+            }
 
             async function startCamera() {
                 try {
                     if (stream) { stream.getTracks().forEach(track => track.stop()); }
                     stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
                     video.srcObject = stream;
+                    video.addEventListener('loadeddata', () => {
+                         // Start QR scanning loop
+                        if(qrScanInterval) clearInterval(qrScanInterval);
+                        qrScanInterval = setInterval(scanQRCode, 500);
+                    });
                     showScreen('scanner');
                 } catch (err) {
                     console.error("Error accessing camera:", err);
@@ -344,6 +385,8 @@
             }
 
             function stopCamera() {
+                if (qrScanInterval) clearInterval(qrScanInterval);
+                qrScanInterval = null;
                 if (stream) { stream.getTracks().forEach(track => track.stop()); }
             }
 
@@ -383,6 +426,7 @@
 
             async function captureAndProcess() {
                 stopCamera();
+                processingTitle.textContent = "AI Menganalisis Gambar...";
                 const context = canvas.getContext('2d');
                 canvas.width = video.videoWidth;
                 canvas.height = video.videoHeight;
@@ -390,10 +434,10 @@
                 const imageDataUrl = canvas.toDataURL('image/jpeg', 0.9); // Use JPEG
                 
                 const finalImageDataUrl = await resizeImage(imageDataUrl);
-                await processImage(finalImageDataUrl);
+                await processImageWithAI(finalImageDataUrl);
             }
 
-            async function processImage(imageDataUrl) {
+            async function processImageWithAI(imageDataUrl) {
                 showScreen('processing');
                 try {
                     const response = await fetch(BACKEND_API_URL, {
@@ -403,37 +447,72 @@
                     });
                     if (!response.ok) {
                         const errorText = await response.text();
-                        let errorBody;
-                        try {
-                            errorBody = JSON.parse(errorText);
-                        } catch (e) {
-                            errorBody = { error: errorText };
-                        }
-                        
-                        // Extract Groq's error message if available
-                        const groqErrorMatch = errorText.match(/Groq API Error: (\d{3})/);
-                        const groqStatusCode = groqErrorMatch ? groqErrorMatch[1] : 'N/A';
-                        
-                        throw new Error(`Backend Error: ${response.status}. Groq API Error: ${groqStatusCode}`);
+                        throw new Error(`Backend Error: ${response.status}. Detail: ${errorText}`);
                     }
                     const result = await response.json();
                     const jsonString = result.data;
                     if (jsonString) {
                         const extractedData = JSON.parse(jsonString);
-                        extractedData.acara = sessionAcaraInput.value;
-                        extractedData.tanggal = sessionTanggalInput.value;
-                        extractedData.catatan = sessionCatatanInput.value;
-
-                        await dbLogic.addContact(extractedData);
-                        showToast('Kontak berhasil disimpan!');
-                        await refreshResults();
-                        showScreen('results');
+                        saveContactData(extractedData);
                     } else { throw new Error("Respons dari Backend tidak valid."); }
                 } catch (error) {
                     console.error("Processing Error:", error);
                     alert(`Gagal memproses gambar: ${error.message}`);
                     showScreen('initial');
                 }
+            }
+            
+            // --- Process QR Code Data ---
+            async function processQRCode(data) {
+                processingTitle.textContent = "Memproses QR Code...";
+                showScreen('processing');
+                
+                try {
+                    // Simple check for vCard format
+                    if (data.startsWith('BEGIN:VCARD')) {
+                        const contact = parseVCard(data);
+                        await saveContactData(contact);
+                    } else {
+                        // If not a vCard, save as a note
+                        const contact = { nama: 'Kontak dari QR Code', catatan: data };
+                        await saveContactData(contact);
+                    }
+                } catch(error) {
+                    console.error("QR Processing Error:", error);
+                    alert(`Gagal memproses QR Code: ${error.message}`);
+                    showScreen('initial');
+                }
+            }
+
+            function parseVCard(vcardString) {
+                const contact = {};
+                const lines = vcardString.split('\n');
+                lines.forEach(line => {
+                    if (line.startsWith('FN:')) contact.nama = line.substring(3).trim();
+                    else if (line.startsWith('N:')) { // Fallback for name
+                        if(!contact.nama) {
+                            const parts = line.substring(2).split(';');
+                            contact.nama = `${parts[1]} ${parts[0]}`.trim();
+                        }
+                    }
+                    else if (line.startsWith('TITLE:')) contact.jabatan = line.substring(6).trim();
+                    else if (line.startsWith('ORG:')) contact.perusahaan = line.substring(4).trim();
+                    else if (line.includes('TYPE=CELL')) contact.whatsapp = line.split(':')[1].trim();
+                    else if (line.includes('TYPE=WORK')) contact.telepon_kantor = line.split(':')[1].trim();
+                    else if (line.startsWith('EMAIL:')) contact.email = line.substring(6).trim();
+                });
+                return contact;
+            }
+
+            async function saveContactData(contactData) {
+                contactData.acara = sessionAcaraInput.value;
+                contactData.tanggal = sessionTanggalInput.value;
+                contactData.catatan = contactData.catatan || sessionCatatanInput.value; // Preserve QR notes
+                
+                await dbLogic.addContact(contactData);
+                showToast('Kontak berhasil disimpan!');
+                await refreshResults();
+                showScreen('results');
             }
             
             async function refreshResults() {
@@ -493,15 +572,15 @@
 
                 if (count === 1) {
                     exportButtonsContainer.innerHTML = `
-                        <button id="export-csv-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-full shadow-lg flex items-center justify-center gap-2 text-base"><i data-lucide="file-spreadsheet" class="w-5 h-5"></i>SIMPAN .csv</button>
-                        <button id="export-vcf-btn" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-full shadow-lg flex items-center justify-center gap-2 text-base"><i data-lucide="contact" class="w-5 h-5"></i>SIMPAN .vcf</button>
+                        <button id="export-csv-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-full shadow-lg flex items-center justify-center gap-2 text-base"><i data-lucide="file-spreadsheet" class="w-5 h-5"></i>Simpan .csv</button>
+                        <button id="export-vcf-btn" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-full shadow-lg flex items-center justify-center gap-2 text-base"><i data-lucide="contact" class="w-5 h-5"></i>Simpan .vcf</button>
                     `;
                     document.getElementById('export-csv-btn').addEventListener('click', () => exportCSV(contacts));
                     document.getElementById('export-vcf-btn').addEventListener('click', () => exportVCF(contacts[0]));
                 } else {
                     exportButtonsContainer.innerHTML = `
-                        <button id="export-csv-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-full shadow-lg flex items-center justify-center gap-2 text-base"><i data-lucide="file-spreadsheet" class="w-5 h-5"></i>SIMPAN .csv</button>
-                        <button id="export-zip-btn" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-full shadow-lg flex items-center justify-center gap-2 text-base"><i data-lucide="archive" class="w-5 h-5"></i>SIMPAN VCF .zip</button>
+                        <button id="export-csv-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-full shadow-lg flex items-center justify-center gap-2 text-base"><i data-lucide="file-spreadsheet" class="w-5 h-5"></i>Simpan .csv</button>
+                        <button id="export-zip-btn" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-full shadow-lg flex items-center justify-center gap-2 text-base"><i data-lucide="archive" class="w-5 h-5"></i>Simpan VCF .zip</button>
                     `;
                     document.getElementById('export-csv-btn').addEventListener('click', () => exportCSV(contacts));
                     document.getElementById('export-zip-btn').addEventListener('click', () => exportZIP(contacts));
@@ -515,7 +594,7 @@
                 const reader = new FileReader();
                 reader.onload = async (e) => {
                     const finalImageDataUrl = await resizeImage(e.target.result);
-                    await processImage(finalImageDataUrl);
+                    await processImageWithAI(finalImageDataUrl);
                 };
                 reader.readAsDataURL(file);
                 imageUploadInput.value = '';
@@ -719,4 +798,3 @@
     </script>
 </body>
 </html>
-
