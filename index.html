@@ -102,7 +102,7 @@
                 <button id="close-log-viewer-btn" class="p-1 hover:bg-gray-700 rounded-full"><i data-lucide="x" class="w-5 h-5"></i></button>
             </header>
             <div id="log-list" class="flex-grow p-4 overflow-y-auto font-mono text-sm space-y-2"></div>
-            <footer class="p-3 border-t border-gray-700 flex-shrink-0 flex justify-between">
+            <footer class="p-3 border-t border-gray-700 flex-shrink-0 flex justify-end gap-4">
                 <button id="copy-logs-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md text-xs flex items-center gap-2"><i data-lucide="copy" class="w-4 h-4"></i>Copy Logs</button>
                 <button id="clear-logs-btn" class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-md text-xs">Clear Logs</button>
             </footer>
@@ -154,11 +154,39 @@
             
             let stream, qrScanInterval, confirmCallback = null;
 
-             // --- Log Viewer Logic ---
-            function logError(message, details = '') {
-                console.error(message, details); // Keep original console log
+            // --- Phone Number Formatting ---
+            function formatKantor(phone) {
+                if (!phone) return '';
+                let digits = phone.replace(/\D/g, '');
+                if (digits.startsWith('62')) {
+                    digits = '0' + digits.substring(2);
+                }
+                return digits;
+            }
+
+            function formatWA(phone) {
+                if (!phone) return '';
+                let digits = phone.replace(/\D/g, '');
+                if (digits.startsWith('0')) {
+                    digits = '62' + digits.substring(1);
+                }
+                return digits;
+            }
+
+             // --- Log Viewer Logic (IMPROVED) ---
+            function logError(message, errorObject = null) {
+                console.error(message, errorObject); // Keep original console log for developers
                 const timestamp = new Date().toLocaleTimeString();
-                errorLogs.push({ timestamp, message, details: details.toString() });
+                
+                let details = '';
+                if (errorObject) {
+                    details = `Error Type: ${errorObject.name}\nMessage: ${errorObject.message}\n`;
+                    if(errorObject.stack) {
+                        details += `Stack Trace:\n${errorObject.stack}`;
+                    }
+                }
+
+                errorLogs.push({ timestamp, message, details });
                 renderLogs();
             }
 
@@ -170,10 +198,11 @@
                     errorLogs.forEach(log => {
                         const logEntry = document.createElement('div');
                         logEntry.className = 'log-entry p-2';
+                        const sanitizedDetails = log.details.replace(/</g, "&lt;").replace(/>/g, "&gt;");
                         logEntry.innerHTML = `
                             <p class="text-gray-400 text-xs">${log.timestamp}</p>
                             <p class="text-red-400 font-semibold">${log.message}</p>
-                            <p class="text-gray-300 text-xs whitespace-pre-wrap">${log.details}</p>
+                            <pre class="text-gray-300 text-xs whitespace-pre-wrap">${sanitizedDetails}</pre>
                         `;
                         logList.appendChild(logEntry);
                     });
@@ -185,7 +214,7 @@
                 init: function() {
                     return new Promise((resolve, reject) => {
                         const request = indexedDB.open('SmartScannerDB', 2);
-                        request.onerror = (event) => { logError("Database error", event.target.errorCode); reject("Database error"); };
+                        request.onerror = (event) => { logError("Database error", event.target.error); reject("Database error"); };
                         request.onsuccess = (event) => { this.db = event.target.result; resolve(); };
                         request.onupgradeneeded = (event) => {
                             const db = event.target.result;
@@ -195,12 +224,12 @@
                         };
                     });
                 },
-                addContact: function(contact) { return new Promise((resolve, reject) => { const transaction = this.db.transaction(['contacts'], 'readwrite'); const store = transaction.objectStore('contacts'); const request = store.add(contact); request.onsuccess = resolve; request.onerror = reject; }); },
-                getContact: function(id) { return new Promise((resolve, reject) => { const transaction = this.db.transaction(['contacts'], 'readonly'); const store = transaction.objectStore('contacts'); const request = store.get(id); request.onsuccess = (event) => resolve(event.target.result); request.onerror = reject; }); },
-                updateContact: function(contact) { return new Promise((resolve, reject) => { const transaction = this.db.transaction(['contacts'], 'readwrite'); const store = transaction.objectStore('contacts'); const request = store.put(contact); request.onsuccess = resolve; request.onerror = reject; }); },
-                deleteContact: function(id) { return new Promise((resolve, reject) => { const transaction = this.db.transaction(['contacts'], 'readwrite'); const store = transaction.objectStore('contacts'); const request = store.delete(id); request.onsuccess = resolve; request.onerror = reject; }); },
-                getAllContacts: function() { return new Promise((resolve, reject) => { const transaction = this.db.transaction(['contacts'], 'readonly'); const store = transaction.objectStore('contacts'); const request = store.getAll(); request.onsuccess = (event) => resolve(event.target.result); request.onerror = reject; }); },
-                clearAllContacts: function() { return new Promise((resolve, reject) => { const transaction = this.db.transaction(['contacts'], 'readwrite'); const store = transaction.objectStore('contacts'); const request = store.clear(); request.onsuccess = resolve; request.onerror = reject; }); }
+                addContact: function(contact) { return new Promise((resolve, reject) => { const transaction = this.db.transaction(['contacts'], 'readwrite'); const store = transaction.objectStore('contacts'); const request = store.add(contact); request.onsuccess = resolve; request.onerror = (e) => { logError("Add contact DB error", e.target.error); reject(e.target.error); }; }); },
+                getContact: function(id) { return new Promise((resolve, reject) => { const transaction = this.db.transaction(['contacts'], 'readonly'); const store = transaction.objectStore('contacts'); const request = store.get(id); request.onsuccess = (event) => resolve(event.target.result); request.onerror = (e) => { logError("Get contact DB error", e.target.error); reject(e.target.error); }; }); },
+                updateContact: function(contact) { return new Promise((resolve, reject) => { const transaction = this.db.transaction(['contacts'], 'readwrite'); const store = transaction.objectStore('contacts'); const request = store.put(contact); request.onsuccess = resolve; request.onerror = (e) => { logError("Update contact DB error", e.target.error); reject(e.target.error); }; }); },
+                deleteContact: function(id) { return new Promise((resolve, reject) => { const transaction = this.db.transaction(['contacts'], 'readwrite'); const store = transaction.objectStore('contacts'); const request = store.delete(id); request.onsuccess = resolve; request.onerror = (e) => { logError("Delete contact DB error", e.target.error); reject(e.target.error); }; }); },
+                getAllContacts: function() { return new Promise((resolve, reject) => { const transaction = this.db.transaction(['contacts'], 'readonly'); const store = transaction.objectStore('contacts'); const request = store.getAll(); request.onsuccess = (event) => resolve(event.target.result); request.onerror = (e) => { logError("Get all contacts DB error", e.target.error); reject(e.target.error); }; }); },
+                clearAllContacts: function() { return new Promise((resolve, reject) => { const transaction = this.db.transaction(['contacts'], 'readwrite'); const store = transaction.objectStore('contacts'); const request = store.clear(); request.onsuccess = resolve; request.onerror = (e) => { logError("Clear contacts DB error", e.target.error); reject(e.target.error); }; }); }
             };
             
             function showToast(message) {
@@ -341,7 +370,13 @@
                     if (!response.ok) { const errorText = await response.text(); throw new Error(`Backend Error: ${response.status}. Detail: ${errorText}`); }
                     const result = await response.json();
                     const jsonString = result.data;
-                    if (jsonString) { const extractedData = JSON.parse(jsonString); saveContactData(extractedData); } 
+                    if (jsonString) { 
+                        const extractedData = JSON.parse(jsonString);
+                        // Format numbers after extraction
+                        extractedData.telepon_kantor = formatKantor(extractedData.telepon_kantor);
+                        extractedData.whatsapp = formatWA(extractedData.whatsapp);
+                        saveContactData(extractedData);
+                    } 
                     else { throw new Error("Respons dari Backend tidak valid."); }
                 } catch (error) {
                     logError("Processing Error:", error);
@@ -355,6 +390,9 @@
                 showScreen('processing');
                 try {
                     const contact = data.startsWith('BEGIN:VCARD') ? parseVCard(data) : { nama: 'Kontak dari QR Code', catatan: data };
+                    // Format numbers
+                    contact.telepon_kantor = formatKantor(contact.telepon_kantor);
+                    contact.whatsapp = formatWA(contact.whatsapp);
                     await saveContactData(contact);
                 } catch(error) {
                     logError("QR Processing Error:", error);
@@ -432,9 +470,17 @@
             async function saveContactChanges() {
                 const id = parseInt(document.getElementById('edit-contact-id').value);
                 const updatedContact = {
-                    id: id, nama: document.getElementById('edit-nama').value, jabatan: document.getElementById('edit-jabatan').value, perusahaan: document.getElementById('edit-perusahaan').value,
-                    jenis_perusahaan: document.getElementById('edit-jenis_perusahaan').value, telepon_kantor: document.getElementById('edit-telepon_kantor').value, whatsapp: document.getElementById('edit-whatsapp').value,
-                    email: document.getElementById('edit-email').value, acara: document.getElementById('edit-acara').value, tanggal: document.getElementById('edit-tanggal').value, catatan: document.getElementById('edit-catatan').value,
+                    id: id,
+                    nama: document.getElementById('edit-nama').value,
+                    jabatan: document.getElementById('edit-jabatan').value,
+                    perusahaan: document.getElementById('edit-perusahaan').value,
+                    jenis_perusahaan: document.getElementById('edit-jenis_perusahaan').value,
+                    telepon_kantor: formatKantor(document.getElementById('edit-telepon_kantor').value),
+                    whatsapp: formatWA(document.getElementById('edit-whatsapp').value),
+                    email: document.getElementById('edit-email').value,
+                    acara: document.getElementById('edit-acara').value,
+                    tanggal: document.getElementById('edit-tanggal').value,
+                    catatan: document.getElementById('edit-catatan').value,
                 };
                 await dbLogic.updateContact(updatedContact);
                 showToast("Kontak berhasil diperbarui!");
@@ -488,6 +534,10 @@
             }
 
             async function saveContactData(contactData) {
+                // Format numbers before saving
+                contactData.telepon_kantor = formatKantor(contactData.telepon_kantor);
+                contactData.whatsapp = formatWA(contactData.whatsapp);
+
                 contactData.acara = otherSelectors.sessionAcaraInput.value;
                 contactData.tanggal = otherSelectors.sessionTanggalInput.value;
                 contactData.catatan = contactData.catatan || otherSelectors.sessionCatatanInput.value;
@@ -762,20 +812,48 @@
             });
 
             // Log Viewer Event Listeners
-            logIcon.addEventListener('click', () => logViewerModal.classList.remove('hidden'));
+            logIcon.addEventListener('click', () => {
+                logViewerModal.classList.remove('hidden');
+                lucide.createIcons(); // Refresh icons when modal is opened
+            });
             closeLogViewerBtn.addEventListener('click', () => logViewerModal.classList.add('hidden'));
             clearLogsBtn.addEventListener('click', () => {
                 errorLogs = [];
                 renderLogs();
             });
             copyLogsBtn.addEventListener('click', () => {
+                if (errorLogs.length === 0) {
+                    showToast('No logs to copy.');
+                    return;
+                }
                 const logText = errorLogs.map(log => `[${log.timestamp}] ${log.message}\n${log.details}`).join('\n\n');
-                navigator.clipboard.writeText(logText).then(() => {
-                    showToast('Logs copied to clipboard!');
-                }).catch(err => {
-                    logError('Failed to copy logs', err);
-                    showToast('Could not copy logs.');
-                });
+                
+                // Use modern Clipboard API
+                if (navigator.clipboard && window.isSecureContext) {
+                    navigator.clipboard.writeText(logText).then(() => {
+                        showToast('Logs copied to clipboard!');
+                    }).catch(err => {
+                        logError('Failed to copy logs with Clipboard API', err);
+                        showToast('Could not copy logs.');
+                    });
+                } else {
+                    // Fallback for older browsers or insecure contexts
+                    const textArea = document.createElement('textarea');
+                    textArea.value = logText;
+                    textArea.style.position = 'fixed';  textArea.style.top = '-9999px'; textArea.style.left = '-9999px';
+                    document.body.appendChild(textArea);
+                    textArea.focus();
+                    textArea.select();
+                    try {
+                        document.execCommand('copy');
+                        showToast('Logs copied to clipboard!');
+                    } catch (err) {
+                        logError('Failed to copy logs with fallback', err);
+                        showToast('Could not copy logs.');
+                    } finally {
+                        document.body.removeChild(textArea);
+                    }
+                }
             });
 
 
@@ -784,5 +862,4 @@
     </script>
 </body>
 </html>
-
 
