@@ -294,24 +294,65 @@
                     }
                 }
             }
-
+            
+            // =======================================================================
+            // START OF IPHONE CAMERA FIX
+            // The original startCamera function is replaced with this more robust version.
+            // =======================================================================
             async function startCamera() {
                 try {
-                    if (stream) { stream.getTracks().forEach(track => track.stop()); }
-                    stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
-                    otherSelectors.video.srcObject = stream;
-                    otherSelectors.video.addEventListener('loadeddata', () => {
-                        if(qrScanInterval) clearInterval(qrScanInterval);
+                    if (stream) {
+                        stream.getTracks().forEach(track => track.stop());
+                    }
+
+                    // IMPROVEMENT: Use 'ideal' facingMode for better device compatibility.
+                    // This tells the browser to prefer the back camera but allows it to fall back
+                    // to another camera if 'environment' isn't available.
+                    const constraints = {
+                        video: {
+                            facingMode: { ideal: 'environment' }
+                        }
+                    };
+
+                    stream = await navigator.mediaDevices.getUserMedia(constraints);
+                    
+                    const video = otherSelectors.video;
+                    video.srcObject = stream;
+                    
+                    // FIX: Explicitly call play() for iOS Safari compatibility.
+                    // The 'playsinline' attribute is necessary, but calling .play() ensures
+                    // the video starts even if autoplay policies are strict.
+                    video.play();
+
+                    video.addEventListener('loadeddata', () => {
+                        if (qrScanInterval) clearInterval(qrScanInterval);
                         qrScanInterval = setInterval(scanQRCode, 500);
                     });
+
                     showScreen('scanner');
+
                 } catch (err) {
                     logError("Error accessing camera:", err);
-                    showToast("Tidak dapat mengakses kamera. Pastikan Anda memberikan izin.");
+                    
+                    // IMPROVEMENT: More specific error handling to give better user feedback.
+                    let errorMessage = "Tidak dapat mengakses kamera.";
+                    if (err.name === "NotAllowedError") {
+                        errorMessage = "Anda tidak memberikan izin untuk mengakses kamera. Harap izinkan di pengaturan browser.";
+                    } else if (err.name === "NotFoundError") {
+                        errorMessage = "Tidak ada kamera yang ditemukan di perangkat ini.";
+                    } else {
+                        errorMessage = "Gagal mengakses kamera. Pastikan tidak ada aplikasi lain yang sedang menggunakannya.";
+                    }
+                    
+                    showToast(errorMessage);
                     showScreen('initial');
                 }
             }
-            
+            // =======================================================================
+            // END OF IPHONE CAMERA FIX
+            // =======================================================================
+
+
             function stopCamera() {
                 if (qrScanInterval) clearInterval(qrScanInterval);
                 qrScanInterval = null;
@@ -862,8 +903,3 @@
     </script>
 </body>
 </html>
-
-
-
-
-
