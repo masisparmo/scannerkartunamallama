@@ -243,10 +243,10 @@
                 clearAllContacts: function() { return new Promise((resolve, reject) => { const transaction = this.db.transaction(['contacts'], 'readwrite'); const store = transaction.objectStore('contacts'); const request = store.clear(); request.onsuccess = resolve; request.onerror = (e) => { logError("Clear contacts DB error", e.target.error); reject(e.target.error); }; }); }
             };
             
-            function showToast(message) {
+            function showToast(message, duration = 3000) {
                 otherSelectors.toastMessage.textContent = message;
                 otherSelectors.toast.classList.remove('opacity-0', 'translate-y-5');
-                setTimeout(() => { otherSelectors.toast.classList.add('opacity-0', 'translate-y-5'); }, 3000);
+                setTimeout(() => { otherSelectors.toast.classList.add('opacity-0', 'translate-y-5'); }, duration);
             }
 
             function showScreen(screenName) {
@@ -383,15 +383,21 @@
                     const jsonString = result.data;
                     if (jsonString) { 
                         const extractedData = JSON.parse(jsonString);
-                        // Format numbers after extraction
                         extractedData.telepon_kantor = formatKantor(extractedData.telepon_kantor);
                         extractedData.whatsapp = formatWA(extractedData.whatsapp);
                         saveContactData(extractedData);
                     } 
                     else { throw new Error("Respons dari Backend tidak valid."); }
                 } catch (error) {
-                    logError("Processing Error:", error);
-                    showToast(`Gagal memproses gambar: ${error.message}`);
+                    // --- PERBAIKAN DI SINI ---
+                    if (error instanceof TypeError && error.message.includes('Failed to fetch')) {
+                        const errorMessage = "Gagal terhubung ke server untuk scan. Ini mungkin disebabkan oleh ekstensi browser (Ad-Blocker) atau masalah jaringan. Coba di mode Incognito.";
+                        logError("Processing Error (Fetch Error):", error);
+                        showToast(errorMessage, 5000); // Tampilkan toast lebih lama
+                    } else {
+                        logError("Processing Error (General Error):", error);
+                        showToast(`Gagal memproses gambar: ${error.message}`);
+                    }
                     showScreen('initial');
                 }
             }
@@ -401,7 +407,6 @@
                 showScreen('processing');
                 try {
                     const contact = data.startsWith('BEGIN:VCARD') ? parseVCard(data) : { nama: 'Kontak dari QR Code', catatan: data };
-                    // Format numbers
                     contact.telepon_kantor = formatKantor(contact.telepon_kantor);
                     contact.whatsapp = formatWA(contact.whatsapp);
                     await saveContactData(contact);
@@ -453,7 +458,6 @@
                     });
                      document.querySelectorAll('.contact-card').forEach(card => {
                         card.addEventListener('click', (e) => {
-                            // Cek apakah yang diklik adalah tombol edit
                             if (e.target.closest('.edit-btn')) {
                                 openEditModal(parseInt(e.currentTarget.dataset.id));
                             } else {
@@ -491,7 +495,6 @@
                 otherSelectors.actionModalFooter.innerHTML = footerHTML;
                 lucide.createIcons();
                 
-                // Add event listeners
                 document.getElementById('action-save-vcf').addEventListener('click', () => exportVCF(contact));
                 if(contact.whatsapp && document.getElementById('action-whatsapp')) {
                     document.getElementById('action-whatsapp').addEventListener('click', (e) => {
@@ -529,7 +532,12 @@
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ contact, profile })
                     });
-                    if (!response.ok) { throw new Error('Gagal membuat draf email dari AI.'); }
+                    
+                    if (!response.ok) {
+                        const errorText = await response.text();
+                        throw new Error(`Gagal membuat draf email dari AI. Status: ${response.status}. Detail: ${errorText}`);
+                    }
+                    
                     const result = await response.json();
 
                     if (result.success && result.data) {
@@ -541,8 +549,14 @@
                         throw new Error('Respons AI tidak valid.');
                     }
                 } catch (error) {
-                    logError("Gagal generate email:", error);
-                    showToast(error.message);
+                    if (error instanceof TypeError && error.message.includes('Failed to fetch')) {
+                        const errorMessage = "Gagal terhubung ke server. Ini mungkin disebabkan oleh ekstensi browser (seperti Ad-Blocker) atau masalah jaringan. Coba di mode Incognito atau nonaktifkan ekstensi.";
+                        logError("Gagal generate email (Fetch Error):", error);
+                        showToast(errorMessage, 5000);
+                    } else {
+                        logError("Gagal generate email (General Error):", error);
+                        showToast(error.message);
+                    }
                 } finally {
                     emailBtn.disabled = false;
                     emailBtn.innerHTML = originalBtnHTML;
@@ -655,7 +669,6 @@
             }
 
             async function saveContactData(contactData) {
-                // Format numbers before saving
                 contactData.telepon_kantor = formatKantor(contactData.telepon_kantor);
                 contactData.whatsapp = formatWA(contactData.whatsapp);
 
@@ -963,7 +976,7 @@
             // Log Viewer Event Listeners
             logIcon.addEventListener('click', () => {
                 logViewerModal.classList.remove('hidden');
-                lucide.createIcons(); // Refresh icons when modal is opened
+                lucide.createIcons();
             });
             closeLogViewerBtn.addEventListener('click', () => logViewerModal.classList.add('hidden'));
             clearLogsBtn.addEventListener('click', () => {
@@ -977,7 +990,6 @@
                 }
                 const logText = errorLogs.map(log => `[${log.timestamp}] ${log.message}\n${log.details}`).join('\n\n');
                 
-                // Use modern Clipboard API
                 if (navigator.clipboard && window.isSecureContext) {
                     navigator.clipboard.writeText(logText).then(() => {
                         showToast('Logs copied to clipboard!');
@@ -986,7 +998,6 @@
                         showToast('Could not copy logs.');
                     });
                 } else {
-                    // Fallback for older browsers or insecure contexts
                     const textArea = document.createElement('textarea');
                     textArea.value = logText;
                     textArea.style.position = 'fixed';  textArea.style.top = '-9999px'; textArea.style.left = '-9999px';
@@ -1011,5 +1022,4 @@
     </script>
 </body>
 </html>
-
 
