@@ -33,6 +33,9 @@
         #log-icon { position: fixed; bottom: 1rem; right: 1rem; z-index: 100; }
         #log-viewer-modal .log-entry { border-bottom: 1px solid #4a5568; }
         #log-viewer-modal .log-entry:last-child { border-bottom: none; }
+        .contact-card { cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .contact-card:hover { transform: translateY(-3px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .dark .contact-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
     </style>
 </head>
 <body class="bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200">
@@ -45,7 +48,8 @@
         
         <main class="main-content flex-grow flex flex-col">
             <div id="initial-screen" class="screen p-8 flex flex-col justify-center items-center text-center flex-grow">
-                 <div class="absolute top-5 right-5 z-10">
+                 <div class="absolute top-5 right-5 z-10 flex items-center gap-2">
+                    <button id="profile-settings-btn" class="p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"><i data-lucide="cog" class="w-5 h-5"></i></button>
                     <button id="theme-toggle-initial" class="p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"><i data-lucide="sun" class="w-5 h-5"></i><i data-lucide="moon" class="w-5 h-5"></i></button>
                 </div>
                 <div class="w-full"><div class="flex justify-center mb-8"><div class="p-4 bg-indigo-600/10 dark:bg-indigo-600/20 rounded-full"><i data-lucide="contact-2" class="w-12 h-12 text-indigo-500 dark:text-indigo-400"></i></div></div><h1 class="text-3xl font-bold text-gray-900 dark:text-white">SCANNER PINTAR</h1><p class="text-gray-500 dark:text-gray-400 mt-2">Scanner Kartu Nama & QR Code Berbasis AI</p></div>
@@ -79,6 +83,8 @@
                 </div>
             </div>
 
+            <div id="profile-screen" class="hidden screen flex-col"><header class="p-6 flex justify-between items-center border-b border-gray-200 dark:border-gray-700"><h2 class="text-2xl font-bold">Profil Saya</h2><button id="back-to-home-from-profile" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700"><i data-lucide="x" class="w-6 h-6"></i></button></header><div class="p-8 space-y-4 flex-grow"><div><label for="profile-nama" class="text-sm font-medium text-gray-600 dark:text-gray-400">Nama Anda</label><input type="text" id="profile-nama" placeholder="Cth: Isparmo" class="w-full mt-1 p-3 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg"></div><div><label for="profile-jabatan" class="text-sm font-medium text-gray-600 dark:text-gray-400">Jabatan Anda</label><input type="text" id="profile-jabatan" placeholder="Cth: Marketing Manager" class="w-full mt-1 p-3 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg"></div><div><label for="profile-perusahaan" class="text-sm font-medium text-gray-600 dark:text-gray-400">Nama Perusahaan Anda</label><input type="text" id="profile-perusahaan" placeholder="Cth: PT Multibangun Rekatama Patria" class="w-full mt-1 p-3 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg"></div><div><label for="profile-deskripsi" class="text-sm font-medium text-gray-600 dark:text-gray-400">Deskripsi Singkat Perusahaan</label><textarea id="profile-deskripsi" rows="3" placeholder="Cth: Spesialis Geosintetik sejak 1995..." class="w-full mt-1 p-3 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg"></textarea></div></div><footer class="p-6"><button id="save-profile-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-full">SIMPAN PROFIL</button></footer></div>
+
             <div id="scanner-screen" class="hidden screen relative bg-black flex-grow"><video id="video" autoplay playsinline></video><div class="scan-frame"></div><div class="camera-overlay p-6"><div class="flex justify-between items-center"><p id="scan-mode-label" class="text-white font-medium text-sm bg-black/50 px-3 py-1 rounded-full">Arahkan ke Kartu Nama atau QR Code</p><button id="cancel-scan-btn" class="p-3 bg-black/50 rounded-full text-white hover:bg-black/80"><i data-lucide="x" class="w-6 h-6"></i></button></div><div class="flex justify-center items-center"><button id="capture-btn" class="w-20 h-20 bg-white rounded-full flex items-center justify-center shadow-2xl ring-4 ring-white/30 transition-transform transform hover:scale-110"><i data-lucide="scan-line" class="w-10 h-10 text-indigo-600"></i></button></div></div><canvas id="canvas" class="hidden"></canvas></div>
             <div id="processing-screen" class="hidden screen justify-center items-center text-center p-8 flex-grow"><div class="loader mb-6"></div><h2 id="processing-title" class="text-2xl font-bold text-gray-900 dark:text-white animate-pulse">AI Menganalisis Gambar...</h2><p class="text-gray-500 dark:text-gray-400 mt-2">Mohon tunggu sebentar...</p></div>
             <div id="results-screen" class="hidden screen flex flex-col"><header class="p-6 flex justify-between items-center gap-4 border-b border-gray-200 dark:border-gray-700"><h2 class="text-2xl font-bold text-gray-900 dark:text-white flex-grow">Hasil Scan Lokal</h2><button id="back-to-home-btn" class="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 font-semibold hover:bg-gray-300 dark:hover:bg-gray-600 py-2 px-4 rounded-full text-sm whitespace-nowrap">MENU UTAMA</button><button id="theme-toggle-results" class="p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"><i data-lucide="sun" class="w-5 h-5"></i><i data-lucide="moon" class="w-5 h-5"></i></button></header><div class="flex-grow p-6 pt-4 overflow-y-auto"><p class="text-gray-600 dark:text-gray-400 mb-4">Total <span id="results-contact-count" class="font-bold">0</span> kontak tersimpan di HP ini.</p><div id="results-list" class="space-y-3"></div></div><footer id="results-footer" class="p-6 border-t border-gray-200 dark:border-gray-700"><div id="export-buttons-container" class="grid grid-cols-2 gap-4"></div><button id="clear-all-btn" class="col-span-2 w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-full shadow-lg mt-4 flex items-center justify-center gap-2 uppercase"><i data-lucide="trash-2" class="w-4 h-4"></i>Hapus Semua Data Lokal</button></footer></div>
@@ -87,6 +93,7 @@
     </div>
 
     <!-- Modals -->
+    <div id="action-modal" class="modal-backdrop hidden fixed inset-0 bg-black/60 z-50 p-4 flex items-end sm:items-center sm:justify-center"><div class="modal-content bg-white dark:bg-gray-800 rounded-t-2xl sm:rounded-2xl shadow-xl w-full max-w-md p-6 transform translate-y-full sm:scale-95 sm:translate-y-0 opacity-0"><div class="flex justify-between items-start mb-4"><div id="action-modal-header"></div><button id="close-action-modal-btn" class="p-2 -mr-2 -mt-2 text-gray-500 hover:text-gray-800 dark:hover:text-gray-200 rounded-full"><i data-lucide="x" class="w-5 h-5"></i></button></div><div id="action-modal-body" class="text-sm text-gray-600 dark:text-gray-400 mb-6"></div><div id="action-modal-footer" class="grid grid-cols-1 sm:grid-cols-3 gap-3"></div></div></div>
     <div id="show-session-qr-modal" class="modal-backdrop hidden fixed inset-0 bg-black/60 z-50 p-4"><div class="modal-content w-full max-w-sm m-auto bg-white dark:bg-gray-800 rounded-2xl p-6 text-center"><h3 class="text-xl font-bold mb-2">Sesi Dibuat!</h3><p class="text-gray-600 dark:text-gray-400 mb-4">Bagikan QR Code ini ke tim Anda untuk bergabung.</p><div id="qr-code-container"></div><button id="close-qr-modal-btn" class="modal-button w-full mt-6 bg-indigo-600 text-white hover:bg-indigo-700">Selesai</button></div></div>
     <div id="join-session-modal" class="modal-backdrop hidden fixed inset-0 bg-black/60 z-50 p-4"><div class="modal-content w-full max-w-sm m-auto bg-white dark:bg-gray-800 rounded-2xl p-6"><h3 class="text-xl font-bold mb-2">Gabung Sesi Kolaborasi</h3><p class="text-gray-600 dark:text-gray-400 mb-4">Anda diundang ke sesi <strong id="join-session-name" class="text-indigo-500"></strong>. Masukkan nama Anda:</p><input type="text" id="marketing-name-input" placeholder="Nama Anda" class="w-full p-3 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500"><div class="flex gap-4 mt-6"><button id="cancel-join-btn" class="modal-button flex-1 bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-200 hover:bg-gray-300">Batal</button><button id="confirm-join-btn" class="modal-button flex-1 bg-indigo-600 text-white hover:bg-indigo-700">Gabung</button></div></div></div>
     <div id="edit-modal" class="modal-backdrop hidden fixed inset-0 bg-black/60 z-50 p-4 flex items-center justify-center"><div class="modal-content bg-white dark:bg-gray-800 rounded-2xl shadow-xl w-full max-w-md p-6 transform scale-95 opacity-0"><h3 class="text-xl font-bold mb-4">Edit Kontak</h3><form id="edit-form" class="space-y-3"><input type="hidden" id="edit-contact-id"><div class="grid grid-cols-2 gap-3"><div><label for="edit-nama" class="text-sm font-medium text-gray-600 dark:text-gray-400">Nama</label><input type="text" id="edit-nama" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"></div><div><label for="edit-jabatan" class="text-sm font-medium text-gray-600 dark:text-gray-400">Jabatan</label><input type="text" id="edit-jabatan" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"></div></div><div class="grid grid-cols-2 gap-3"><div><label for="edit-perusahaan" class="text-sm font-medium text-gray-600 dark:text-gray-400">Perusahaan</label><input type="text" id="edit-perusahaan" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"></div><div><label for="edit-jenis_perusahaan" class="text-sm font-medium text-gray-600 dark:text-gray-400">Jenis Perusahaan</label><input type="text" id="edit-jenis_perusahaan" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"></div></div><div class="grid grid-cols-2 gap-3"><div><label for="edit-telepon_kantor" class="text-sm font-medium text-gray-600 dark:text-gray-400">Telepon Kantor</label><input type="tel" id="edit-telepon_kantor" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"></div><div><label for="edit-whatsapp" class="text-sm font-medium text-gray-600 dark:text-gray-400">WhatsApp</label><input type="tel" id="edit-whatsapp" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"></div></div><div><label for="edit-email" class="text-sm font-medium text-gray-600 dark:text-gray-400">Email</label><input type="email" id="edit-email" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"></div><hr class="border-gray-200 dark:border-gray-600 !my-4"><div><label for="edit-acara" class="text-sm font-medium text-gray-600 dark:text-gray-400">Acara</label><input type="text" id="edit-acara" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"></div><div class="grid grid-cols-2 gap-3"><div><label for="edit-tanggal" class="text-sm font-medium text-gray-600 dark:text-gray-400">Tanggal</label><input type="date" id="edit-tanggal" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"></div><div><label for="edit-catatan" class="text-sm font-medium text-gray-600 dark:text-gray-400">Catatan</label><input type="text" id="edit-catatan" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"></div></div></form><div class="mt-6 flex justify-between items-center gap-3"><button id="delete-contact-btn" class="modal-button bg-red-600 hover:bg-red-700 text-white flex-1 flex items-center justify-center gap-2"><i data-lucide="trash-2" class="w-4 h-4"></i>HAPUS</button><button id="cancel-edit-btn" class="modal-button bg-blue-600 hover:bg-blue-700 text-white flex-1">Batal</button><button id="save-edit-btn" class="modal-button bg-green-600 hover:bg-green-700 text-white flex-1">SIMPAN</button></div></div></div>
@@ -112,8 +119,10 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const BACKEND_API_URL = 'https://asia-southeast1-scanner-kartu-nama-llama.cloudfunctions.net/processBusinessCard';
-            const GSHEET_BACKEND_URL = 'https://asia-southeast1-scanner-kartu-nama-llama.cloudfunctions.net/simpan-gsheet';
+            const BACKEND_API_URL = 'https://asia-southeast1-scanner-kartu-nama-llama.cloudfunctions.net';
+            const GSHEET_BACKEND_URL = `${BACKEND_API_URL}/simpan-gsheet`;
+            const EMAIL_GENERATOR_URL = `${BACKEND_API_URL}/generateFollowUpEmail`;
+
             
             let collaborationSession = { isActive: false, sessionId: null, sessionAcara: null, marketingName: null };
             let errorLogs = [];
@@ -147,8 +156,10 @@
 
             function initializeSelectors() {
                 return {
-                    screens: { initial: document.getElementById('initial-screen'), scanner: document.getElementById('scanner-screen'), processing: document.getElementById('processing-screen'), results: document.getElementById('results-screen'), createSession: document.getElementById('create-session-screen') },
+                    screens: { initial: document.getElementById('initial-screen'), scanner: document.getElementById('scanner-screen'), processing: document.getElementById('processing-screen'), results: document.getElementById('results-screen'), createSession: document.getElementById('create-session-screen'), profile: document.getElementById('profile-screen') },
                     startScanBtn: document.getElementById('start-scan-btn'), uploadBtn: document.getElementById('upload-btn'), viewResultsBtn: document.getElementById('view-results-btn'), imageUploadInput: document.getElementById('image-upload-input'), captureBtn: document.getElementById('capture-btn'), cancelScanBtn: document.getElementById('cancel-scan-btn'), backToHomeBtn: document.getElementById('back-to-home-btn'), exportButtonsContainer: document.getElementById('export-buttons-container'), clearAllBtn: document.getElementById('clear-all-btn'), homeContactCount: document.getElementById('home-contact-count'), resultsContactCount: document.getElementById('results-contact-count'), resultsList: document.getElementById('results-list'), video: document.getElementById('video'), canvas: document.getElementById('canvas'), toast: document.getElementById('toast'), toastMessage: document.getElementById('toast-message'), processingTitle: document.getElementById('processing-title'), sessionAcaraInput: document.getElementById('session-acara'), sessionTanggalInput: document.getElementById('session-tanggal'), sessionCatatanInput: document.getElementById('session-catatan'), editModal: document.getElementById('edit-modal'), editModalContent: document.getElementById('edit-modal').querySelector('.modal-content'), cancelEditBtn: document.getElementById('cancel-edit-btn'), saveEditBtn: document.getElementById('save-edit-btn'), deleteContactBtn: document.getElementById('delete-contact-btn'), themeToggleInitial: document.getElementById('theme-toggle-initial'), themeToggleResults: document.getElementById('theme-toggle-results'), confirmModal: document.getElementById('confirm-modal'), confirmModalContent: document.getElementById('confirm-modal').querySelector('.modal-content'), confirmMessage: document.getElementById('confirm-message'), cancelConfirmBtn: document.getElementById('cancel-confirm-btn'), confirmActionBtn: document.getElementById('confirm-action-btn'),
+                    profileSettingsBtn: document.getElementById('profile-settings-btn'), backToHomeFromProfile: document.getElementById('back-to-home-from-profile'), saveProfileBtn: document.getElementById('save-profile-btn'),
+                    actionModal: document.getElementById('action-modal'), actionModalContent: document.getElementById('action-modal').querySelector('.modal-content'), closeActionModalBtn: document.getElementById('close-action-modal-btn'), actionModalHeader: document.getElementById('action-modal-header'), actionModalBody: document.getElementById('action-modal-body'), actionModalFooter: document.getElementById('action-modal-footer'),
                 };
             }
             
@@ -362,7 +373,7 @@
             async function processImageWithAI(imageDataUrl) {
                 showScreen('processing');
                 try {
-                    const response = await fetch(BACKEND_API_URL, {
+                    const response = await fetch(`${BACKEND_API_URL}/processBusinessCard`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ imageDataUrl })
@@ -426,27 +437,131 @@
                 } else {
                     contacts.reverse().forEach(contact => {
                         const card = document.createElement('div');
-                        card.className = 'bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 rounded-xl flex justify-between items-start';
+                        card.className = 'contact-card bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 rounded-xl';
+                        card.dataset.id = contact.id;
                         card.innerHTML = `
-                            <div>
-                                <div class="flex items-center gap-3"> <p class="font-bold text-lg text-gray-900 dark:text-white">${contact.nama || 'Tanpa Nama'}</p> ${contact.jenis_perusahaan ? `<span class="text-xs font-semibold text-indigo-600 dark:text-indigo-400 bg-indigo-100 dark:bg-indigo-900/50 px-2 py-0.5 rounded-full">${contact.jenis_perusahaan}</span>` : ''} </div>
-                                <p class="text-sm text-gray-600 dark:text-gray-400">${contact.jabatan || ''} di ${contact.perusahaan || ''}</p>
-                                <div class="mt-2 text-xs text-gray-500 dark:text-gray-400"> ${contact.whatsapp ? `<span>HP: ${contact.whatsapp}</span>` : ''} ${contact.email ? `<span class="ml-2">Email: ${contact.email}</span>` : ''} </div>
-                                ${(contact.acara || contact.catatan) ? `<div class="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700 text-xs text-gray-500 dark:text-gray-400"> ${contact.acara ? `<p><strong>Acara:</strong> ${contact.acara} (${contact.tanggal || ''})</p>` : ''} ${contact.catatan ? `<p><strong>Catatan:</strong> ${contact.catatan}</p>` : ''} </div>` : ''}
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <div class="flex items-center gap-3"> <p class="font-bold text-lg text-gray-900 dark:text-white">${contact.nama || 'Tanpa Nama'}</p> ${contact.jenis_perusahaan ? `<span class="text-xs font-semibold text-indigo-600 dark:text-indigo-400 bg-indigo-100 dark:bg-indigo-900/50 px-2 py-0.5 rounded-full">${contact.jenis_perusahaan}</span>` : ''} </div>
+                                    <p class="text-sm text-gray-600 dark:text-gray-400">${contact.jabatan || ''} di ${contact.perusahaan || ''}</p>
+                                </div>
+                                <button class="edit-btn p-2 text-gray-500 hover:text-indigo-600 dark:hover:text-indigo-400 flex-shrink-0" data-id="${contact.id}"> <i data-lucide="edit" class="w-5 h-5"></i> </button>
                             </div>
-                            <button class="edit-btn p-2 text-gray-500 hover:text-indigo-600 dark:hover:text-indigo-400 flex-shrink-0" data-id="${contact.id}"> <i data-lucide="edit" class="w-5 h-5"></i> </button>`;
+                            <div class="mt-2 text-xs text-gray-500 dark:text-gray-400"> ${contact.whatsapp ? `<span>HP: ${contact.whatsapp}</span>` : ''} ${contact.email ? `<span class="ml-2">Email: ${contact.email}</span>` : ''} </div>
+                            ${(contact.acara || contact.catatan) ? `<div class="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700 text-xs text-gray-500 dark:text-gray-400"> ${contact.acara ? `<p><strong>Acara:</strong> ${contact.acara} (${contact.tanggal || ''})</p>` : ''} ${contact.catatan ? `<p><strong>Catatan:</strong> ${contact.catatan}</p>` : ''} </div>` : ''}`;
                         otherSelectors.resultsList.appendChild(card);
                     });
-                    document.querySelectorAll('.edit-btn').forEach(btn => btn.addEventListener('click', (e) => openEditModal(parseInt(e.currentTarget.dataset.id))));
+                     document.querySelectorAll('.contact-card').forEach(card => {
+                        card.addEventListener('click', (e) => {
+                            // Cek apakah yang diklik adalah tombol edit
+                            if (e.target.closest('.edit-btn')) {
+                                openEditModal(parseInt(e.currentTarget.dataset.id));
+                            } else {
+                                openActionModal(parseInt(e.currentTarget.dataset.id));
+                            }
+                        });
+                    });
                 }
                 updateExportButtons(contacts);
                 lucide.createIcons();
             }
 
+            async function openActionModal(id) {
+                const contact = await dbLogic.getContact(id);
+                if (!contact) return;
+
+                otherSelectors.actionModalHeader.innerHTML = `<h3 class="text-xl font-bold text-gray-900 dark:text-white">${contact.nama || 'Tanpa Nama'}</h3>`;
+                otherSelectors.actionModalBody.innerHTML = `<p>${contact.jabatan || ''} di ${contact.perusahaan || ''}</p><p class="mt-1">Acara: ${contact.acara || '-'}</p>`;
+                
+                let footerHTML = '';
+                footerHTML += `<button id="action-save-vcf" class="modal-button bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 flex-1 flex items-center justify-center gap-2"><i data-lucide="contact" class="w-5 h-5"></i>Simpan Kontak</button>`;
+                
+                if (contact.whatsapp) {
+                    footerHTML += `<button id="action-whatsapp" data-wa="${contact.whatsapp}" class="modal-button bg-green-500 text-white hover:bg-green-600 flex-1 flex items-center justify-center gap-2"><i data-lucide="message-circle" class="w-5 h-5"></i>WhatsApp</button>`;
+                } else {
+                     footerHTML += `<button class="modal-button bg-gray-300 dark:bg-gray-600 text-gray-500 cursor-not-allowed flex-1 flex items-center justify-center gap-2" disabled><i data-lucide="message-circle" class="w-5 h-5"></i>WhatsApp</button>`;
+                }
+
+                if (contact.email) {
+                    footerHTML += `<button id="action-email" class="modal-button bg-blue-600 text-white hover:bg-blue-700 flex-1 flex items-center justify-center gap-2"><i data-lucide="mail" class="w-5 h-5"></i>Email</button>`;
+                } else {
+                    footerHTML += `<button class="modal-button bg-gray-300 dark:bg-gray-600 text-gray-500 cursor-not-allowed flex-1 flex items-center justify-center gap-2" disabled><i data-lucide="mail" class="w-5 h-5"></i>Email</button>`;
+                }
+                
+                otherSelectors.actionModalFooter.innerHTML = footerHTML;
+                lucide.createIcons();
+                
+                // Add event listeners
+                document.getElementById('action-save-vcf').addEventListener('click', () => exportVCF(contact));
+                if(contact.whatsapp && document.getElementById('action-whatsapp')) {
+                    document.getElementById('action-whatsapp').addEventListener('click', (e) => {
+                         const waNumber = e.currentTarget.dataset.wa;
+                         const url = `https://wa.me/${waNumber}`;
+                         window.open(url, '_blank');
+                    });
+                }
+                if(contact.email && document.getElementById('action-email')) {
+                    document.getElementById('action-email').addEventListener('click', () => generateAndOpenEmail(contact));
+                }
+
+                otherSelectors.actionModal.classList.remove('hidden');
+                setTimeout(() => { 
+                    otherSelectors.actionModal.classList.remove('opacity-0');
+                    otherSelectors.actionModalContent.classList.remove('translate-y-full', 'sm:scale-95', 'sm:translate-y-0', 'opacity-0'); 
+                }, 10);
+            }
+            
+            async function generateAndOpenEmail(contact) {
+                 const profile = JSON.parse(localStorage.getItem('userProfile'));
+                if (!profile || !profile.nama || !profile.jabatan || !profile.perusahaan) {
+                    showToast("Harap lengkapi profil Anda di menu Pengaturan terlebih dahulu.");
+                    return;
+                }
+
+                const emailBtn = document.getElementById('action-email');
+                const originalBtnHTML = emailBtn.innerHTML;
+                emailBtn.disabled = true;
+                emailBtn.innerHTML = `<div class="loader btn-loader"></div>`;
+                
+                try {
+                    const response = await fetch(EMAIL_GENERATOR_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ contact, profile })
+                    });
+                    if (!response.ok) { throw new Error('Gagal membuat draf email dari AI.'); }
+                    const result = await response.json();
+
+                    if (result.success && result.data) {
+                        const emailData = JSON.parse(result.data);
+                        const subject = encodeURIComponent(emailData.subject || `Perkenalan dari ${profile.perusahaan}`);
+                        const body = encodeURIComponent(emailData.body || '');
+                        window.location.href = `mailto:${contact.email}?subject=${subject}&body=${body}`;
+                    } else {
+                        throw new Error('Respons AI tidak valid.');
+                    }
+                } catch (error) {
+                    logError("Gagal generate email:", error);
+                    showToast(error.message);
+                } finally {
+                    emailBtn.disabled = false;
+                    emailBtn.innerHTML = originalBtnHTML;
+                    lucide.createIcons();
+                }
+            }
+
+
+            function closeActionModal() {
+                 otherSelectors.actionModal.classList.add('opacity-0');
+                 otherSelectors.actionModalContent.classList.add('translate-y-full', 'sm:scale-95', 'sm:translate-y-0', 'opacity-0');
+                setTimeout(() => { otherSelectors.actionModal.classList.add('hidden'); }, 300);
+            }
+
+
             async function openEditModal(id) {
                 const contact = await dbLogic.getContact(id);
                 if (!contact) return;
-                // PERUBAHAN: Sembunyikan konten utama aplikasi agar tidak tampil bersebelahan
+                
                 document.querySelector('.app-container').classList.add('hidden');
                 
                 document.getElementById('edit-contact-id').value = contact.id;
@@ -469,7 +584,6 @@
                 otherSelectors.editModalContent.classList.add('scale-95', 'opacity-0');
                 setTimeout(() => {
                     otherSelectors.editModal.classList.add('hidden');
-                    // PERUBAHAN: Tampilkan kembali konten utama aplikasi setelah modal ditutup
                     document.querySelector('.app-container').classList.remove('hidden');
                 }, 300);
             }
@@ -702,6 +816,14 @@
                     showToast("File ZIP sedang diunduh.");
                 });
             }
+            
+            function loadAndDisplayProfile() {
+                const profile = JSON.parse(localStorage.getItem('userProfile')) || {};
+                document.getElementById('profile-nama').value = profile.nama || '';
+                document.getElementById('profile-jabatan').value = profile.jabatan || '';
+                document.getElementById('profile-perusahaan').value = profile.perusahaan || '';
+                document.getElementById('profile-deskripsi').value = profile.deskripsi || '';
+            }
 
             async function initializeApp() {
                 lucide.createIcons();
@@ -817,6 +939,26 @@
                 }
                 hideConfirmModal();
             });
+
+            // --- Profile Screen Listeners ---
+            otherSelectors.profileSettingsBtn.addEventListener('click', () => {
+                loadAndDisplayProfile();
+                showScreen('profile');
+            });
+            otherSelectors.backToHomeFromProfile.addEventListener('click', () => showScreen('initial'));
+            otherSelectors.saveProfileBtn.addEventListener('click', () => {
+                const profile = {
+                    nama: document.getElementById('profile-nama').value,
+                    jabatan: document.getElementById('profile-jabatan').value,
+                    perusahaan: document.getElementById('profile-perusahaan').value,
+                    deskripsi: document.getElementById('profile-deskripsi').value,
+                };
+                localStorage.setItem('userProfile', JSON.stringify(profile));
+                showToast("Profil berhasil disimpan!");
+                showScreen('initial');
+            });
+            otherSelectors.closeActionModalBtn.addEventListener('click', closeActionModal);
+
 
             // Log Viewer Event Listeners
             logIcon.addEventListener('click', () => {
