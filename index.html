@@ -417,25 +417,75 @@
                 }
             }
 
+            /**
+             * @param {string} vcardString The raw string content from a VCard QR code.
+             * @returns {object} A contact object with parsed data.
+             */
             function parseVCard(vcardString) {
                 const contact = {};
-                vcardString.split('\n').forEach(line => {
-                    const [key, ...valueParts] = line.split(':');
-                    const value = valueParts.join(':').trim();
+                // Split lines and handle both LF (\n) and CRLF (\r\n) line endings
+                const lines = vcardString.split(/[\n\r]+/);
 
-                    if (key.startsWith('FN')) contact.nama = value;
-                    else if (key.startsWith('N')) { 
-                        if(!contact.nama) { 
-                            const parts = value.split(';');
-                            contact.nama = `${parts[1] || ''} ${parts[0] || ''}`.trim();
-                        }
+                lines.forEach(line => {
+                    // Ensure the line has a colon, otherwise it's not a valid field
+                    if (!line.includes(':')) return;
+                    
+                    let [key, ...valueParts] = line.split(':');
+                    let value = valueParts.join(':').trim();
+
+                    // Basic parsing of the key and its parameters (e.g., TEL;TYPE=WORK)
+                    const keyParts = key.split(';');
+                    const mainKey = keyParts[0].toUpperCase();
+                    const params = {};
+                    if (keyParts.length > 1) {
+                        keyParts.slice(1).forEach(p => {
+                            const [paramKey, paramValue] = p.split('=');
+                            if (paramKey && paramValue) {
+                                // Group types, e.g., TYPE=WORK,VOICE -> {TYPE: ['WORK', 'VOICE']}
+                                const pKey = paramKey.toUpperCase();
+                                if (pKey === 'TYPE') {
+                                    params[pKey] = (params[pKey] || []).concat(paramValue.split(','));
+                                } else {
+                                    params[pKey] = paramValue;
+                                }
+                            }
+                        });
                     }
-                    else if (key.startsWith('TITLE')) contact.jabatan = value;
-                    else if (key.startsWith('ORG')) contact.perusahaan = value;
-                    else if (key.includes('TYPE=CELL')) contact.whatsapp = value;
-                    else if (key.includes('TYPE=WORK')) contact.telepon_kantor = value;
-                    else if (key.startsWith('EMAIL')) contact.email = value;
+
+                    // Assign values to the contact object, only if the field is not already filled
+                    if (mainKey === 'FN' && !contact.nama) contact.nama = value;
+                    else if (mainKey === 'N' && !contact.nama) {
+                        const nameParts = value.split(';');
+                        contact.nama = `${nameParts[1] || ''} ${nameParts[0] || ''}`.trim();
+                    }
+                    else if (mainKey === 'TITLE' && !contact.jabatan) contact.jabatan = value;
+                    else if (mainKey === 'ORG' && !contact.perusahaan) contact.perusahaan = value;
+                    else if (mainKey === 'EMAIL' && !contact.email) contact.email = value;
+                    else if (mainKey === 'CATEGORIES' && !contact.jenis_perusahaan) {
+                        // This field is used for "Jenis Perusahaan"
+                        contact.jenis_perusahaan = value.split(',').map(s => s.trim()).join(', ');
+                    }
+                    else if (mainKey === 'TEL') {
+                        const types = params.TYPE || [];
+                        // Check for WORK type for office phone
+                        if (types.includes('WORK') && !contact.telepon_kantor) {
+                            contact.telepon_kantor = value;
+                        } 
+                        // Check for CELL type for WhatsApp
+                        else if (types.includes('CELL') && !contact.whatsapp) {
+                            contact.whatsapp = value;
+                        } 
+                        // Fallback: if no specific numbers are assigned yet, assign the first number found to whatsapp
+                        else if (!contact.telepon_kantor && !contact.whatsapp) { 
+                             contact.whatsapp = value;
+                        }
+                    } 
+                    // Support for non-standard but common X-WHATSAPP field
+                    else if (mainKey === 'X-WHATSAPP' && !contact.whatsapp) {
+                        contact.whatsapp = value;
+                    }
                 });
+
                 return contact;
             }
 
@@ -1059,4 +1109,3 @@
     </script>
 </body>
 </html>
-
