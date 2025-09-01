@@ -93,7 +93,7 @@
     </div>
 
     <!-- Modals -->
-    <div id="action-modal" class="modal-backdrop hidden fixed inset-0 bg-black/60 z-50 p-4 flex items-end sm:items-center sm:justify-center"><div class="modal-content bg-white dark:bg-gray-800 rounded-t-2xl sm:rounded-2xl shadow-xl w-full max-w-md p-6 transform translate-y-full sm:scale-95 sm:translate-y-0 opacity-0"><div class="flex justify-between items-start mb-4"><div id="action-modal-header"></div><button id="close-action-modal-btn" class="p-2 -mr-2 -mt-2 text-gray-500 hover:text-gray-800 dark:hover:text-gray-200 rounded-full"><i data-lucide="x" class="w-5 h-5"></i></button></div><div id="action-modal-body" class="text-sm text-gray-600 dark:text-gray-400 mb-6"></div><div id="action-modal-footer" class="grid grid-cols-1 sm:grid-cols-3 gap-3"></div></div></div>
+    <div id="action-modal" class="modal-backdrop hidden fixed inset-0 bg-black/60 z-50 p-4 flex items-end sm:items-center sm:justify-center"><div class="modal-content bg-white dark:bg-gray-800 rounded-t-2xl sm:rounded-2xl shadow-xl w-full max-w-md p-6 transform translate-y-full sm:scale-95 sm:translate-y-0 opacity-0"><div class="flex justify-between items-start mb-4"><div id="action-modal-header"></div><button id="close-action-modal-btn" class="p-2 -mr-2 -mt-2 text-gray-500 hover:text-gray-800 dark:hover:text-gray-200 rounded-full"><i data-lucide="x" class="w-5 h-5"></i></button></div><div id="action-modal-body" class="text-sm text-gray-600 dark:text-gray-400 mb-6"></div><div id="action-modal-footer" class="flex flex-wrap justify-center gap-3"></div></div></div>
     <div id="show-session-qr-modal" class="modal-backdrop hidden fixed inset-0 bg-black/60 z-50 p-4"><div class="modal-content w-full max-w-sm m-auto bg-white dark:bg-gray-800 rounded-2xl p-6 text-center"><h3 class="text-xl font-bold mb-2">Sesi Dibuat!</h3><p class="text-gray-600 dark:text-gray-400 mb-4">Bagikan QR Code ini ke tim Anda untuk bergabung.</p><div id="qr-code-container"></div><button id="close-qr-modal-btn" class="modal-button w-full mt-6 bg-indigo-600 text-white hover:bg-indigo-700">Selesai</button></div></div>
     <div id="join-session-modal" class="modal-backdrop hidden fixed inset-0 bg-black/60 z-50 p-4"><div class="modal-content w-full max-w-sm m-auto bg-white dark:bg-gray-800 rounded-2xl p-6"><h3 class="text-xl font-bold mb-2">Gabung Sesi Kolaborasi</h3><p class="text-gray-600 dark:text-gray-400 mb-4">Anda diundang ke sesi <strong id="join-session-name" class="text-indigo-500"></strong>. Masukkan nama Anda:</p><input type="text" id="marketing-name-input" placeholder="Nama Anda" class="w-full p-3 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500"><div class="flex gap-4 mt-6"><button id="cancel-join-btn" class="modal-button flex-1 bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-200 hover:bg-gray-300">BATAL</button><button id="confirm-join-btn" class="modal-button flex-1 bg-indigo-600 text-white hover:bg-indigo-700">Gabung</button></div></div></div>
     <div id="edit-modal" class="modal-backdrop hidden fixed inset-0 bg-black/60 z-50 p-4 flex items-center justify-center"><div class="modal-content bg-white dark:bg-gray-800 rounded-2xl shadow-xl w-full max-w-md p-6 transform scale-95 opacity-0"><h3 class="text-xl font-bold mb-4">Edit Kontak</h3><form id="edit-form" class="space-y-3"><input type="hidden" id="edit-contact-id"><div class="grid grid-cols-2 gap-3"><div><label for="edit-nama" class="text-sm font-medium text-gray-600 dark:text-gray-400">Nama</label><input type="text" id="edit-nama" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"></div><div><label for="edit-jabatan" class="text-sm font-medium text-gray-600 dark:text-gray-400">Jabatan</label><input type="text" id="edit-jabatan" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"></div></div><div class="grid grid-cols-2 gap-3"><div><label for="edit-perusahaan" class="text-sm font-medium text-gray-600 dark:text-gray-400">Perusahaan</label><input type="text" id="edit-perusahaan" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"></div><div><label for="edit-jenis_perusahaan" class="text-sm font-medium text-gray-600 dark:text-gray-400">Jenis Perusahaan</label><input type="text" id="edit-jenis_perusahaan" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"></div></div><div class="grid grid-cols-2 gap-3"><div><label for="edit-telepon_kantor" class="text-sm font-medium text-gray-600 dark:text-gray-400">Telepon Kantor</label><input type="tel" id="edit-telepon_kantor" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"></div><div><label for="edit-whatsapp" class="text-sm font-medium text-gray-600 dark:text-gray-400">WhatsApp</label><input type="tel" id="edit-whatsapp" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"></div></div><div><label for="edit-email" class="text-sm font-medium text-gray-600 dark:text-gray-400">Email</label><input type="email" id="edit-email" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"></div><hr class="border-gray-200 dark:border-gray-600 !my-4"><div><label for="edit-acara" class="text-sm font-medium text-gray-600 dark:text-gray-400">Acara</label><input type="text" id="edit-acara" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"></div><div class="grid grid-cols-2 gap-3"><div><label for="edit-tanggal" class="text-sm font-medium text-gray-600 dark:text-gray-400">Tanggal</label><input type="date" id="edit-tanggal" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"></div><div><label for="edit-catatan" class="text-sm font-medium text-gray-600 dark:text-gray-400">Catatan</label><input type="text" id="edit-catatan" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"></div></div></form><div class="mt-6 flex justify-between items-center gap-3"><button id="delete-contact-btn" class="modal-button bg-red-600 hover:bg-red-700 text-white flex-1 flex items-center justify-center gap-2"><i data-lucide="trash-2" class="w-4 h-4"></i>HAPUS</button><button id="cancel-edit-btn" class="modal-button bg-blue-600 hover:bg-blue-700 text-white flex-1">Batal</button><button id="save-edit-btn" class="modal-button bg-green-600 hover:bg-green-700 text-white flex-1">SIMPAN</button></div></div></div>
@@ -122,6 +122,7 @@
             const BACKEND_API_URL = 'https://asia-southeast1-scanner-kartu-nama-llama.cloudfunctions.net/scanner-api';
             const GSHEET_BACKEND_URL = `${BACKEND_API_URL}/simpan-gsheet`;
             const EMAIL_GENERATOR_URL = `${BACKEND_API_URL}/generateFollowUpEmail`;
+            const WA_GENERATOR_URL = `${BACKEND_API_URL}/generateFollowUpWa`; // URL Endpoint Baru
 
             
             let collaborationSession = { isActive: false, sessionId: null, sessionAcara: null, marketingName: null };
@@ -389,11 +390,10 @@
                     } 
                     else { throw new Error("Respons dari Backend tidak valid."); }
                 } catch (error) {
-                    // --- PERBAIKAN DI SINI ---
                     if (error instanceof TypeError && error.message.includes('Failed to fetch')) {
                         const errorMessage = "Gagal terhubung ke server untuk scan. Ini mungkin disebabkan oleh ekstensi browser (Ad-Blocker) atau masalah jaringan. Coba di mode Incognito.";
                         logError("Processing Error (Fetch Error):", error);
-                        showToast(errorMessage, 5000); // Tampilkan toast lebih lama
+                        showToast(errorMessage, 5000);
                     } else {
                         logError("Processing Error (General Error):", error);
                         showToast(`Gagal memproses gambar: ${error.message}`);
@@ -478,31 +478,31 @@
                 otherSelectors.actionModalBody.innerHTML = `<p>${contact.jabatan || ''} di ${contact.perusahaan || ''}</p><p class="mt-1">Acara: ${contact.acara || '-'}</p>`;
                 
                 let footerHTML = '';
-                footerHTML += `<button id="action-save-vcf" class="modal-button bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 flex-1 flex items-center justify-center gap-2"><i data-lucide="contact" class="w-5 h-5"></i>Simpan Kontak</button>`;
+                footerHTML += `<button id="action-save-vcf" class="modal-button bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 flex items-center justify-center gap-2"><i data-lucide="contact" class="w-5 h-5"></i>Simpan Kontak</button>`;
                 
                 if (contact.whatsapp) {
-                    footerHTML += `<button id="action-whatsapp" data-wa="${contact.whatsapp}" class="modal-button bg-green-500 text-white hover:bg-green-600 flex-1 flex items-center justify-center gap-2"><i data-lucide="message-circle" class="w-5 h-5"></i>WhatsApp</button>`;
-                } else {
-                     footerHTML += `<button class="modal-button bg-gray-300 dark:bg-gray-600 text-gray-500 cursor-not-allowed flex-1 flex items-center justify-center gap-2" disabled><i data-lucide="message-circle" class="w-5 h-5"></i>WhatsApp</button>`;
+                    footerHTML += `<button id="action-whatsapp" data-wa="${contact.whatsapp}" class="modal-button bg-green-500 text-white hover:bg-green-600 flex items-center justify-center gap-2"><i data-lucide="message-circle" class="w-5 h-5"></i>Buka WA</button>`;
+                    footerHTML += `<button id="action-whatsapp-ai" class="modal-button bg-teal-500 text-white hover:bg-teal-600 flex items-center justify-center gap-2"><i data-lucide="sparkles" class="w-5 h-5"></i>Draf Pesan WA</button>`;
                 }
 
                 if (contact.email) {
-                    footerHTML += `<button id="action-email" class="modal-button bg-blue-600 text-white hover:bg-blue-700 flex-1 flex items-center justify-center gap-2"><i data-lucide="mail" class="w-5 h-5"></i>Email</button>`;
-                } else {
-                    footerHTML += `<button class="modal-button bg-gray-300 dark:bg-gray-600 text-gray-500 cursor-not-allowed flex-1 flex items-center justify-center gap-2" disabled><i data-lucide="mail" class="w-5 h-5"></i>Email</button>`;
+                    footerHTML += `<button id="action-email" class="modal-button bg-blue-600 text-white hover:bg-blue-700 flex items-center justify-center gap-2"><i data-lucide="mail" class="w-5 h-5"></i>Draf Email</button>`;
                 }
                 
                 otherSelectors.actionModalFooter.innerHTML = footerHTML;
                 lucide.createIcons();
                 
                 document.getElementById('action-save-vcf').addEventListener('click', () => exportVCF(contact));
-                if(contact.whatsapp && document.getElementById('action-whatsapp')) {
+                
+                if(contact.whatsapp) {
                     document.getElementById('action-whatsapp').addEventListener('click', (e) => {
                          const waNumber = e.currentTarget.dataset.wa;
                          const url = `https://wa.me/${waNumber}`;
                          window.open(url, '_blank');
                     });
+                    document.getElementById('action-whatsapp-ai').addEventListener('click', () => generateAndOpenWa(contact));
                 }
+
                 if(contact.email && document.getElementById('action-email')) {
                     document.getElementById('action-email').addEventListener('click', () => generateAndOpenEmail(contact));
                 }
@@ -517,8 +517,7 @@
             async function generateAndOpenEmail(contact) {
                  const profile = JSON.parse(localStorage.getItem('userProfile'));
                 if (!profile || !profile.nama || !profile.jabatan || !profile.perusahaan) {
-                    showToast("Harap lengkapi profil Anda di menu Pengaturan terlebih dahulu.");
-                    return;
+                    showToast("Harap lengkapi profil Anda di menu Pengaturan terlebih dahulu."); return;
                 }
 
                 const emailBtn = document.getElementById('action-email');
@@ -533,24 +532,18 @@
                         body: JSON.stringify({ contact, profile })
                     });
                     
-                    if (!response.ok) {
-                        const errorText = await response.text();
-                        throw new Error(`Gagal membuat draf email dari AI. Status: ${response.status}. Detail: ${errorText}`);
-                    }
+                    if (!response.ok) { const errorText = await response.text(); throw new Error(`Gagal membuat draf email. Status: ${response.status}. Detail: ${errorText}`); }
                     
                     const result = await response.json();
-
                     if (result.success && result.data) {
                         const emailData = JSON.parse(result.data);
                         const subject = encodeURIComponent(emailData.subject || `Perkenalan dari ${profile.perusahaan}`);
                         const body = encodeURIComponent(emailData.body || '');
                         window.location.href = `mailto:${contact.email}?subject=${subject}&body=${body}`;
-                    } else {
-                        throw new Error('Respons AI tidak valid.');
-                    }
+                    } else { throw new Error('Respons AI tidak valid.'); }
                 } catch (error) {
                     if (error instanceof TypeError && error.message.includes('Failed to fetch')) {
-                        const errorMessage = "Gagal terhubung ke server. Ini mungkin disebabkan oleh ekstensi browser (seperti Ad-Blocker) atau masalah jaringan. Coba di mode Incognito atau nonaktifkan ekstensi.";
+                        const errorMessage = "Gagal terhubung ke server. Ini mungkin disebabkan oleh ekstensi browser (Ad-Blocker) atau masalah jaringan.";
                         logError("Gagal generate email (Fetch Error):", error);
                         showToast(errorMessage, 5000);
                     } else {
@@ -564,13 +557,49 @@
                 }
             }
 
+            async function generateAndOpenWa(contact) {
+                const profile = JSON.parse(localStorage.getItem('userProfile'));
+                if (!profile || !profile.nama) {
+                    showToast("Harap lengkapi profil Anda di menu Pengaturan terlebih dahulu."); return;
+                }
+
+                const waAiBtn = document.getElementById('action-whatsapp-ai');
+                const originalBtnHTML = waAiBtn.innerHTML;
+                waAiBtn.disabled = true;
+                waAiBtn.innerHTML = `<div class="loader btn-loader"></div>`;
+                
+                try {
+                    const response = await fetch(WA_GENERATOR_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ contact, profile })
+                    });
+                    
+                    if (!response.ok) { const errorText = await response.text(); throw new Error(`Gagal membuat draf WA. Status: ${response.status}. Detail: ${errorText}`); }
+                    
+                    const result = await response.json();
+                    if (result.success && result.data) {
+                        const message = encodeURIComponent(result.data);
+                        const waNumber = formatWA(contact.whatsapp);
+                        const url = `https://wa.me/${waNumber}?text=${message}`;
+                        window.open(url, '_blank');
+                        closeActionModal();
+                    } else { throw new Error('Respons AI untuk WA tidak valid.'); }
+                } catch (error) {
+                    logError("Gagal generate pesan WA:", error);
+                    showToast(error.message);
+                } finally {
+                    waAiBtn.disabled = false;
+                    waAiBtn.innerHTML = originalBtnHTML;
+                    lucide.createIcons();
+                }
+            }
 
             function closeActionModal() {
                  otherSelectors.actionModal.classList.add('opacity-0');
                  otherSelectors.actionModalContent.classList.add('translate-y-full', 'sm:scale-95', 'sm:translate-y-0', 'opacity-0');
                 setTimeout(() => { otherSelectors.actionModal.classList.add('hidden'); }, 300);
             }
-
 
             async function openEditModal(id) {
                 const contact = await dbLogic.getContact(id);
@@ -1022,5 +1051,3 @@
     </script>
 </body>
 </html>
-
-
