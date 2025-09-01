@@ -420,13 +420,21 @@
             function parseVCard(vcardString) {
                 const contact = {};
                 vcardString.split('\n').forEach(line => {
-                    if (line.startsWith('FN:')) contact.nama = line.substring(3).trim();
-                    else if (line.startsWith('N:')) { if(!contact.nama) { const parts = line.substring(2).split(';'); contact.nama = `${parts[1]} ${parts[0]}`.trim(); } }
-                    else if (line.startsWith('TITLE:')) contact.jabatan = line.substring(6).trim();
-                    else if (line.startsWith('ORG:')) contact.perusahaan = line.substring(4).trim();
-                    else if (line.includes('TYPE=CELL')) contact.whatsapp = line.split(':')[1].trim();
-                    else if (line.includes('TYPE=WORK')) contact.telepon_kantor = line.split(':')[1].trim();
-                    else if (line.startsWith('EMAIL:')) contact.email = line.substring(6).trim();
+                    const [key, ...valueParts] = line.split(':');
+                    const value = valueParts.join(':').trim();
+
+                    if (key.startsWith('FN')) contact.nama = value;
+                    else if (key.startsWith('N')) { 
+                        if(!contact.nama) { 
+                            const parts = value.split(';');
+                            contact.nama = `${parts[1] || ''} ${parts[0] || ''}`.trim();
+                        }
+                    }
+                    else if (key.startsWith('TITLE')) contact.jabatan = value;
+                    else if (key.startsWith('ORG')) contact.perusahaan = value;
+                    else if (key.includes('TYPE=CELL')) contact.whatsapp = value;
+                    else if (key.includes('TYPE=WORK')) contact.telepon_kantor = value;
+                    else if (key.startsWith('EMAIL')) contact.email = value;
                 });
                 return contact;
             }
@@ -1051,3 +1059,4 @@
     </script>
 </body>
 </html>
+
