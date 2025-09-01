@@ -311,40 +311,135 @@
             }
 
             async function startCamera() {
-                // Define more robust constraints, especially for iOS, as suggested.
-                const constraints = {
-                    video: {
-                        facingMode: 'environment', // Prefer the rear camera
-                        width: { ideal: 1280 },   // Request a higher resolution if available
-                        height: { ideal: 720 }
-                    }
-                };
-
                 try {
-                    if (stream) { stream.getTracks().forEach(track => track.stop()); }
+                    // Hentikan stream yang ada
+                    if (stream) {
+                        stream.getTracks().forEach(track => track.stop());
+                    }
                     
-                    stream = await navigator.mediaDevices.getUserMedia(constraints);
+                    // Coba beberapa konfigurasi kamera secara bertahap
+                    const constraints = [
+                        // Prioritas 1: Kamera belakang dengan resolusi sedang
+                        { video: { facingMode: { exact: 'environment' }, width: { ideal: 1280 }, height: { ideal: 720 } } },
+                        // Prioritas 2: Kamera belakang tanpa constraint resolusi
+                        { video: { facingMode: 'environment' } },
+                        // Prioritas 3: Kamera default (depan/belakang)
+                        { video: { width: { ideal: 1280 }, height: { ideal: 720 } } },
+                        // Prioritas 4: Kamera minimal
+                        { video: true }
+                    ];
+                    let cameraStarted = false;
+                    
+                    // Coba setiap konfigurasi sampai berhasil
+                    for (let i = 0; i < constraints.length; i++) {
+                        try {
+                            console.log(`Mencoba konfigurasi kamera ${i + 1}:`, constraints[i]);
+                            stream = await navigator.mediaDevices.getUserMedia(constraints[i]);
+                            
+                            // Test apakah stream benar-benar berfungsi
+                            if (stream && stream.getVideoTracks().length > 0) {
+                                const videoTrack = stream.getVideoTracks()[0];
+                                if (videoTrack.readyState === 'live') {
+                                    cameraStarted = true;
+                                    console.log(`Berhasil dengan konfigurasi ${i + 1}`);
+                                    break;
+                                }
+                            }
+                        } catch (err) {
+                            console.log(`Konfigurasi ${i + 1} gagal:`, err);
+                            // Lanjut ke konfigurasi berikutnya
+                            continue;
+                        }
+                    }
+                    
+                    if (!cameraStarted || !stream) {
+                        throw new Error("Tidak dapat mengakses kamera dengan semua konfigurasi");
+                    }
+                    
+                    // Set stream ke video element
                     otherSelectors.video.srcObject = stream;
-
-                    // Explicitly play the video. This is crucial for iOS Safari.
-                    await otherSelectors.video.play();
                     
-                    otherSelectors.video.addEventListener('loadeddata', () => {
-                        if(qrScanInterval) clearInterval(qrScanInterval);
-                        qrScanInterval = setInterval(scanQRCode, 500);
+                    // Panggil play() secara eksplisit, ini sangat penting untuk iOS
+                    await otherSelectors.video.play();
+
+                    // Tunggu sampai video siap
+                    await new Promise((resolve, reject) => {
+                        const timeout = setTimeout(() => {
+                            reject(new Error("Video tidak dapat dimuat dalam waktu yang ditentukan"));
+                        }, 10000); // Timeout 10 detik
+                        
+                        otherSelectors.video.addEventListener('loadeddata', () => {
+                            clearTimeout(timeout);
+                            resolve();
+                        }, { once: true });
+                        
+                        otherSelectors.video.addEventListener('error', (e) => {
+                            clearTimeout(timeout);
+                            reject(new Error(`Video error: ${e.message}`));
+                        }, { once: true });
                     });
+
+                    // Mulai QR scanning
+                    if (qrScanInterval) clearInterval(qrScanInterval);
+                    qrScanInterval = setInterval(scanQRCode, 500);
+                    
                     showScreen('scanner');
+                    
                 } catch (err) {
                     logError("Error accessing camera:", err);
-                    // Provide a clear message and an automatic fallback for the user.
-                    showToast("Kamera gagal diakses. Coba upload dari galeri.", 4000);
-                    showScreen('initial');
                     
-                    // Automatically trigger the file upload as a fallback.
-                    // A small delay allows the user to read the toast message first.
+                    // Pesan error yang lebih spesifik untuk iPhone
+                    let errorMessage = "Tidak dapat mengakses kamera. ";
+                    
+                    if (err.name === 'NotAllowedError') {
+                        errorMessage += "Harap berikan izin kamera di Safari: Settings > Safari > Camera > Allow";
+                    } else if (err.name === 'NotFoundError') {
+                        errorMessage += "Kamera tidak ditemukan pada perangkat ini.";
+                    } else if (err.name === 'NotReadableError') {
+                        errorMessage += "Kamera sedang digunakan aplikasi lain atau bermasalah hardware.";
+                    } else {
+                        errorMessage += "Coba refresh halaman atau restart Safari.";
+                    }
+                    
+                    showToast(errorMessage, 8000);
+                    showScreen('initial');
+
+                    // Fallback otomatis ke upload galeri
                     setTimeout(() => {
                         otherSelectors.uploadBtn.click();
-                    }, 500);
+                    }, 1000);
+                }
+            }
+            
+            // Fungsi untuk cek kemampuan kamera
+            async function checkCameraCapabilities() {
+                try {
+                    if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
+                        console.log("enumerateDevices() not supported.");
+                        return;
+                    }
+                    const devices = await navigator.mediaDevices.enumerateDevices();
+                    const videoDevices = devices.filter(device => device.kind === 'videoinput');
+
+                    console.log('Available cameras:', videoDevices);
+
+                    const hasBackCamera = videoDevices.some(device =>
+                        device.label.toLowerCase().includes('back') ||
+                        device.label.toLowerCase().includes('rear') ||
+                        device.label.toLowerCase().includes('environment')
+                    );
+                    
+                    const capabilities = {
+                        hasCamera: videoDevices.length > 0,
+                        hasBackCamera: hasBackCamera,
+                        cameraCount: videoDevices.length
+                    };
+                    console.log('Camera Capabilities:', capabilities);
+                    return capabilities;
+
+                } catch (err) {
+                    console.log('Error checking camera capabilities:', err);
+                    return { hasCamera: false, hasBackCamera: false, cameraCount: 0 };
                 }
             }
             
@@ -951,6 +1046,10 @@
 
             async function initializeApp() {
                 lucide.createIcons();
+                
+                // Cek kemampuan kamera saat aplikasi dimuat
+                checkCameraCapabilities();
+
                 const savedTheme = localStorage.getItem('theme');
                 const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
                 applyTheme(savedTheme ? savedTheme === 'dark' : prefersDark);
@@ -1133,3 +1232,4 @@
     </script>
 </body>
 </html>
+
