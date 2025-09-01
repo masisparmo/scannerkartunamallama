@@ -311,12 +311,22 @@
             }
 
             async function startCamera() {
+                // Define more robust constraints, especially for iOS, as suggested.
+                const constraints = {
+                    video: {
+                        facingMode: 'environment', // Prefer the rear camera
+                        width: { ideal: 1280 },   // Request a higher resolution if available
+                        height: { ideal: 720 }
+                    }
+                };
+
                 try {
                     if (stream) { stream.getTracks().forEach(track => track.stop()); }
-                    stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+                    
+                    stream = await navigator.mediaDevices.getUserMedia(constraints);
                     otherSelectors.video.srcObject = stream;
 
-                    // Explicitly play the video, essential for iOS Safari compatibility
+                    // Explicitly play the video. This is crucial for iOS Safari.
                     await otherSelectors.video.play();
                     
                     otherSelectors.video.addEventListener('loadeddata', () => {
@@ -326,8 +336,15 @@
                     showScreen('scanner');
                 } catch (err) {
                     logError("Error accessing camera:", err);
-                    showToast("Tidak dapat mengakses kamera. Pastikan Anda memberikan izin.");
+                    // Provide a clear message and an automatic fallback for the user.
+                    showToast("Kamera gagal diakses. Coba upload dari galeri.", 4000);
                     showScreen('initial');
+                    
+                    // Automatically trigger the file upload as a fallback.
+                    // A small delay allows the user to read the toast message first.
+                    setTimeout(() => {
+                        otherSelectors.uploadBtn.click();
+                    }, 500);
                 }
             }
             
