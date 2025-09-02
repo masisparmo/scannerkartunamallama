@@ -130,7 +130,7 @@
     <div id="action-modal" class="modal-backdrop hidden fixed inset-0 bg-black/60 z-50 p-4 flex items-end sm:items-center sm:justify-center"><div class="modal-content bg-white dark:bg-gray-800 rounded-t-2xl sm:rounded-2xl shadow-xl w-full max-w-md p-6 transform translate-y-full sm:scale-95 sm:translate-y-0 opacity-0"><div class="flex justify-between items-start mb-4"><div id="action-modal-header"></div><button id="close-action-modal-btn" class="p-2 -mr-2 -mt-2 text-gray-500 hover:text-gray-800 dark:hover:text-gray-200 rounded-full"><i data-lucide="x" class="w-5 h-5"></i></button></div><div id="action-modal-body" class="text-sm text-gray-600 dark:text-gray-400 mb-6"></div><div id="action-modal-footer" class="flex flex-wrap justify-center gap-3"></div></div></div>
     <div id="show-session-qr-modal" class="modal-backdrop hidden fixed inset-0 bg-black/60 z-50 p-4"><div class="modal-content w-full max-w-sm m-auto bg-white dark:bg-gray-800 rounded-2xl p-6 text-center"><h3 class="text-xl font-bold mb-2">Sesi Dibuat!</h3><p class="text-gray-600 dark:text-gray-400 mb-4">Bagikan QR Code ini ke tim Anda untuk bergabung.</p><div id="qr-code-container"></div><button id="close-qr-modal-btn" class="modal-button w-full mt-6 bg-indigo-600 text-white hover:bg-indigo-700">Selesai</button></div></div>
     <div id="join-session-modal" class="modal-backdrop hidden fixed inset-0 bg-black/60 z-50 p-4"><div class="modal-content w-full max-w-sm m-auto bg-white dark:bg-gray-800 rounded-2xl p-6"><h3 class="text-xl font-bold mb-2">Gabung Sesi Kolaborasi</h3><p class="text-gray-600 dark:text-gray-400 mb-4">Anda diundang ke sesi <strong id="join-session-name" class="text-indigo-500"></strong>. Masukkan nama Anda:</p><input type="text" id="marketing-name-input" placeholder="Nama Anda" class="w-full p-3 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500"><div class="flex gap-4 mt-6"><button id="cancel-join-btn" class="modal-button flex-1 bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-200 hover:bg-gray-300">BATAL</button><button id="confirm-join-btn" class="modal-button flex-1 bg-indigo-600 text-white hover:bg-indigo-700">Gabung</button></div></div></div>
-    <div id="edit-modal" class="modal-backdrop hidden fixed inset-0 bg-black/60 z-50 p-4 flex items-center justify-center"><div class="modal-content bg-white dark:bg-gray-800 rounded-2xl shadow-xl w-full max-w-md p-6 transform scale-95 opacity-0"><h3 class="text-xl font-bold mb-4">Edit Kontak</h3><form id="edit-form" class="space-y-3"><input type="hidden" id="edit-contact-id"><div class="grid grid-cols-2 gap-3"><div><label for="edit-nama" class="text-sm font-medium text-gray-600 dark:text-gray-400">Nama</label><div class="relative"><input type="text" id="edit-nama" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg pr-10"><button type="button" class="translate-btn absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 hover:text-indigo-500" data-target="edit-nama" title="Terjemahkan ke Bahasa Indonesia"><i data-lucide="languages" class="w-5 h-5"></i></button></div></div><div><label for="edit-jabatan" class="text-sm font-medium text-gray-600 dark:text-gray-400">Jabatan</label><div class="relative"><input type="text" id="edit-jabatan" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg pr-10"><button type="button" class="translate-btn absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 hover:text-indigo-500" data-target="edit-jabatan" title="Terjemahkan ke Bahasa Indonesia"><i data-lucide="languages" class="w-5 h-5"></i></button></div></div></div><div class="grid grid-cols-2 gap-3"><div><label for="edit-perusahaan" class="text-sm font-medium text-gray-600 dark:text-gray-400">Perusahaan</label><div class="relative"><input type="text" id="edit-perusahaan" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg pr-10"><button type="button" class="translate-btn absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 hover:text-indigo-500" data-target="edit-perusahaan" title="Terjemahkan ke Bahasa Indonesia"><i data-lucide="languages" class="w-5 h-5"></i></button></div></div><div><label for="edit-jenis_perusahaan" class="text-sm font-medium text-gray-600 dark:text-gray-400">Jenis Perusahaan</label><div class="relative"><input type="text" id="edit-jenis_perusahaan" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg pr-10"><button type="button" class="translate-btn absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 hover:text-indigo-500" data-target="edit-jenis_perusahaan" title="Terjemahkan ke Bahasa Indonesia"><i data-lucide="languages" class="w-5 h-5"></i></button></div></div></div><div class="grid grid-cols-2 gap-3"><div><label for="edit-telepon_kantor" class="text-sm font-medium text-gray-600 dark:text-gray-400">Telepon Kantor</label><input type="tel" id="edit-telepon_kantor" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"></div><div><label for="edit-whatsapp" class="text-sm font-medium text-gray-600 dark:text-gray-400">WhatsApp</label><input type="tel" id="edit-whatsapp" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"></div></div><div><label for="edit-email" class="text-sm font-medium text-gray-600 dark:text-gray-400">Email</label><input type="email" id="edit-email" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"></div><hr class="border-gray-200 dark:border-gray-600 !my-4"><div><label for="edit-acara" class="text-sm font-medium text-gray-600 dark:text-gray-400">Acara</label><input type="text" id="edit-acara" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"></div><div class="grid grid-cols-2 gap-3"><div><label for="edit-tanggal" class="text-sm font-medium text-gray-600 dark:text-gray-400">Tanggal</label><input type="date" id="edit-tanggal" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"></div><div><label for="edit-catatan" class="text-sm font-medium text-gray-600 dark:text-gray-400">Catatan</label><input type="text" id="edit-catatan" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"></div></div></form><div class="mt-6 flex justify-between items-center gap-3"><button id="delete-contact-btn" class="modal-button bg-red-600 hover:bg-red-700 text-white flex-1 flex items-center justify-center gap-2"><i data-lucide="trash-2" class="w-4 h-4"></i>HAPUS</button><button id="cancel-edit-btn" class="modal-button bg-blue-600 hover:bg-blue-700 text-white flex-1">Batal</button><button id="save-edit-btn" class="modal-button bg-green-600 hover:bg-green-700 text-white flex-1">SIMPAN</button></div></div></div>
+    <div id="edit-modal" class="modal-backdrop hidden fixed inset-0 bg-black/60 z-50 p-4 flex items-center justify-center"><div class="modal-content bg-white dark:bg-gray-800 rounded-2xl shadow-xl w-full max-w-md p-6 transform scale-95 opacity-0"><h3 class="text-xl font-bold mb-4">Edit Kontak</h3><form id="edit-form" class="space-y-3"><input type="hidden" id="edit-contact-id"><div class="grid grid-cols-2 gap-3"><div><label for="edit-nama" class="text-sm font-medium text-gray-600 dark:text-gray-400">Nama</label><input type="text" id="edit-nama" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"></div><div><label for="edit-jabatan" class="text-sm font-medium text-gray-600 dark:text-gray-400">Jabatan</label><input type="text" id="edit-jabatan" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"></div></div><div class="grid grid-cols-2 gap-3"><div><label for="edit-perusahaan" class="text-sm font-medium text-gray-600 dark:text-gray-400">Perusahaan</label><input type="text" id="edit-perusahaan" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"></div><div><label for="edit-jenis_perusahaan" class="text-sm font-medium text-gray-600 dark:text-gray-400">Jenis Perusahaan</label><input type="text" id="edit-jenis_perusahaan" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"></div></div><div class="grid grid-cols-2 gap-3"><div><label for="edit-telepon_kantor" class="text-sm font-medium text-gray-600 dark:text-gray-400">Telepon Kantor</label><input type="tel" id="edit-telepon_kantor" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"></div><div><label for="edit-whatsapp" class="text-sm font-medium text-gray-600 dark:text-gray-400">WhatsApp</label><input type="tel" id="edit-whatsapp" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"></div></div><div><label for="edit-email" class="text-sm font-medium text-gray-600 dark:text-gray-400">Email</label><input type="email" id="edit-email" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"></div><hr class="border-gray-200 dark:border-gray-600 !my-4"><div><label for="edit-acara" class="text-sm font-medium text-gray-600 dark:text-gray-400">Acara</label><input type="text" id="edit-acara" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"></div><div class="grid grid-cols-2 gap-3"><div><label for="edit-tanggal" class="text-sm font-medium text-gray-600 dark:text-gray-400">Tanggal</label><input type="date" id="edit-tanggal" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"></div><div><label for="edit-catatan" class="text-sm font-medium text-gray-600 dark:text-gray-400">Catatan</label><input type="text" id="edit-catatan" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"></div></div></form><div class="mt-6 flex justify-between items-center gap-3"><button id="delete-contact-btn" class="modal-button bg-red-600 hover:bg-red-700 text-white flex-1 flex items-center justify-center gap-2"><i data-lucide="trash-2" class="w-4 h-4"></i>HAPUS</button><button id="cancel-edit-btn" class="modal-button bg-blue-600 hover:bg-blue-700 text-white flex-1">Batal</button><button id="save-edit-btn" class="modal-button bg-green-600 hover:bg-green-700 text-white flex-1">SIMPAN</button></div></div></div>
     <div id="confirm-modal" class="modal-backdrop hidden fixed inset-0 bg-black/60 z-50 p-4"><div class="modal-content bg-white dark:bg-gray-800 rounded-2xl shadow-xl w-full max-w-sm p-6 transform scale-95 opacity-0"><h3 class="text-lg font-bold mb-2">Konfirmasi Tindakan</h3><p id="confirm-message" class="text-gray-600 dark:text-gray-400 mb-6"></p><div class="flex justify-end items-center gap-3"><button id="cancel-confirm-btn" class="modal-button bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-500 text-gray-800 dark:text-gray-200">Batal</button><button id="confirm-action-btn" class="modal-button bg-red-600 hover:bg-red-700 text-white">Lanjutkan</button></div></div></div>
     <div id="toast" class="toast fixed bottom-5 right-5 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 py-3 px-5 rounded-full shadow-lg opacity-0 transform translate-y-5 pointer-events-none"><p id="toast-message"></p></div>
     
@@ -168,10 +168,9 @@
             // === AKHIR DARI KODE BARU ===
 
             const BACKEND_API_URL = 'https://asia-southeast1-scanner-kartu-nama-llama.cloudfunctions.net/scanner-api';
-            const TRANSLATE_API_URL = `${BACKEND_API_URL}/translateText`; // URL Endpoint Baru untuk Terjemahan
             const GSHEET_BACKEND_URL = `${BACKEND_API_URL}/simpan-gsheet`;
             const EMAIL_GENERATOR_URL = `${BACKEND_API_URL}/generateFollowUpEmail`;
-            const WA_GENERATOR_URL = `${BACKEND_API_URL}/generateFollowUpWa`; // URL Endpoint Baru
+            const WA_GENERATOR_URL = `${BACKEND_API_URL}/generateFollowUpWa`; 
 
             
             let collaborationSession = { isActive: false, sessionId: null, sessionAcara: null, marketingName: null };
@@ -423,21 +422,41 @@
             async function processImageWithAI(imageDataUrl) {
                 showScreen('processing');
                 try {
-                    const response = await fetch(`${BACKEND_API_URL}/processBusinessCard`, {
+                    // Step 1: Initial Extraction
+                    otherSelectors.processingTitle.textContent = "AI Menganalisis Gambar...";
+                    const extractResponse = await fetch(`${BACKEND_API_URL}/processBusinessCard`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ imageDataUrl })
                     });
-                    if (!response.ok) { const errorText = await response.text(); throw new Error(`Backend Error: ${response.status}. Detail: ${errorText}`); }
-                    const result = await response.json();
-                    const jsonString = result.data;
-                    if (jsonString) { 
-                        const extractedData = JSON.parse(jsonString);
-                        extractedData.telepon_kantor = formatKantor(extractedData.telepon_kantor);
-                        extractedData.whatsapp = formatWA(extractedData.whatsapp);
-                        saveContactData(extractedData);
-                    } 
-                    else { throw new Error("Respons dari Backend tidak valid."); }
+                    if (!extractResponse.ok) { const errorText = await extractResponse.text(); throw new Error(`Backend Error: ${extractResponse.status}. Detail: ${errorText}`); }
+                    
+                    const extractResult = await extractResponse.json();
+                    const jsonString = extractResult.data;
+                    if (!jsonString) { throw new Error("Respons dari Backend tidak valid."); }
+                    
+                    const extractedData = JSON.parse(jsonString);
+
+                    // Step 2: Refine and Translate Foreign Text
+                    otherSelectors.processingTitle.textContent = "Menerjemahkan Teks Asing...";
+                    const refineResponse = await fetch(`${BACKEND_API_URL}/refineAndTranslate`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ extractedData })
+                    });
+                    if (!refineResponse.ok) { const errorText = await refineResponse.text(); throw new Error(`Translation Error: ${refineResponse.status}. Detail: ${errorText}`); }
+
+                    const refineResult = await refineResponse.json();
+                    const refinedJsonString = refineResult.data;
+                    if (!refinedJsonString) { throw new Error("Respons dari proses terjemahan tidak valid."); }
+
+                    const finalData = JSON.parse(refinedJsonString);
+
+                    // Step 3: Format numbers and save
+                    finalData.telepon_kantor = formatKantor(finalData.telepon_kantor);
+                    finalData.whatsapp = formatWA(finalData.whatsapp);
+                    await saveContactData(finalData);
+
                 } catch (error) {
                     if (error instanceof TypeError && error.message.includes('Failed to fetch')) {
                         const errorMessage = "Gagal terhubung ke server untuk scan. Ini mungkin disebabkan oleh ekstensi browser (Ad-Blocker) atau masalah jaringan. Coba di mode Incognito.";
@@ -974,47 +993,6 @@
                 document.getElementById('profile-deskripsi').value = profile.deskripsi || '';
             }
 
-            async function handleTranslation(event) {
-                const button = event.target.closest('.translate-btn');
-                if (!button) return;
-
-                const targetInputId = button.dataset.target;
-                const inputElement = document.getElementById(targetInputId);
-                const originalText = inputElement.value;
-
-                if (!originalText.trim()) {
-                    showToast("Tidak ada teks untuk diterjemahkan.");
-                    return;
-                }
-
-                // Show loading state
-                const originalIconHTML = button.innerHTML;
-                button.innerHTML = `<div class="loader btn-loader !w-5 !h-5"></div>`;
-                button.disabled = true;
-
-                try {
-                    const response = await fetch(TRANSLATE_API_URL, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ text: originalText, targetLanguage: 'Indonesian' })
-                    });
-                    const result = await response.json();
-                    if (!response.ok || !result.success) {
-                        throw new Error(result.error || 'Gagal menerjemahkan teks.');
-                    }
-                    inputElement.value = result.translatedText;
-                    showToast("Teks berhasil diterjemahkan.");
-                } catch (error) {
-                    logError("Translation Error:", error);
-                    showToast(`Gagal menerjemahkan: ${error.message}`);
-                } finally {
-                    // Restore button state
-                    button.innerHTML = originalIconHTML;
-                    button.disabled = false;
-                }
-            }
-
-
             async function initializeApp() {
                 lucide.createIcons();
                 const savedTheme = localStorage.getItem('theme');
@@ -1149,15 +1127,6 @@
             });
             otherSelectors.closeActionModalBtn.addEventListener('click', closeActionModal);
             
-            // --- NEW: Translation Button Listener (Event Delegation) ---
-            otherSelectors.editModal.addEventListener('click', function(event) {
-                const translateButton = event.target.closest('.translate-btn');
-                if (translateButton) {
-                    handleTranslation(event);
-                }
-            });
-
-
             // Log Viewer Event Listeners
             logIcon.addEventListener('click', () => {
                 logViewerModal.classList.remove('hidden');
