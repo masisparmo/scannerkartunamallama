@@ -1,4 +1,8 @@
-const CACHE_NAME = 'scanner-pintar-cache-v2';
+// Nama cache unik. Ubah nama ini jika Anda membuat perubahan besar pada file yang di-cache.
+const CACHE_NAME = 'scanner-pintar-cache-v1';
+
+// Daftar file inti yang membentuk "App Shell".
+// Ini adalah file yang dibutuhkan agar aplikasi Anda dapat berjalan.
 const urlsToCache = [
   './',
   './index.html',
@@ -8,7 +12,10 @@ const urlsToCache = [
   './privacy.html',
 ];
 
+// Event listener 'install'
+// Dijalankan saat service worker pertama kali diinstal.
 self.addEventListener('install', event => {
+  // Tunggu hingga proses caching selesai.
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
@@ -18,11 +25,14 @@ self.addEventListener('install', event => {
   );
 });
 
+// Event listener 'activate'
+// Dijalankan setelah service worker diinstal. Berguna untuk membersihkan cache lama.
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(cacheNames => {
       return Promise.all(
         cacheNames.map(cacheName => {
+          // Jika ada cache dengan nama yang berbeda dari CACHE_NAME saat ini, hapus.
           if (cacheName !== CACHE_NAME) {
             console.log('Deleting old cache:', cacheName);
             return caches.delete(cacheName);
@@ -31,108 +41,53 @@ self.addEventListener('activate', event => {
       );
     })
   );
+  // Mengambil alih kontrol halaman dengan segera.
   return self.clients.claim();
 });
 
+// Event listener 'fetch'
+// Dijalankan setiap kali aplikasi membuat permintaan jaringan (misalnya mengambil gambar, script, atau data).
 self.addEventListener('fetch', event => {
-  if (event.request.method !== 'GET') return;
+  // Kita hanya akan menangani permintaan GET.
+  if (event.request.method !== 'GET') {
+    return;
+  }
   
   event.respondWith(
     caches.open(CACHE_NAME).then(async (cache) => {
+      // 1. Coba cari respons dari cache terlebih dahulu.
       const cachedResponse = await cache.match(event.request);
-      if (cachedResponse) return cachedResponse;
       
+      // 2. Jika ada di cache, langsung kembalikan.
+      if (cachedResponse) {
+        return cachedResponse;
+      }
+      
+      // 3. Jika tidak ada di cache, coba ambil dari jaringan.
       try {
         const networkResponse = await fetch(event.request);
+        
+        // Jika berhasil, simpan salinan respons ke dalam cache untuk penggunaan di masa mendatang.
+        // Kita hanya meng-cache respons yang valid (status 200).
         if (networkResponse && networkResponse.status === 200) {
+            // Perlu di-clone karena response hanya bisa dibaca sekali.
             cache.put(event.request, networkResponse.clone());
         }
+        
         return networkResponse;
       } catch (error) {
+        // Jika fetch gagal (misalnya karena offline), kita bisa memberikan halaman fallback.
+        // Untuk API, kita tidak memberikan fallback agar aplikasi bisa menangani errornya sendiri.
         console.error('Fetch failed; returning offline fallback.', error);
+        
+        // Untuk navigasi halaman (misal: about.html), Anda bisa memberikan halaman offline fallback
+        // if (event.request.mode === 'navigate') {
+        //   return caches.match('./offline.html');
+        // }
+        
+        // Untuk request lain, biarkan gagal agar aplikasi tahu sedang offline.
         return null;
       }
     })
   );
-});
-
-// --- LOGIKA BARU UNTUK FITUR PENGINGAT ---
-
-function openDB() {
-    return new Promise((resolve, reject) => {
-        const request = indexedDB.open('SmartScannerDB', 2);
-        request.onerror = (event) => reject("Database error: " + event.target.errorCode);
-        request.onsuccess = (event) => resolve(event.target.result);
-    });
-}
-
-async function checkRemindersAndNotify() {
-    console.log("Checking reminders...");
-    try {
-        const db = await openDB();
-        const transaction = db.transaction(['contacts'], 'readwrite');
-        const store = transaction.objectStore('contacts');
-        const contacts = await new Promise((resolve, reject) => {
-            const req = store.getAll();
-            req.onsuccess = () => resolve(req.result);
-            req.onerror = () => reject(req.error);
-        });
-
-        const now = new Date();
-
-        for (const contact of contacts) {
-            if (contact.reminderDate) {
-                const reminderDate = new Date(contact.reminderDate);
-                if (reminderDate <= now) {
-                    console.log(`Reminder for ${contact.nama}`);
-                    await showNotification(contact);
-                    
-                    // Hapus pengingat setelah notifikasi ditampilkan
-                    contact.reminderDate = null;
-                    const updateRequest = store.put(contact);
-                    updateRequest.onerror = (e) => console.error("Error updating contact after notification:", e.target.error);
-                }
-            }
-        }
-    } catch (error) {
-        console.error("Failed to check reminders:", error);
-    }
-}
-
-async function showNotification(contact) {
-    const title = 'Waktunya Follow-up!';
-    const options = {
-        body: `Jangan lupa hubungi ${contact.nama} dari ${contact.perusahaan}.`,
-        icon: 'https://raw.githubusercontent.com/masisparmo/scannerkartunamallama/refs/heads/main/scanner-pintar-192.png',
-        badge: 'https://raw.githubusercontent.com/masisparmo/scannerkartunamallama/refs/heads/main/scanner-pintar-72.png',
-        data: {
-            contactId: contact.id
-        },
-        actions: [
-            { action: 'open_app', title: 'Buka Kontak' }
-        ]
-    };
-
-    await self.registration.showNotification(title, options);
-}
-
-self.addEventListener('periodicsync', (event) => {
-    if (event.tag === 'check-reminders') {
-        event.waitUntil(checkRemindersAndNotify());
-    }
-});
-
-self.addEventListener('notificationclick', (event) => {
-    event.notification.close();
-    const contactId = event.notification.data.contactId;
-    const urlToOpen = new URL(`/index_asisten-pintar_040925.html?contactID=${contactId}`, self.location.origin).href;
-
-    event.waitUntil(
-        clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
-            if (clientList.length > 0) {
-                return clientList[0].navigate(urlToOpen).then((client) => client.focus());
-            }
-            return clients.openWindow(urlToOpen);
-        })
-    );
 });
