@@ -1,7 +1,7 @@
 {
   "name": "Scanner Pintar AI",
   "short_name": "Scanner Pintar",
-  "description": "Aplikasi Scan Kartu Nama & QR Code Berbasis AI oleh Isparmo",
+  "description": "Aplikasi Scan Kartu Nama & QR Code Berbasis AI oleh Isparmo & M. Hasan",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#0D1117",
