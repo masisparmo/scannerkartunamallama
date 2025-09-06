@@ -180,7 +180,7 @@
             }
             // === AKHIR DARI KODE BARU ===
 
-            const BACKEND_API_URL = 'https://scanner-api-328921559379.asia-southeast1.run.app';
+            const BACKEND_API_URL = 'https://scanner-api-7yz27p4cpa-et.a.run.app';
             const GSHEET_BACKEND_URL = `${BACKEND_API_URL}/simpan-gsheet`;
             const EMAIL_GENERATOR_URL = `${BACKEND_API_URL}/generateFollowUpEmail`;
             const WA_GENERATOR_URL = `${BACKEND_API_URL}/generateFollowUpWa`; 
@@ -761,6 +761,9 @@
                 setTimeout(() => {
                     otherSelectors.editModal.classList.add('hidden');
                     document.querySelector('.app-container').classList.remove('hidden');
+                    // --- PERUBAHAN KRUSIAL ADA DI SINI ---
+                    // Selalu kembali ke layar awal setelah menutup modal edit
+                    showScreen('initial'); 
                 }, 300);
             }
 
@@ -795,9 +798,9 @@
                     await sendCollaborativeData({ ...contactData, marketingName: collaborationSession.marketingName });
                 }
                 
-                closeEditModal();
                 await refreshResults();
                 showScreen('results');
+                closeEditModal();
             }
 
             async function handleDeleteContact() {
@@ -805,12 +808,13 @@
                 const isNewContact = !idValue;
 
                 if (isNewContact) {
-                    closeEditModal();
+                    // Jika ini scan baru yang belum disimpan, "hapus" berarti "batal"
+                    closeEditModal(); // Cukup panggil ini, karena sudah diperbaiki
                     showToast("Scan dibatalkan.");
-                    showScreen('initial');
                     return;
                 }
 
+                // Logika untuk kontak yang sudah ada
                 const id = parseInt(idValue);
                 showConfirmModal(
                     "Apakah Anda yakin ingin menghapus kontak ini dari HP Anda? Tindakan ini tidak dapat dibatalkan.",
@@ -1107,7 +1111,18 @@
                 );
             });
             otherSelectors.saveEditBtn.addEventListener('click', saveContactChanges);
-            otherSelectors.cancelEditBtn.addEventListener('click', closeEditModal);
+            // --- EVENT LISTENER UNTUK TOMBOL BATAL ---
+            otherSelectors.cancelEditBtn.addEventListener('click', () => {
+                const idValue = document.getElementById('edit-contact-id').value;
+                const isNewContact = !idValue;
+                
+                if (isNewContact) {
+                    closeEditModal(); 
+                    showToast("Scan dibatalkan.");
+                } else {
+                    closeEditModal();
+                }
+            });
             otherSelectors.deleteContactBtn.addEventListener('click', handleDeleteContact);
             [otherSelectors.themeToggleInitial, otherSelectors.themeToggleResults].forEach(btn => btn.addEventListener('click', toggleTheme));
             otherSelectors.sessionAcaraInput.addEventListener('input', (e) => localStorage.setItem('sessionAcara', e.target.value));
@@ -1189,5 +1204,4 @@
     </script>
 </body>
 </html>
-
 
