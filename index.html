@@ -180,7 +180,7 @@
             }
             // === AKHIR DARI KODE BARU ===
 
-            const BACKEND_API_URL = 'https://asia-southeast1-scanner-kartu-nama-llama.cloudfunctions.net/scanner-api';
+            const BACKEND_API_URL = 'https://scanner-api-7yz27p4cpa-et.a.run.app';
             const GSHEET_BACKEND_URL = `${BACKEND_API_URL}/simpan-gsheet`;
             const EMAIL_GENERATOR_URL = `${BACKEND_API_URL}/generateFollowUpEmail`;
             const WA_GENERATOR_URL = `${BACKEND_API_URL}/generateFollowUpWa`; 
@@ -456,25 +456,25 @@
                     
                     const extractedData = JSON.parse(jsonString);
 
-                    otherSelectors.processingTitle.textContent = "Menerjemahkan Teks Asing...";
+                    // --- PERUBAHAN ---
+                    // Ubah teks di layar proses
+                    otherSelectors.processingTitle.textContent = "Memfinalisasi Data...";
                     const refineResponse = await fetch(`${BACKEND_API_URL}/refineAndTranslate`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ extractedData })
                     });
-                    if (!refineResponse.ok) { const errorText = await refineResponse.text(); throw new Error(`Translation Error: ${refineResponse.status}. Detail: ${errorText}`); }
+                    if (!refineResponse.ok) { const errorText = await refineResponse.text(); throw new Error(`Refinement Error: ${refineResponse.status}. Detail: ${errorText}`); }
 
                     const refineResult = await refineResponse.json();
                     const refinedJsonString = refineResult.data;
-                    if (!refinedJsonString) { throw new Error("Respons dari proses terjemahan tidak valid."); }
+                    if (!refinedJsonString) { throw new Error("Respons dari proses finalisasi tidak valid."); }
 
                     const finalData = JSON.parse(refinedJsonString);
 
                     finalData.telepon_kantor = formatKantor(finalData.telepon_kantor);
                     finalData.whatsapp = formatWA(finalData.whatsapp);
                     
-                    // --- PERUBAHAN ALUR ---
-                    // Tidak langsung menyimpan, tapi buka modal edit
                     await openEditModalForNewContact(finalData);
 
                 } catch (error) {
@@ -497,10 +497,7 @@
                     const contact = data.startsWith('BEGIN:VCARD') ? parseVCard(data) : { nama: 'Kontak dari QR Code', catatan: data };
                     contact.telepon_kantor = formatKantor(contact.telepon_kantor);
                     contact.whatsapp = formatWA(contact.whatsapp);
-
-                    // --- PERUBAHAN ALUR ---
                     await openEditModalForNewContact(contact);
-
                 } catch(error) {
                     logError("QR Processing Error:", error);
                     showToast(`Gagal memproses QR Code: ${error.message}`);
@@ -714,11 +711,10 @@
                 setTimeout(() => { otherSelectors.actionModal.classList.add('hidden'); }, 300);
             }
 
-            // --- FUNGSI BARU UNTUK MEMBUKA MODAL EDIT UNTUK KONTAK BARU ---
             async function openEditModalForNewContact(contact) {
                 document.querySelector('.app-container').classList.add('hidden');
                 
-                document.getElementById('edit-contact-id').value = ''; // ID kosong menandakan kontak baru
+                document.getElementById('edit-contact-id').value = ''; 
                 document.getElementById('edit-nama').value = contact.nama || '';
                 document.getElementById('edit-jabatan').value = contact.jabatan || '';
                 document.getElementById('edit-perusahaan').value = contact.perusahaan || '';
@@ -727,7 +723,6 @@
                 document.getElementById('edit-whatsapp').value = contact.whatsapp || '';
                 document.getElementById('edit-email').value = contact.email || '';
                 
-                // Mengambil data sesi saat ini dan memasukkannya ke form
                 document.getElementById('edit-acara').value = otherSelectors.sessionAcaraInput.value;
                 document.getElementById('edit-tanggal').value = otherSelectors.sessionTanggalInput.value;
                 document.getElementById('edit-catatan').value = contact.catatan || otherSelectors.sessionCatatanInput.value;
@@ -769,7 +764,6 @@
                 }, 300);
             }
 
-            // --- FUNGSI DIPERBARUI UNTUK MENANGANI KONTAK BARU & LAMA ---
             async function saveContactChanges() {
                 const idValue = document.getElementById('edit-contact-id').value;
                 const isNewContact = !idValue;
@@ -787,7 +781,6 @@
                     catatan: document.getElementById('edit-catatan').value,
                 };
 
-                // Logika Simpan
                 if (isNewContact) {
                     await dbLogic.addContact(contactData);
                     showToast("Kontak baru berhasil disimpan!");
@@ -797,7 +790,6 @@
                     showToast("Kontak berhasil diperbarui!");
                 }
 
-                // Logika kirim ke Google Sheet jika dalam mode kolaborasi
                 if (collaborationSession.isActive) {
                     showToast('Mengirim data ke Google Sheet...');
                     await sendCollaborativeData({ ...contactData, marketingName: collaborationSession.marketingName });
@@ -805,23 +797,20 @@
                 
                 closeEditModal();
                 await refreshResults();
-                showScreen('results'); // Selalu tampilkan layar hasil setelah menyimpan
+                showScreen('results');
             }
 
-            // --- FUNGSI DIPERBARUI UNTUK MENANGANI KONTAK BARU & LAMA ---
             async function handleDeleteContact() {
                 const idValue = document.getElementById('edit-contact-id').value;
                 const isNewContact = !idValue;
 
                 if (isNewContact) {
-                    // Jika ini scan baru yang belum disimpan, "hapus" berarti "batal"
                     closeEditModal();
                     showToast("Scan dibatalkan.");
                     showScreen('initial');
                     return;
                 }
 
-                // Logika untuk kontak yang sudah ada
                 const id = parseInt(idValue);
                 showConfirmModal(
                     "Apakah Anda yakin ingin menghapus kontak ini dari HP Anda? Tindakan ini tidak dapat dibatalkan.",
