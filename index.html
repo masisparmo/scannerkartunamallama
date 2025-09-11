@@ -376,8 +376,6 @@
                 }
             }
 
-            // ================== PERUBAHAN DI SINI SESUAI PERMINTAAN ==================
-            // Menerapkan 100% kode dari file yang berhasil, termasuk alert().
             async function startCamera() {
                 try {
                     if (stream) { stream.getTracks().forEach(track => track.stop()); }
@@ -386,19 +384,16 @@
                     otherSelectors.video.onloadedmetadata = () => {
                         otherSelectors.canvas.width = otherSelectors.video.videoWidth;
                         otherSelectors.canvas.height = otherSelectors.video.videoHeight;
-                        // Menjaga fitur QR Code Scan agar tidak hilang
                         if(qrScanInterval) clearInterval(qrScanInterval);
                         qrScanInterval = setInterval(scanQRCode, 500);
                     };
                     showScreen('scanner');
                 } catch (err) {
                     console.error("Error accessing camera:", err);
-                    // Menggunakan alert() yang menghentikan interaksi pengguna, sesuai permintaan.
                     alert("Tidak dapat mengakses kamera. Pastikan Anda memberikan izin.");
                     showScreen('initial');
                 }
             }
-            // ================== AKHIR PERUBAHAN ==================
             
             function stopCamera() {
                 if (qrScanInterval) clearInterval(qrScanInterval);
@@ -435,20 +430,31 @@
                 otherSelectors.imageUploadInput.value = '';
             }
 
+            // ================== PERUBAHAN LOGIKA CAPTURE DI SINI ==================
             async function captureAndProcess() {
-                stopCamera();
-                otherSelectors.processingTitle.textContent = "AI Menganalisis Gambar...";
+                // 1. Tampilkan layar proses terlebih dahulu untuk UX yang lebih baik.
+                showScreen('processing');
+                otherSelectors.processingTitle.textContent = "Mengambil gambar...";
+
                 const context = otherSelectors.canvas.getContext('2d');
                 otherSelectors.canvas.width = otherSelectors.video.videoWidth;
                 otherSelectors.canvas.height = otherSelectors.video.videoHeight;
+
+                // 2. LOGIKA BENAR: Ambil gambar dari video SEBELUM kamera dimatikan.
                 context.drawImage(otherSelectors.video, 0, 0, otherSelectors.canvas.width, otherSelectors.canvas.height);
+                
+                // 3. LOGIKA BENAR: Matikan kamera SETELAH gambar berhasil ditangkap di canvas.
+                stopCamera();
+                
+                // 4. Lanjutkan proses yang sudah ada (resize & kirim ke AI), sesuai permintaan.
                 const imageDataUrl = otherSelectors.canvas.toDataURL('image/jpeg', 0.9);
                 const finalImageDataUrl = await resizeImage(imageDataUrl);
                 await processImageWithAI(finalImageDataUrl);
             }
+            // ================== AKHIR PERUBAHAN ==================
 
             async function processImageWithAI(imageDataUrl) {
-                showScreen('processing');
+                // Baris showScreen('processing') dipindahkan ke captureAndProcess agar tidak ada jeda blank.
                 try {
                     otherSelectors.processingTitle.textContent = "AI Menganalisis Gambar...";
                     const extractResponse = await fetch(`${BACKEND_API_URL}/processBusinessCard`, {
@@ -464,8 +470,6 @@
                     
                     const extractedData = JSON.parse(jsonString);
 
-                    // --- PERUBAHAN ---
-                    // Ubah teks di layar proses
                     otherSelectors.processingTitle.textContent = "Memfinalisasi Data...";
                     const refineResponse = await fetch(`${BACKEND_API_URL}/refineAndTranslate`, {
                         method: 'POST',
