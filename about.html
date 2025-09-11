@@ -42,14 +42,15 @@
                     <i data-lucide="contact-2" class="w-7 h-7 text-indigo-600 dark:text-indigo-400"></i>
                 </div>
                 <div>
-                    <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">Scanner Pintar</h1>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">Tentang Aplikasi</p>
+                    <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white" data-translate-key="mainTitle">Scanner Pintar</h1>
+                    <p class="text-sm text-gray-500 dark:text-gray-400" data-translate-key="pageTitle">Tentang Aplikasi</p>
                 </div>
             </div>
              <div class="flex items-center gap-4">
+                <button id="lang-toggle" class="inline-flex items-center gap-2 bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors shadow-sm text-sm">EN</button>
                 <a href="https://scankartunama.isparmo.com/" class="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors shadow-sm">
                     <i data-lucide="home" class="w-4 h-4"></i>
-                    <span class="hidden sm:inline">Kembali ke Aplikasi</span>
+                    <span class="hidden sm:inline" data-translate-key="backToApp">Kembali ke Aplikasi</span>
                 </a>
                 <button id="theme-toggle" class="p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
                     <i data-lucide="sun" class="w-5 h-5 hidden"></i>
@@ -62,12 +63,12 @@
 
             <!-- Section: Tentang Aplikasi -->
             <section id="tentang">
-                <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">Transformasi Digital untuk Jaringan Profesional Anda</h2>
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4" data-translate-key="aboutTitle">Transformasi Digital untuk Jaringan Profesional Anda</h2>
                 <div class="text-gray-600 dark:text-gray-300 space-y-4 leading-relaxed">
-                    <p>
+                    <p data-translate-key="aboutDesc1">
                         <strong>Scanner Pintar</strong> adalah aplikasi web modern yang dirancang untuk merevolusi cara Anda mengelola kartu nama. Lupakan entri data manual yang memakan waktu. Dengan bantuan Kecerdasan Buatan (AI), aplikasi ini secara instan memindai, mengekstrak informasi, dan mengklasifikasikan data dari kartu nama langsung dari browser Anda.
                     </p>
-                    <p>
+                    <p data-translate-key="aboutDesc2">
                         Dibuat untuk para profesional yang dinamis, tenaga penjualan, dan siapa saja yang sering bertukar kontak di berbagai acara, Scanner Pintar berfungsi sebagai jembatan antara pertemuan fisik dan manajemen kontak digital yang efisien. Tidak perlu instalasi, cukup buka di browser dan Anda siap untuk mengubah tumpukan kartu nama menjadi database yang terorganisir dan siap digunakan.
                     </p>
                 </div>
@@ -75,84 +76,84 @@
 
             <!-- Section: Fitur Utama -->
             <section id="fitur">
-                <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Fitur Unggulan</h2>
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6" data-translate-key="featuresTitle">Fitur Unggulan</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <!-- Fitur 1: Scan Cerdas AI -->
                     <div class="feature-card bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700">
                         <div class="flex items-center justify-center w-12 h-12 bg-blue-100 dark:bg-blue-900/50 rounded-lg mb-4">
                             <i data-lucide="scan-line" class="w-6 h-6 text-blue-600 dark:text-blue-400"></i>
                         </div>
-                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Scan Cerdas dengan AI</h3>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">Ambil foto kartu nama dan biarkan AI kami bekerja. Teknologi vision canggih akan mengekstrak nama, jabatan, perusahaan, email, dan nomor telepon, serta mengklasifikasikan jenis industri perusahaan secara otomatis.</p>
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2" data-translate-key="feature1Title">Scan Cerdas dengan AI</h3>
+                        <p class="text-sm text-gray-500 dark:text-gray-400" data-translate-key="feature1Desc">Ambil foto kartu nama dan biarkan AI kami bekerja. Teknologi vision canggih akan mengekstrak nama, jabatan, perusahaan, email, dan nomor telepon, serta mengklasifikasikan jenis industri perusahaan secara otomatis.</p>
                     </div>
                     <!-- Fitur 2: Mode Kolaborasi Tim -->
                     <div class="feature-card bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700">
                         <div class="flex items-center justify-center w-12 h-12 bg-purple-100 dark:bg-purple-900/50 rounded-lg mb-4">
                             <i data-lucide="users" class="w-6 h-6 text-purple-600 dark:text-purple-400"></i>
                         </div>
-                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Mode Kolaborasi Tim</h3>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">Buat sesi acara dan bagikan QR Code ke tim Anda. Semua hasil scan dari anggota tim akan tersimpan secara real-time ke dalam satu Google Sheet yang sama, ideal untuk pameran atau event besar.</p>
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2" data-translate-key="feature2Title">Mode Kolaborasi Tim</h3>
+                        <p class="text-sm text-gray-500 dark:text-gray-400" data-translate-key="feature2Desc">Buat sesi acara dan bagikan QR Code ke tim Anda. Semua hasil scan dari anggota tim akan tersimpan secara real-time ke dalam satu Google Sheet yang sama, ideal untuk pameran atau event besar.</p>
                     </div>
                     <!-- Fitur 3: Asisten Follow-Up AI -->
                     <div class="feature-card bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700">
                         <div class="flex items-center justify-center w-12 h-12 bg-teal-100 dark:bg-teal-900/50 rounded-lg mb-4">
                             <i data-lucide="sparkles" class="w-6 h-6 text-teal-600 dark:text-teal-400"></i>
                         </div>
-                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Asisten Follow-Up AI</h3>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">Hemat waktu dengan membuat draf email atau pesan WhatsApp untuk follow-up secara otomatis. AI akan menyusun pesan profesional berdasarkan profil Anda dan detail kontak yang baru di-scan.</p>
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2" data-translate-key="feature3Title">Asisten Follow-Up AI</h3>
+                        <p class="text-sm text-gray-500 dark:text-gray-400" data-translate-key="feature3Desc">Hemat waktu dengan membuat draf email atau pesan WhatsApp untuk follow-up secara otomatis. AI akan menyusun pesan profesional berdasarkan profil Anda dan detail kontak yang baru di-scan.</p>
                     </div>
                     <!-- Fitur 4: Penyimpanan Lokal & Aman -->
                     <div class="feature-card bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700">
                         <div class="flex items-center justify-center w-12 h-12 bg-amber-100 dark:bg-amber-900/50 rounded-lg mb-4">
                             <i data-lucide="database" class="w-6 h-6 text-amber-600 dark:text-amber-400"></i>
                         </div>
-                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Penyimpanan Lokal & Aman</h3>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">Privasi adalah prioritas. Semua data kontak yang Anda scan disimpan secara default hanya di perangkat (HP) Anda menggunakan IndexedDB, memberikan Anda kendali penuh atas data Anda.</p>
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2" data-translate-key="feature4Title">Penyimpanan Lokal & Aman</h3>
+                        <p class="text-sm text-gray-500 dark:text-gray-400" data-translate-key="feature4Desc">Privasi adalah prioritas. Semua data kontak yang Anda scan disimpan secara default hanya di perangkat (HP) Anda menggunakan IndexedDB, memberikan Anda kendali penuh atas data Anda.</p>
                     </div>
                     <!-- Fitur 5: Ekspor Data Fleksibel -->
                     <div class="feature-card bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700">
                         <div class="flex items-center justify-center w-12 h-12 bg-green-100 dark:bg-green-900/50 rounded-lg mb-4">
                             <i data-lucide="file-output" class="w-6 h-6 text-green-600 dark:text-green-400"></i>
                         </div>
-                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Ekspor Data Fleksibel</h3>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">Ekspor kontak Anda ke berbagai format sesuai kebutuhan: CSV untuk spreadsheet, VCF untuk impor ke kontak telepon (satu per satu atau dalam format ZIP), dan simpan massal ke Google Sheet.</p>
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2" data-translate-key="feature5Title">Ekspor Data Fleksibel</h3>
+                        <p class="text-sm text-gray-500 dark:text-gray-400" data-translate-key="feature5Desc">Ekspor kontak Anda ke berbagai format sesuai kebutuhan: CSV untuk spreadsheet, VCF untuk impor ke kontak telepon (satu per satu atau dalam format ZIP), dan simpan massal ke Google Sheet.</p>
                     </div>
                      <!-- Fitur 6: QR Code Scanner -->
                     <div class="feature-card bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700">
                         <div class="flex items-center justify-center w-12 h-12 bg-red-100 dark:bg-red-900/50 rounded-lg mb-4">
                             <i data-lucide="qr-code" class="w-6 h-6 text-red-600 dark:text-red-400"></i>
                         </div>
-                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Pemindai QR Code Universal</h3>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">Selain kartu nama, aplikasi ini juga mampu memindai berbagai jenis QR Code, termasuk VCard, tautan URL, dan teks biasa, menjadikannya alat pemindai serbaguna.</p>
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2" data-translate-key="feature6Title">Pemindai QR Code Universal</h3>
+                        <p class="text-sm text-gray-500 dark:text-gray-400" data-translate-key="feature6Desc">Selain kartu nama, aplikasi ini juga mampu memindai berbagai jenis QR Code, termasuk VCard, tautan URL, dan teks biasa, menjadikannya alat pemindai serbaguna.</p>
                     </div>
                 </div>
             </section>
             
             <!-- Section: Privasi -->
             <section id="privasi">
-                <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">Privasi dan Keamanan Data Anda</h2>
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4" data-translate-key="privacyTitle">Privasi dan Keamanan Data Anda</h2>
                  <div class="text-gray-600 dark:text-gray-300 space-y-4 leading-relaxed p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
-                    <p>
+                    <p data-translate-key="privacyDesc1">
                         Kami sangat menghargai privasi Anda. Berikut adalah komitmen kami terhadap keamanan data:
                     </p>
                     <ul class="list-disc list-inside space-y-2">
-                        <li><strong class="text-gray-700 dark:text-gray-200">Data Tersimpan di Perangkat Anda:</strong> Secara default, semua informasi kontak yang diekstrak disimpan dengan aman di dalam database browser pada perangkat Anda (local storage). Data ini tidak dikirim ke server kami tanpa persetujuan eksplisit dari Anda.</li>
-                        <li><strong class="text-gray-700 dark:text-gray-200">Pemrosesan Sesaat:</strong> Gambar kartu nama yang Anda unggah dikirim ke server kami hanya untuk tujuan analisis oleh AI. Gambar tersebut tidak disimpan secara permanen dan hanya diproses sesaat.</li>
-                        <li><strong class="text-gray-700 dark:text-gray-200">Kendali Penuh di Tangan Anda:</strong> Anda memiliki kendali penuh untuk menghapus data dari penyimpanan lokal kapan saja. Saat Anda menggunakan fitur ekspor ke Google Sheet atau Mode Kolaborasi, Anda secara sadar memilih untuk membagikan data tersebut ke platform pilihan Anda.</li>
-                        <li><strong class="text-gray-700 dark:text-gray-200">Tanpa Pelacakan Pengguna:</strong> Aplikasi ini tidak memerlukan login atau akun pengguna, sehingga meminimalkan pengumpulan data pribadi.</li>
+                        <li data-translate-key="privacyLi1"><strong class="text-gray-700 dark:text-gray-200">Data Tersimpan di Perangkat Anda:</strong> Secara default, semua informasi kontak yang diekstrak disimpan dengan aman di dalam database browser pada perangkat Anda (local storage). Data ini tidak dikirim ke server kami tanpa persetujuan eksplisit dari Anda.</li>
+                        <li data-translate-key="privacyLi2"><strong class="text-gray-700 dark:text-gray-200">Pemrosesan Sesaat:</strong> Gambar kartu nama yang Anda unggah dikirim ke server kami hanya untuk tujuan analisis oleh AI. Gambar tersebut tidak disimpan secara permanen dan hanya diproses sesaat.</li>
+                        <li data-translate-key="privacyLi3"><strong class="text-gray-700 dark:text-gray-200">Kendali Penuh di Tangan Anda:</strong> Anda memiliki kendali penuh untuk menghapus data dari penyimpanan lokal kapan saja. Saat Anda menggunakan fitur ekspor ke Google Sheet atau Mode Kolaborasi, Anda secara sadar memilih untuk membagikan data tersebut ke platform pilihan Anda.</li>
+                        <li data-translate-key="privacyLi4"><strong class="text-gray-700 dark:text-gray-200">Tanpa Pelacakan Pengguna:</strong> Aplikasi ini tidak memerlukan login atau akun pengguna, sehingga meminimalkan pengumpulan data pribadi.</li>
                     </ul>
                 </div>
             </section>
 
             <!-- Section: Kontak Developer -->
             <section id="kontak">
-                <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">Kontak Developer</h2>
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4" data-translate-key="contactTitle">Kontak Developer</h2>
                 <div class="p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 text-gray-600 dark:text-gray-300">
                         <div class="flex items-center gap-3">
                              <i data-lucide="user-circle" class="w-5 h-5 text-gray-400"></i>
                             <div>
-                                <p class="text-sm text-gray-500">Nama</p>
+                                <p class="text-sm text-gray-500" data-translate-key="contactNameLabel">Nama</p>
                                 <p class="font-semibold text-gray-800 dark:text-gray-200">Isparmo</p>
                             </div>
                         </div>
@@ -173,7 +174,7 @@
                         <div class="flex items-center gap-3">
                             <i data-lucide="smartphone" class="w-5 h-5 text-gray-400"></i>
                             <div>
-                                <p class="text-sm text-gray-500">HP / WhatsApp</p>
+                                <p class="text-sm text-gray-500" data-translate-key="contactPhoneLabel">HP / WhatsApp</p>
                                 <a href="https://wa.me/628121083060" target="_blank" rel="noopener noreferrer" class="font-semibold text-indigo-600 dark:text-indigo-400 hover:underline">0812 108 3060</a>
                             </div>
                         </div>
@@ -186,23 +187,122 @@
         <!-- Footer -->
         <footer class="text-center mt-12 py-6 border-t border-gray-200 dark:border-gray-700">
             <div class="flex justify-center items-center gap-x-4 mb-4 text-sm text-gray-500 dark:text-gray-400">
-                <a href="https://scankartunama.isparmo.com/" class="hover:underline hover:text-indigo-500">Home</a>
+                <a href="https://scankartunama.isparmo.com/" class="hover:underline hover:text-indigo-500" data-translate-key="footerHome">Home</a>
                 <span class="text-gray-300 dark:text-gray-600">|</span>
-                <a href="about.html" class="hover:underline hover:text-indigo-500">Tentang</a>
+                <a href="about.html" class="hover:underline hover:text-indigo-500" data-translate-key="footerAbout">Tentang</a>
                 <span class="text-gray-300 dark:text-gray-600">|</span>
-                <a href="help.html" class="hover:underline hover:text-indigo-500">Bantuan</a>
+                <a href="help.html" class="hover:underline hover:text-indigo-500" data-translate-key="footerHelp">Bantuan</a>
                 <span class="text-gray-300 dark:text-gray-600">|</span>
-                <a href="terms.html" class="hover:underline hover:text-indigo-500">Ketentuan</a>
+                <a href="terms.html" class="hover:underline hover:text-indigo-500" data-translate-key="footerTerms">Ketentuan</a>
                 <span class="text-gray-300 dark:text-gray-600">|</span>
-                <a href="privacy.html" class="hover:underline hover:text-indigo-500">Privasi</a>
+                <a href="privacy.html" class="hover:underline hover:text-indigo-500" data-translate-key="footerPrivacy">Privasi</a>
             </div>
-            <p class="text-sm text-gray-500 dark:text-gray-400">&copy; 2025 Scanner Pintar. Dibuat oleh <a href="https://isparmo.com" target="_blank" rel="noopener noreferrer" class="font-semibold text-indigo-600 dark:text-indigo-400 hover:underline">Isparmo</a>.</p>
+            <p class="text-sm text-gray-500 dark:text-gray-400" data-translate-key="footerCopyright">&copy; 2025 Scanner Pintar. Dibuat oleh <a href="https://isparmo.com" target="_blank" rel="noopener noreferrer" class="font-semibold text-indigo-600 dark:text-indigo-400 hover:underline">Isparmo</a>.</p>
         </footer>
 
     </div>
 
     <script>
         lucide.createIcons();
+
+        // --- DUAL LANGUAGE SCRIPT ---
+        const translations = {
+            id: {
+                pageTitle: "Tentang Aplikasi",
+                mainTitle: "Scanner Pintar",
+                backToApp: "Kembali ke Aplikasi",
+                aboutTitle: "Transformasi Digital untuk Jaringan Profesional Anda",
+                aboutDesc1: '<strong>Scanner Pintar</strong> adalah aplikasi web modern yang dirancang untuk merevolusi cara Anda mengelola kartu nama. Lupakan entri data manual yang memakan waktu. Dengan bantuan Kecerdasan Buatan (AI), aplikasi ini secara instan memindai, mengekstrak informasi, dan mengklasifikasikan data dari kartu nama langsung dari browser Anda.',
+                aboutDesc2: 'Dibuat untuk para profesional yang dinamis, tenaga penjualan, dan siapa saja yang sering bertukar kontak di berbagai acara, Scanner Pintar berfungsi sebagai jembatan antara pertemuan fisik dan manajemen kontak digital yang efisien. Tidak perlu instalasi, cukup buka di browser dan Anda siap untuk mengubah tumpukan kartu nama menjadi database yang terorganisir dan siap digunakan.',
+                featuresTitle: "Fitur Unggulan",
+                feature1Title: "Scan Cerdas dengan AI",
+                feature1Desc: "Ambil foto kartu nama dan biarkan AI kami bekerja. Teknologi vision canggih akan mengekstrak nama, jabatan, perusahaan, email, dan nomor telepon, serta mengklasifikasikan jenis industri perusahaan secara otomatis.",
+                feature2Title: "Mode Kolaborasi Tim",
+                feature2Desc: "Buat sesi acara dan bagikan QR Code ke tim Anda. Semua hasil scan dari anggota tim akan tersimpan secara real-time ke dalam satu Google Sheet yang sama, ideal untuk pameran atau event besar.",
+                feature3Title: "Asisten Follow-Up AI",
+                feature3Desc: "Hemat waktu dengan membuat draf email atau pesan WhatsApp untuk follow-up secara otomatis. AI akan menyusun pesan profesional berdasarkan profil Anda dan detail kontak yang baru di-scan.",
+                feature4Title: "Penyimpanan Lokal & Aman",
+                feature4Desc: "Privasi adalah prioritas. Semua data kontak yang Anda scan disimpan secara default hanya di perangkat (HP) Anda menggunakan IndexedDB, memberikan Anda kendali penuh atas data Anda.",
+                feature5Title: "Ekspor Data Fleksibel",
+                feature5Desc: "Ekspor kontak Anda ke berbagai format sesuai kebutuhan: CSV untuk spreadsheet, VCF untuk impor ke kontak telepon (satu per satu atau dalam format ZIP), dan simpan massal ke Google Sheet.",
+                feature6Title: "Pemindai QR Code Universal",
+                feature6Desc: "Selain kartu nama, aplikasi ini juga mampu memindai berbagai jenis QR Code, termasuk VCard, tautan URL, dan teks biasa, menjadikannya alat pemindai serbaguna.",
+                privacyTitle: "Privasi dan Keamanan Data Anda",
+                privacyDesc1: "Kami sangat menghargai privasi Anda. Berikut adalah komitmen kami terhadap keamanan data:",
+                privacyLi1: '<strong class="text-gray-700 dark:text-gray-200">Data Tersimpan di Perangkat Anda:</strong> Secara default, semua informasi kontak yang diekstrak disimpan dengan aman di dalam database browser pada perangkat Anda (local storage). Data ini tidak dikirim ke server kami tanpa persetujuan eksplisit dari Anda.',
+                privacyLi2: '<strong class="text-gray-700 dark:text-gray-200">Pemrosesan Sesaat:</strong> Gambar kartu nama yang Anda unggah dikirim ke server kami hanya untuk tujuan analisis oleh AI. Gambar tersebut tidak disimpan secara permanen dan hanya diproses sesaat.',
+                privacyLi3: '<strong class="text-gray-700 dark:text-gray-200">Kendali Penuh di Tangan Anda:</strong> Anda memiliki kendali penuh untuk menghapus data dari penyimpanan lokal kapan saja. Saat Anda menggunakan fitur ekspor ke Google Sheet atau Mode Kolaborasi, Anda secara sadar memilih untuk membagikan data tersebut ke platform pilihan Anda.',
+                privacyLi4: '<strong class="text-gray-700 dark:text-gray-200">Tanpa Pelacakan Pengguna:</strong> Aplikasi ini tidak memerlukan login atau akun pengguna, sehingga meminimalkan pengumpulan data pribadi.',
+                contactTitle: "Kontak Developer",
+                contactNameLabel: "Nama",
+                contactPhoneLabel: "HP / WhatsApp",
+                footerHome: "Home",
+                footerAbout: "Tentang",
+                footerHelp: "Bantuan",
+                footerTerms: "Ketentuan",
+                footerPrivacy: "Privasi",
+                footerCopyright: '&copy; 2025 Scanner Pintar. Dibuat oleh <a href="https://isparmo.com" target="_blank" rel="noopener noreferrer" class="font-semibold text-indigo-600 dark:text-indigo-400 hover:underline">Isparmo</a>.'
+            },
+            en: {
+                pageTitle: "About The Application",
+                mainTitle: "Scanner Pintar",
+                backToApp: "Back to App",
+                aboutTitle: "Digital Transformation for Your Professional Network",
+                aboutDesc1: '<strong>Scanner Pintar</strong> is a modern web application designed to revolutionize the way you manage business cards. Forget time-consuming manual data entry. With the help of Artificial Intelligence (AI), this application instantly scans, extracts information, and classifies data from business cards directly from your browser.',
+                aboutDesc2: 'Built for dynamic professionals, sales teams, and anyone who frequently exchanges contacts at events, Scanner Pintar serves as a bridge between physical meetings and efficient digital contact management. No installation is needed—just open it in your browser, and you are ready to turn a stack of business cards into an organized and actionable database.',
+                featuresTitle: "Main Features",
+                feature1Title: "Smart AI Scanning",
+                feature1Desc: "Take a photo of a business card and let our AI do the work. Advanced vision technology will extract names, titles, companies, emails, and phone numbers, and automatically classify the company's industry type.",
+                feature2Title: "Team Collaboration Mode",
+                feature2Desc: "Create an event session and share a QR Code with your team. All scans from team members will be saved in real-time to the same Google Sheet, ideal for exhibitions or large events.",
+                feature3Title: "AI Follow-Up Assistant",
+                feature3Desc: "Save time by automatically drafting emails or WhatsApp messages for follow-ups. The AI will compose a professional message based on your profile and the newly scanned contact's details.",
+                feature4Title: "Local & Secure Storage",
+                feature4Desc: "Privacy is a priority. All contact data you scan is stored by default only on your device (phone) using IndexedDB, giving you full control over your data.",
+                feature5Title: "Flexible Data Export",
+                feature5Desc: "Export your contacts to various formats as needed: CSV for spreadsheets, VCF for importing into phone contacts (one by one or in a ZIP format), and bulk save to Google Sheets.",
+                feature6Title: "Universal QR Code Scanner",
+                feature6Desc: "In addition to business cards, this application can also scan various types of QR Codes, including VCards, URL links, and plain text, making it a versatile scanning tool.",
+                privacyTitle: "Your Data Privacy and Security",
+                privacyDesc1: "We highly value your privacy. Here is our commitment to data security:",
+                privacyLi1: '<strong class="text-gray-700 dark:text-gray-200">Data Stored on Your Device:</strong> By default, all extracted contact information is securely stored within the browser database on your device (local storage). This data is not sent to our servers without your explicit consent.',
+                privacyLi2: '<strong class="text-gray-700 dark:text-gray-200">Temporary Processing:</strong> The business card images you upload are sent to our servers solely for analysis by the AI. The images are not permanently stored and are only processed momentarily.',
+                privacyLi3: '<strong class="text-gray-700 dark:text-gray-200">Full Control in Your Hands:</strong> You have full control to delete data from local storage at any time. When you use the export to Google Sheet or Collaboration Mode features, you consciously choose to share that data with your chosen platform.',
+                privacyLi4: '<strong class="text-gray-700 dark:text-gray-200">No User Tracking:</strong> This application does not require a login or user account, thus minimizing the collection of personal data.',
+                contactTitle: "Developer Contact",
+                contactNameLabel: "Name",
+                contactPhoneLabel: "Phone / WhatsApp",
+                footerHome: "Home",
+                footerAbout: "About",
+                footerHelp: "Help",
+                footerTerms: "Terms",
+                footerPrivacy: "Privacy",
+                footerCopyright: '&copy; 2025 Scanner Pintar. Created by <a href="https://isparmo.com" target="_blank" rel="noopener noreferrer" class="font-semibold text-indigo-600 dark:text-indigo-400 hover:underline">Isparmo</a>.'
+            }
+        };
+
+        const langToggleBtn = document.getElementById('lang-toggle');
+        let currentLang = 'id';
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            document.documentElement.lang = lang;
+            langToggleBtn.textContent = lang === 'id' ? 'EN' : 'ID';
+            document.querySelectorAll('[data-translate-key]').forEach(el => {
+                const key = el.getAttribute('data-translate-key');
+                if (translations[lang][key]) {
+                    el.innerHTML = translations[lang][key];
+                }
+            });
+            const titleKey = 'pageTitle';
+            document.title = `${translations[lang][titleKey]} | ${translations[lang]['mainTitle']}`;
+            localStorage.setItem('pageLang', lang);
+        }
+
+        langToggleBtn.addEventListener('click', () => {
+            const newLang = currentLang === 'id' ? 'en' : 'id';
+            setLanguage(newLang);
+        });
 
         const themeToggleBtn = document.getElementById('theme-toggle');
         const sunIcon = themeToggleBtn.querySelector('[data-lucide="sun"]');
@@ -227,11 +327,18 @@
 
         themeToggleBtn.addEventListener('click', toggleTheme);
 
-        // Initial theme setup on page load
-        const savedTheme = localStorage.getItem('theme');
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        applyTheme(savedTheme ? savedTheme === 'dark' : prefersDark);
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            applyTheme(savedTheme ? savedTheme === 'dark' : prefersDark);
+            
+            const savedLang = localStorage.getItem('pageLang');
+            if (savedLang && (savedLang === 'id' || savedLang === 'en')) {
+                setLanguage(savedLang);
+            } else {
+                setLanguage('id');
+            }
+        });
     </script>
 </body>
 </html>
-
