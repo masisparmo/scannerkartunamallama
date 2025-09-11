@@ -376,34 +376,25 @@
                 }
             }
 
-            // ================== PERUBAHAN DI SINI ==================
-            // Menerapkan metode perizinan kamera Versi 2
+            // ================== PERUBAHAN DI SINI SESUAI PERMINTAAN ==================
+            // Menerapkan 100% kode dari file yang berhasil, termasuk alert().
             async function startCamera() {
                 try {
-                    if (stream) { 
-                        stream.getTracks().forEach(track => track.stop()); 
-                    }
-                    
+                    if (stream) { stream.getTracks().forEach(track => track.stop()); }
                     stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
-                    
                     otherSelectors.video.srcObject = stream;
-                    
-                    // Menggunakan addEventListener karena lebih modern daripada onloadeddata
-                    otherSelectors.video.addEventListener('loadeddata', () => {
-                        // Memastikan interval scan QR hanya berjalan jika belum ada
+                    otherSelectors.video.onloadedmetadata = () => {
+                        otherSelectors.canvas.width = otherSelectors.video.videoWidth;
+                        otherSelectors.canvas.height = otherSelectors.video.videoHeight;
+                        // Menjaga fitur QR Code Scan agar tidak hilang
                         if(qrScanInterval) clearInterval(qrScanInterval);
                         qrScanInterval = setInterval(scanQRCode, 500);
-                    });
-                    
+                    };
                     showScreen('scanner');
-
                 } catch (err) {
-                    // Mencatat error ke konsol dan log internal
-                    logError("Error accessing camera:", err); 
-                    
-                    // Menggunakan showToast() untuk notifikasi yang tidak mengganggu
-                    showToast("Tidak dapat mengakses kamera. Pastikan Anda memberikan izin.");
-                    
+                    console.error("Error accessing camera:", err);
+                    // Menggunakan alert() yang menghentikan interaksi pengguna, sesuai permintaan.
+                    alert("Tidak dapat mengakses kamera. Pastikan Anda memberikan izin.");
                     showScreen('initial');
                 }
             }
