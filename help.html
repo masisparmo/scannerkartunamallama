@@ -18,13 +18,6 @@
         body {
             font-family: 'Inter', sans-serif;
         }
-        .step-card {
-            counter-increment: step-counter;
-        }
-        .step-card::before {
-            content: counter(step-counter);
-            @apply absolute -left-4 top-4 w-8 h-8 flex items-center justify-center bg-indigo-600 text-white font-bold rounded-full ring-4 ring-gray-50 dark:ring-gray-900;
-        }
         .faq-item details > summary {
             list-style: none;
         }
@@ -51,14 +44,15 @@
                     <i data-lucide="help-circle" class="w-7 h-7 text-indigo-600 dark:text-indigo-400"></i>
                 </div>
                 <div>
-                    <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">Scanner Pintar</h1>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">Petunjuk & Bantuan</p>
+                    <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white" data-translate-key="mainTitle">Scanner Pintar</h1>
+                    <p class="text-sm text-gray-500 dark:text-gray-400" data-translate-key="pageTitle">Petunjuk & Bantuan</p>
                 </div>
             </div>
             <div class="flex items-center gap-4">
+                <button id="lang-toggle" class="inline-flex items-center gap-2 bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors shadow-sm text-sm">EN</button>
                 <a href="https://scankartunama.isparmo.com/" class="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors shadow-sm">
                     <i data-lucide="home" class="w-4 h-4"></i>
-                    <span class="hidden sm:inline">Kembali ke Aplikasi</span>
+                    <span class="hidden sm:inline" data-translate-key="backToApp">Kembali ke Aplikasi</span>
                 </a>
                 <button id="theme-toggle" class="p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
                     <i data-lucide="sun" class="w-5 h-5 hidden"></i>
@@ -71,67 +65,92 @@
 
             <!-- Section: Cara Penggunaan -->
             <section id="cara-penggunaan">
-                <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Cara Menggunakan Scanner Pintar</h2>
-                <div class="space-y-8" style="counter-reset: step-counter;">
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6" data-translate-key="howToUseTitle">Cara Menggunakan Scanner Pintar</h2>
+                <div class="space-y-8">
                     
-                    <!-- Langkah 1: Memindai Kartu Nama -->
+                    <!-- Langkah 1: Persiapan -->
                     <div>
-                        <h3 class="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-200">1. Memindai Kartu Nama atau QR Code</h3>
-                        <div class="relative pl-8 border-l-2 border-gray-200 dark:border-gray-700">
-                            <div class="space-y-6">
-                                <div class="step-card relative p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
-                                    <h4 class="font-semibold text-gray-900 dark:text-white mb-2">Isi Informasi Acara (Opsional tapi Direkomendasikan)</h4>
-                                    <p class="text-sm text-gray-600 dark:text-gray-400">Pada halaman utama, isi kolom "Nama Acara", "Tanggal", dan "Catatan". Informasi ini akan otomatis ditambahkan ke setiap kontak yang Anda pindai dalam sesi ini.</p>
+                        <h3 class="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-200 flex items-center gap-3">
+                            <span class="flex items-center justify-center w-8 h-8 bg-indigo-600 text-white font-bold rounded-full flex-shrink-0">1</span>
+                            <span data-translate-key="step1Title">Persiapan Awal</span>
+                        </h3>
+                        <div class="relative pl-8 border-l-2 border-gray-200 dark:border-gray-700 ml-4">
+                            <div class="space-y-6 pt-2 pb-4">
+                                <div class="relative p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
+                                    <h4 class="font-semibold text-gray-900 dark:text-white mb-2" data-translate-key="step1_1Title">Isi Profil Anda (Penting untuk Follow-up AI)</h4>
+                                    <p class="text-sm text-gray-600 dark:text-gray-400" data-translate-key="step1_1Desc">Sebelum memulai, klik tombol <strong>PROFIL</strong> di pojok kanan atas halaman utama. Isi nama, jabatan, dan perusahaan Anda. Informasi ini akan digunakan oleh AI untuk membuat draf email dan pesan WhatsApp yang personal dan profesional.</p>
                                 </div>
-                                <div class="step-card relative p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
-                                    <h4 class="font-semibold text-gray-900 dark:text-white mb-2">Pilih Metode Pindai</h4>
-                                    <p class="text-sm text-gray-600 dark:text-gray-400">Klik <strong>SCAN KARTU NAMA</strong> untuk membuka kamera, atau <strong>UPLOAD DARI GALERI</strong> untuk memilih gambar yang sudah ada di perangkat Anda.</p>
-                                </div>
-                                <div class="step-card relative p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
-                                    <h4 class="font-semibold text-gray-900 dark:text-white mb-2">Ambil Gambar</h4>
-                                    <p class="text-sm text-gray-600 dark:text-gray-400">Posisikan kartu nama atau QR Code di dalam frame. Pastikan pencahayaan cukup dan gambar fokus. Klik tombol Pindai. AI akan otomatis menganalisis dan mengekstrak informasinya.</p>
+                                <div class="relative p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
+                                    <h4 class="font-semibold text-gray-900 dark:text-white mb-2" data-translate-key="step1_2Title">Isi Informasi Acara (Opsional)</h4>
+                                    <p class="text-sm text-gray-600 dark:text-gray-400" data-translate-key="step1_2Desc">Pada halaman utama, isi kolom "Nama Acara" dan "Tanggal". Informasi ini akan otomatis ditambahkan ke setiap kontak yang Anda pindai dalam sesi ini.</p>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Langkah 2: Mode Kolaborasi -->
+                    <!-- Langkah 2: Memindai Kartu Nama -->
                     <div>
-                        <h3 class="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-200">2. Menggunakan Mode Kolaborasi Tim</h3>
-                         <div class="relative pl-8 border-l-2 border-gray-200 dark:border-gray-700">
-                            <div class="space-y-6">
-                                <div class="step-card relative p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
-                                    <h4 class="font-semibold text-gray-900 dark:text-white mb-2">Membuat Sesi (Leader Tim)</h4>
-                                    <p class="text-sm text-gray-600 dark:text-gray-400">Di halaman utama, klik <strong>MODE KOLABORASI TIM</strong>, masukkan nama acara, lalu klik <strong>Buat QR Code</strong>. Bagikan QR Code yang muncul ke anggota tim Anda.</p>
+                        <h3 class="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-200 flex items-center gap-3">
+                           <span class="flex items-center justify-center w-8 h-8 bg-indigo-600 text-white font-bold rounded-full flex-shrink-0">2</span>
+                           <span data-translate-key="step2Title">Memindai Kartu Nama atau QR Code</span>
+                        </h3>
+                        <div class="relative pl-8 border-l-2 border-gray-200 dark:border-gray-700 ml-4">
+                            <div class="space-y-6 pt-2 pb-4">
+                                <div class="relative p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
+                                    <h4 class="font-semibold text-gray-900 dark:text-white mb-2" data-translate-key="step2_1Title">Pilih Metode Pindai</h4>
+                                    <p class="text-sm text-gray-600 dark:text-gray-400" data-translate-key="step2_1Desc">Klik <strong>SCAN KARTU NAMA</strong> untuk membuka kamera, atau <strong>UPLOAD DARI GALERI</strong> untuk memilih gambar yang sudah ada di perangkat Anda.</p>
                                 </div>
-                                 <div class="step-card relative p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
-                                    <h4 class="font-semibold text-gray-900 dark:text-white mb-2">Bergabung ke Sesi (Anggota Tim)</h4>
-                                    <p class="text-sm text-gray-600 dark:text-gray-400">Pindai QR Code dari Leader Tim menggunakan kamera HP Anda (atau aplikasi Scanner Pintar). Masukkan nama Anda untuk bergabung. Setelah bergabung, setiap kartu nama yang Anda pindai akan otomatis terkirim ke Google Sheet sesi tersebut.</p>
+                                <div class="relative p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
+                                    <h4 class="font-semibold text-gray-900 dark:text-white mb-2" data-translate-key="step2_2Title">Ambil Gambar</h4>
+                                    <p class="text-sm text-gray-600 dark:text-gray-400" data-translate-key="step2_2Desc">Posisikan kartu nama atau QR Code di dalam frame. Pastikan pencahayaan cukup dan gambar fokus. Klik tombol Pindai. AI akan otomatis menganalisis dan mengekstrak informasinya.</p>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Langkah 3: Mengelola Hasil -->
+                    <!-- Langkah 3: Mode Kolaborasi -->
+                    <div>
+                        <h3 class="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-200 flex items-center gap-3">
+                            <span class="flex items-center justify-center w-8 h-8 bg-indigo-600 text-white font-bold rounded-full flex-shrink-0">3</span>
+                            <span data-translate-key="step3Title">Menggunakan Mode Kolaborasi Tim</span>
+                        </h3>
+                         <div class="relative pl-8 border-l-2 border-gray-200 dark:border-gray-700 ml-4">
+                            <div class="space-y-6 pt-2 pb-4">
+                                <div class="relative p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
+                                    <h4 class="font-semibold text-gray-900 dark:text-white mb-2" data-translate-key="step3_1Title">Membuat Sesi (Leader Tim)</h4>
+                                    <p class="text-sm text-gray-600 dark:text-gray-400" data-translate-key="step3_1Desc">Di halaman utama, klik <strong>MODE KOLABORASI TIM</strong>, masukkan nama acara, lalu klik <strong>Buat QR Code</strong>. Bagikan QR Code yang muncul ke anggota tim Anda.</p>
+                                </div>
+                                 <div class="relative p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
+                                    <h4 class="font-semibold text-gray-900 dark:text-white mb-2" data-translate-key="step3_2Title">Bergabung ke Sesi (Anggota Tim)</h4>
+                                    <p class="text-sm text-gray-600 dark:text-gray-400" data-translate-key="step3_2Desc">Pindai QR Code dari Leader Tim menggunakan kamera HP Anda (atau aplikasi Scanner Pintar). Masukkan nama Anda untuk bergabung. Setelah bergabung, setiap kartu nama yang Anda pindai akan otomatis terkirim ke Google Sheet sesi tersebut.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Langkah 4: Mengelola Hasil -->
                      <div>
-                        <h3 class="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-200">3. Mengelola dan Mengekspor Hasil</h4>
-                         <div class="relative pl-8 border-l-2 border-gray-200 dark:border-gray-700">
-                            <div class="space-y-6">
-                                <div class="step-card relative p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
-                                    <h4 class="font-semibold text-gray-900 dark:text-white mb-2">Lihat Hasil Scan</h4>
-                                    <p class="text-sm text-gray-600 dark:text-gray-400">Klik <strong>Lihat Hasil Scan</strong> di halaman utama untuk melihat semua kontak yang tersimpan di perangkat Anda. Kontak diurutkan dari yang terbaru.</p>
+                        <h3 class="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-200 flex items-center gap-3">
+                            <span class="flex items-center justify-center w-8 h-8 bg-indigo-600 text-white font-bold rounded-full flex-shrink-0">4</span>
+                            <span data-translate-key="step4Title">Mengelola dan Mengekspor Hasil</span>
+                        </h4>
+                         <div class="relative pl-8 border-l-2 border-gray-200 dark:border-gray-700 ml-4">
+                            <div class="space-y-6 pt-2 pb-4">
+                                <div class="relative p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
+                                    <h4 class="font-semibold text-gray-900 dark:text-white mb-2" data-translate-key="step4_1Title">Lihat Hasil Scan</h4>
+                                    <p class="text-sm text-gray-600 dark:text-gray-400" data-translate-key="step4_1Desc">Klik <strong>Lihat Hasil Scan</strong> di halaman utama untuk melihat semua kontak yang tersimpan di perangkat Anda. Kontak diurutkan dari yang terbaru.</p>
                                 </div>
-                                <div class="step-card relative p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
-                                    <h4 class="font-semibold text-gray-900 dark:text-white mb-2">Edit atau Hapus Kontak</h4>
-                                    <p class="text-sm text-gray-600 dark:text-gray-400">Di halaman hasil, klik ikon <strong>pensil</strong> pada kartu kontak untuk mengedit informasi yang salah atau menambahkan detail. Anda juga bisa menghapus kontak dari halaman edit.</p>
+                                <div class="relative p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
+                                    <h4 class="font-semibold text-gray-900 dark:text-white mb-2" data-translate-key="step4_2Title">Edit atau Hapus Kontak</h4>
+                                    <p class="text-sm text-gray-600 dark:text-gray-400" data-translate-key="step4_2Desc">Di halaman hasil, klik tombol <strong>EDIT</strong> pada kartu kontak untuk mengedit informasi yang salah atau menambahkan detail. Anda juga bisa menghapus kontak dari halaman edit.</p>
                                 </div>
-                                <div class="step-card relative p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
-                                    <h4 class="font-semibold text-gray-900 dark:text-white mb-2">Gunakan Asisten Follow-Up AI</h4>
-                                    <p class="text-sm text-gray-600 dark:text-gray-400">Klik pada kartu kontak (bukan ikon pensil) untuk membuka menu tindakan. Pilih <strong>Draf Pesan WA</strong> atau <strong>Draf Email</strong>. Pastikan Anda sudah melengkapi profil Anda di menu Pengaturan (ikon gerigi) agar AI dapat membuat draf yang personal.</p>
+                                <div class="relative p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
+                                    <h4 class="font-semibold text-gray-900 dark:text-white mb-2" data-translate-key="step4_3Title">Gunakan Asisten Follow-Up AI</h4>
+                                    <p class="text-sm text-gray-600 dark:text-gray-400" data-translate-key="step4_3Desc">Klik pada kartu kontak (bukan tombol edit) untuk membuka menu tindakan. Pilih <strong>Draf Pesan WA</strong> atau <strong>Draf Email</strong>. Ingat, fitur ini memerlukan profil yang sudah terisi.</p>
                                 </div>
-                                <div class="step-card relative p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
-                                    <h4 class="font-semibold text-gray-900 dark:text-white mb-2">Ekspor Data</h4>
-                                    <p class="text-sm text-gray-600 dark:text-gray-400">Di bagian bawah halaman hasil, pilih format ekspor yang Anda inginkan: <strong>CSV</strong> (untuk Excel/Sheets), <strong>VCF</strong> (untuk kontak HP), <strong>ZIP</strong> (kumpulan file VCF), atau <strong>SIMPAN KE GOOGLE SHEET</strong> (untuk menyimpan semua data lokal ke G-Sheet pribadi).</p>
+                                <div class="relative p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
+                                    <h4 class="font-semibold text-gray-900 dark:text-white mb-2" data-translate-key="step4_4Title">Ekspor Data</h4>
+                                    <p class="text-sm text-gray-600 dark:text-gray-400" data-translate-key="step4_4Desc">Di bagian bawah halaman hasil, pilih format ekspor yang Anda inginkan: <strong>CSV</strong> (untuk Excel/Sheets), <strong>VCF</strong> (untuk kontak HP), <strong>ZIP</strong> (kumpulan file VCF), atau <strong>SIMPAN KE GOOGLE SHEET</strong> (untuk menyimpan semua data lokal ke G-Sheet pribadi).</p>
                                 </div>
                             </div>
                         </div>
@@ -141,100 +160,98 @@
 
             <!-- Section: F.A.Q. -->
             <section id="faq">
-                <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Frequently Asked Questions (F.A.Q.)</h2>
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6" data-translate-key="faqTitle">Frequently Asked Questions (F.A.Q.)</h2>
                 <div class="space-y-4">
                     <div class="faq-item bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
                         <details class="p-6">
-                            <summary class="font-semibold text-gray-900 dark:text-white cursor-pointer flex justify-between items-center">
+                            <summary class="font-semibold text-gray-900 dark:text-white cursor-pointer flex justify-between items-center" data-translate-key="faq1_q">
                                 Seberapa akurat hasil scan AI?
                                 <i data-lucide="chevron-down" class="chevron w-5 h-5"></i>
                             </summary>
-                            <div class="mt-4 text-sm text-gray-600 dark:text-gray-400">Akurasi sangat bergantung pada kualitas gambar: pencahayaan yang baik, gambar yang fokus, dan desain kartu nama yang jelas akan memberikan hasil terbaik. AI kami terus belajar, namun jika ada kesalahan, Anda dapat dengan mudah mengedit hasilnya.</div>
+                            <div class="mt-4 text-sm text-gray-600 dark:text-gray-400" data-translate-key="faq1_a">Akurasi sangat bergantung pada kualitas gambar: pencahayaan yang baik, gambar yang fokus, dan desain kartu nama yang jelas akan memberikan hasil terbaik. AI kami terus belajar, namun jika ada kesalahan, Anda dapat dengan mudah mengedit hasilnya.</div>
                         </details>
                     </div>
                     <div class="faq-item bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
                         <details class="p-6">
-                            <summary class="font-semibold text-gray-900 dark:text-white cursor-pointer flex justify-between items-center">
+                            <summary class="font-semibold text-gray-900 dark:text-white cursor-pointer flex justify-between items-center" data-translate-key="faq2_q">
                                 Apakah data saya aman? Di mana data disimpan?
                                 <i data-lucide="chevron-down" class="chevron w-5 h-5"></i>
                             </summary>
-                            <div class="mt-4 text-sm text-gray-600 dark:text-gray-400">Sangat aman. Secara default, semua data hasil scan disimpan secara lokal di dalam browser perangkat Anda (IndexedDB) dan tidak dikirim ke server kami. Anda memiliki kendali penuh. Data hanya dikirim ke Google Sheet jika Anda menggunakan Mode Kolaborasi atau fitur ekspor massal.</div>
+                            <div class="mt-4 text-sm text-gray-600 dark:text-gray-400" data-translate-key="faq2_a">Sangat aman. Secara default, semua data hasil scan disimpan secara lokal di dalam browser perangkat Anda (IndexedDB) dan tidak dikirim ke server kami. Anda memiliki kendali penuh. Data hanya dikirim ke Google Sheet jika Anda menggunakan Mode Kolaborasi atau fitur ekspor massal.</div>
                         </details>
                     </div>
                     <div class="faq-item bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
                         <details class="p-6">
-                            <summary class="font-semibold text-gray-900 dark:text-white cursor-pointer flex justify-between items-center">
+                            <summary class="font-semibold text-gray-900 dark:text-white cursor-pointer flex justify-between items-center" data-translate-key="faq3_q">
                                 Apakah aplikasi ini gratis?
                                 <i data-lucide="chevron-down" class="chevron w-5 h-5"></i>
                             </summary>
-                            <div class="mt-4 text-sm text-gray-600 dark:text-gray-400">Ya, saat ini Scanner Pintar gratis untuk digunakan. Aplikasi ini dibuat sebagai alat bantu untuk meningkatkan produktivitas dan efisiensi dalam manajemen kontak.</div>
+                            <div class="mt-4 text-sm text-gray-600 dark:text-gray-400" data-translate-key="faq3_a">Ya, saat ini Scanner Pintar gratis untuk digunakan. Aplikasi ini dibuat sebagai alat bantu untuk meningkatkan produktivitas dan efisiensi dalam manajemen kontak.</div>
                         </details>
                     </div>
                      <div class="faq-item bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
                         <details class="p-6">
-                            <summary class="font-semibold text-gray-900 dark:text-white cursor-pointer flex justify-between items-center">
+                            <summary class="font-semibold text-gray-900 dark:text-white cursor-pointer flex justify-between items-center" data-translate-key="faq4_q">
                                 Perangkat apa saja yang didukung?
                                 <i data-lucide="chevron-down" class="chevron w-5 h-5"></i>
                             </summary>
-                            <div class="mt-4 text-sm text-gray-600 dark:text-gray-400">
+                            <div class="mt-4 text-sm text-gray-600 dark:text-gray-400" data-translate-key="faq4_a">
                                 Aplikasi ini adalah aplikasi web (web app) dan dapat berjalan di browser modern pada smartphone (Android & iOS), tablet, dan laptop. Untuk pengalaman terbaik, gunakan browser seperti Google Chrome, Safari, atau Firefox versi terbaru.
-                                <br><br>
-                                <strong class="text-amber-600 dark:text-amber-400">Penting:</strong> Saat ini, fitur scan menggunakan kamera <strong>belum bisa digunakan pada browser di perangkat iOS (iPhone/iPad)</strong> karena kebijakan perizinan kamera yang sangat ketat dari sistem operasi iOS. Pengguna iOS tetap dapat menggunakan aplikasi dengan lancar melalui fitur <strong>UPLOAD DARI GALERI</strong>.
                             </div>
                         </details>
                     </div>
                      <div class="faq-item bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
                         <details class="p-6">
-                            <summary class="font-semibold text-gray-900 dark:text-white cursor-pointer flex justify-between items-center">
+                            <summary class="font-semibold text-gray-900 dark:text-white cursor-pointer flex justify-between items-center" data-translate-key="faq5_q">
                                 Mengapa saya tidak bisa mengakses kamera?
                                 <i data-lucide="chevron-down" class="chevron w-5 h-5"></i>
                             </summary>
-                            <div class="mt-4 text-sm text-gray-600 dark:text-gray-400">Selain isu pada perangkat iOS yang disebutkan di atas, pastikan Anda telah memberikan izin akses kamera untuk situs web ini di pengaturan browser Anda. Saat pertama kali menekan tombol Scan, browser akan meminta izin. Jika tidak sengaja tertolak, Anda perlu mengizinkannya secara manual melalui pengaturan situs di browser Anda.</div>
+                            <div class="mt-4 text-sm text-gray-600 dark:text-gray-400" data-translate-key="faq5_a">Pastikan Anda telah memberikan izin akses kamera untuk situs web ini di pengaturan browser Anda. Saat pertama kali menekan tombol Scan, browser akan meminta izin. Jika tidak sengaja tertolak, Anda perlu mengizinkannya secara manual melalui pengaturan situs di browser Anda.</div>
                         </details>
                     </div>
                      <div class="faq-item bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
                         <details class="p-6">
-                            <summary class="font-semibold text-gray-900 dark:text-white cursor-pointer flex justify-between items-center">
+                            <summary class="font-semibold text-gray-900 dark:text-white cursor-pointer flex justify-between items-center" data-translate-key="faq6_q">
                                 Bagaimana cara kerja Mode Kolaborasi?
                                 <i data-lucide="chevron-down" class="chevron w-5 h-5"></i>
                             </summary>
-                            <div class="mt-4 text-sm text-gray-600 dark:text-gray-400">Leader tim membuat sesi yang terhubung ke sebuah Google Sheet. Anggota tim yang bergabung akan mengirimkan setiap hasil scan mereka ke Google Sheet tersebut secara otomatis. Data juga tetap tersimpan di perangkat masing-masing anggota sebagai cadangan.</div>
+                            <div class="mt-4 text-sm text-gray-600 dark:text-gray-400" data-translate-key="faq6_a">Leader tim membuat sesi yang terhubung ke sebuah Google Sheet. Anggota tim yang bergabung akan mengirimkan setiap hasil scan mereka ke Google Sheet tersebut secara otomatis. Data juga tetap tersimpan di perangkat masing-masing anggota sebagai cadangan.</div>
                         </details>
                     </div>
                     <div class="faq-item bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
                         <details class="p-6">
-                            <summary class="font-semibold text-gray-900 dark:text-white cursor-pointer flex justify-between items-center">
+                            <summary class="font-semibold text-gray-900 dark:text-white cursor-pointer flex justify-between items-center" data-translate-key="faq7_q">
                                 Bisakah saya mengedit data setelah di-scan?
                                 <i data-lucide="chevron-down" class="chevron w-5 h-5"></i>
                             </summary>
-                            <div class="mt-4 text-sm text-gray-600 dark:text-gray-400">Tentu saja. Di halaman "Lihat Hasil Scan", klik ikon pensil pada kontak yang ingin Anda ubah. Anda bisa memperbaiki atau melengkapi informasi apa pun sebelum mengekspornya.</div>
+                            <div class="mt-4 text-sm text-gray-600 dark:text-gray-400" data-translate-key="faq7_a">Tentu saja. Di halaman "Lihat Hasil Scan", klik tombol EDIT pada kontak yang ingin Anda ubah. Anda bisa memperbaiki atau melengkapi informasi apa pun sebelum mengekspornya.</div>
                         </details>
                     </div>
                      <div class="faq-item bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
                         <details class="p-6">
-                            <summary class="font-semibold text-gray-900 dark:text-white cursor-pointer flex justify-between items-center">
+                            <summary class="font-semibold text-gray-900 dark:text-white cursor-pointer flex justify-between items-center" data-translate-key="faq8_q">
                                 Apakah saya perlu menginstal sesuatu?
                                 <i data-lucide="chevron-down" class="chevron w-5 h-5"></i>
                             </summary>
-                            <div class="mt-4 text-sm text-gray-600 dark:text-gray-400">Tidak perlu. Scanner Pintar adalah Progressive Web App (PWA). Anda bisa langsung menggunakannya dari browser. Untuk akses lebih cepat, Anda bisa menambahkannya ke layar utama (Add to Home Screen) ponsel Anda, sehingga berfungsi seperti aplikasi native.</div>
+                            <div class="mt-4 text-sm text-gray-600 dark:text-gray-400" data-translate-key="faq8_a">Tidak perlu. Scanner Pintar adalah Progressive Web App (PWA). Anda bisa langsung menggunakannya dari browser. Untuk akses lebih cepat, Anda bisa menambahkannya ke layar utama (Add to Home Screen) ponsel Anda, sehingga berfungsi seperti aplikasi native.</div>
                         </details>
                     </div>
                      <div class="faq-item bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
                         <details class="p-6">
-                            <summary class="font-semibold text-gray-900 dark:text-white cursor-pointer flex justify-between items-center">
+                            <summary class="font-semibold text-gray-900 dark:text-white cursor-pointer flex justify-between items-center" data-translate-key="faq9_q">
                                 AI gagal mengekstrak informasi dengan benar. Apa yang harus saya lakukan?
                                 <i data-lucide="chevron-down" class="chevron w-5 h-5"></i>
                             </summary>
-                            <div class="mt-4 text-sm text-gray-600 dark:text-gray-400">Jika AI kesulitan, coba ambil ulang foto dengan kualitas lebih baik. Pastikan tidak ada bayangan, gambar tidak buram, dan kartu nama diletakkan di permukaan yang kontras. Jika masih ada kesalahan, Anda bisa dengan cepat memperbaikinya menggunakan fitur Edit di halaman hasil.</div>
+                            <div class="mt-4 text-sm text-gray-600 dark:text-gray-400" data-translate-key="faq9_a">Jika AI kesulitan, coba ambil ulang foto dengan kualitas lebih baik. Pastikan tidak ada bayangan, gambar tidak buram, dan kartu nama diletakkan di permukaan yang kontras. Jika masih ada kesalahan, Anda bisa dengan cepat memperbaikinya menggunakan fitur Edit di halaman hasil.</div>
                         </details>
                     </div>
                      <div class="faq-item bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
                         <details class="p-6">
-                            <summary class="font-semibold text-gray-900 dark:text-white cursor-pointer flex justify-between items-center">
+                            <summary class="font-semibold text-gray-900 dark:text-white cursor-pointer flex justify-between items-center" data-translate-key="faq10_q">
                                 Bisakah saya menggunakan aplikasi ini secara offline?
                                 <i data-lucide="chevron-down" class="chevron w-5 h-5"></i>
                             </summary>
-                            <div class="mt-4 text-sm text-gray-600 dark:text-gray-400">Anda dapat membuka aplikasi dan melihat data yang sudah tersimpan secara offline. Namun, untuk proses pemindaian kartu nama dengan AI dan sinkronisasi ke Google Sheet, Anda memerlukan koneksi internet yang aktif.</div>
+                            <div class="mt-4 text-sm text-gray-600 dark:text-gray-400" data-translate-key="faq10_a">Anda dapat membuka aplikasi dan melihat data yang sudah tersimpan secara offline. Namun, untuk proses pemindaian kartu nama dengan AI dan sinkronisasi ke Google Sheet, Anda memerlukan koneksi internet yang aktif.</div>
                         </details>
                     </div>
                 </div>
@@ -242,9 +259,9 @@
             
             <!-- Section: Kontak & Dukungan -->
             <section id="dukungan">
-                 <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">Kontak & Dukungan</h2>
+                 <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4" data-translate-key="supportTitle">Kontak & Dukungan</h2>
                 <div class="p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 text-center">
-                    <p class="text-gray-600 dark:text-gray-300">Untuk pertanyaan, masukan, atau laporan bug, silakan kirim email ke tim dukungan kami.</p>
+                    <p class="text-gray-600 dark:text-gray-300" data-translate-key="supportDesc">Untuk pertanyaan, masukan, atau laporan bug, silakan kirim email ke tim dukungan kami.</p>
                     <a href="mailto:support@isparmo.com" class="mt-4 inline-flex items-center gap-2 bg-indigo-100 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-300 font-semibold py-3 px-5 rounded-lg hover:bg-indigo-200 dark:hover:bg-indigo-900 transition-colors">
                         <i data-lucide="mail" class="w-5 h-5"></i>
                         support@isparmo.com
@@ -257,23 +274,178 @@
         <!-- Footer -->
         <footer class="text-center mt-16 py-6 border-t border-gray-200 dark:border-gray-700">
              <div class="flex justify-center items-center gap-x-4 mb-4 text-sm text-gray-500 dark:text-gray-400">
-                <a href="https://scankartunama.isparmo.com/" class="hover:underline hover:text-indigo-500">Home</a>
+                <a href="https://scankartunama.isparmo.com/" class="hover:underline hover:text-indigo-500" data-translate-key="footerHome">Home</a>
                 <span class="text-gray-300 dark:text-gray-600">|</span>
-                <a href="about.html" class="hover:underline hover:text-indigo-500">Tentang</a>
+                <a href="about.html" class="hover:underline hover:text-indigo-500" data-translate-key="footerAbout">Tentang</a>
                 <span class="text-gray-300 dark:text-gray-600">|</span>
-                <a href="help.html" class="hover:underline hover:text-indigo-500">Bantuan</a>
+                <a href="help.html" class="hover:underline hover:text-indigo-500" data-translate-key="footerHelp">Bantuan</a>
                 <span class="text-gray-300 dark:text-gray-600">|</span>
-                <a href="terms.html" class="hover:underline hover:text-indigo-500">Ketentuan</a>
+                <a href="terms.html" class="hover:underline hover:text-indigo-500" data-translate-key="footerTerms">Ketentuan</a>
                 <span class="text-gray-300 dark:text-gray-600">|</span>
-                <a href="privacy.html" class="hover:underline hover:text-indigo-500">Privasi</a>
+                <a href="privacy.html" class="hover:underline hover:text-indigo-500" data-translate-key="footerPrivacy">Privasi</a>
             </div>
-            <p class="text-sm text-gray-500 dark:text-gray-400">&copy; 2025 Scanner Pintar. Dibuat oleh <a href="https://isparmo.com" target="_blank" rel="noopener noreferrer" class="font-semibold text-indigo-600 dark:text-indigo-400 hover:underline">Isparmo</a>.</p>
+            <p class="text-sm text-gray-500 dark:text-gray-400" data-translate-key="footerCopyright">&copy; 2025 Scanner Pintar. Dibuat oleh <a href="https://isparmo.com" target="_blank" rel="noopener noreferrer" class="font-semibold text-indigo-600 dark:text-indigo-400 hover:underline">Isparmo</a>.</p>
         </footer>
 
     </div>
 
     <script>
         lucide.createIcons();
+        
+        // --- DUAL LANGUAGE SCRIPT ---
+        const translations = {
+            id: {
+                pageTitle: "Petunjuk & Bantuan",
+                mainTitle: "Scanner Pintar",
+                backToApp: "Kembali ke Aplikasi",
+                howToUseTitle: "Cara Menggunakan Scanner Pintar",
+                step1Title: "Persiapan Awal",
+                step1_1Title: "Isi Profil Anda (Penting untuk Follow-up AI)",
+                step1_1Desc: "Sebelum memulai, klik tombol <strong>PROFIL</strong> di pojok kanan atas halaman utama. Isi nama, jabatan, dan perusahaan Anda. Informasi ini akan digunakan oleh AI untuk membuat draf email dan pesan WhatsApp yang personal dan profesional.",
+                step1_2Title: "Isi Informasi Acara (Opsional)",
+                step1_2Desc: "Pada halaman utama, isi kolom \"Nama Acara\" dan \"Tanggal\". Informasi ini akan otomatis ditambahkan ke setiap kontak yang Anda pindai dalam sesi ini.",
+                step2Title: "Memindai Kartu Nama atau QR Code",
+                step2_1Title: "Pilih Metode Pindai",
+                step2_1Desc: "Klik <strong>SCAN KARTU NAMA</strong> untuk membuka kamera, atau <strong>UPLOAD DARI GALERI</strong> untuk memilih gambar yang sudah ada di perangkat Anda.",
+                step2_2Title: "Ambil Gambar",
+                step2_2Desc: "Posisikan kartu nama atau QR Code di dalam frame. Pastikan pencahayaan cukup dan gambar fokus. Klik tombol Pindai. AI akan otomatis menganalisis dan mengekstrak informasinya.",
+                step3Title: "Menggunakan Mode Kolaborasi Tim",
+                step3_1Title: "Membuat Sesi (Leader Tim)",
+                step3_1Desc: "Di halaman utama, klik <strong>MODE KOLABORASI TIM</strong>, masukkan nama acara, lalu klik <strong>Buat QR Code</strong>. Bagikan QR Code yang muncul ke anggota tim Anda.",
+                step3_2Title: "Bergabung ke Sesi (Anggota Tim)",
+                step3_2Desc: "Pindai QR Code dari Leader Tim menggunakan kamera HP Anda (atau aplikasi Scanner Pintar). Masukkan nama Anda untuk bergabung. Setelah bergabung, setiap kartu nama yang Anda pindai akan otomatis terkirim ke Google Sheet sesi tersebut.",
+                step4Title: "Mengelola dan Mengekspor Hasil",
+                step4_1Title: "Lihat Hasil Scan",
+                step4_1Desc: "Klik <strong>Lihat Hasil Scan</strong> di halaman utama untuk melihat semua kontak yang tersimpan di perangkat Anda. Kontak diurutkan dari yang terbaru.",
+                step4_2Title: "Edit atau Hapus Kontak",
+                step4_2Desc: "Di halaman hasil, klik tombol <strong>EDIT</strong> pada kartu kontak untuk mengedit informasi yang salah atau menambahkan detail. Anda juga bisa menghapus kontak dari halaman edit.",
+                step4_3Title: "Gunakan Asisten Follow-Up AI",
+                step4_3Desc: "Klik pada kartu kontak (bukan tombol edit) untuk membuka menu tindakan. Pilih <strong>Draf Pesan WA</strong> atau <strong>Draf Email</strong>. Ingat, fitur ini memerlukan profil yang sudah terisi.",
+                step4_4Title: "Ekspor Data",
+                step4_4Desc: "Di bagian bawah halaman hasil, pilih format ekspor yang Anda inginkan: <strong>CSV</strong> (untuk Excel/Sheets), <strong>VCF</strong> (untuk kontak HP), <strong>ZIP</strong> (kumpulan file VCF), atau <strong>SIMPAN KE GOOGLE SHEET</strong> (untuk menyimpan semua data lokal ke G-Sheet pribadi).",
+                faqTitle: "Frequently Asked Questions (F.A.Q.)",
+                faq1_q: "Seberapa akurat hasil scan AI?",
+                faq1_a: "Akurasi sangat bergantung pada kualitas gambar: pencahayaan yang baik, gambar yang fokus, dan desain kartu nama yang jelas akan memberikan hasil terbaik. AI kami terus belajar, namun jika ada kesalahan, Anda dapat dengan mudah mengedit hasilnya.",
+                faq2_q: "Apakah data saya aman? Di mana data disimpan?",
+                faq2_a: "Sangat aman. Secara default, semua data hasil scan disimpan secara lokal di dalam browser perangkat Anda (IndexedDB) dan tidak dikirim ke server kami. Anda memiliki kendali penuh. Data hanya dikirim ke Google Sheet jika Anda menggunakan Mode Kolaborasi atau fitur ekspor massal.",
+                faq3_q: "Apakah aplikasi ini gratis?",
+                faq3_a: "Ya, saat ini Scanner Pintar gratis untuk digunakan. Aplikasi ini dibuat sebagai alat bantu untuk meningkatkan produktivitas dan efisiensi dalam manajemen kontak.",
+                faq4_q: "Perangkat apa saja yang didukung?",
+                faq4_a: 'Aplikasi ini adalah aplikasi web (web app) dan dapat berjalan di browser modern pada smartphone (Android & iOS), tablet, dan laptop. Untuk pengalaman terbaik, gunakan browser seperti Google Chrome, Safari, atau Firefox versi terbaru.',
+                faq5_q: "Mengapa saya tidak bisa mengakses kamera?",
+                faq5_a: "Pastikan Anda telah memberikan izin akses kamera untuk situs web ini di pengaturan browser Anda. Saat pertama kali menekan tombol Scan, browser akan meminta izin. Jika tidak sengaja tertolak, Anda perlu mengizinkannya secara manual melalui pengaturan situs di browser Anda.",
+                faq6_q: "Bagaimana cara kerja Mode Kolaborasi?",
+                faq6_a: "Leader tim membuat sesi yang terhubung ke sebuah Google Sheet. Anggota tim yang bergabung akan mengirimkan setiap hasil scan mereka ke Google Sheet tersebut secara otomatis. Data juga tetap tersimpan di perangkat masing-masing anggota sebagai cadangan.",
+                faq7_q: "Bisakah saya mengedit data setelah di-scan?",
+                faq7_a: "Tentu saja. Di halaman \"Lihat Hasil Scan\", klik tombol EDIT pada kontak yang ingin Anda ubah. Anda bisa memperbaiki atau melengkapi informasi apa pun sebelum mengekspornya.",
+                faq8_q: "Apakah saya perlu menginstal sesuatu?",
+                faq8_a: "Tidak perlu. Scanner Pintar adalah Progressive Web App (PWA). Anda bisa langsung menggunakannya dari browser. Untuk akses lebih cepat, Anda bisa menambahkannya ke layar utama (Add to Home Screen) ponsel Anda, sehingga berfungsi seperti aplikasi native.",
+                faq9_q: "AI gagal mengekstrak informasi dengan benar. Apa yang harus saya lakukan?",
+                faq9_a: "Jika AI kesulitan, coba ambil ulang foto dengan kualitas lebih baik. Pastikan tidak ada bayangan, gambar tidak buram, dan kartu nama diletakkan di permukaan yang kontras. Jika masih ada kesalahan, Anda bisa dengan cepat memperbaikinya menggunakan fitur Edit di halaman hasil.",
+                faq10_q: "Bisakah saya menggunakan aplikasi ini secara offline?",
+                faq10_a: "Anda dapat membuka aplikasi dan melihat data yang sudah tersimpan secara offline. Namun, untuk proses pemindaian kartu nama dengan AI dan sinkronisasi ke Google Sheet, Anda memerlukan koneksi internet yang aktif.",
+                supportTitle: "Kontak & Dukungan",
+                supportDesc: "Untuk pertanyaan, masukan, atau laporan bug, silakan kirim email ke tim dukungan kami.",
+                footerHome: "Home",
+                footerAbout: "Tentang",
+                footerHelp: "Bantuan",
+                footerTerms: "Ketentuan",
+                footerPrivacy: "Privasi",
+                footerCopyright: '&copy; 2025 Scanner Pintar. Dibuat oleh <a href="https://isparmo.com" target="_blank" rel="noopener noreferrer" class="font-semibold text-indigo-600 dark:text-indigo-400 hover:underline">Isparmo</a>.'
+            },
+            en: {
+                pageTitle: "Instructions & Help",
+                mainTitle: "Scanner Pintar",
+                backToApp: "Back to App",
+                howToUseTitle: "How to Use Scanner Pintar",
+                step1Title: "Initial Setup",
+                step1_1Title: "Fill Out Your Profile (Important for AI Follow-ups)",
+                step1_1Desc: "Before you begin, click the <strong>PROFILE</strong> button in the top-right corner of the main page. Fill in your name, position, and company. This information will be used by the AI to create personal and professional draft emails and WhatsApp messages.",
+                step1_2Title: "Fill in Event Information (Optional)",
+                step1_2Desc: "On the main page, fill in the \"Event Name\" and \"Date\" fields. This information will be automatically added to every contact you scan in this session.",
+                step2Title: "Scanning a Business Card or QR Code",
+                step2_1Title: "Choose Scan Method",
+                step2_1Desc: "Click <strong>SCAN BUSINESS CARD</strong> to open the camera, or <strong>UPLOAD FROM GALLERY</strong> to select an existing image from your device.",
+                step2_2Title: "Capture the Image",
+                step2_2Desc: "Position the business card or QR Code within the frame. Ensure there is enough light and the image is in focus. Click the Scan button. The AI will automatically analyze and extract the information.",
+                step3Title: "Using Team Collaboration Mode",
+                step3_1Title: "Create a Session (Team Leader)",
+                step3_1Desc: "On the main page, click <strong>TEAM COLLABORATION MODE</strong>, enter the event name, then click <strong>Create QR Code</strong>. Share the generated QR Code with your team members.",
+                step3_2Title: "Join a Session (Team Member)",
+                step3_2Desc: "Scan the QR Code from the Team Leader using your phone's camera (or the Scanner Pintar app). Enter your name to join. After joining, every business card you scan will be automatically sent to the session's Google Sheet.",
+                step4Title: "Managing and Exporting Results",
+                step4_1Title: "View Scan Results",
+                step4_1Desc: "Click <strong>View Scan Results</strong> on the main page to see all contacts saved on your device. Contacts are sorted by the most recent.",
+                step4_2Title: "Edit or Delete a Contact",
+                step4_2Desc: "On the results page, click the <strong>EDIT</strong> button on a contact card to correct any wrong information or add details. You can also delete the contact from the edit page.",
+                step4_3Title: "Use the AI Follow-Up Assistant",
+                step4_3Desc: "Click on a contact card (not the edit button) to open the action menu. Select <strong>Draft WA Message</strong> or <strong>Draft Email</strong>. Remember, this feature requires a completed profile.",
+                step4_4Title: "Export Data",
+                step4_4Desc: "At the bottom of the results page, choose your desired export format: <strong>CSV</strong> (for Excel/Sheets), <strong>VCF</strong> (for phone contacts), <strong>ZIP</strong> (a collection of VCF files), or <strong>SAVE TO GOOGLE SHEET</strong> (to save all local data to a personal G-Sheet).",
+                faqTitle: "Frequently Asked Questions (F.A.Q.)",
+                faq1_q: "How accurate is the AI scan result?",
+                faq1_a: "Accuracy heavily depends on the image quality: good lighting, a focused image, and a clear business card design will yield the best results. Our AI is constantly learning, but if there are any errors, you can easily edit the results.",
+                faq2_q: "Is my data secure? Where is it stored?",
+                faq2_a: "Very secure. By default, all scanned data is stored locally within your device's browser (IndexedDB) and is not sent to our servers. You have full control. Data is only sent to Google Sheets if you use the Collaboration Mode or the bulk export feature.",
+                faq3_q: "Is this application free?",
+                faq3_a: "Yes, Scanner Pintar is currently free to use. This application was created as a tool to improve productivity and efficiency in contact management.",
+                faq4_q: "What devices are supported?",
+                faq4_a: 'This is a web app and can run on modern browsers on smartphones (Android & iOS), tablets, and laptops. For the best experience, use the latest version of browsers like Google Chrome, Safari, or Firefox.',
+                faq5_q: "Why can't I access the camera?",
+                faq5_a: "Please ensure you have granted camera access permission for this website in your browser settings. The first time you press the Scan button, the browser will ask for permission. If you accidentally denied it, you need to allow it manually through the site settings in your browser.",
+                faq6_q: "How does Collaboration Mode work?",
+                faq6_a: "The team leader creates a session linked to a Google Sheet. Team members who join will automatically send each of their scan results to that Google Sheet. The data is also saved on each member's device as a backup.",
+                faq7_q: "Can I edit the data after scanning?",
+                faq7_a: 'Of course. On the "View Scan Results" page, click the EDIT button on the contact you want to change. You can correct or complete any information before exporting it.',
+                faq8_q: "Do I need to install anything?",
+                faq8_a: "No installation needed. Scanner Pintar is a Progressive Web App (PWA). You can use it directly from your browser. For quicker access, you can add it to your phone's Home Screen, and it will function like a native app.",
+                faq9_q: "The AI failed to extract information correctly. What should I do?",
+                faq9_a: "If the AI has trouble, try retaking the photo with better quality. Ensure there are no shadows, the image is not blurry, and the business card is placed on a contrasting surface. If errors persist, you can quickly correct them using the Edit feature on the results page.",
+                faq10_q: "Can I use this application offline?",
+                faq10_a: "You can open the application and view already saved data offline. However, for the AI-powered business card scanning process and synchronization to Google Sheets, you will need an active internet connection.",
+                supportTitle: "Contact & Support",
+                supportDesc: "For questions, feedback, or bug reports, please send an email to our support team.",
+                footerHome: "Home",
+                footerAbout: "About",
+                footerHelp: "Help",
+                footerTerms: "Terms",
+                footerPrivacy: "Privacy",
+                footerCopyright: '&copy; 2025 Scanner Pintar. Created by <a href="https://isparmo.com" target="_blank" rel="noopener noreferrer" class="font-semibold text-indigo-600 dark:text-indigo-400 hover:underline">Isparmo</a>.'
+            }
+        };
+
+        const langToggleBtn = document.getElementById('lang-toggle');
+        let currentLang = 'id';
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            document.documentElement.lang = lang;
+            langToggleBtn.textContent = lang === 'id' ? 'EN' : 'ID';
+            document.querySelectorAll('[data-translate-key]').forEach(el => {
+                const key = el.getAttribute('data-translate-key');
+                // Special handling for FAQ questions to preserve the chevron icon
+                if (el.tagName === 'SUMMARY') {
+                    const icon = el.querySelector('.chevron');
+                    const text = translations[lang][key] || el.textContent.trim();
+                    el.innerHTML = text; // This might remove the icon, so we re-append it
+                    if (icon) {
+                        el.appendChild(icon);
+                    }
+                } else {
+                     if (translations[lang][key]) {
+                        el.innerHTML = translations[lang][key];
+                    }
+                }
+            });
+            const titleKey = 'pageTitle';
+            document.title = `${translations[lang][titleKey]} | ${translations[lang]['mainTitle']}`;
+            localStorage.setItem('pageLang', lang);
+        }
+
+        langToggleBtn.addEventListener('click', () => {
+            const newLang = currentLang === 'id' ? 'en' : 'id';
+            setLanguage(newLang);
+        });
 
         const themeToggleBtn = document.getElementById('theme-toggle');
         const sunIcon = themeToggleBtn.querySelector('[data-lucide="sun"]');
@@ -299,9 +471,18 @@
         themeToggleBtn.addEventListener('click', toggleTheme);
 
         // Initial theme setup on page load
-        const savedTheme = localStorage.getItem('theme');
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        applyTheme(savedTheme ? savedTheme === 'dark' : prefersDark);
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            applyTheme(savedTheme ? savedTheme === 'dark' : prefersDark);
+            
+            const savedLang = localStorage.getItem('pageLang');
+            if (savedLang && (savedLang === 'id' || savedLang === 'en')) {
+                setLanguage(savedLang);
+            } else {
+                setLanguage('id');
+            }
+        });
     </script>
 </body>
 </html>
