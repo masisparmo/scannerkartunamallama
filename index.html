@@ -377,18 +377,48 @@
             }
 
             async function startCamera() {
-                try {
-                    if (stream) { stream.getTracks().forEach(track => track.stop()); }
-                    stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
-                    otherSelectors.video.srcObject = stream;
-                    otherSelectors.video.addEventListener('loadeddata', () => {
-                        if(qrScanInterval) clearInterval(qrScanInterval);
-                        qrScanInterval = setInterval(scanQRCode, 500);
-                    });
-                    showScreen('scanner');
-                } catch (err) {
-                    logError("Error accessing camera:", err);
-                    showToast("Tidak dapat mengakses kamera. Pastikan Anda memberikan izin.");
+                // Perbaikan: Menggunakan API modern navigator.mediaDevices.getUserMedia
+                // API ini adalah standar saat ini dan didukung oleh browser modern, termasuk Safari di iPhone.
+                if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                    try {
+                        // Hentikan stream kamera lama jika ada
+                        if (stream) {
+                            stream.getTracks().forEach(track => track.stop());
+                        }
+                        
+                        const constraints = { 
+                            video: { 
+                                facingMode: 'environment' // Gunakan kamera belakang
+                            } 
+                        };
+
+                        const newStream = await navigator.mediaDevices.getUserMedia(constraints);
+                        stream = newStream; // Simpan stream baru
+                        
+                        otherSelectors.video.srcObject = newStream;
+                        otherSelectors.video.addEventListener('loadeddata', () => {
+                            if (qrScanInterval) clearInterval(qrScanInterval);
+                            qrScanInterval = setInterval(scanQRCode, 500);
+                        });
+                        
+                        showScreen('scanner');
+
+                    } catch (err) {
+                        logError("Error accessing camera:", err);
+                        // Pesan error yang lebih spesifik berdasarkan jenis error
+                        if (err.name === "NotAllowedError" || err.name === "PermissionDeniedError") {
+                            showToast("Izin akses kamera ditolak. Mohon izinkan di pengaturan browser Anda.");
+                        } else if (err.name === "NotFoundError" || err.name === "DevicesNotFoundError") {
+                            showToast("Tidak ada kamera yang ditemukan di perangkat ini.");
+                        } else {
+                            showToast("Tidak dapat mengakses kamera. Pastikan Anda memberikan izin.");
+                        }
+                        showScreen('initial');
+                    }
+                } else {
+                    // Fallback jika browser sangat tua dan tidak mendukung API modern
+                    logError("getUserMedia not supported");
+                    showToast("Browser Anda tidak mendukung akses kamera.");
                     showScreen('initial');
                 }
             }
@@ -1205,4 +1235,3 @@
     </script>
 </body>
 </html>
-
