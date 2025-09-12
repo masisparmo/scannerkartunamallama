@@ -89,7 +89,7 @@
                         <span class="hidden sm:inline" data-translate-key="themeBtn">TEMA</span>
                     </button>
                 </div>
-                <div class="w-full">
+                <div class="w-full pt-16">
                     <div class="flex justify-center mb-8">
                         <img src="https://raw.githubusercontent.com/masisparmo/scannerkartunamallama/refs/heads/main/scanner-pintar.png" alt="Logo Scanner Pintar" class="w-24 h-24 rounded-full">
                     </div>
@@ -131,7 +131,6 @@
             <div id="scanner-screen" class="hidden screen relative bg-black flex-grow"><video id="video" autoplay playsinline></video><div class="scan-frame"></div><div class="camera-overlay p-6"><div class="flex justify-between items-center"><p id="scan-mode-label" class="text-white font-medium text-sm bg-black/50 px-3 py-1 rounded-full" data-translate-key="scanInstructions">Arahkan ke Kartu Nama atau QR Code</p><button id="cancel-scan-btn" class="p-3 bg-black/50 rounded-full text-white hover:bg-black/80"><i data-lucide="x" class="w-6 h-6"></i></button></div><div class="flex justify-center items-center"><button id="capture-btn" class="w-20 h-20 bg-white rounded-full flex items-center justify-center shadow-2xl ring-4 ring-white/30 transition-transform transform hover:scale-110" data-translate-key="scanBtn">SCAN</button></div></div><canvas id="canvas" class="hidden"></canvas></div>
             <div id="processing-screen" class="hidden screen justify-center items-center text-center p-8 flex-grow"><div class="loader mb-6"></div><h2 id="processing-title" class="text-2xl font-bold text-gray-900 dark:text-white animate-pulse" data-translate-key="processingTitle">AI Menganalisis Gambar...</h2><p class="text-gray-500 dark:text-gray-400 mt-2" data-translate-key="processingSubtitle">Mohon tunggu sebentar...</p></div>
             
-            <!-- ==== PERUBAHAN PADA RESULTS SCREEN ==== -->
             <div id="results-screen" class="hidden screen flex flex-col">
                 <header class="p-6 flex justify-between items-center gap-4 border-b border-gray-200 dark:border-gray-700">
                     <h2 class="text-2xl font-bold text-gray-900 dark:text-white flex-grow" data-translate-key="scanResultTitle">Hasil Scan</h2>
@@ -144,15 +143,13 @@
                     </button>
                 </header>
                 <div class="p-6 flex-shrink-0">
-                    <!-- Search and Filter UI -->
                     <div class="relative">
-                        <input type="search" id="search-input" placeholder="Cari kontak..." class="w-full p-3 pl-10 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                        <input type="search" id="search-input" data-translate-key-placeholder="searchPlaceholder" class="w-full p-3 pl-10 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500">
                         <i data-lucide="search" class="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
                         <button id="filter-btn" class="absolute right-2 top-1/2 -translate-y-1/2 p-2 text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full">
                             <i data-lucide="filter" class="w-5 h-5"></i>
                         </button>
                     </div>
-                    <!-- Filter Dropdown -->
                     <div id="filter-dropdown" class="hidden filter-dropdown absolute right-6 mt-2 w-64 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 p-4 z-10 origin-top-right opacity-0 scale-95">
                         <h4 class="font-semibold mb-2" data-translate-key="filterByTag">Filter Berdasarkan Tag</h4>
                         <div id="tag-filter-list" class="flex flex-wrap gap-2 mb-4"></div>
@@ -168,7 +165,6 @@
                     <button id="clear-all-btn" class="col-span-2 w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-full shadow-lg mt-4 flex items-center justify-center gap-2 uppercase" data-translate-key="deleteAllLocalDataBtn">HAPUS SEMUA DATA LOKAL</button>
                 </footer>
             </div>
-            <!-- ==== AKHIR PERUBAHAN ==== -->
         </main>
         <footer class="text-center p-6 space-y-2 text-sm text-gray-500 dark:text-gray-400">
             <div class="flex justify-center items-center gap-x-4">
@@ -189,14 +185,12 @@
     <div id="show-session-qr-modal" class="modal-backdrop hidden fixed inset-0 bg-black/60 z-50 p-4"><div class="modal-content w-full max-w-sm m-auto bg-white dark:bg-gray-800 rounded-2xl p-6 text-center"><h3 class="text-xl font-bold mb-2" data-translate-key="sessionCreatedTitle">Sesi Dibuat!</h3><p class="text-gray-600 dark:text-gray-400 mb-4" data-translate-key="sessionCreatedSubtitle">Bagikan QR Code ini ke tim Anda untuk bergabung.</p><div id="qr-code-container"></div><button id="close-qr-modal-btn" class="modal-button w-full mt-6 bg-indigo-600 text-white hover:bg-indigo-700" data-translate-key="doneBtn">SELESAI</button></div></div>
     <div id="join-session-modal" class="modal-backdrop hidden fixed inset-0 bg-black/60 z-50 p-4"><div class="modal-content w-full max-w-sm m-auto bg-white dark:bg-gray-800 rounded-2xl p-6"><h3 class="text-xl font-bold mb-2" data-translate-key="joinCollabTitle">Gabung Sesi Kolaborasi</h3><p class="text-gray-600 dark:text-gray-400 mb-4"><span data-translate-key="joinCollabInvite">Anda diundang ke sesi</span> <strong id="join-session-name" class="text-indigo-500"></strong>. <span data-translate-key="joinCollabPrompt">Masukkan nama Anda:</span></p><input type="text" id="marketing-name-input" data-translate-key-placeholder="yourNameLabel" placeholder="Nama Anda" class="w-full p-3 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500"><div class="flex gap-4 mt-6"><button id="cancel-join-btn" class="modal-button flex-1 bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-200 hover:bg-gray-300" data-translate-key="cancelBtn">BATAL</button><button id="confirm-join-btn" class="modal-button flex-1 bg-indigo-600 text-white hover:bg-indigo-700" data-translate-key="joinBtn">GABUNG</button></div></div></div>
     
-    <!-- ==== PERUBAHAN PADA EDIT MODAL ==== -->
     <div id="edit-modal" class="modal-backdrop hidden fixed inset-0 bg-black/60 z-50 p-4 flex items-center justify-center"><div class="modal-content bg-white dark:bg-gray-800 rounded-2xl shadow-xl w-full max-w-md p-6 transform scale-95 opacity-0"><h3 class="text-xl font-bold mb-4" data-translate-key="editContactTitle">Edit Kontak</h3><form id="edit-form" class="space-y-3"><input type="hidden" id="edit-contact-id"><div class="grid grid-cols-2 gap-3"><div><label for="edit-nama" class="text-sm font-medium text-gray-600 dark:text-gray-400" data-translate-key="nameLabel">Nama</label><input type="text" id="edit-nama" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"></div><div><label for="edit-jabatan" class="text-sm font-medium text-gray-600 dark:text-gray-400" data-translate-key="positionLabel">Jabatan</label><input type="text" id="edit-jabatan" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"></div></div><div class="grid grid-cols-2 gap-3"><div><label for="edit-perusahaan" class="text-sm font-medium text-gray-600 dark:text-gray-400" data-translate-key="companyLabel">Perusahaan</label><input type="text" id="edit-perusahaan" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"></div><div><label for="edit-jenis_perusahaan" class="text-sm font-medium text-gray-600 dark:text-gray-400" data-translate-key="companyTypeLabel">Jenis Perusahaan</label><input type="text" id="edit-jenis_perusahaan" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"></div></div><div class="grid grid-cols-2 gap-3"><div><label for="edit-telepon_kantor" class="text-sm font-medium text-gray-600 dark:text-gray-400" data-translate-key="officePhoneLabel">Telepon Kantor</label><input type="tel" id="edit-telepon_kantor" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"></div><div><label for="edit-whatsapp" class="text-sm font-medium text-gray-600 dark:text-gray-400">WhatsApp</label><input type="tel" id="edit-whatsapp" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"></div></div><div><label for="edit-email" class="text-sm font-medium text-gray-600 dark:text-gray-400">Email</label><input type="email" id="edit-email" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"></div>
     <div>
         <label for="edit-tags" class="text-sm font-medium text-gray-600 dark:text-gray-400" data-translate-key="tagsLabel">Tags</label>
         <input type="text" id="edit-tags" name="edit-tags" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg">
     </div>
     <hr class="border-gray-200 dark:border-gray-600 !my-4"><div><label for="edit-acara" class="text-sm font-medium text-gray-600 dark:text-gray-400" data-translate-key="eventLabel">Acara</label><input type="text" id="edit-acara" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"></div><div class="grid grid-cols-2 gap-3"><div><label for="edit-tanggal" class="text-sm font-medium text-gray-600 dark:text-gray-400" data-translate-key="dateLabel">Tanggal</label><input type="date" id="edit-tanggal" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"></div><div><label for="edit-catatan" class="text-sm font-medium text-gray-600 dark:text-gray-400" data-translate-key="notesLabel">Catatan</label><input type="text" id="edit-catatan" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"></div></div></form><div class="mt-6 flex items-center gap-3"><button id="delete-contact-btn" class="modal-button bg-red-600 hover:bg-red-700 text-white flex-1 flex items-center justify-center gap-2" data-translate-key="deleteBtn">HAPUS</button><button id="cancel-edit-btn" class="modal-button bg-blue-600 hover:bg-blue-700 text-white flex-1" data-translate-key="cancelBtn">BATAL</button><button id="save-edit-btn" class="modal-button bg-green-600 hover:bg-green-700 text-white flex-1" data-translate-key="saveBtn">SIMPAN</button></div></div></div>
-    <!-- ==== AKHIR PERUBAHAN ==== -->
 
     <div id="confirm-modal" class="modal-backdrop hidden fixed inset-0 bg-black/60 z-50 p-4"><div class="modal-content bg-white dark:bg-gray-800 rounded-2xl shadow-xl w-full max-w-sm p-6 transform scale-95 opacity-0"><h3 class="text-lg font-bold mb-2" data-translate-key="confirmActionTitle">Konfirmasi Tindakan</h3><p id="confirm-message" class="text-gray-600 dark:text-gray-400 mb-6"></p><div class="flex justify-end items-center gap-3"><button id="cancel-confirm-btn" class="modal-button bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-500 text-gray-800 dark:text-gray-200" data-translate-key="cancelBtn">BATAL</button><button id="confirm-action-btn" class="modal-button bg-red-600 hover:bg-red-700 text-white" data-translate-key="continueBtn">LANJUTKAN</button></div></div></div>
     <div id="toast" class="toast fixed bottom-5 right-5 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 py-3 px-5 rounded-full shadow-lg opacity-0 transform translate-y-5 pointer-events-none"><p id="toast-message"></p></div>
@@ -235,7 +229,6 @@
                 });
             }
             
-            // ================== START: DUAL LANGUAGE FEATURE ==================
             let currentLang = 'id';
 
             const translations = {
@@ -291,10 +284,10 @@
                     // Scanner & Proses
                     scanInstructions: "Arahkan ke Kartu Nama atau QR Code",
                     scanBtn: "SCAN",
-                    processingTitle: "AI Menganalisis Gambar...",
+                    processingTitle: "Tunggu... AI Sedang Memproses...",
+                    processingRefining: "Memfinalisasi & Menerjemahkan Data...",
                     processingSubtitle: "Mohon tunggu sebentar...",
                     processingTakingPicture: "Mengambil gambar...",
-                    processingFinalizing: "Memfinalisasi Data...",
                     processingQRCode: "Memproses QR Code...",
                     // Layar Hasil
                     scanResultTitle: "Hasil Scan",
@@ -304,6 +297,7 @@
                     deleteAllLocalDataBtn: "HAPUS SEMUA DATA LOKAL",
                     filterByTag: "Filter Berdasarkan Tag",
                     clearFilter: "Hapus Filter",
+                    searchPlaceholder: "Cari kontak...",
                     // Modal Edit Kontak
                     editContactTitle: "Edit Kontak",
                     nameLabel: "Nama",
@@ -346,7 +340,7 @@
                     toastEmptyEventName: "Nama acara tidak boleh kosong.",
                     toastEmptyMarketingName: "Nama marketing tidak boleh kosong.",
                     toastProfileIncomplete: "Harap lengkapi profil Anda di menu Pengaturan terlebih dahulu.",
-                    // PERBAIKAN: Menambahkan kunci terjemahan footer untuk Bahasa Indonesia
+                    // Footer
                     footerAbout: "Tentang",
                     footerHelp: "Bantuan",
                     footerTerms: "Ketentuan",
@@ -420,10 +414,10 @@
                     // Scanner & Processing
                     scanInstructions: "Point at a Business Card or QR Code",
                     scanBtn: "SCAN",
-                    processingTitle: "AI is Analyzing Image...",
+                    processingTitle: "Wait... AI is Processing...",
+                    processingRefining: "Finalizing & Translating Data...",
                     processingSubtitle: "Please wait a moment...",
                     processingTakingPicture: "Taking picture...",
-                    processingFinalizing: "Finalizing Data...",
                     processingQRCode: "Processing QR Code...",
                     // Results Screen
                     scanResultTitle: "Scan Results",
@@ -433,6 +427,7 @@
                     deleteAllLocalDataBtn: "DELETE ALL LOCAL DATA",
                     filterByTag: "Filter by Tag",
                     clearFilter: "Clear Filter",
+                    searchPlaceholder: "Search contacts...",
                     // Edit Contact Modal
                     editContactTitle: "Edit Contact",
                     nameLabel: "Name",
@@ -475,7 +470,7 @@
                     toastEmptyEventName: "Event name cannot be empty.",
                     toastEmptyMarketingName: "Marketing name cannot be empty.",
                     toastProfileIncomplete: "Please complete your profile in the Settings menu first.",
-                    // PERBAIKAN: Menambahkan kunci terjemahan footer yang hilang
+                    // Footer
                     footerAbout: "About",
                     footerHelp: "Help",
                     footerTerms: "Terms",
@@ -509,26 +504,21 @@
 
             function updateUI() {
                 document.documentElement.lang = currentLang;
-
-                // Update language toggle buttons
                 const langToggles = document.querySelectorAll('#lang-toggle-initial, #lang-toggle-results');
                 langToggles.forEach(toggle => {
                     toggle.textContent = currentLang === 'id' ? 'EN' : 'ID';
                 });
 
-                // Update elements with data-translate-key
                 document.querySelectorAll('[data-translate-key]').forEach(el => {
                     const key = el.getAttribute('data-translate-key');
-                    el.innerHTML = getTranslation(key); // Use innerHTML to support potential icons
+                    el.innerHTML = getTranslation(key);
                 });
 
-                // Update elements with data-translate-key-placeholder
                 document.querySelectorAll('[data-translate-key-placeholder]').forEach(el => {
                     const key = el.getAttribute('data-translate-key-placeholder');
                     el.placeholder = getTranslation(key);
                 });
                 
-                // Manually update any dynamic content if needed
                 refreshResults(); 
             }
 
@@ -542,8 +532,7 @@
                 const newLang = currentLang === 'id' ? 'en' : 'id';
                 setLanguage(newLang);
             }
-            // ================== END: DUAL LANGUAGE FEATURE ==================
-
+            
             const BACKEND_API_URL = 'https://scanner-api-328921559379.asia-southeast1.run.app';
             const GSHEET_BACKEND_URL = `${BACKEND_API_URL}/simpan-gsheet`;
             const EMAIL_GENERATOR_URL = `${BACKEND_API_URL}/generateFollowUpEmail`;
@@ -552,7 +541,6 @@
             let collaborationSession = { isActive: false, sessionId: null, sessionAcara: null, marketingName: null };
             let errorLogs = [];
 
-            // --- Log Viewer Selectors ---
             const logIcon = document.getElementById('log-icon');
             const logViewerModal = document.getElementById('log-viewer-modal');
             const closeLogViewerBtn = document.getElementById('close-log-viewer-btn');
@@ -560,7 +548,6 @@
             const copyLogsBtn = document.getElementById('copy-logs-btn');
             const logList = document.getElementById('log-list');
             
-            // --- Tagify & Filter Selectors ---
             const editTagsInput = document.getElementById('edit-tags');
             const searchInput = document.getElementById('search-input');
             const filterBtn = document.getElementById('filter-btn');
@@ -573,7 +560,6 @@
                 activeTag: null
             };
 
-            // --- Other Selectors ---
             const createSessionBtn = document.getElementById('create-session-btn');
             const cancelCreateSessionBtn = document.getElementById('cancel-create-session-btn');
             const generateSessionQRBtn = document.getElementById('generate-session-qr-btn');
@@ -605,7 +591,6 @@
             
             let stream, qrScanInterval, confirmCallback = null;
 
-            // --- Phone Number Formatting ---
             function formatKantor(phone) {
                 if (!phone) return '';
                 let digits = phone.replace(/\D/g, '');
@@ -624,7 +609,6 @@
                 return digits;
             }
 
-             // --- Log Viewer Logic (IMPROVED) ---
             function logError(message, errorObject = null) {
                 console.error(message, errorObject);
                 const timestamp = new Date().toLocaleTimeString();
@@ -670,7 +654,6 @@
                         request.onupgradeneeded = (event) => {
                             const db = event.target.result;
                             const store = db.createObjectStore('contacts', { keyPath: 'id', autoIncrement: true });
-                            // Tambahkan index untuk 'tags'
                             store.createIndex('tags', 'tags', { multiEntry: true });
                         };
                     });
@@ -804,6 +787,10 @@
             async function handleImageUpload(event) {
                 const file = event.target.files[0];
                 if (!file) return;
+
+                showScreen('processing');
+                otherSelectors.processingTitle.textContent = getTranslation('processingTitle');
+                
                 const reader = new FileReader();
                 reader.onload = async (e) => {
                     const finalImageDataUrl = await resizeImage(e.target.result);
@@ -846,7 +833,7 @@
                     
                     const extractedData = JSON.parse(jsonString);
 
-                    otherSelectors.processingTitle.textContent = getTranslation('processingFinalizing');
+                    otherSelectors.processingTitle.textContent = getTranslation('processingRefining');
                     const refineResponse = await fetch(`${BACKEND_API_URL}/refineAndTranslate`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -937,7 +924,6 @@
                 if (!dbLogic.db) return;
                 const allContacts = await dbLogic.getAllContacts();
                 
-                // --- LOGIKA FILTER & PENCARIAN ---
                 const searchTerm = currentFilter.searchTerm.toLowerCase();
                 const activeTag = currentFilter.activeTag;
 
@@ -1162,7 +1148,6 @@
                 document.getElementById('edit-whatsapp').value = contact.whatsapp || '';
                 document.getElementById('edit-email').value = contact.email || '';
                 
-                // Setel ulang dan isi nilai tag
                 tagify.removeAllTags();
                 if(contact.tags && contact.tags.length > 0) {
                     tagify.addTags(contact.tags);
@@ -1194,7 +1179,6 @@
                 document.getElementById('edit-whatsapp').value = contact.whatsapp || '';
                 document.getElementById('edit-email').value = contact.email || '';
                 
-                // Setel ulang dan isi nilai tag
                 tagify.removeAllTags();
                 if(contact.tags && contact.tags.length > 0) {
                     tagify.addTags(contact.tags);
@@ -1232,7 +1216,7 @@
                     acara: document.getElementById('edit-acara').value,
                     tanggal: document.getElementById('edit-tanggal').value,
                     catatan: document.getElementById('edit-catatan').value,
-                    tags: tagify.value.map(tag => tag.value) // Ambil nilai tags dari Tagify
+                    tags: tagify.value.map(tag => tag.value)
                 };
 
                 if (isNewContact) {
@@ -1249,7 +1233,7 @@
                     await sendCollaborativeData({ ...contactData, marketingName: collaborationSession.marketingName });
                 }
                 
-                showScreen('results'); // Pindah ke layar hasil akan memicu refreshResults
+                showScreen('results');
                 closeEditModal();
             }
 
@@ -1271,7 +1255,7 @@
                             await dbLogic.deleteContact(id);
                             showToast(getTranslation('toastContactDeleted'));
                             closeEditModal();
-                            refreshResults(); // Langsung refresh setelah hapus
+                            refreshResults();
                         } catch (error) { 
                             logError("Failed to delete contact:", error); 
                             showToast("Failed to delete contact."); 
@@ -1468,7 +1452,6 @@
                 otherSelectors.sessionTanggalInput.value = localStorage.getItem('sessionTanggal') || new Date().toISOString().slice(0, 10);
                 otherSelectors.sessionCatatanInput.value = localStorage.getItem('sessionCatatan') || '';
                 
-                // Initialize Tagify
                 tagify = new Tagify(editTagsInput);
 
                 try {
@@ -1506,12 +1489,9 @@
                 }
             }
             
-            // Event Listeners
             [otherSelectors.langToggleInitial, otherSelectors.langToggleResults].forEach(btn => btn.addEventListener('click', toggleLanguage));
-
             createSessionBtn.addEventListener('click', () => showScreen('createSession'));
             cancelCreateSessionBtn.addEventListener('click', () => showScreen('initial'));
-            
             generateSessionQRBtn.addEventListener('click', () => {
                 const acara = collabSessionNameInput.value.trim();
                 if (!acara) { showToast(getTranslation('toastEmptyEventName')); return; }
@@ -1522,12 +1502,10 @@
                 new QRCode(qrCodeContainer, { text: collabUrl, width: 256, height: 256 });
                 showSessionQRModal.classList.remove('hidden');
             });
-            
             closeQrModalBtn.addEventListener('click', () => {
                 showSessionQRModal.classList.add('hidden');
                 showScreen('initial');
             });
-            
             confirmJoinBtn.addEventListener('click', () => {
                 const marketingName = marketingNameInput.value.trim();
                 if (!marketingName) { showToast(getTranslation('toastEmptyMarketingName')); return; }
@@ -1543,7 +1521,6 @@
                 setupCollaborationModeUI();
                 showToast(getTranslation('toastWelcome', marketingName));
             });
-
             cancelJoinBtn.addEventListener('click', () => {
                 joinSessionModal.classList.add('hidden');
                 const url = new URL(window.location);
@@ -1552,7 +1529,6 @@
                 window.history.pushState({}, '', url);
                 showScreen('initial');
             });
-
             exitCollabBtn.addEventListener('click', exitCollaborationMode);
             otherSelectors.startScanBtn.addEventListener('click', startCamera);
             otherSelectors.uploadBtn.addEventListener('click', () => otherSelectors.imageUploadInput.click());
@@ -1571,7 +1547,6 @@
                 );
             });
             otherSelectors.saveEditBtn.addEventListener('click', saveContactChanges);
-            
             otherSelectors.cancelEditBtn.addEventListener('click', () => {
                 const idValue = document.getElementById('edit-contact-id').value;
                 const isNewContact = !idValue;
@@ -1595,8 +1570,6 @@
                 }
                 hideConfirmModal();
             });
-
-            // --- Profile Screen Listeners ---
             otherSelectors.profileSettingsBtn.addEventListener('click', () => {
                 loadAndDisplayProfile();
                 showScreen('profile');
@@ -1615,7 +1588,6 @@
             });
             otherSelectors.closeActionModalBtn.addEventListener('click', closeActionModal);
             
-            // Log Viewer Event Listeners
             logIcon.addEventListener('click', () => {
                 logViewerModal.classList.remove('hidden');
                 lucide.createIcons();
@@ -1658,7 +1630,6 @@
                 }
             });
 
-            // --- Search & Filter Listeners ---
             searchInput.addEventListener('input', (e) => {
                 currentFilter.searchTerm = e.target.value;
                 refreshResults();
