@@ -182,6 +182,56 @@
 
     <!-- Modals -->
     <div id="action-modal" class="modal-backdrop hidden fixed inset-0 bg-black/60 z-50 p-4 flex items-end sm:items-center sm:justify-center"><div class="modal-content bg-white dark:bg-gray-800 rounded-t-2xl sm:rounded-2xl shadow-xl w-full max-w-md p-6 transform translate-y-full sm:scale-95 sm:translate-y-0 opacity-0"><div class="flex justify-between items-start mb-4"><div id="action-modal-header"></div><button id="close-action-modal-btn" class="p-2 -mr-2 -mt-2 text-gray-500 hover:text-gray-800 dark:hover:text-gray-200 rounded-full"><i data-lucide="x" class="w-6 h-6"></i></button></div><div id="action-modal-body" class="text-sm text-gray-600 dark:text-gray-400 mb-6"></div><div id="action-modal-footer" class="grid grid-cols-2 gap-3"></div></div></div>
+    <div id="reminder-modal" class="modal-backdrop hidden fixed inset-0 bg-black/60 z-50 p-4 flex items-center justify-center">
+        <div class="modal-content bg-white dark:bg-gray-800 rounded-2xl shadow-xl w-full max-w-md p-6 transform scale-95 opacity-0">
+            <h3 class="text-xl font-bold mb-4" data-translate-key="reminderTitle">Buat Pengingat Janji</h3>
+            <form id="reminder-form" class="space-y-3">
+                <input type="hidden" id="reminder-contact-id">
+                <div>
+                    <label for="reminder-type" class="text-sm font-medium text-gray-600 dark:text-gray-400" data-translate-key="reminderTypeLabel">Reminder Apa</label>
+                    <select id="reminder-type" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg">
+                        <option value="Meeting/Presentasi">Meeting/Presentasi</option>
+                        <option value="Kirim Brosur">Kirim Brosur</option>
+                        <option value="Kirim Penawaran">Kirim Penawaran</option>
+                        <option value="Janji Ketemu">Janji Ketemu</option>
+                        <option value="Lainnya">Lainnya</option>
+                    </select>
+                    <input type="text" id="reminder-type-other" class="hidden w-full mt-2 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg" placeholder="Ketik jenis reminder...">
+                </div>
+                <div>
+                    <label for="reminder-location" class="text-sm font-medium text-gray-600 dark:text-gray-400" data-translate-key="reminderLocationLabel">Tempat</label>
+                    <input type="text" id="reminder-location" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label for="reminder-date" class="text-sm font-medium text-gray-600 dark:text-gray-400" data-translate-key="reminderDateLabel">Tanggal</label>
+                        <input type="date" id="reminder-date" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg">
+                    </div>
+                    <div>
+                        <label for="reminder-time" class="text-sm font-medium text-gray-600 dark:text-gray-400" data-translate-key="reminderTimeLabel">Jam</label>
+                        <input type="time" id="reminder-time" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg">
+                    </div>
+                </div>
+                <div>
+                    <label for="reminder-alarm" class="text-sm font-medium text-gray-600 dark:text-gray-400" data-translate-key="reminderAlarmLabel">Waktu Pengingat</label>
+                    <select id="reminder-alarm" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg">
+                        <option value="-P1D">Sehari Sebelumnya</option>
+                        <option value="-PT1H">Sejam Sebelumnya</option>
+                        <option value="lainnya">Lainnya</option>
+                    </select>
+                    <input type="text" id="reminder-alarm-other" class="hidden w-full mt-2 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg" placeholder="Contoh: -P2D (2 hari) atau -PT2H (2 jam)">
+                </div>
+                <div>
+                    <label for="reminder-notes" class="text-sm font-medium text-gray-600 dark:text-gray-400" data-translate-key="reminderNotesLabel">Catatan</label>
+                    <textarea id="reminder-notes" rows="3" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"></textarea>
+                </div>
+            </form>
+            <div class="mt-6 flex items-center gap-3">
+                <button id="cancel-reminder-btn" class="modal-button bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-200 flex-1" data-translate-key="cancelBtn">Batal</button>
+                <button id="create-reminder-btn" class="modal-button bg-indigo-600 hover:bg-indigo-700 text-white flex-1" data-translate-key="createReminderBtn">Buat Reminder</button>
+            </div>
+        </div>
+    </div>
     <div id="show-session-qr-modal" class="modal-backdrop hidden fixed inset-0 bg-black/60 z-50 p-4"><div class="modal-content w-full max-w-sm m-auto bg-white dark:bg-gray-800 rounded-2xl p-6 text-center"><h3 class="text-xl font-bold mb-2" data-translate-key="sessionCreatedTitle">Sesi Dibuat!</h3><p class="text-gray-600 dark:text-gray-400 mb-4" data-translate-key="sessionCreatedSubtitle">Bagikan QR Code ini ke tim Anda untuk bergabung.</p><div id="qr-code-container"></div><button id="close-qr-modal-btn" class="modal-button w-full mt-6 bg-indigo-600 text-white hover:bg-indigo-700" data-translate-key="doneBtn">SELESAI</button></div></div>
     <div id="join-session-modal" class="modal-backdrop hidden fixed inset-0 bg-black/60 z-50 p-4"><div class="modal-content w-full max-w-sm m-auto bg-white dark:bg-gray-800 rounded-2xl p-6"><h3 class="text-xl font-bold mb-2" data-translate-key="joinCollabTitle">Gabung Sesi Kolaborasi</h3><p class="text-gray-600 dark:text-gray-400 mb-4"><span data-translate-key="joinCollabInvite">Anda diundang ke sesi</span> <strong id="join-session-name" class="text-indigo-500"></strong>. <span data-translate-key="joinCollabPrompt">Masukkan nama Anda:</span></p><input type="text" id="marketing-name-input" data-translate-key-placeholder="yourNameLabel" placeholder="Nama Anda" class="w-full p-3 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500"><div class="flex gap-4 mt-6"><button id="cancel-join-btn" class="modal-button flex-1 bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-200 hover:bg-gray-300" data-translate-key="cancelBtn">BATAL</button><button id="confirm-join-btn" class="modal-button flex-1 bg-indigo-600 text-white hover:bg-indigo-700" data-translate-key="joinBtn">GABUNG</button></div></div></div>
     
@@ -312,6 +362,16 @@
                     actionOpenWA: "Buka WA",
                     actionDraftWA: "Draf Pesan WA",
                     actionDraftEmail: "Draf Email",
+                    actionReminder: "Pengingat Janji",
+                    // Modal Pengingat
+                    reminderTitle: "Buat Pengingat Janji",
+                    reminderTypeLabel: "Reminder Apa",
+                    reminderLocationLabel: "Tempat",
+                    reminderDateLabel: "Tanggal",
+                    reminderTimeLabel: "Jam",
+                    reminderAlarmLabel: "Waktu Pengingat",
+                    reminderNotesLabel: "Catatan",
+                    createReminderBtn: "Buat Reminder",
                     // Modal Konfirmasi
                     confirmActionTitle: "Konfirmasi Tindakan",
                     confirmDeleteContact: "Apakah Anda yakin ingin menghapus kontak ini dari HP Anda? Tindakan ini tidak dapat dibatalkan.",
@@ -340,6 +400,7 @@
                     toastEmptyEventName: "Nama acara tidak boleh kosong.",
                     toastEmptyMarketingName: "Nama marketing tidak boleh kosong.",
                     toastProfileIncomplete: "Harap lengkapi profil Anda di menu Pengaturan terlebih dahulu.",
+                    toastReminderCreated: "Reminder berhasil dibuat dan file .ics telah diunduh.",
                     // Footer
                     footerAbout: "Tentang",
                     footerHelp: "Bantuan",
@@ -442,6 +503,16 @@
                     actionOpenWA: "Open WA",
                     actionDraftWA: "Draft WA",
                     actionDraftEmail: "Draft Email",
+                    actionReminder: "Set Reminder",
+                    // Reminder Modal
+                    reminderTitle: "Create Appointment Reminder",
+                    reminderTypeLabel: "Reminder For",
+                    reminderLocationLabel: "Location",
+                    reminderDateLabel: "Date",
+                    reminderTimeLabel: "Time",
+                    reminderAlarmLabel: "Reminder Time",
+                    reminderNotesLabel: "Notes",
+                    createReminderBtn: "Create Reminder",
                     // Confirm Modal
                     confirmActionTitle: "Confirm Action",
                     confirmDeleteContact: "Are you sure you want to delete this contact from your phone? This action cannot be undone.",
@@ -470,6 +541,7 @@
                     toastEmptyEventName: "Event name cannot be empty.",
                     toastEmptyMarketingName: "Marketing name cannot be empty.",
                     toastProfileIncomplete: "Please complete your profile in the Settings menu first.",
+                    toastReminderCreated: "Reminder created and .ics file downloaded successfully.",
                     // Footer
                     footerAbout: "About",
                     footerHelp: "Help",
@@ -1020,7 +1092,7 @@
                 footerHTML += `<button id="action-save-vcf" class="modal-button bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 flex items-center justify-center gap-2 uppercase">${getTranslation('actionSaveContact')}</button>`;
                 
                 if (contact.whatsapp) {
-                    footerHTML += `<button id="action-whatsapp" data-wa="${contact.whatsapp}" class="modal-button bg-green-500 text-white hover:bg-green-600 flex items-center justify-center gap-2 uppercase">${getTranslation('actionOpenWA')}</button>`;
+                    footerHTML += `<button id="action-reminder" data-contact-id="${id}" class="modal-button bg-purple-600 text-white hover:bg-purple-700 flex items-center justify-center gap-2 uppercase">${getTranslation('actionReminder')}</button>`;
                     footerHTML += `<button id="action-whatsapp-ai" class="modal-button bg-teal-500 text-white hover:bg-teal-600 flex items-center justify-center gap-2 uppercase">${getTranslation('actionDraftWA')}</button>`;
                 }
 
@@ -1034,12 +1106,15 @@
                 document.getElementById('action-save-vcf').addEventListener('click', () => exportVCF(contact));
                 
                 if(contact.whatsapp) {
-                    document.getElementById('action-whatsapp').addEventListener('click', (e) => {
-                         const waNumber = e.currentTarget.dataset.wa;
-                         const url = `https://wa.me/${waNumber}`;
-                         window.open(url, '_blank');
-                    });
-                    document.getElementById('action-whatsapp-ai').addEventListener('click', () => generateAndOpenWa(contact));
+                    if(document.getElementById('action-reminder')) {
+                        document.getElementById('action-reminder').addEventListener('click', (e) => {
+                            const contactId = parseInt(e.currentTarget.dataset.contactId, 10);
+                            openReminderModal(contactId);
+                        });
+                    }
+                    if(document.getElementById('action-whatsapp-ai')) {
+                        document.getElementById('action-whatsapp-ai').addEventListener('click', () => generateAndOpenWa(contact));
+                    }
                 }
 
                 if(contact.email && document.getElementById('action-email')) {
@@ -1134,6 +1209,80 @@
                  otherSelectors.actionModal.classList.add('opacity-0');
                  otherSelectors.actionModalContent.classList.add('translate-y-full', 'sm:scale-95', 'sm:translate-y-0', 'opacity-0');
                 setTimeout(() => { otherSelectors.actionModal.classList.add('hidden'); }, 300);
+            }
+
+            function openReminderModal(contactId) {
+                document.getElementById('reminder-contact-id').value = contactId;
+                const reminderModal = document.getElementById('reminder-modal');
+                reminderModal.classList.remove('hidden');
+                setTimeout(() => {
+                    reminderModal.classList.remove('opacity-0');
+                    reminderModal.querySelector('.modal-content').classList.remove('scale-95', 'opacity-0');
+                }, 10);
+            }
+
+            function closeReminderModal() {
+                const reminderModal = document.getElementById('reminder-modal');
+                reminderModal.classList.add('opacity-0');
+                reminderModal.querySelector('.modal-content').classList.add('scale-95', 'opacity-0');
+                setTimeout(() => {
+                    reminderModal.classList.add('hidden');
+                }, 300);
+            }
+
+            function createICSFile() {
+                const contactId = document.getElementById('reminder-contact-id').value;
+                let reminderType = document.getElementById('reminder-type').value;
+                if (reminderType === 'Lainnya') {
+                    reminderType = document.getElementById('reminder-type-other').value;
+                }
+                const location = document.getElementById('reminder-location').value;
+                const date = document.getElementById('reminder-date').value;
+                const time = document.getElementById('reminder-time').value;
+                let alarm = document.getElementById('reminder-alarm').value;
+                if (alarm === 'lainnya') {
+                    alarm = document.getElementById('reminder-alarm-other').value;
+                }
+                const notes = document.getElementById('reminder-notes').value;
+
+                if (!reminderType || !date || !time) {
+                    showToast("Harap isi semua kolom yang diperlukan.");
+                    return;
+                }
+
+                const dtstart = new Date(`${date}T${time}`);
+                const dtend = new Date(dtstart.getTime() + 60 * 60 * 1000); // 1 hour duration
+
+                const pad = (i) => (i < 10 ? `0${i}` : i);
+                const toUTC = (d) => `${d.getUTCFullYear()}${pad(d.getUTCMonth() + 1)}${pad(d.getUTCDate())}T${pad(d.getUTCHours())}${pad(d.getUTCMinutes())}${pad(d.getUTCSeconds())}Z`;
+
+                const icsContent = `BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//ScannerPintar//EN
+BEGIN:VEVENT
+UID:${Date.now()}@scannner-pintar.com
+DTSTAMP:${toUTC(new Date())}
+DTSTART:${toUTC(dtstart)}
+DTEND:${toUTC(dtend)}
+SUMMARY:${reminderType}
+LOCATION:${location}
+DESCRIPTION:${notes}
+BEGIN:VALARM
+TRIGGER:${alarm}
+ACTION:DISPLAY
+DESCRIPTION:Reminder
+END:VALARM
+END:VEVENT
+END:VCALENDAR`;
+
+                const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8;' });
+                const link = document.createElement("a");
+                link.href = URL.createObjectURL(blob);
+                link.download = `reminder.ics`;
+                link.click();
+
+                showToast(getTranslation('toastReminderCreated'));
+                closeReminderModal();
             }
 
             async function openEditModalForNewContact(contact) {
@@ -1649,6 +1798,27 @@
             document.body.addEventListener('click', () => {
                 if (!filterDropdown.classList.contains('hidden')) {
                     filterDropdown.classList.add('hidden', 'opacity-0', 'scale-95');
+                }
+            });
+
+
+            document.getElementById('cancel-reminder-btn').addEventListener('click', closeReminderModal);
+            document.getElementById('create-reminder-btn').addEventListener('click', createICSFile);
+
+            document.getElementById('reminder-type').addEventListener('change', (e) => {
+                const otherInput = document.getElementById('reminder-type-other');
+                if (e.target.value === 'Lainnya') {
+                    otherInput.classList.remove('hidden');
+                } else {
+                    otherInput.classList.add('hidden');
+                }
+            });
+            document.getElementById('reminder-alarm').addEventListener('change', (e) => {
+                const otherInput = document.getElementById('reminder-alarm-other');
+                if (e.target.value === 'lainnya') {
+                    otherInput.classList.remove('hidden');
+                } else {
+                    otherInput.classList.add('hidden');
                 }
             });
 
