@@ -44,9 +44,11 @@ Aplikasi ini adalah aplikasi web statis dan tidak memerlukan proses build yang r
     ```
     Buka browser dan akses `http://localhost:8000`.
 
-### Backend (Server AI & Google Sheets)
+### Panduan Pengembangan Backend (Lokal)
 
-Untuk menjalankan fungsionalitas AI dan penyimpanan ke Google Sheets, frontend perlu terhubung ke server backend. Anda dapat menjalankan server backend yang disediakan secara lokal.
+***Catatan Penting:*** *Bagian ini ditujukan untuk **pengembangan dan pengujian** di komputer lokal. Lingkungan produksi sebenarnya di-hosting di **Google Cloud Run** dan dikelola secara terpisah.*
+
+Untuk menjalankan fungsionalitas AI dan penyimpanan ke Google Sheets, frontend perlu terhubung ke server backend. Anda dapat menjalankan server backend yang disediakan secara lokal dengan mengikuti langkah-langkah ini.
 
 1.  **Prasyarat**: Pastikan Anda memiliki [Node.js](https://nodejs.org/) terinstal.
 
@@ -76,14 +78,14 @@ Untuk menjalankan fungsionalitas AI dan penyimpanan ke Google Sheets, frontend p
     ```bash
     node server.js
     ```
-    Server akan berjalan di `http://localhost:8080`. Pastikan URL di `app.js` (variabel `BACKEND_API_URL`) menunjuk ke alamat ini jika Anda ingin frontend lokal terhubung ke backend lokal.
+    Server akan berjalan di `http://localhost:8080`. Pastikan URL di `frontend/app.js` (variabel `BACKEND_API_URL`) menunjuk ke alamat ini jika Anda ingin frontend lokal terhubung ke backend lokal.
 
 
 ## 🏛️ Arsitektur Backend (Node.js & Google Cloud)
 
 Fungsionalitas inti aplikasi (pemrosesan AI dan integrasi Google Sheets) didukung oleh backend yang aman dan skalabel. Kode backend **tidak** disimpan di repositori ini untuk alasan keamanan.
 
--   **Platform**: Backend dibangun menggunakan **Node.js** dengan framework **Express.js**. Untuk produksi, layanan ini di-hosting di **Google Cloud Run**, yang memungkinkan penskalaan otomatis untuk efisiensi.
+-   **Platform**: Backend dibangun menggunakan **Node.js** dengan framework **Express.js**. Untuk produksi, layanan ini di-hosting di **Google Cloud Run**.
 -   **Bahasa**: JavaScript (Node.js).
 
 ### Endpoint API
