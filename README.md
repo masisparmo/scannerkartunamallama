@@ -24,68 +24,67 @@ Aplikasi ini sepenuhnya berjalan di sisi klien (client-side), memanfaatkan Index
 
 ## 🚀 Cara Menjalankan Proyek
 
+### Frontend (Aplikasi Web)
+
 Aplikasi ini adalah aplikasi web statis dan tidak memerlukan proses build yang rumit.
 
-1.  **Clone Repositori (Opsional)**
-    Jika Anda ingin menjalankan secara lokal, clone repositori ini:
-    ```bash
-    git clone https://github.com/masisparmo/scannerkartunamallama.git
-    ```
+1.  **Akses Langsung (Rekomendasi)**
+    Aplikasi ini di-host dan dapat diakses langsung melalui [URL publiknya](https://scanner-pintar.isparmo.com/).
 
-2.  **Jalankan Server Lokal**
-    Anda memerlukan server web sederhana untuk menjalankan `index.html`. Anda bisa menggunakan ekstensi seperti "Live Server" di Visual Studio Code, atau menggunakan Python:
+2.  **Menjalankan Secara Lokal**
+    Jika Anda ingin memodifikasi frontend, Anda bisa menjalankannya di komputer lokal Anda.
     ```bash
-    # Arahkan terminal ke direktori proyek
+    # 1. Clone repositori ini
+    git clone https://github.com/masisparmo/scannerkartunamallama.git
     cd scannerkartunamallama
 
-    # Jika Anda menggunakan Python 3
+    # 2. Jalankan server web sederhana.
+    # Jika Anda menggunakan Python 3:
     python -m http.server
     ```
     Buka browser dan akses `http://localhost:8000`.
 
-3.  **Akses Langsung**
-    Aplikasi ini juga di-host dan dapat diakses langsung melalui [URL publiknya](https://scanner-pintar.isparmo.com/).
+### Backend (Server AI & Google Sheets)
 
-## 🛠️ Cara Menggunakan Aplikasi
+Untuk menjalankan fungsionalitas AI dan penyimpanan ke Google Sheets, frontend perlu terhubung ke server backend. Anda dapat menjalankan server backend yang disediakan secara lokal.
 
-1.  **Buka Aplikasi**: Akses URL aplikasi melalui browser di ponsel Anda. Untuk pengalaman terbaik, gunakan Chrome di Android atau Safari di iOS.
-2.  **Lengkapi Profil (Penting!)**: Sebelum memulai, buka menu **Profil**. Isi nama, jabatan, dan perusahaan Anda. Informasi ini akan digunakan oleh AI untuk membuat draf email dan pesan WhatsApp yang lebih personal.
-3.  **Memindai Kartu Nama**:
-    - Klik **SCAN KARTU NAMA**.
-    - Arahkan kamera ke kartu nama dan pastikan gambar jelas dan terang.
-    - Klik tombol **SCAN**. AI akan memproses gambar.
-4.  **Memindai QR Code**:
-    - Arahkan kamera ke QR code. Aplikasi akan mendeteksinya secara otomatis.
-5.  **Verifikasi & Edit**:
-    - Setelah pemindaian, Anda akan dibawa ke halaman edit. Periksa kembali data yang diekstrak AI.
-    - Lakukan koreksi jika diperlukan, tambahkan `Tags` untuk mengkategorikan kontak (misal: "Prospek Panas", "Supplier").
-    - Klik **SIMPAN**.
-6.  **Lihat Hasil**:
-    - Klik **LIHAT HASIL SCAN** dari halaman utama untuk melihat semua kontak yang telah Anda simpan.
-    - Gunakan fitur pencarian dan filter berdasarkan tag untuk mengelola kontak.
-7.  **Lakukan Aksi**:
-    - Klik pada sebuah kontak untuk membuka menu aksi.
-    - Dari sini, Anda bisa membuat draf email/WA, menyimpan vCard, atau membuat pengingat.
+1.  **Prasyarat**: Pastikan Anda memiliki [Node.js](https://nodejs.org/) terinstal.
 
-## 💻 Teknologi yang Digunakan
+2.  **Setup Awal**:
+    - Simpan kode backend yang diberikan ke dalam sebuah file, misalnya `backend/server.js`.
+    - Dari dalam direktori `backend`, jalankan `npm install` untuk menginstal dependensi: `express`, `googleapis`, `google-auth-library`, `cors`, `dotenv`.
 
--   **Frontend**: HTML5, CSS3 (TailwindCSS), Vanilla JavaScript (ES6+)
--   **PWA**: Service Worker, Web App Manifest
--   **Penyimpanan Lokal**: IndexedDB
--   **Library JavaScript**:
-    -   `lucide-icons`: Untuk ikon.
-    -   `jsQR`: Untuk pemindaian QR code.
-    -   `jszip`: Untuk membuat file .zip.
-    -   `qrcodejs`: Untuk menghasilkan QR code.
-    -   `tagify`: Untuk input tag yang interaktif.
--   **Backend (untuk AI & Google Sheets)**: Google Cloud Run, Google Cloud Vision AI, Google Gemini API.
+3.  **Konfigurasi Environment Variables**:
+    Buat file bernama `.env` di dalam direktori `backend` dan isi dengan variabel berikut:
 
-## 🏛️ Arsitektur Backend
+    ```env
+    # Kunci API dari Groq.com. Bisa lebih dari satu, dipisahkan koma.
+    GROQ_API_KEYS=gsk_xxx,gsk_yyy
 
-Meskipun aplikasi ini berjalan di sisi klien, fungsionalitas intinya (pemrosesan AI dan integrasi Google Sheets) didukung oleh backend yang aman dan skalabel yang di-hosting di Google Cloud. Kode backend ini **tidak** ada di repositori ini untuk alasan keamanan.
+    # ID Spreadsheet Google Sheets Anda
+    SPREADSHEET_ID=1LliHJrPnsRlIJv8RVROrabrXoicIUKT9OdqWoyXcIqY
 
--   **Platform**: Backend dibangun sebagai layanan mikro menggunakan **Google Cloud Run**, yang memungkinkan penskalaan otomatis (termasuk skala ke nol) untuk efisiensi biaya.
--   **Bahasa**: Python.
+    # Kredensial Service Account Google dalam format JSON string satu baris
+    # Buka file JSON kredensial Anda, salin seluruh isinya, dan tempel di sini.
+    GOOGLE_CREDENTIALS_JSON='{"type": "service_account", "project_id": "...", ...}'
+
+    # Port server (opsional, default 8080)
+    PORT=8080
+    ```
+
+4.  **Menjalankan Server Backend**:
+    ```bash
+    node server.js
+    ```
+    Server akan berjalan di `http://localhost:8080`. Pastikan URL di `app.js` (variabel `BACKEND_API_URL`) menunjuk ke alamat ini jika Anda ingin frontend lokal terhubung ke backend lokal.
+
+
+## 🏛️ Arsitektur Backend (Node.js & Google Cloud)
+
+Fungsionalitas inti aplikasi (pemrosesan AI dan integrasi Google Sheets) didukung oleh backend yang aman dan skalabel. Kode backend **tidak** disimpan di repositori ini untuk alasan keamanan.
+
+-   **Platform**: Backend dibangun menggunakan **Node.js** dengan framework **Express.js**. Untuk produksi, layanan ini di-hosting di **Google Cloud Run**, yang memungkinkan penskalaan otomatis untuk efisiensi.
+-   **Bahasa**: JavaScript (Node.js).
 
 ### Endpoint API
 
@@ -93,27 +92,20 @@ Frontend berkomunikasi dengan backend melalui beberapa endpoint REST API:
 
 1.  `/processBusinessCard`
     -   **Metode**: `POST`
-    -   **Fungsi**: Menerima data gambar kartu nama (base64), menggunakan **Google Cloud Vision AI** untuk melakukan OCR (Optical Character Recognition) dan mengekstrak teks mentah dari gambar.
-    -   **Respons**: Mengembalikan teks mentah yang terdeteksi.
+    -   **Fungsi**: Menerima data gambar kartu nama (base64). Endpoint ini memanggil **Groq API** dengan model `meta-llama/llama-4-maverick-17b-128e-instruct` yang memiliki kemampuan *vision*. Prompt meminta model untuk mengekstrak informasi kontak dan mengklasifikasikan jenis industri perusahaan, lalu mengembalikan hasilnya dalam format JSON yang bersih.
+    -   **Respons**: `JSON` berisi data kontak terstruktur.
 
-2.  `/refineAndTranslate`
+2.  `/generateFollowUpEmail` & `/generateFollowUpWa`
     -   **Metode**: `POST`
-    -   **Fungsi**: Menerima teks mentah dari endpoint sebelumnya, kemudian mengirimkannya ke model AI generatif untuk diproses.
-    -   **Integrasi AI**: Menggunakan **Groq API** untuk mengakses model bahasa besar **Llama 4**. Prompt dirancang khusus untuk membersihkan, menstrukturkan, dan menerjemahkan data teks mentah ke dalam format JSON yang rapi (nama, jabatan, perusahaan, dll.).
-    -   **Respons**: Mengembalikan data kontak dalam format JSON yang terstruktur.
+    -   **Fungsi**: Menerima detail kontak dan profil pengguna, kemudian memanggil model `meta-llama/llama-4-maverick-17b-128e-instruct` dengan prompt spesifik untuk menghasilkan draf email atau pesan WhatsApp yang relevan dan profesional.
+    -   **Respons**: `JSON` berisi subjek dan isi email, atau `string` berisi pesan WhatsApp.
 
-3.  `/generateFollowUpEmail` & `/generateFollowUpWa`
+3.  `/simpan-gsheet`
     -   **Metode**: `POST`
-    -   **Fungsi**: Menerima detail kontak dan profil pengguna, kemudian memanggil model **Llama 4 via Groq** dengan prompt untuk menghasilkan draf email atau pesan WhatsApp yang relevan dan profesional.
-    -   **Respons**: Mengembalikan draf pesan dalam format JSON atau teks.
-
-4.  `/simpan-gsheet`
-    -   **Metode**: `POST`
-    -   **Fungsi**: Menerima data kontak (atau beberapa kontak), lalu menggunakan kredensial layanan (service account) untuk mengautentikasi dan menambahkan data sebagai baris baru di **Google Sheet** yang telah ditentukan.
+    -   **Fungsi**: Menerima satu atau beberapa data kontak. Menggunakan kredensial layanan Google (`googleapis`) untuk mengautentikasi dan menambahkan data sebagai baris baru di **Google Sheet**. Jika nama *sheet* (berdasarkan nama acara) belum ada, maka akan dibuat secara otomatis lengkap dengan *header*.
     -   **Respons**: Memberikan konfirmasi sukses atau gagal.
 
 ### 🔐 Manajemen Kunci API & Keamanan
 
--   Kunci API untuk layanan eksternal (seperti Groq) dan kredensial untuk Google Sheets **tidak** disimpan di dalam kode.
--   Semua rahasia (secrets) disimpan dengan aman menggunakan **Google Secret Manager**.
--   Aplikasi di Cloud Run memiliki akses yang diatur dengan ketat (IAM) untuk hanya mengambil rahasia yang dibutuhkannya saat runtime.
+-   **Rotasi Kunci API**: Kode backend mendukung beberapa kunci API Groq (`GROQ_API_KEYS`) dan akan menggunakannya secara bergiliran. Ini meningkatkan resiliensi jika satu kunci mencapai batas penggunaan.
+-   **Environment Variables**: Semua informasi sensitif (kunci API, kredensial Google, ID spreadsheet) dimuat dari *environment variables* menggunakan `dotenv` untuk pengembangan lokal, dan diatur langsung di Google Cloud Run untuk produksi. Ini adalah praktik terbaik untuk menghindari penyimpanan rahasia di dalam kode.
