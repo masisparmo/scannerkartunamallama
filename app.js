@@ -109,7 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
             reminderTimeLabel: "Jam",
             reminderAlarmLabel: "Waktu Pengingat",
             reminderNotesLabel: "Catatan",
-            createReminderBtn: "Buat Reminder",
+            createReminderBtn: "BUAT REMINDER",
             // Modal Konfirmasi
             confirmActionTitle: "Konfirmasi Tindakan",
             confirmDeleteContact: "Apakah Anda yakin ingin menghapus kontak ini dari HP Anda? Tindakan ini tidak dapat dibatalkan.",
