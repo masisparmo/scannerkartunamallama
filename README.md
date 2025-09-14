@@ -79,3 +79,41 @@ Aplikasi ini adalah aplikasi web statis dan tidak memerlukan proses build yang r
     -   `qrcodejs`: Untuk menghasilkan QR code.
     -   `tagify`: Untuk input tag yang interaktif.
 -   **Backend (untuk AI & Google Sheets)**: Google Cloud Run, Google Cloud Vision AI, Google Gemini API.
+
+## 🏛️ Arsitektur Backend
+
+Meskipun aplikasi ini berjalan di sisi klien, fungsionalitas intinya (pemrosesan AI dan integrasi Google Sheets) didukung oleh backend yang aman dan skalabel yang di-hosting di Google Cloud. Kode backend ini **tidak** ada di repositori ini untuk alasan keamanan.
+
+-   **Platform**: Backend dibangun sebagai layanan mikro menggunakan **Google Cloud Run**, yang memungkinkan penskalaan otomatis (termasuk skala ke nol) untuk efisiensi biaya.
+-   **Bahasa**: Python.
+
+### Endpoint API
+
+Frontend berkomunikasi dengan backend melalui beberapa endpoint REST API:
+
+1.  `/processBusinessCard`
+    -   **Metode**: `POST`
+    -   **Fungsi**: Menerima data gambar kartu nama (base64), menggunakan **Google Cloud Vision AI** untuk melakukan OCR (Optical Character Recognition) dan mengekstrak teks mentah dari gambar.
+    -   **Respons**: Mengembalikan teks mentah yang terdeteksi.
+
+2.  `/refineAndTranslate`
+    -   **Metode**: `POST`
+    -   **Fungsi**: Menerima teks mentah dari endpoint sebelumnya, kemudian mengirimkannya ke model AI generatif untuk diproses.
+    -   **Integrasi AI**: Menggunakan **Groq API** untuk mengakses model bahasa besar **Llama 4**. Prompt dirancang khusus untuk membersihkan, menstrukturkan, dan menerjemahkan data teks mentah ke dalam format JSON yang rapi (nama, jabatan, perusahaan, dll.).
+    -   **Respons**: Mengembalikan data kontak dalam format JSON yang terstruktur.
+
+3.  `/generateFollowUpEmail` & `/generateFollowUpWa`
+    -   **Metode**: `POST`
+    -   **Fungsi**: Menerima detail kontak dan profil pengguna, kemudian memanggil model **Llama 4 via Groq** dengan prompt untuk menghasilkan draf email atau pesan WhatsApp yang relevan dan profesional.
+    -   **Respons**: Mengembalikan draf pesan dalam format JSON atau teks.
+
+4.  `/simpan-gsheet`
+    -   **Metode**: `POST`
+    -   **Fungsi**: Menerima data kontak (atau beberapa kontak), lalu menggunakan kredensial layanan (service account) untuk mengautentikasi dan menambahkan data sebagai baris baru di **Google Sheet** yang telah ditentukan.
+    -   **Respons**: Memberikan konfirmasi sukses atau gagal.
+
+### 🔐 Manajemen Kunci API & Keamanan
+
+-   Kunci API untuk layanan eksternal (seperti Groq) dan kredensial untuk Google Sheets **tidak** disimpan di dalam kode.
+-   Semua rahasia (secrets) disimpan dengan aman menggunakan **Google Secret Manager**.
+-   Aplikasi di Cloud Run memiliki akses yang diatur dengan ketat (IAM) untuk hanya mengambil rahasia yang dibutuhkannya saat runtime.
