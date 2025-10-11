@@ -1521,13 +1521,13 @@ END:VCALENDAR`;
                 setTimeout(() => { otherSelectors.editModal.classList.remove('opacity-0'); otherSelectors.editModalContent.classList.remove('scale-95', 'opacity-0'); }, 10);
             }
 
-            function closeEditModal() {
+            function closeEditModal(forceScreen) {
                 otherSelectors.editModal.classList.add('opacity-0');
                 otherSelectors.editModalContent.classList.add('scale-95', 'opacity-0');
                 setTimeout(() => {
                     otherSelectors.editModal.classList.add('hidden');
                     document.querySelector('.app-container').classList.remove('hidden');
-                    showScreen('initial');
+                    showScreen(forceScreen || 'results');
                 }, 300);
             }
 
@@ -1564,8 +1564,7 @@ END:VCALENDAR`;
                     // await sendCollaborativeData({ ...contactData, marketingName: collaborationSession.marketingName });
                 }
 
-                showScreen('results');
-                closeEditModal();
+                closeEditModal('results');
             }
 
             async function handleDeleteContact() {
@@ -1940,6 +1939,7 @@ END:VCALENDAR`;
             otherSelectors.captureBtn.addEventListener('click', captureAndProcess);
             otherSelectors.cancelScanBtn.addEventListener('click', () => { stopCamera(); showScreen('initial'); });
             otherSelectors.viewResultsBtn.addEventListener('click', () => showScreen('results'));
+            otherSelectors.backToHomeBtn.addEventListener('click', () => showScreen('initial'));
             otherSelectors.clearAllBtn.addEventListener('click', () => {
                 showConfirmModal(getTranslation('confirmClearAll'),
                     async () => {
@@ -1955,10 +1955,10 @@ END:VCALENDAR`;
                 const isNewContact = !idValue;
 
                 if (isNewContact) {
-                    closeEditModal();
+                    closeEditModal('initial');
                     showToast(getTranslation('toastScanCancelled'));
                 } else {
-                    closeEditModal();
+                    closeEditModal('results');
                 }
             });
             otherSelectors.deleteContactBtn.addEventListener('click', handleDeleteContact);
