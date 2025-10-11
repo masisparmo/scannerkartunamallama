@@ -1707,8 +1707,21 @@ END:VCALENDAR`;
 
                         if (!spreadsheetId) throw new Error("Could not find or create spreadsheet.");
 
+                        showToast("Membaca data dari Google Sheet...", 2000);
+                        const sheetDataResponse = await gapi.client.sheets.spreadsheets.values.get({
+                            spreadsheetId: spreadsheetId,
+                            range: 'Kontak!A2:K', // Start from A2 to skip header
+                        });
+                        if(logError) logError("Sheets API 'get' response:", sheetDataResponse);
+
+                        const remoteValues = sheetDataResponse.result.values || [];
+
                         const headers = ['Nama', 'Jabatan', 'Perusahaan', 'Jenis Perusahaan', 'Telepon Kantor', 'WhatsApp', 'Email', 'Acara', 'Tanggal', 'Catatan', 'Tags'];
-                        const values = contacts.map(c => [
+
+                        showToast("Menggabungkan data...", 2000);
+                        const mergedContacts = mergeAndDeduplicate(contacts, remoteValues, headers);
+
+                        const values = mergedContacts.map(c => [
                             c.nama || '', c.jabatan || '', c.perusahaan || '', c.jenis_perusahaan || '',
                             c.telepon_kantor || '', c.whatsapp || '', c.email || '', c.acara || '',
                             c.tanggal || '', c.catatan || '', (c.tags || []).join(', ')
@@ -1716,7 +1729,13 @@ END:VCALENDAR`;
 
                         const dataToInsert = [headers, ...values];
 
-                        showToast("Menyimpan data ke Google Sheet...", 3000);
+                        showToast("Mengosongkan data lama...", 2000);
+                        await gapi.client.sheets.spreadsheets.values.clear({
+                            spreadsheetId: spreadsheetId,
+                            range: 'Kontak!A:K',
+                        });
+
+                        showToast("Menyimpan data baru...", 3000);
                         const updateResponse = await gapi.client.sheets.spreadsheets.values.update({
                             spreadsheetId: spreadsheetId,
                             range: 'Kontak!A1',
@@ -1776,6 +1795,57 @@ END:VCALENDAR`;
                 };
 
                 ensureValidTokenAndExecute();
+            }
+
+            function mergeAndDeduplicate(localContacts, remoteContactsAsArrays, headers) {
+                const combined = new Map();
+
+                const getContactIdentifier = (contact) => {
+                    const name = (contact.nama || '').trim().toLowerCase();
+                    const company = (contact.perusahaan || '').trim().toLowerCase();
+                    const phone = (contact.whatsapp || contact.telepon_kantor || '').replace(/\D/g, '');
+                    const email = (contact.email || '').trim().toLowerCase();
+                    return `${name}|${company}|${phone}|${email}`;
+                };
+
+                // Process local contacts first, giving them priority
+                localContacts.forEach(contact => {
+                    const id = getContactIdentifier(contact);
+                    if (id !== '|||') { // Avoid blank identifiers
+                       combined.set(id, contact);
+                    }
+                });
+
+                // Process remote contacts
+                remoteContactsAsArrays.forEach(row => {
+                    const remoteContact = {};
+                    headers.forEach((header, index) => {
+                        const key = header.toLowerCase().replace(/\s/g, '_');
+                        remoteContact[key] = row[index] || '';
+                    });
+
+                    // Re-map keys to match local contact object structure
+                    const mappedContact = {
+                        nama: remoteContact.nama,
+                        jabatan: remoteContact.jabatan,
+                        perusahaan: remoteContact.perusahaan,
+                        jenis_perusahaan: remoteContact.jenis_perusahaan,
+                        telepon_kantor: remoteContact.telepon_kantor,
+                        whatsapp: remoteContact.whatsapp,
+                        email: remoteContact.email,
+                        acara: remoteContact.acara,
+                        tanggal: remoteContact.tanggal,
+                        catatan: remoteContact.catatan,
+                        tags: remoteContact.tags ? remoteContact.tags.split(',').map(t => t.trim()) : []
+                    };
+
+                    const id = getContactIdentifier(mappedContact);
+                    if (id !== '|||' && !combined.has(id)) {
+                        combined.set(id, mappedContact);
+                    }
+                });
+
+                return Array.from(combined.values());
             }
 
             function exportCSV(contacts) {
