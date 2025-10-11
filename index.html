@@ -1758,6 +1758,8 @@ END:VCALENDAR`;
                             showToast(`Google Auth Error: ${tokenResponse.error}`);
                             return;
                         }
+                        localStorage.setItem('google_token', JSON.stringify(gapi.client.getToken()));
+                        await updateAuthUI();
                         if(logError) logError("Token acquired successfully. Proceeding to save.");
                         await executeSave();
                     };
