@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Scanner Pintar | Aplikasi Scanner Kartu Nama & QR Code Berbasis AI</title>
-    
+
     <!-- Favicon -->
     <link rel="icon" href="https://raw.githubusercontent.com/masisparmo/scannerkartunamallama/refs/heads/main/scanner-pintar.ico" type="image/x-icon">
 
@@ -29,7 +29,7 @@
     <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    
+
     <!-- Tagify CSS -->
     <link href="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.css" rel="stylesheet" type="text/css" />
 
@@ -57,7 +57,7 @@
         .contact-card { cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease; }
         .contact-card:hover { transform: translateY(-3px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
         .dark .contact-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
-        
+
         /* Tagify Custom Styles */
         .tagify { --tag-bg: #e5e7eb; --tag-hover: #d1d5db; --tag-text-color: #1f2937; --tags-border-color: #d1d5db; }
         .dark .tagify { --tag-bg: #374151; --tag-hover: #4b5563; --tag-text-color: #f3f4f6; --tags-border-color: #4b5563; }
@@ -74,7 +74,7 @@
             <strong data-translate-key="collabMode">Mode Kolaborasi:</strong> <span id="collab-session-name"></span> | <strong data-translate-key="collabUser">User:</strong> <span id="collab-user-name"></span>
             <button id="exit-collab-btn" class="absolute top-1/2 right-2 -translate-y-1/2 text-indigo-200 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
         </div>
-        
+
         <main class="main-content flex-grow flex flex-col">
             <div id="initial-screen" class="screen p-8 flex flex-col justify-center items-center text-center flex-grow">
                  <div class="absolute top-5 right-5 z-30 flex items-center gap-2">
@@ -130,7 +130,7 @@
 
             <div id="scanner-screen" class="hidden screen relative bg-black flex-grow"><video id="video" autoplay playsinline></video><div class="scan-frame"></div><div class="camera-overlay p-6"><div class="flex justify-between items-center"><p id="scan-mode-label" class="text-white font-medium text-sm bg-black/50 px-3 py-1 rounded-full" data-translate-key="scanInstructions">Arahkan ke Kartu Nama atau QR Code</p><button id="cancel-scan-btn" class="p-3 bg-black/50 rounded-full text-white hover:bg-black/80"><i data-lucide="x" class="w-6 h-6"></i></button></div><div class="flex justify-center items-center"><button id="capture-btn" class="w-20 h-20 bg-white rounded-full flex items-center justify-center shadow-2xl ring-4 ring-white/30 transition-transform transform hover:scale-110" data-translate-key="scanBtn">SCAN</button></div></div><canvas id="canvas" class="hidden"></canvas></div>
             <div id="processing-screen" class="hidden screen justify-center items-center text-center p-8 flex-grow"><div class="loader mb-6"></div><h2 id="processing-title" class="text-2xl font-bold text-gray-900 dark:text-white animate-pulse" data-translate-key="processingTitle">AI Menganalisis Gambar...</h2><p class="text-gray-500 dark:text-gray-400 mt-2" data-translate-key="processingSubtitle">Mohon tunggu sebentar...</p></div>
-            
+
             <div id="results-screen" class="hidden screen flex flex-col">
                 <header class="p-6 flex justify-between items-center gap-4 border-b border-gray-200 dark:border-gray-700">
                     <h2 class="text-2xl font-bold text-gray-900 dark:text-white flex-grow" data-translate-key="scanResultTitle">Hasil Scan</h2>
@@ -162,7 +162,7 @@
                 </div>
                 <footer id="results-footer" class="p-6 border-t border-gray-200 dark:border-gray-700">
                     <div id="google-auth-container" class="mb-4 text-center">
-                        <button id="google-login-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-full shadow-lg flex items-center justify-center gap-2 text-base" data-translate-key="loginGoogle">LOGIN DENGAN GOOGLE</button>
+                        <button id="google-login-btn" disabled class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-full shadow-lg flex items-center justify-center gap-2 text-base opacity-50 cursor-not-allowed" data-translate-key="loginGoogle">LOGIN DENGAN GOOGLE</button>
                         <div id="google-auth-status" class="hidden mt-2 text-sm text-gray-600 dark:text-gray-400">
                             <p><span data-translate-key="loggedInAs">Login sebagai:</span> <span id="google-user-email" class="font-semibold"></span></p>
                             <button id="google-logout-btn" class="text-red-500 hover:underline mt-1" data-translate-key="logout">Logout</button>
@@ -241,7 +241,7 @@
     </div>
     <div id="show-session-qr-modal" class="modal-backdrop hidden fixed inset-0 bg-black/60 z-50 p-4"><div class="modal-content w-full max-w-sm m-auto bg-white dark:bg-gray-800 rounded-2xl p-6 text-center"><h3 class="text-xl font-bold mb-2" data-translate-key="sessionCreatedTitle">Sesi Dibuat!</h3><p class="text-gray-600 dark:text-gray-400 mb-4" data-translate-key="sessionCreatedSubtitle">Bagikan QR Code ini ke tim Anda untuk bergabung.</p><div id="qr-code-container"></div><button id="close-qr-modal-btn" class="modal-button w-full mt-6 bg-indigo-600 text-white hover:bg-indigo-700" data-translate-key="doneBtn">SELESAI</button></div></div>
     <div id="join-session-modal" class="modal-backdrop hidden fixed inset-0 bg-black/60 z-50 p-4"><div class="modal-content w-full max-w-sm m-auto bg-white dark:bg-gray-800 rounded-2xl p-6"><h3 class="text-xl font-bold mb-2" data-translate-key="joinCollabTitle">Gabung Sesi Kolaborasi</h3><p class="text-gray-600 dark:text-gray-400 mb-4"><span data-translate-key="joinCollabInvite">Anda diundang ke sesi</span> <strong id="join-session-name" class="text-indigo-500"></strong>. <span data-translate-key="joinCollabPrompt">Masukkan nama Anda:</span></p><input type="text" id="marketing-name-input" data-translate-key-placeholder="yourNameLabel" placeholder="Nama Anda" class="w-full p-3 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500"><div class="flex gap-4 mt-6"><button id="cancel-join-btn" class="modal-button flex-1 bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-200 hover:bg-gray-300" data-translate-key="cancelBtn">BATAL</button><button id="confirm-join-btn" class="modal-button flex-1 bg-indigo-600 text-white hover:bg-indigo-700" data-translate-key="joinBtn">GABUNG</button></div></div></div>
-    
+
     <div id="edit-modal" class="modal-backdrop hidden fixed inset-0 bg-black/60 z-50 p-4 flex items-center justify-center"><div class="modal-content bg-white dark:bg-gray-800 rounded-2xl shadow-xl w-full max-w-md p-6 transform scale-95 opacity-0"><h3 class="text-xl font-bold mb-4" data-translate-key="editContactTitle">Edit Kontak</h3><form id="edit-form" class="space-y-3"><input type="hidden" id="edit-contact-id"><div class="grid grid-cols-2 gap-3"><div><label for="edit-nama" class="text-sm font-medium text-gray-600 dark:text-gray-400" data-translate-key="nameLabel">Nama</label><input type="text" id="edit-nama" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"></div><div><label for="edit-jabatan" class="text-sm font-medium text-gray-600 dark:text-gray-400" data-translate-key="positionLabel">Jabatan</label><input type="text" id="edit-jabatan" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"></div></div><div class="grid grid-cols-2 gap-3"><div><label for="edit-perusahaan" class="text-sm font-medium text-gray-600 dark:text-gray-400" data-translate-key="companyLabel">Perusahaan</label><input type="text" id="edit-perusahaan" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"></div><div><label for="edit-jenis_perusahaan" class="text-sm font-medium text-gray-600 dark:text-gray-400" data-translate-key="companyTypeLabel">Jenis Perusahaan</label><input type="text" id="edit-jenis_perusahaan" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"></div></div><div class="grid grid-cols-2 gap-3"><div><label for="edit-telepon_kantor" class="text-sm font-medium text-gray-600 dark:text-gray-400" data-translate-key="officePhoneLabel">Telepon Kantor</label><input type="tel" id="edit-telepon_kantor" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"></div><div><label for="edit-whatsapp" class="text-sm font-medium text-gray-600 dark:text-gray-400">WhatsApp</label><input type="tel" id="edit-whatsapp" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"></div></div><div><label for="edit-email" class="text-sm font-medium text-gray-600 dark:text-gray-400">Email</label><input type="email" id="edit-email" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"></div>
     <div>
         <label for="edit-tags" class="text-sm font-medium text-gray-600 dark:text-gray-400" data-translate-key="tagsLabel">Tags</label>
@@ -251,7 +251,7 @@
 
     <div id="confirm-modal" class="modal-backdrop hidden fixed inset-0 bg-black/60 z-50 p-4"><div class="modal-content bg-white dark:bg-gray-800 rounded-2xl shadow-xl w-full max-w-sm p-6 transform scale-95 opacity-0"><h3 class="text-lg font-bold mb-2" data-translate-key="confirmActionTitle">Konfirmasi Tindakan</h3><p id="confirm-message" class="text-gray-600 dark:text-gray-400 mb-6"></p><div class="flex justify-end items-center gap-3"><button id="cancel-confirm-btn" class="modal-button bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-500 text-gray-800 dark:text-gray-200" data-translate-key="cancelBtn">BATAL</button><button id="confirm-action-btn" class="modal-button bg-red-600 hover:bg-red-700 text-white" data-translate-key="continueBtn">LANJUTKAN</button></div></div></div>
     <div id="toast" class="toast fixed bottom-5 right-5 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 py-3 px-5 rounded-full shadow-lg opacity-0 transform translate-y-5 pointer-events-none"><p id="toast-message"></p></div>
-    
+
     <!-- Log Viewer Elements -->
     <button id="log-icon" class="hidden p-2 bg-gray-800 text-white rounded-full shadow-lg hover:bg-gray-700 transition-colors uppercase">Log</button>
     <div id="log-viewer-modal" class="modal-backdrop hidden fixed inset-0 bg-black/70 z-50 p-4 flex flex-col">
@@ -277,6 +277,151 @@
     <script async defer src="https://accounts.google.com/gsi/client" onload="gisLoaded()"></script>
 
     <script>
+        // --- Google API Configuration & State ---
+        const GOOGLE_CLIENT_ID = '328921559379-s3mmi3dlpj39qtkgl4itt5q2ukl1nmid.apps.googleusercontent.com';
+        const GOOGLE_API_KEY = ''; // API Key is not strictly needed for this OAuth flow.
+        const GOOGLE_DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/sheets/v4/rest", "https://www.googleapis.com/discovery/v1/apis/drive/v3/rest"];
+        const GOOGLE_SCOPES = 'https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/drive.file';
+
+        let tokenClient;
+        let gapiInited = false;
+        let gisInited = false;
+        // --- End Google API Section ---
+
+        // --- Google Auth Functions ---
+        function gapiLoaded() {
+            gapi.load('client', initializeGapiClient);
+        }
+
+        async function initializeGapiClient() {
+            try {
+                await gapi.client.init({
+                    apiKey: GOOGLE_API_KEY,
+                    discoveryDocs: GOOGLE_DISCOVERY_DOCS,
+                });
+                gapiInited = true;
+                checkApisReady();
+            } catch (error) {
+                console.error("Error initializing GAPI client", error);
+                logError("Error initializing GAPI client", error);
+            }
+        }
+
+        function gisLoaded() {
+            try {
+                tokenClient = google.accounts.oauth2.initTokenClient({
+                    client_id: GOOGLE_CLIENT_ID,
+                    scope: GOOGLE_SCOPES,
+                    callback: '', // Will be defined dynamically on auth click
+                });
+                gisInited = true;
+                checkApisReady();
+            } catch (error) {
+                console.error("Error initializing GIS client", error);
+                logError("Error initializing GIS client", error);
+            }
+        }
+
+        function checkApisReady() {
+            if (gapiInited && gisInited) {
+                // APIs are ready, now we can enable UI and set up listeners
+                const googleLoginBtn = document.getElementById('google-login-btn');
+                const storedToken = localStorage.getItem('google_token');
+                if (storedToken) {
+                    try {
+                        gapi.client.setToken(JSON.parse(storedToken));
+                    } catch (e) {
+                         console.error("Failed to parse stored token", e);
+                         localStorage.removeItem('google_token');
+                    }
+                }
+                updateAuthUI();
+                googleLoginBtn.addEventListener('click', handleAuthClick);
+                document.getElementById('google-logout-btn').addEventListener('click', handleSignoutClick);
+                googleLoginBtn.disabled = false;
+                googleLoginBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            }
+        }
+
+        function handleAuthClick() {
+             if (!tokenClient) {
+                logError("Token client not initialized.");
+                showToast("Google Login is not ready yet. Please wait.");
+                return;
+            }
+            tokenClient.callback = async (resp) => {
+                if (resp.error !== undefined) {
+                    logError('Google Auth Error', resp);
+                    showToast(`Error: ${resp.error}`);
+                    throw (resp);
+                }
+                localStorage.setItem('google_token', JSON.stringify(gapi.client.getToken()));
+                await updateAuthUI();
+                showToast('Login Google berhasil!');
+            };
+
+            if (gapi.client.getToken() === null) {
+                tokenClient.requestAccessToken({prompt: 'consent'});
+            } else {
+                tokenClient.requestAccessToken({prompt: ''});
+            }
+        }
+
+        function handleSignoutClick() {
+            const token = gapi.client.getToken();
+            if (token !== null) {
+                google.accounts.oauth2.revoke(token.access_token, () => {
+                    gapi.client.setToken(null);
+                    localStorage.removeItem('google_token');
+                    updateAuthUI();
+                    showToast('Logout berhasil.');
+                });
+            }
+        }
+
+        function updateAuthUI() {
+            const googleLoginBtn = document.getElementById('google-login-btn');
+            const googleAuthStatus = document.getElementById('google-auth-status');
+            const googleUserEmail = document.getElementById('google-user-email');
+
+            const token = gapi.client.getToken();
+
+            if (token && token.access_token) {
+                googleLoginBtn.classList.add('hidden');
+                googleAuthStatus.classList.remove('hidden');
+
+                // Fetch user info
+                fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+                    headers: { "Authorization": `Bearer ${token.access_token}` }
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        // If token is expired/invalid, clear it
+                        if (response.status === 401) {
+                           handleSignoutClick();
+                        }
+                        throw new Error('Failed to fetch user info');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    googleUserEmail.textContent = data.email || '...';
+                })
+                .catch(err => {
+                    logError('Failed to fetch user info', err);
+                    googleUserEmail.textContent = '...';
+                });
+            } else {
+                googleLoginBtn.classList.remove('hidden');
+                googleAuthStatus.classList.add('hidden');
+                googleUserEmail.textContent = '';
+            }
+            // Refresh the export buttons which might depend on auth state
+            refreshResults();
+        }
+        // --- End Google Auth Functions ---
+
+
         document.addEventListener('DOMContentLoaded', () => {
             if ('serviceWorker' in navigator) {
                 window.addEventListener('load', () => {
@@ -289,7 +434,7 @@
                         });
                 });
             }
-            
+
             let currentLang = 'id';
 
             const translations = {
@@ -554,7 +699,7 @@
                     toastGSheetSaveSuccess: (count) => `${count} contacts saved successfully.`,
                     toastGSheetSaveError: (msg) => `Error: ${msg}`,
                     toastDataSentToGSheet: (name) => `Data sent to Google Sheet: ${name}`,
-                    toastFailSendGSheet: (name) => `Failed to send: ${name}. Data is safe locally.`,
+                    toastFailSendGSheet: (name) => `Gagal kirim: ${name}. Data is safe locally.`,
                     toastEmptyEventName: "Event name cannot be empty.",
                     toastEmptyMarketingName: "Marketing name cannot be empty.",
                     toastProfileIncomplete: "Please complete your profile in the Settings menu first.",
@@ -613,8 +758,8 @@
                     const key = el.getAttribute('data-translate-key-placeholder');
                     el.placeholder = getTranslation(key);
                 });
-                
-                refreshResults(); 
+
+                refreshResults();
             }
 
             function setLanguage(lang) {
@@ -627,11 +772,11 @@
                 const newLang = currentLang === 'id' ? 'en' : 'id';
                 setLanguage(newLang);
             }
-            
+
             const BACKEND_API_URL = 'https://scanner-api-328921559379.asia-southeast1.run.app';
             const EMAIL_GENERATOR_URL = `${BACKEND_API_URL}/generateFollowUpEmail`;
-            const WA_GENERATOR_URL = `${BACKEND_API_URL}/generateFollowUpWa`; 
-            
+            const WA_GENERATOR_URL = `${BACKEND_API_URL}/generateFollowUpWa`;
+
             let collaborationSession = { isActive: false, sessionId: null, sessionAcara: null, marketingName: null };
             let errorLogs = [];
 
@@ -641,7 +786,7 @@
             const clearLogsBtn = document.getElementById('clear-logs-btn');
             const copyLogsBtn = document.getElementById('copy-logs-btn');
             const logList = document.getElementById('log-list');
-            
+
             const editTagsInput = document.getElementById('edit-tags');
             const searchInput = document.getElementById('search-input');
             const filterBtn = document.getElementById('filter-btn');
@@ -671,17 +816,6 @@
             const collabUserName = document.getElementById('collab-user-name');
             const exitCollabBtn = document.getElementById('exit-collab-btn');
 
-            // --- Google API Configuration & State ---
-            const GOOGLE_CLIENT_ID = '328921559379-s3mmi3dlpj39qtkgl4itt5q2ukl1nmid.apps.googleusercontent.com';
-            const GOOGLE_API_KEY = ''; // API Key is not strictly needed for this OAuth flow.
-            const GOOGLE_DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/sheets/v4/rest", "https://www.googleapis.com/discovery/v1/apis/drive/v3/rest"];
-            const GOOGLE_SCOPES = 'https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/drive.file';
-
-            let tokenClient;
-            let gapiInited = false;
-            let gisInited = false;
-            // --- End Google API Section ---
-
             const { ...otherSelectors } = initializeSelectors();
 
             function initializeSelectors() {
@@ -694,7 +828,7 @@
                     langToggleResults: document.getElementById('lang-toggle-results')
                 };
             }
-            
+
             let stream, qrScanInterval, confirmCallback = null;
 
             function formatKantor(phone) {
@@ -718,7 +852,7 @@
             function logError(message, errorObject = null) {
                 console.error(message, errorObject);
                 const timestamp = new Date().toLocaleTimeString();
-                
+
                 let details = '';
                 if (errorObject) {
                     details = `Error Type: ${errorObject.name}\nMessage: ${errorObject.message}\n`;
@@ -749,7 +883,7 @@
                     });
                 }
             }
-            
+
             const dbLogic = {
                 db: null,
                 init: function() {
@@ -771,17 +905,17 @@
                 getAllContacts: function() { return new Promise((resolve, reject) => { const transaction = this.db.transaction(['contacts'], 'readonly'); const store = transaction.objectStore('contacts'); const request = store.getAll(); request.onsuccess = (event) => resolve(event.target.result); request.onerror = (e) => { logError("Get all contacts DB error", e.target.error); reject(e.target.error); }; }); },
                 clearAllContacts: function() { return new Promise((resolve, reject) => { const transaction = this.db.transaction(['contacts'], 'readwrite'); const store = transaction.objectStore('contacts'); const request = store.clear(); request.onsuccess = resolve; request.onerror = (e) => { logError("Clear contacts DB error", e.target.error); reject(e.target.error); }; }); }
             };
-            
+
             function showToast(message, duration = 3000) {
-                otherSelectors.toastMessage.textContent = message;
+                otherSelectors.toastMessage.innerHTML = message;
                 otherSelectors.toast.classList.remove('opacity-0', 'translate-y-5');
                 setTimeout(() => { otherSelectors.toast.classList.add('opacity-0', 'translate-y-5'); }, duration);
             }
 
             function showScreen(screenName) {
                 Object.values(otherSelectors.screens).forEach(screen => { if (screen) screen.classList.add('hidden'); });
-                if (otherSelectors.screens[screenName]) { 
-                    otherSelectors.screens[screenName].classList.remove('hidden'); 
+                if (otherSelectors.screens[screenName]) {
+                    otherSelectors.screens[screenName].classList.remove('hidden');
                     if (screenName === 'results') {
                         refreshResults();
                     }
@@ -838,12 +972,12 @@
                 context.drawImage(otherSelectors.video, 0, 0, otherSelectors.canvas.width, otherSelectors.canvas.height);
                 const imageData = context.getImageData(0, 0, otherSelectors.canvas.width, otherSelectors.canvas.height);
                 const code = jsQR(imageData.data, imageData.width, imageData.height, { inversionAttempts: "dontInvert" });
-                if (code) { 
-                    stopCamera(); 
+                if (code) {
+                    stopCamera();
                     if (code.data.includes('?sesi=') && code.data.includes('&acara=')) {
                         window.location.href = code.data;
                     } else {
-                        processQRCode(code.data); 
+                        processQRCode(code.data);
                     }
                 }
             }
@@ -866,7 +1000,7 @@
                     showScreen('initial');
                 }
             }
-            
+
             function stopCamera() {
                 if (qrScanInterval) clearInterval(qrScanInterval);
                 qrScanInterval = null;
@@ -880,23 +1014,23 @@
                     img.onload = () => {
                         let canvas = document.createElement('canvas');
                         let width = img.width, height = img.height;
-                        if (width > height) { if (width > maxWidth) { height *= maxWidth / width; width = maxWidth; } } 
+                        if (width > height) { if (width > maxWidth) { height *= maxWidth / width; width = maxWidth; } }
                         else { if (height > maxHeight) { width *= maxHeight / height; height = maxHeight; } }
                         canvas.width = width; canvas.height = height;
                         let ctx = canvas.getContext('2d');
                         ctx.drawImage(img, 0, 0, width, height);
-                        resolve(canvas.toDataURL('image/jpeg', 0.8)); 
+                        resolve(canvas.toDataURL('image/jpeg', 0.8));
                     };
                 });
             }
-            
+
             async function handleImageUpload(event) {
                 const file = event.target.files[0];
                 if (!file) return;
 
                 showScreen('processing');
                 otherSelectors.processingTitle.textContent = getTranslation('processingTitle');
-                
+
                 const reader = new FileReader();
                 reader.onload = async (e) => {
                     const finalImageDataUrl = await resizeImage(e.target.result);
@@ -915,14 +1049,14 @@
                 otherSelectors.canvas.height = otherSelectors.video.videoHeight;
 
                 context.drawImage(otherSelectors.video, 0, 0, otherSelectors.canvas.width, otherSelectors.canvas.height);
-                
+
                 stopCamera();
-                
+
                 const imageDataUrl = otherSelectors.canvas.toDataURL('image/jpeg', 0.9);
                 const finalImageDataUrl = await resizeImage(imageDataUrl);
                 await processImageWithAI(finalImageDataUrl);
             }
-            
+
             async function processImageWithAI(imageDataUrl) {
                 try {
                     otherSelectors.processingTitle.textContent = getTranslation('processingTitle');
@@ -932,11 +1066,11 @@
                         body: JSON.stringify({ imageDataUrl })
                     });
                     if (!extractResponse.ok) { const errorText = await extractResponse.text(); throw new Error(`Backend Error: ${extractResponse.status}. Detail: ${errorText}`); }
-                    
+
                     const extractResult = await extractResponse.json();
                     const jsonString = extractResult.data;
                     if (!jsonString) { throw new Error("Invalid response from Backend."); }
-                    
+
                     const extractedData = JSON.parse(jsonString);
 
                     otherSelectors.processingTitle.textContent = getTranslation('processingRefining');
@@ -955,7 +1089,7 @@
 
                     finalData.telepon_kantor = formatKantor(finalData.telepon_kantor);
                     finalData.whatsapp = formatWA(finalData.whatsapp);
-                    
+
                     await openEditModalForNewContact(finalData);
 
                 } catch (error) {
@@ -970,7 +1104,7 @@
                     showScreen('initial');
                 }
             }
-            
+
             async function processQRCode(data) {
                 otherSelectors.processingTitle.textContent = getTranslation('processingQRCode');
                 showScreen('processing');
@@ -1017,10 +1151,10 @@
                     else if (mainKey === 'CATEGORIES' && !contact.jenis_perusahaan) { contact.jenis_perusahaan = value.split(',').map(s => s.trim()).join(', '); }
                     else if (mainKey === 'TEL') {
                         const types = params.TYPE || [];
-                        if (types.includes('WORK') && !contact.telepon_kantor) { contact.telepon_kantor = value; } 
-                        else if (types.includes('CELL') && !contact.whatsapp) { contact.whatsapp = value; } 
+                        if (types.includes('WORK') && !contact.telepon_kantor) { contact.telepon_kantor = value; }
+                        else if (types.includes('CELL') && !contact.whatsapp) { contact.whatsapp = value; }
                         else if (!contact.telepon_kantor && !contact.whatsapp) { contact.whatsapp = value; }
-                    } 
+                    }
                     else if (mainKey === 'X-WHATSAPP' && !contact.whatsapp) { contact.whatsapp = value; }
                 });
                 return contact;
@@ -1029,7 +1163,7 @@
             async function refreshResults() {
                 if (!dbLogic.db) return;
                 const allContacts = await dbLogic.getAllContacts();
-                
+
                 const searchTerm = currentFilter.searchTerm.toLowerCase();
                 const activeTag = currentFilter.activeTag;
 
@@ -1041,7 +1175,7 @@
                         (contact.acara && contact.acara.toLowerCase().includes(searchTerm));
 
                     const matchesTag = !activeTag || (contact.tags && contact.tags.includes(activeTag));
-                    
+
                     return matchesSearch && matchesTag;
                 });
 
@@ -1058,8 +1192,8 @@
                         card.className = 'contact-card bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 rounded-xl';
                         card.dataset.id = contact.id;
 
-                        const tagsHTML = (contact.tags && contact.tags.length > 0) 
-                            ? `<div class="mt-2 flex flex-wrap gap-2">${contact.tags.map(tag => 
+                        const tagsHTML = (contact.tags && contact.tags.length > 0)
+                            ? `<div class="mt-2 flex flex-wrap gap-2">${contact.tags.map(tag =>
                                 `<span class="text-xs font-semibold text-purple-600 dark:text-purple-400 bg-purple-100 dark:bg-purple-900/50 px-2 py-0.5 rounded-full">${tag}</span>`
                               ).join('')}</div>`
                             : '';
@@ -1101,8 +1235,8 @@
                     allTags.forEach(tag => {
                         const button = document.createElement('button');
                         button.textContent = tag;
-                        button.className = `text-xs font-semibold px-2 py-1 rounded-full border transition-colors ${currentFilter.activeTag === tag 
-                            ? 'bg-indigo-600 text-white border-indigo-600' 
+                        button.className = `text-xs font-semibold px-2 py-1 rounded-full border transition-colors ${currentFilter.activeTag === tag
+                            ? 'bg-indigo-600 text-white border-indigo-600'
                             : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 border-gray-300 dark:border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-600'}`;
                         button.onclick = () => {
                             currentFilter.activeTag = currentFilter.activeTag === tag ? null : tag;
@@ -1121,10 +1255,10 @@
 
                 otherSelectors.actionModalHeader.innerHTML = `<h3 class="text-xl font-bold text-gray-900 dark:text-white">${contact.nama || getTranslation('unnamedContact')}</h3>`;
                 otherSelectors.actionModalBody.innerHTML = `<p>${contact.jabatan || ''} ${getTranslation('atCompany')} ${contact.perusahaan || ''}</p><p class="mt-1">${getTranslation('eventLabel')}: ${contact.acara || '-'}</p>`;
-                
+
                 let footerHTML = '';
                 footerHTML += `<button id="action-save-vcf" class="modal-button bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 flex items-center justify-center gap-2 uppercase">${getTranslation('actionSaveContact')}</button>`;
-                
+
                 if (contact.whatsapp) {
                     footerHTML += `<button id="action-reminder" data-contact-id="${id}" class="modal-button bg-purple-600 text-white hover:bg-purple-700 flex items-center justify-center gap-2 uppercase">${getTranslation('actionReminder')}</button>`;
                     footerHTML += `<button id="action-whatsapp-ai" class="modal-button bg-teal-500 text-white hover:bg-teal-600 flex items-center justify-center gap-2 uppercase">${getTranslation('actionDraftWA')}</button>`;
@@ -1133,12 +1267,12 @@
                 if (contact.email) {
                     footerHTML += `<button id="action-email" class="modal-button bg-blue-600 text-white hover:bg-blue-700 flex items-center justify-center gap-2 uppercase">${getTranslation('actionDraftEmail')}</button>`;
                 }
-                
+
                 otherSelectors.actionModalFooter.innerHTML = footerHTML;
                 lucide.createIcons();
-                
+
                 document.getElementById('action-save-vcf').addEventListener('click', () => exportVCF(contact));
-                
+
                 if(contact.whatsapp) {
                     if(document.getElementById('action-reminder')) {
                         document.getElementById('action-reminder').addEventListener('click', (e) => {
@@ -1156,12 +1290,12 @@
                 }
 
                 otherSelectors.actionModal.classList.remove('hidden');
-                setTimeout(() => { 
+                setTimeout(() => {
                     otherSelectors.actionModal.classList.remove('opacity-0');
-                    otherSelectors.actionModalContent.classList.remove('translate-y-full', 'sm:scale-95', 'sm:translate-y-0', 'opacity-0'); 
+                    otherSelectors.actionModalContent.classList.remove('translate-y-full', 'sm:scale-95', 'sm:translate-y-0', 'opacity-0');
                 }, 10);
             }
-            
+
             async function generateAndOpenEmail(contact) {
                 const profile = JSON.parse(localStorage.getItem('userProfile'));
                 if (!profile || !profile.nama || !profile.jabatan || !profile.perusahaan) {
@@ -1171,16 +1305,16 @@
                 const emailBtn = document.getElementById('action-email');
                 emailBtn.disabled = true;
                 emailBtn.innerHTML = `<div class="loader btn-loader"></div>`;
-                
+
                 try {
                     const response = await fetch(EMAIL_GENERATOR_URL, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ contact, profile, lang: currentLang })
                     });
-                    
+
                     if (!response.ok) { const errorText = await response.text(); throw new Error(`Failed to create email draft. Status: ${response.status}. Detail: ${errorText}`); }
-                    
+
                     const result = await response.json();
                     if (result.success && result.data) {
                         const emailData = JSON.parse(result.data);
@@ -1212,16 +1346,16 @@
                 const waAiBtn = document.getElementById('action-whatsapp-ai');
                 waAiBtn.disabled = true;
                 waAiBtn.innerHTML = `<div class="loader btn-loader"></div>`;
-                
+
                 try {
                     const response = await fetch(WA_GENERATOR_URL, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ contact, profile, lang: currentLang })
                     });
-                    
+
                     if (!response.ok) { const errorText = await response.text(); throw new Error(`Failed to create WA draft. Status: ${response.status}. Detail: ${errorText}`); }
-                    
+
                     const result = await response.json();
                     if (result.success && result.data) {
                         const message = encodeURIComponent(result.data);
@@ -1321,8 +1455,8 @@ END:VCALENDAR`;
 
             async function openEditModalForNewContact(contact) {
                 document.querySelector('.app-container').classList.add('hidden');
-                
-                document.getElementById('edit-contact-id').value = ''; 
+
+                document.getElementById('edit-contact-id').value = '';
                 document.getElementById('edit-nama').value = contact.nama || '';
                 document.getElementById('edit-jabatan').value = contact.jabatan || '';
                 document.getElementById('edit-perusahaan').value = contact.perusahaan || '';
@@ -1330,7 +1464,7 @@ END:VCALENDAR`;
                 document.getElementById('edit-telepon_kantor').value = contact.telepon_kantor || '';
                 document.getElementById('edit-whatsapp').value = contact.whatsapp || '';
                 document.getElementById('edit-email').value = contact.email || '';
-                
+
                 tagify.removeAllTags();
                 if(contact.tags && contact.tags.length > 0) {
                     tagify.addTags(contact.tags);
@@ -1339,20 +1473,20 @@ END:VCALENDAR`;
                 document.getElementById('edit-acara').value = otherSelectors.sessionAcaraInput.value;
                 document.getElementById('edit-tanggal').value = otherSelectors.sessionTanggalInput.value;
                 document.getElementById('edit-catatan').value = contact.catatan || otherSelectors.sessionCatatanInput.value;
-                
+
                 otherSelectors.editModal.classList.remove('hidden');
-                setTimeout(() => { 
-                    otherSelectors.editModal.classList.remove('opacity-0'); 
-                    otherSelectors.editModalContent.classList.remove('scale-95', 'opacity-0'); 
+                setTimeout(() => {
+                    otherSelectors.editModal.classList.remove('opacity-0');
+                    otherSelectors.editModalContent.classList.remove('scale-95', 'opacity-0');
                 }, 10);
             }
 
             async function openEditModal(id) {
                 const contact = await dbLogic.getContact(id);
                 if (!contact) return;
-                
+
                 document.querySelector('.app-container').classList.add('hidden');
-                
+
                 document.getElementById('edit-contact-id').value = contact.id;
                 document.getElementById('edit-nama').value = contact.nama || '';
                 document.getElementById('edit-jabatan').value = contact.jabatan || '';
@@ -1361,7 +1495,7 @@ END:VCALENDAR`;
                 document.getElementById('edit-telepon_kantor').value = contact.telepon_kantor || '';
                 document.getElementById('edit-whatsapp').value = contact.whatsapp || '';
                 document.getElementById('edit-email').value = contact.email || '';
-                
+
                 tagify.removeAllTags();
                 if(contact.tags && contact.tags.length > 0) {
                     tagify.addTags(contact.tags);
@@ -1380,7 +1514,7 @@ END:VCALENDAR`;
                 setTimeout(() => {
                     otherSelectors.editModal.classList.add('hidden');
                     document.querySelector('.app-container').classList.remove('hidden');
-                    showScreen('initial'); 
+                    showScreen('initial');
                 }, 300);
             }
 
@@ -1416,7 +1550,7 @@ END:VCALENDAR`;
                     // showToast('Sending data to Google Sheet...');
                     // await sendCollaborativeData({ ...contactData, marketingName: collaborationSession.marketingName });
                 }
-                
+
                 showScreen('results');
                 closeEditModal();
             }
@@ -1426,11 +1560,11 @@ END:VCALENDAR`;
                 const isNewContact = !idValue;
 
                 if (isNewContact) {
-                    closeEditModal(); 
+                    closeEditModal();
                     showToast(getTranslation('toastScanCancelled'));
                     return;
                 }
-                
+
                 const id = parseInt(idValue);
                 showConfirmModal(
                     getTranslation('confirmDeleteContact'),
@@ -1440,19 +1574,19 @@ END:VCALENDAR`;
                             showToast(getTranslation('toastContactDeleted'));
                             closeEditModal();
                             refreshResults();
-                        } catch (error) { 
-                            logError("Failed to delete contact:", error); 
-                            showToast("Failed to delete contact."); 
+                        } catch (error) {
+                            logError("Failed to delete contact:", error);
+                            showToast("Failed to delete contact.");
                         }
                     }
                 );
             }
-            
+
             function setupCollaborationModeUI() {
                 collaborationSession.isActive = true;
                 document.getElementById('session-form-container').classList.add('opacity-50', 'pointer-events-none');
                 createSessionBtn.classList.add('hidden');
-                
+
                 collaborationModeIndicator.classList.remove('hidden');
                 collabSessionName.textContent = collaborationSession.sessionAcara;
                 collabUserName.textContent = collaborationSession.marketingName;
@@ -1465,7 +1599,7 @@ END:VCALENDAR`;
                 showConfirmModal(getTranslation('confirmExitCollab'), () => {
                     localStorage.removeItem('collaborationSession');
                     collaborationSession = { isActive: false, sessionId: null, sessionAcara: null, marketingName: null };
-                    
+
                     const url = new URL(window.location);
                     url.searchParams.delete('sesi');
                     url.searchParams.delete('acara');
@@ -1477,106 +1611,6 @@ END:VCALENDAR`;
                     showToast(getTranslation('toastExitCollab'));
                 });
             }
-            
-            
-            // --- Google Auth Functions ---
-            function gapiLoaded() {
-                gapi.load('client', initializeGapiClient);
-            }
-
-            function gisLoaded() {
-                tokenClient = google.accounts.oauth2.initTokenClient({
-                    client_id: GOOGLE_CLIENT_ID,
-                    scope: GOOGLE_SCOPES,
-                    callback: '', // Will be defined dynamically
-                });
-                gisInited = true;
-            }
-
-            async function initializeGapiClient() {
-                await gapi.client.init({
-                    apiKey: GOOGLE_API_KEY,
-                    discoveryDocs: GOOGLE_DISCOVERY_DOCS,
-                });
-                gapiInited = true;
-
-                const storedToken = localStorage.getItem('google_token');
-                if (storedToken) {
-                    gapi.client.setToken(JSON.parse(storedToken));
-                }
-                updateAuthUI();
-            }
-
-            function handleAuthClick() {
-                tokenClient.callback = async (resp) => {
-                    if (resp.error !== undefined) {
-                        logError('Google Auth Error', resp);
-                        showToast(`Error: ${resp.error}`);
-                        throw (resp);
-                    }
-                    localStorage.setItem('google_token', JSON.stringify(gapi.client.getToken()));
-                    await updateAuthUI();
-                    showToast('Login Google berhasil!');
-                };
-
-                if (gapi.client.getToken() === null) {
-                    tokenClient.requestAccessToken({prompt: 'consent'});
-                } else {
-                    tokenClient.requestAccessToken({prompt: ''});
-                }
-            }
-
-            function handleSignoutClick() {
-                const token = gapi.client.getToken();
-                if (token !== null) {
-                    google.accounts.oauth2.revoke(token.access_token, () => {
-                        gapi.client.setToken(null);
-                        localStorage.removeItem('google_token');
-                        updateAuthUI();
-                        showToast('Logout berhasil.');
-                    });
-                }
-            }
-
-            function updateAuthUI() {
-                const googleLoginBtn = document.getElementById('google-login-btn');
-                const googleAuthStatus = document.getElementById('google-auth-status');
-                const googleUserEmail = document.getElementById('google-user-email');
-                const exportGsheetBtn = document.getElementById('export-gsheet-btn');
-
-                const token = gapi.client.getToken();
-
-                if (token && token.access_token) {
-                    googleLoginBtn.classList.add('hidden');
-                    googleAuthStatus.classList.remove('hidden');
-
-                    fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
-                        headers: { "Authorization": `Bearer ${token.access_token}` }
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        googleUserEmail.textContent = data.email || '...';
-                    })
-                    .catch(err => {
-                        logError('Failed to fetch user info', err);
-                        googleUserEmail.textContent = '...';
-                    });
-
-                    if (exportGsheetBtn) {
-                        exportGsheetBtn.disabled = false;
-                        exportGsheetBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-                    }
-                } else {
-                    googleLoginBtn.classList.remove('hidden');
-                    googleAuthStatus.classList.add('hidden');
-                    googleUserEmail.textContent = '';
-                    if (exportGsheetBtn) {
-                        exportGsheetBtn.disabled = true;
-                        exportGsheetBtn.classList.add('opacity-50', 'cursor-not-allowed');
-                    }
-                }
-            }
-            // --- End Google Auth Functions ---
 
             function updateExportButtons(contacts) {
                 let buttonsHTML = '';
@@ -1607,7 +1641,7 @@ END:VCALENDAR`;
                     }
                 }
                 otherSelectors.exportButtonsContainer.innerHTML = buttonsHTML;
-                
+
                 if (contacts.length > 0) {
                     if (document.getElementById('export-csv-btn')) document.getElementById('export-csv-btn').addEventListener('click', () => exportCSV(contacts));
                     if (document.getElementById('export-vcf-btn')) document.getElementById('export-vcf-btn').addEventListener('click', () => exportVCF(contacts[0]));
@@ -1615,6 +1649,8 @@ END:VCALENDAR`;
                     if (document.getElementById('export-gsheet-btn')) {
                          const gsheetBtn = document.getElementById('export-gsheet-btn');
                          gsheetBtn.addEventListener('click', () => saveAllToGoogleSheet(gsheetBtn));
+                         // Initial auth state check
+                         if(gapiInited && gisInited) updateAuthUI();
                     }
                 }
             }
@@ -1622,8 +1658,9 @@ END:VCALENDAR`;
             async function saveAllToGoogleSheet(button) {
                 const SPREADSHEET_NAME = "Data Kontak Scanner Pintar";
 
-                if (!gapi.client.getToken()) {
+                if (!gapi.client.getToken() || !gapi.client.getToken().access_token) {
                     showToast(getTranslation('toastGSheetLogin'), 4000);
+                    handleAuthClick(); // Prompt user to log in
                     return;
                 }
 
@@ -1652,23 +1689,6 @@ END:VCALENDAR`;
                             properties: { title: SPREADSHEET_NAME },
                             sheets: [{
                                 properties: { title: 'Kontak' },
-                                data: [{
-                                    rowData: [{
-                                        values: [
-                                            { userEnteredValue: { stringValue: 'Nama' } },
-                                            { userEnteredValue: { stringValue: 'Jabatan' } },
-                                            { userEnteredValue: { stringValue: 'Perusahaan' } },
-                                            { userEnteredValue: { stringValue: 'Jenis Perusahaan' } },
-                                            { userEnteredValue: { stringValue: 'Telepon Kantor' } },
-                                            { userEnteredValue: { stringValue: 'WhatsApp' } },
-                                            { userEnteredValue: { stringValue: 'Email' } },
-                                            { userEnteredValue: { stringValue: 'Acara' } },
-                                            { userEnteredValue: { stringValue: 'Tanggal' } },
-                                            { userEnteredValue: { stringValue: 'Catatan' } },
-                                            { userEnteredValue: { stringValue: 'Tags' } },
-                                        ]
-                                    }]
-                                }]
                             }]
                         });
                         spreadsheetId = createResponse.result.spreadsheetId;
@@ -1679,18 +1699,30 @@ END:VCALENDAR`;
                     }
 
                     // 2. Prepare data for appending
+                    const headers = [
+                        'Nama', 'Jabatan', 'Perusahaan', 'Jenis Perusahaan', 'Telepon Kantor',
+                        'WhatsApp', 'Email', 'Acara', 'Tanggal', 'Catatan', 'Tags'
+                    ];
                     const values = contacts.map(c => [
                         c.nama || '', c.jabatan || '', c.perusahaan || '', c.jenis_perusahaan || '',
                         c.telepon_kantor || '', c.whatsapp || '', c.email || '', c.acara || '',
                         c.tanggal || '', c.catatan || '', (c.tags || []).join(', ')
                     ]);
 
-                    // 3. Append data to the sheet
-                    await gapi.client.sheets.spreadsheets.values.append({
+                    // Add headers to the values array
+                    const dataToInsert = [headers, ...values];
+
+                    // 3. Clear the sheet and write all data
+                    await gapi.client.sheets.spreadsheets.values.clear({
                         spreadsheetId: spreadsheetId,
-                        range: 'Kontak!A:K',
+                        range: 'Kontak!A1:K',
+                    });
+
+                    await gapi.client.sheets.spreadsheets.values.update({
+                        spreadsheetId: spreadsheetId,
+                        range: 'Kontak!A1',
                         valueInputOption: 'USER_ENTERED',
-                        resource: { values: values }
+                        resource: { values: dataToInsert }
                     });
 
                     const sheetUrl = `https://docs.google.com/spreadsheets/d/${spreadsheetId}`;
@@ -1766,7 +1798,7 @@ END:VCALENDAR`;
                     showToast(getTranslation('toastDownloadingZIP'));
                 });
             }
-            
+
             function loadAndDisplayProfile() {
                 const profile = JSON.parse(localStorage.getItem('userProfile')) || {};
                 document.getElementById('profile-nama').value = profile.nama || '';
@@ -1776,9 +1808,6 @@ END:VCALENDAR`;
             }
 
             async function initializeApp() {
-                document.getElementById('google-login-btn').addEventListener('click', handleAuthClick);
-                document.getElementById('google-logout-btn').addEventListener('click', handleSignoutClick);
-
                 lucide.createIcons();
                 const savedTheme = localStorage.getItem('theme');
                 const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -1786,7 +1815,7 @@ END:VCALENDAR`;
                 otherSelectors.sessionAcaraInput.value = localStorage.getItem('sessionAcara') || '';
                 otherSelectors.sessionTanggalInput.value = localStorage.getItem('sessionTanggal') || new Date().toISOString().slice(0, 10);
                 otherSelectors.sessionCatatanInput.value = localStorage.getItem('sessionCatatan') || '';
-                
+
                 tagify = new Tagify(editTagsInput);
 
                 try {
@@ -1816,14 +1845,16 @@ END:VCALENDAR`;
                         collaborationSession = savedSession;
                         setupCollaborationModeUI();
                     }
-                    
+
                     showScreen('initial');
                 } catch (error) {
                     logError("Failed to initialize the app", error);
                     document.body.innerHTML = `<div class="text-center p-8 text-red-500">Failed to load database. App cannot run.</div>`;
                 }
             }
-            
+
+            initializeApp();
+
             [otherSelectors.langToggleInitial, otherSelectors.langToggleResults].forEach(btn => btn.addEventListener('click', toggleLanguage));
             createSessionBtn.addEventListener('click', () => showScreen('createSession'));
             cancelCreateSessionBtn.addEventListener('click', () => showScreen('initial'));
@@ -1871,7 +1902,6 @@ END:VCALENDAR`;
             otherSelectors.captureBtn.addEventListener('click', captureAndProcess);
             otherSelectors.cancelScanBtn.addEventListener('click', () => { stopCamera(); showScreen('initial'); });
             otherSelectors.viewResultsBtn.addEventListener('click', () => showScreen('results'));
-            otherSelectors.backToHomeBtn.addEventListener('click', () => showScreen('initial'));
             otherSelectors.clearAllBtn.addEventListener('click', () => {
                 showConfirmModal(getTranslation('confirmClearAll'),
                     async () => {
@@ -1885,9 +1915,9 @@ END:VCALENDAR`;
             otherSelectors.cancelEditBtn.addEventListener('click', () => {
                 const idValue = document.getElementById('edit-contact-id').value;
                 const isNewContact = !idValue;
-                
+
                 if (isNewContact) {
-                    closeEditModal(); 
+                    closeEditModal();
                     showToast(getTranslation('toastScanCancelled'));
                 } else {
                     closeEditModal();
@@ -1922,7 +1952,7 @@ END:VCALENDAR`;
                 showScreen('initial');
             });
             otherSelectors.closeActionModalBtn.addEventListener('click', closeActionModal);
-            
+
             logIcon.addEventListener('click', () => {
                 logViewerModal.classList.remove('hidden');
                 lucide.createIcons();
@@ -1938,7 +1968,7 @@ END:VCALENDAR`;
                     return;
                 }
                 const logText = errorLogs.map(log => `[${log.timestamp}] ${log.message}\n${log.details}`).join('\n\n');
-                
+
                 if (navigator.clipboard && window.isSecureContext) {
                     navigator.clipboard.writeText(logText).then(() => {
                         showToast(getTranslation('toastLogsCopied'));
@@ -2007,13 +2037,7 @@ END:VCALENDAR`;
                     otherInput.classList.add('hidden');
                 }
             });
-
-
-            initializeApp();
         });
     </script>
 </body>
 </html>
-
-
-

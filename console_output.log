@@ -1,0 +1,3 @@
+cdn.tailwindcss.com should not be used in production. To use Tailwind CSS in production, install it as a PostCSS plugin or use the Tailwind CLI: https://tailwindcss.com/docs/installation
+ServiceWorker registration failed:  TypeError: Failed to register a ServiceWorker: The URL protocol of the current origin ('null') is not supported.
+    at file:///app/index.html:283:45
