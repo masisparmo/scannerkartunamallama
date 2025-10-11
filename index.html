@@ -349,8 +349,15 @@
                     updateAuthUI();
                     googleLoginBtn.addEventListener('click', () => handleAuthClick());
                     document.getElementById('google-logout-btn').addEventListener('click', handleSignoutClick);
+
                     googleLoginBtn.disabled = false;
                     googleLoginBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+
+                    const gsheetBtn = document.getElementById('export-gsheet-btn');
+                    if (gsheetBtn) {
+                        gsheetBtn.disabled = false;
+                        gsheetBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                    }
                 }
             }
 
@@ -1639,8 +1646,10 @@ END:VCALENDAR`;
                         `;
                     }
                     if (contacts.length > 0) {
+                        const gsheetBtnDisabled = googleAuthReady ? '' : 'disabled';
+                        const gsheetBtnDisabledClass = googleAuthReady ? '' : 'opacity-50 cursor-not-allowed';
                         buttonsHTML += `
-                            <button id="export-gsheet-btn" class="col-span-2 w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-4 rounded-full shadow-lg flex items-center justify-center gap-2 text-base mt-2">
+                            <button id="export-gsheet-btn" ${gsheetBtnDisabled} class="col-span-2 w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-4 rounded-full shadow-lg flex items-center justify-center gap-2 text-base mt-2 ${gsheetBtnDisabledClass}">
                                 ${getTranslation('exportGSheet')}
                             </button>
                         `;
@@ -1655,8 +1664,6 @@ END:VCALENDAR`;
                     if (document.getElementById('export-gsheet-btn')) {
                          const gsheetBtn = document.getElementById('export-gsheet-btn');
                          gsheetBtn.addEventListener('click', () => saveAllToGoogleSheet(gsheetBtn));
-                         // Initial auth state check
-                         if(googleAuthReady) updateAuthUI();
                     }
                 }
             }
