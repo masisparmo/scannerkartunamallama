@@ -343,7 +343,7 @@
                         }
                     }
                     updateAuthUI();
-                    googleLoginBtn.addEventListener('click', handleAuthClick);
+                    googleLoginBtn.addEventListener('click', () => handleAuthClick());
                     document.getElementById('google-logout-btn').addEventListener('click', handleSignoutClick);
                     googleLoginBtn.disabled = false;
                     googleLoginBtn.classList.remove('opacity-50', 'cursor-not-allowed');
@@ -352,21 +352,21 @@
 
             function handleAuthClick(callback) {
                 if (!tokenClient) {
-                    logError("Token client not initialized.");
-                    showToast("Google Login is not ready yet. Please wait.");
+                    if (logError) logError("Token client not initialized.");
+                    if (showToast) showToast("Google Login is not ready yet. Please wait.");
                     return;
                 }
 
                 tokenClient.callback = async (resp) => {
                     if (resp.error !== undefined) {
-                        logError('Google Auth Error', resp);
-                        showToast(`Error: ${resp.error}`);
+                        if (logError) logError('Google Auth Error', resp);
+                        if (showToast) showToast(`Error: ${resp.error}`);
                         if (typeof callback === 'function') callback(false);
                         throw (resp);
                     }
                     localStorage.setItem('google_token', JSON.stringify(gapi.client.getToken()));
                     await updateAuthUI();
-                    showToast('Login Google berhasil!');
+                    if (showToast) showToast('Login Google berhasil!');
                     if (typeof callback === 'function') callback(true);
                 };
 
@@ -384,7 +384,7 @@
                         gapi.client.setToken(null);
                         localStorage.removeItem('google_token');
                         updateAuthUI();
-                        showToast('Logout berhasil.');
+                        if (showToast) showToast('Logout berhasil.');
                     });
                 }
             }
@@ -414,7 +414,7 @@
                         googleUserEmail.textContent = data.email || '...';
                     })
                     .catch(err => {
-                        logError('Failed to fetch user info', err);
+                        if(logError) logError('Failed to fetch user info', err);
                         googleUserEmail.textContent = '...';
                     });
                 } else {
@@ -698,20 +698,20 @@
                     toastDownloadingVCF: "VCF file is downloading.",
                     toastDownloadingZIP: "ZIP file is downloading.",
                     toastNoContactSave: "No contacts to save.",
-                    toastGSheetSaveSuccess: (count) => `${count} contacts berhasil disimpan.`,
+                    toastGSheetSaveSuccess: (count) => `${count} kontak berhasil disimpan.`,
                     toastGSheetSaveError: (msg) => `Error: ${msg}`,
                     toastDataSentToGSheet: (name) => `Data terkirim ke Google Sheet: ${name}`,
                     toastFailSendGSheet: (name) => `Gagal kirim: ${name}. Data aman di lokal.`,
                     toastEmptyEventName: "Event name cannot be empty.",
                     toastEmptyMarketingName: "Marketing name cannot be empty.",
-                    toastProfileIncomplete: "Please complete your profile in the Settings menu first.",
+                    toastProfileIncomplete: "Harap lengkapi profil Anda di menu Pengaturan terlebih dahulu.",
                     toastReminderCreated: "Reminder created and .ics file downloaded successfully.",
                     // Footer
                     footerAbout: "About",
                     footerHelp: "Help",
                     footerTerms: "Terms",
                     footerPrivacy: "Privacy",
-                    footerCopyright: "&copy; 2025 SCANNER PINTAR by Isparmo & M. Hasan",
+                    footerCopyright: "&copy; 2025 SCANNER PINTAR oleh Isparmo & M. Hasan",
                     // Misc
                     unnamedContact: "Unnamed",
                     qrCodeContactName: "Contact from QR Code",
@@ -1666,6 +1666,7 @@ END:VCALENDAR`;
                     button.innerHTML = `<div class="loader btn-loader"></div><span class="ml-2">${getTranslation('exportGSheetSaving')}</span>`;
 
                     try {
+                        showToast("Mencari file Google Sheet...", 2000);
                         const contacts = await dbLogic.getAllContacts();
                         if (contacts.length === 0) {
                             showToast(getTranslation('toastNoContactSave'));
@@ -1680,7 +1681,9 @@ END:VCALENDAR`;
 
                         if (findResponse.result.files.length > 0) {
                             spreadsheetId = findResponse.result.files[0].id;
+                            showToast("File ditemukan, memperbarui data...", 2000);
                         } else {
+                            showToast("File tidak ditemukan, membuat file baru...", 3000);
                             const createResponse = await gapi.client.sheets.spreadsheets.create({
                                 properties: { title: SPREADSHEET_NAME },
                                 sheets: [{ properties: { title: 'Kontak' } }]
@@ -1699,11 +1702,7 @@ END:VCALENDAR`;
 
                         const dataToInsert = [headers, ...values];
 
-                        await gapi.client.sheets.spreadsheets.values.clear({
-                            spreadsheetId: spreadsheetId,
-                            range: 'Kontak!A1:K',
-                        });
-
+                        showToast("Menyimpan data ke Google Sheet...", 3000);
                         await gapi.client.sheets.spreadsheets.values.update({
                             spreadsheetId: spreadsheetId,
                             range: 'Kontak!A1',
