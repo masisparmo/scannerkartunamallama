@@ -281,7 +281,6 @@
             // --- Google API Configuration & State ---
             const GOOGLE_CLIENT_ID = '328921559379-s3mmi3dlpj39qtkgl4itt5q2ukl1nmid.apps.googleusercontent.com';
             const GOOGLE_API_KEY = ''; // API Key is not strictly needed for this OAuth flow.
-            const GOOGLE_DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/sheets/v4/rest", "https://www.googleapis.com/discovery/v1/apis/drive/v3/rest"];
             const GOOGLE_SCOPES = 'https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/drive.file';
 
             let tokenClient;
@@ -298,12 +297,18 @@
                 try {
                     await gapi.client.init({
                         apiKey: GOOGLE_API_KEY,
-                        discoveryDocs: GOOGLE_DISCOVERY_DOCS,
                     });
+
+                    // Explicitly load the Drive and Sheets APIs
+                    await Promise.all([
+                        gapi.client.load('https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'),
+                        gapi.client.load('https://www.googleapis.com/discovery/v1/apis/sheets/v4/rest'),
+                    ]);
+
                     gapiInited = true;
                     checkApisReady();
                 } catch (error) {
-                    console.error("Error initializing GAPI client", error);
+                    console.error("Error initializing GAPI client or loading APIs", error);
                     if(logError) logError("Error initializing GAPI client", error);
                 }
             }
@@ -323,7 +328,6 @@
                 }
             };
 
-            // This function is attached to the script load events
             const gapiScript = document.querySelector('script[src="https://apis.google.com/js/api.js"]');
             gapiScript.onload = () => window.gapiLoaded();
             const gisScript = document.querySelector('script[src="https://accounts.google.com/gsi/client"]');
@@ -704,7 +708,7 @@
                     toastFailSendGSheet: (name) => `Gagal kirim: ${name}. Data aman di lokal.`,
                     toastEmptyEventName: "Event name cannot be empty.",
                     toastEmptyMarketingName: "Marketing name cannot be empty.",
-                    toastProfileIncomplete: "Harap lengkapi profil Anda di menu Pengaturan terlebih dahulu.",
+                    toastProfileIncomplete: "Please complete your profile in the Settings menu first.",
                     toastReminderCreated: "Reminder created and .ics file downloaded successfully.",
                     // Footer
                     footerAbout: "About",
