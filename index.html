@@ -161,6 +161,13 @@
                     <div id="results-list" class="space-y-3"></div>
                 </div>
                 <footer id="results-footer" class="p-6 border-t border-gray-200 dark:border-gray-700">
+                    <div id="google-auth-container" class="mb-4 text-center">
+                        <button id="google-login-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-full shadow-lg flex items-center justify-center gap-2 text-base" data-translate-key="loginGoogle">LOGIN DENGAN GOOGLE</button>
+                        <div id="google-auth-status" class="hidden mt-2 text-sm text-gray-600 dark:text-gray-400">
+                            <p><span data-translate-key="loggedInAs">Login sebagai:</span> <span id="google-user-email" class="font-semibold"></span></p>
+                            <button id="google-logout-btn" class="text-red-500 hover:underline mt-1" data-translate-key="logout">Logout</button>
+                        </div>
+                    </div>
                     <div id="export-buttons-container" class="grid grid-cols-2 gap-4"></div>
                     <button id="clear-all-btn" class="col-span-2 w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-full shadow-lg mt-4 flex items-center justify-center gap-2 uppercase" data-translate-key="deleteAllLocalDataBtn">HAPUS SEMUA DATA LOKAL</button>
                 </footer>
@@ -264,6 +271,10 @@
     <!-- Tagify JS -->
     <script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify"></script>
     <script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.polyfills.min.js"></script>
+
+    <!-- Google API Libraries -->
+    <script async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
+    <script async defer src="https://accounts.google.com/gsi/client" onload="gisLoaded()"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -421,7 +432,13 @@
                     exportZIP: "SIMPAN VCF .zip",
                     exportGSheet: "SIMPAN KE GOOGLE SHEET",
                     exportGSheetSaving: "Menyimpan...",
-                    collabExportNote: "Data otomatis terkirim ke G-Sheet. Opsi ekspor di bawah hanya untuk data di HP ini."
+                    collabExportNote: "Data otomatis terkirim ke G-Sheet. Opsi ekspor di bawah hanya untuk data di HP ini.",
+                    // Google Auth
+                    loginGoogle: "LOGIN DENGAN GOOGLE",
+                    loggedInAs: "Login sebagai:",
+                    logout: "Logout",
+                    toastGSheetLogin: "Harap login dengan Google terlebih dahulu.",
+                    toastGSheetSuccess: (link) => `Berhasil! <a href='${link}' target='_blank' class='underline'>Buka Google Sheet</a>`,
                 },
                 en: {
                     // Common Titles & Text
@@ -562,7 +579,13 @@
                     exportZIP: "SAVE VCF .zip",
                     exportGSheet: "SAVE TO GOOGLE SHEET",
                     exportGSheetSaving: "Saving...",
-                    collabExportNote: "Data is automatically sent to G-Sheet. The export options below are only for data on this phone."
+                    collabExportNote: "Data is automatically sent to G-Sheet. The export options below are only for data on this phone.",
+                    // Google Auth
+                    loginGoogle: "LOGIN WITH GOOGLE",
+                    loggedInAs: "Logged in as:",
+                    logout: "Logout",
+                    toastGSheetLogin: "Please log in with Google first.",
+                    toastGSheetSuccess: (link) => `Success! <a href='${link}' target='_blank' class='underline'>Open Google Sheet</a>`,
                 }
             };
 
@@ -606,7 +629,6 @@
             }
             
             const BACKEND_API_URL = 'https://scanner-api-328921559379.asia-southeast1.run.app';
-            const GSHEET_BACKEND_URL = `${BACKEND_API_URL}/simpan-gsheet`;
             const EMAIL_GENERATOR_URL = `${BACKEND_API_URL}/generateFollowUpEmail`;
             const WA_GENERATOR_URL = `${BACKEND_API_URL}/generateFollowUpWa`; 
             
@@ -648,6 +670,18 @@
             const collabSessionName = document.getElementById('collab-session-name');
             const collabUserName = document.getElementById('collab-user-name');
             const exitCollabBtn = document.getElementById('exit-collab-btn');
+
+            // --- Google API Configuration & State ---
+            const GOOGLE_CLIENT_ID = '328921559379-s3mmi3dlpj39qtkgl4itt5q2ukl1nmid.apps.googleusercontent.com';
+            const GOOGLE_API_KEY = ''; // API Key is not strictly needed for this OAuth flow.
+            const GOOGLE_DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/sheets/v4/rest", "https://www.googleapis.com/discovery/v1/apis/drive/v3/rest"];
+            const GOOGLE_SCOPES = 'https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/drive.file';
+
+            let tokenClient;
+            let gapiInited = false;
+            let gisInited = false;
+            // --- End Google API Section ---
+
             const { ...otherSelectors } = initializeSelectors();
 
             function initializeSelectors() {
@@ -1378,8 +1412,9 @@ END:VCALENDAR`;
                 }
 
                 if (collaborationSession.isActive) {
-                    showToast('Sending data to Google Sheet...');
-                    await sendCollaborativeData({ ...contactData, marketingName: collaborationSession.marketingName });
+                    // This is now handled by the main "Save to Google Sheet" button
+                    // showToast('Sending data to Google Sheet...');
+                    // await sendCollaborativeData({ ...contactData, marketingName: collaborationSession.marketingName });
                 }
                 
                 showScreen('results');
@@ -1443,22 +1478,106 @@ END:VCALENDAR`;
                 });
             }
             
-            async function sendCollaborativeData(contact) {
-                try {
-                    const response = await fetch(GSHEET_BACKEND_URL, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ contact: contact })
-                    });
-                    const result = await response.json();
-                    if (!response.ok || !result.success) throw new Error(result.error || 'Failed to send data.');
-                    showToast(getTranslation('toastDataSentToGSheet', contact.nama));
-                } catch (error) {
-                    logError("Failed to send collaborative data", error);
-                    showToast(getTranslation('toastFailSendGSheet', contact.nama));
+            
+            // --- Google Auth Functions ---
+            function gapiLoaded() {
+                gapi.load('client', initializeGapiClient);
+            }
+
+            function gisLoaded() {
+                tokenClient = google.accounts.oauth2.initTokenClient({
+                    client_id: GOOGLE_CLIENT_ID,
+                    scope: GOOGLE_SCOPES,
+                    callback: '', // Will be defined dynamically
+                });
+                gisInited = true;
+            }
+
+            async function initializeGapiClient() {
+                await gapi.client.init({
+                    apiKey: GOOGLE_API_KEY,
+                    discoveryDocs: GOOGLE_DISCOVERY_DOCS,
+                });
+                gapiInited = true;
+
+                const storedToken = localStorage.getItem('google_token');
+                if (storedToken) {
+                    gapi.client.setToken(JSON.parse(storedToken));
+                }
+                updateAuthUI();
+            }
+
+            function handleAuthClick() {
+                tokenClient.callback = async (resp) => {
+                    if (resp.error !== undefined) {
+                        logError('Google Auth Error', resp);
+                        showToast(`Error: ${resp.error}`);
+                        throw (resp);
+                    }
+                    localStorage.setItem('google_token', JSON.stringify(gapi.client.getToken()));
+                    await updateAuthUI();
+                    showToast('Login Google berhasil!');
+                };
+
+                if (gapi.client.getToken() === null) {
+                    tokenClient.requestAccessToken({prompt: 'consent'});
+                } else {
+                    tokenClient.requestAccessToken({prompt: ''});
                 }
             }
-            
+
+            function handleSignoutClick() {
+                const token = gapi.client.getToken();
+                if (token !== null) {
+                    google.accounts.oauth2.revoke(token.access_token, () => {
+                        gapi.client.setToken(null);
+                        localStorage.removeItem('google_token');
+                        updateAuthUI();
+                        showToast('Logout berhasil.');
+                    });
+                }
+            }
+
+            function updateAuthUI() {
+                const googleLoginBtn = document.getElementById('google-login-btn');
+                const googleAuthStatus = document.getElementById('google-auth-status');
+                const googleUserEmail = document.getElementById('google-user-email');
+                const exportGsheetBtn = document.getElementById('export-gsheet-btn');
+
+                const token = gapi.client.getToken();
+
+                if (token && token.access_token) {
+                    googleLoginBtn.classList.add('hidden');
+                    googleAuthStatus.classList.remove('hidden');
+
+                    fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+                        headers: { "Authorization": `Bearer ${token.access_token}` }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        googleUserEmail.textContent = data.email || '...';
+                    })
+                    .catch(err => {
+                        logError('Failed to fetch user info', err);
+                        googleUserEmail.textContent = '...';
+                    });
+
+                    if (exportGsheetBtn) {
+                        exportGsheetBtn.disabled = false;
+                        exportGsheetBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                    }
+                } else {
+                    googleLoginBtn.classList.remove('hidden');
+                    googleAuthStatus.classList.add('hidden');
+                    googleUserEmail.textContent = '';
+                    if (exportGsheetBtn) {
+                        exportGsheetBtn.disabled = true;
+                        exportGsheetBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                    }
+                }
+            }
+            // --- End Google Auth Functions ---
+
             function updateExportButtons(contacts) {
                 let buttonsHTML = '';
                 if (collaborationSession.isActive) {
@@ -1501,23 +1620,87 @@ END:VCALENDAR`;
             }
 
             async function saveAllToGoogleSheet(button) {
-                 const originalHTML = button.innerHTML;
+                const SPREADSHEET_NAME = "Data Kontak Scanner Pintar";
+
+                if (!gapi.client.getToken()) {
+                    showToast(getTranslation('toastGSheetLogin'), 4000);
+                    return;
+                }
+
+                const originalHTML = button.innerHTML;
                 button.disabled = true;
                 button.innerHTML = `<div class="loader btn-loader"></div><span class="ml-2">${getTranslation('exportGSheetSaving')}</span>`;
+
                 try {
                     const contacts = await dbLogic.getAllContacts();
-                    if (contacts.length === 0) { showToast(getTranslation('toastNoContactSave')); return; }
-                    const response = await fetch(GSHEET_BACKEND_URL, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ contacts: contacts })
+                    if (contacts.length === 0) {
+                        showToast(getTranslation('toastNoContactSave'));
+                        return;
+                    }
+
+                    // 1. Find or create the spreadsheet
+                    let spreadsheetId;
+                    const findResponse = await gapi.client.drive.files.list({
+                        q: `mimeType='application/vnd.google-apps.spreadsheet' and name='${SPREADSHEET_NAME}' and trashed=false`,
+                        fields: 'files(id, name)',
                     });
-                    const result = await response.json();
-                    if (!response.ok || !result.success) throw new Error(result.error || 'Failed to save data.');
-                    showToast(result.message || getTranslation('toastGSheetSaveSuccess', contacts.length));
+
+                    if (findResponse.result.files.length > 0) {
+                        spreadsheetId = findResponse.result.files[0].id;
+                    } else {
+                        const createResponse = await gapi.client.sheets.spreadsheets.create({
+                            properties: { title: SPREADSHEET_NAME },
+                            sheets: [{
+                                properties: { title: 'Kontak' },
+                                data: [{
+                                    rowData: [{
+                                        values: [
+                                            { userEnteredValue: { stringValue: 'Nama' } },
+                                            { userEnteredValue: { stringValue: 'Jabatan' } },
+                                            { userEnteredValue: { stringValue: 'Perusahaan' } },
+                                            { userEnteredValue: { stringValue: 'Jenis Perusahaan' } },
+                                            { userEnteredValue: { stringValue: 'Telepon Kantor' } },
+                                            { userEnteredValue: { stringValue: 'WhatsApp' } },
+                                            { userEnteredValue: { stringValue: 'Email' } },
+                                            { userEnteredValue: { stringValue: 'Acara' } },
+                                            { userEnteredValue: { stringValue: 'Tanggal' } },
+                                            { userEnteredValue: { stringValue: 'Catatan' } },
+                                            { userEnteredValue: { stringValue: 'Tags' } },
+                                        ]
+                                    }]
+                                }]
+                            }]
+                        });
+                        spreadsheetId = createResponse.result.spreadsheetId;
+                    }
+
+                    if (!spreadsheetId) {
+                        throw new Error("Could not find or create spreadsheet.");
+                    }
+
+                    // 2. Prepare data for appending
+                    const values = contacts.map(c => [
+                        c.nama || '', c.jabatan || '', c.perusahaan || '', c.jenis_perusahaan || '',
+                        c.telepon_kantor || '', c.whatsapp || '', c.email || '', c.acara || '',
+                        c.tanggal || '', c.catatan || '', (c.tags || []).join(', ')
+                    ]);
+
+                    // 3. Append data to the sheet
+                    await gapi.client.sheets.spreadsheets.values.append({
+                        spreadsheetId: spreadsheetId,
+                        range: 'Kontak!A:K',
+                        valueInputOption: 'USER_ENTERED',
+                        resource: { values: values }
+                    });
+
+                    const sheetUrl = `https://docs.google.com/spreadsheets/d/${spreadsheetId}`;
+                    const toastMessage = getTranslation('toastGSheetSuccess', sheetUrl);
+                    showToast(toastMessage, 10000);
+
                 } catch (error) {
-                    logError("Error saving all to Google Sheet", error);
-                    showToast(getTranslation('toastGSheetSaveError', error.message));
+                    logError("Error saving to Google Sheet", error);
+                    let errorMessage = error.result ? error.result.error.message : error.message;
+                    showToast(getTranslation('toastGSheetSaveError', errorMessage));
                 } finally {
                     button.disabled = false;
                     button.innerHTML = getTranslation('exportGSheet');
@@ -1593,6 +1776,9 @@ END:VCALENDAR`;
             }
 
             async function initializeApp() {
+                document.getElementById('google-login-btn').addEventListener('click', handleAuthClick);
+                document.getElementById('google-logout-btn').addEventListener('click', handleSignoutClick);
+
                 lucide.createIcons();
                 const savedTheme = localStorage.getItem('theme');
                 const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
