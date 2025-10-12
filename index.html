@@ -162,7 +162,7 @@
                 </div>
                 <footer id="results-footer" class="p-6 border-t border-gray-200 dark:border-gray-700">
                     <div id="google-auth-container" class="mb-4 text-center">
-                        <button id="google-login-btn" disabled class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-full shadow-lg flex items-center justify-center gap-2 text-base opacity-50 cursor-not-allowed" data-translate-key="loginGoogle">LOGIN DENGAN GOOGLE</button>
+                        <button id="google-login-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-full shadow-lg flex items-center justify-center gap-2 text-base" data-translate-key="loginGoogle">LOGIN DENGAN GOOGLE</button>
                         <div id="google-auth-status" class="hidden mt-2 text-sm text-gray-600 dark:text-gray-400">
                             <p><span data-translate-key="loggedInAs">Login sebagai:</span> <span id="google-user-email" class="font-semibold"></span></p>
                             <button id="google-logout-btn" class="text-red-500 hover:underline mt-1" data-translate-key="logout">Logout</button>
@@ -347,14 +347,16 @@
                             localStorage.removeItem('google_token');
                         }
                     }
-                    updateGoogleButtonStates();
+                    // updateGoogleButtonStates(); // No longer needed
                 }
             }
 
-            function handleAuthClick(callback) {
+            async function handleAuthClick(callback) {
+                await googleAuthReadyPromise; // Wait for APIs to be ready
+
                 if (!tokenClient) {
-                    if (logError) logError("Token client not initialized.");
-                    if (showToast) showToast("Google Login is not ready yet. Please wait.");
+                    if (logError) logError("Token client not initialized after ready promise.");
+                    if (showToast) showToast("Google Login service is not available.");
                     return;
                 }
 
@@ -437,18 +439,8 @@
                 }
             }
 
-            function updateGoogleButtonStates() {
-                const googleLoginBtn = document.getElementById('google-login-btn');
-                if (googleLoginBtn && googleAuthReady) {
-                    googleLoginBtn.disabled = false;
-                    googleLoginBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-                }
-                const gsheetBtn = document.getElementById('export-gsheet-btn');
-                if (gsheetBtn && googleAuthReady) {
-                    gsheetBtn.disabled = false;
-                    gsheetBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-                }
-            }
+            // The `updateGoogleButtonStates` function is no longer needed as the buttons
+            // are now enabled by default and their handlers await the API readiness.
 
             if ('serviceWorker' in navigator) {
                 window.addEventListener('load', () => {
@@ -1202,7 +1194,7 @@
                 return contact;
             }
 
-            async function refreshResults() {
+            window.refreshResults = async function() {
                 if (!dbLogic.db) return;
                 const allContacts = await dbLogic.getAllContacts();
 
