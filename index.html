@@ -347,7 +347,7 @@
                             localStorage.removeItem('google_token');
                         }
                     }
-                    // updateGoogleButtonStates(); // No longer needed
+                    updateGoogleButtonStates();
                 }
             }
 
@@ -439,8 +439,18 @@
                 }
             }
 
-            // The `updateGoogleButtonStates` function is no longer needed as the buttons
-            // are now enabled by default and their handlers await the API readiness.
+            function updateGoogleButtonStates() {
+                const googleLoginBtn = document.getElementById('google-login-btn');
+                if (googleLoginBtn && googleAuthReady) {
+                    googleLoginBtn.disabled = false;
+                    googleLoginBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                }
+                const gsheetBtn = document.getElementById('export-gsheet-btn');
+                if (gsheetBtn && googleAuthReady) {
+                    gsheetBtn.disabled = false;
+                    gsheetBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                }
+            }
 
             if ('serviceWorker' in navigator) {
                 window.addEventListener('load', () => {
@@ -951,6 +961,7 @@
                     otherSelectors.screens[screenName].classList.remove('hidden');
                     if (screenName === 'results') {
                         refreshResults();
+                        updateGoogleButtonStates();
                     }
                 }
             }
