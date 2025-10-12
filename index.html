@@ -375,7 +375,9 @@
                         if (typeof callback === 'function') callback(false);
                         throw (resp);
                     }
-                    localStorage.setItem('google_token', JSON.stringify(gapi.client.getToken()));
+                    const token = gapi.client.getToken();
+                    gapi.client.setToken(token); // Explicitly set the token for the session
+                    localStorage.setItem('google_token', JSON.stringify(token));
                     await updateAuthUI();
                     if (showToast) showToast('Login Google berhasil!');
                     if (typeof callback === 'function') callback(true);
@@ -1777,7 +1779,9 @@ END:VCALENDAR`;
                             showToast(`Google Auth Error: ${tokenResponse.error}`);
                             return;
                         }
-                        localStorage.setItem('google_token', JSON.stringify(gapi.client.getToken()));
+                        const token = gapi.client.getToken();
+                        gapi.client.setToken(token); // Explicitly set the token for the session
+                        localStorage.setItem('google_token', JSON.stringify(token));
                         await updateAuthUI();
                         if(logError) logError("Token acquired successfully. Proceeding to save.");
                         await executeSave();
