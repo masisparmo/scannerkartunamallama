@@ -287,6 +287,10 @@
             let gapiInited = false;
             let gisInited = false;
             let googleAuthReady = false;
+            let googleAuthReadyPromiseResolver;
+            const googleAuthReadyPromise = new Promise(resolve => {
+                googleAuthReadyPromiseResolver = resolve;
+            });
 
             // --- Google Auth Functions ---
             window.gapiLoaded = function() {
@@ -330,6 +334,7 @@
             function checkApisReady() {
                 if (gapiInited && gisInited && !googleAuthReady) {
                     googleAuthReady = true;
+                    googleAuthReadyPromiseResolver(); // Resolve the promise
 
                     const storedToken = localStorage.getItem('google_token');
                     if (storedToken) {
@@ -1672,10 +1677,8 @@ END:VCALENDAR`;
                         `;
                     }
                     if (contacts.length > 0) {
-                        const gsheetBtnDisabled = googleAuthReady ? '' : 'disabled';
-                        const gsheetBtnDisabledClass = googleAuthReady ? '' : 'opacity-50 cursor-not-allowed';
                         buttonsHTML += `
-                            <button id="export-gsheet-btn" ${gsheetBtnDisabled} class="col-span-2 w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-4 rounded-full shadow-lg flex items-center justify-center gap-2 text-base mt-2 ${gsheetBtnDisabledClass}">
+                            <button id="export-gsheet-btn" class="col-span-2 w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-4 rounded-full shadow-lg flex items-center justify-center gap-2 text-base mt-2">
                                 ${getTranslation('exportGSheet')}
                             </button>
                         `;
@@ -1701,117 +1704,112 @@ END:VCALENDAR`;
             async function saveAllToGoogleSheet(button) {
                 const SPREADSHEET_NAME = "Data Kontak Scanner Pintar";
 
+                // Wait for Google Auth to be ready before doing anything
+                await googleAuthReadyPromise;
+
                 const executeSave = async () => {
                     const originalHTML = button.innerHTML;
                     button.disabled = true;
                     button.innerHTML = `<div class="loader btn-loader"></div><span class="ml-2">${getTranslation('exportGSheetSaving')}</span>`;
 
                     try {
-                        try {
-                            if(logError) logError("Starting Google Sheet save process.");
-                            const contacts = await dbLogic.getAllContacts();
-                            if (contacts.length === 0) {
-                                showToast(getTranslation('toastNoContactSave'));
-                                return;
-                            }
-
-                            showToast("Mencari file Google Sheet...", 2000);
-
-                            let spreadsheetId;
-                            const findResponse = await gapi.client.drive.files.list({
-                                q: `mimeType='application/vnd.google-apps.spreadsheet' and name='${SPREADSHEET_NAME}' and trashed=false`,
-                                fields: 'files(id, name)',
-                            });
-                            if(logError) logError("Drive API 'list' response:", findResponse);
-
-                            if (findResponse.result.files && findResponse.result.files.length > 0) {
-                                spreadsheetId = findResponse.result.files[0].id;
-                                showToast("File ditemukan, memperbarui data...", 2000);
-                            } else {
-                                showToast("File tidak ditemukan, membuat file baru...", 3000);
-                                const createResponse = await gapi.client.sheets.spreadsheets.create({
-                                    properties: { title: SPREADSHEET_NAME },
-                                    sheets: [{ properties: { title: 'Kontak' } }]
-                                });
-                                if(logError) logError("Sheets API 'create' response:", createResponse);
-                                spreadsheetId = createResponse.result.spreadsheetId;
-                            }
-
-                            if (!spreadsheetId) throw new Error("Could not find or create spreadsheet.");
-
-                            showToast("Membaca data dari Google Sheet...", 2000);
-                            const sheetDataResponse = await gapi.client.sheets.spreadsheets.values.get({
-                                spreadsheetId: spreadsheetId,
-                                range: 'Kontak!A2:K', // Start from A2 to skip header
-                            });
-                            if(logError) logError("Sheets API 'get' response:", sheetDataResponse);
-
-                            const remoteValues = sheetDataResponse.result.values || [];
-
-                            const headers = ['Nama', 'Jabatan', 'Perusahaan', 'Jenis Perusahaan', 'Telepon Kantor', 'WhatsApp', 'Email', 'Acara', 'Tanggal', 'Catatan', 'Tags'];
-
-                            showToast("Menggabungkan data...", 2000);
-                            const mergedContacts = mergeAndDeduplicate(contacts, remoteValues, headers);
-
-                            const values = mergedContacts.map(c => [
-                                c.nama || '', c.jabatan || '', c.perusahaan || '', c.jenis_perusahaan || '',
-                                c.telepon_kantor || '', c.whatsapp || '', c.email || '', c.acara || '',
-                                c.tanggal || '', c.catatan || '', (c.tags || []).join(', ')
-                            ]);
-
-                            const dataToInsert = [headers, ...values];
-
-                            showToast("Mengosongkan data lama...", 2000);
-                            await gapi.client.sheets.spreadsheets.values.clear({
-                                spreadsheetId: spreadsheetId,
-                                range: 'Kontak!A:K',
-                            });
-
-                            showToast("Menyimpan data baru...", 3000);
-                            const updateResponse = await gapi.client.sheets.spreadsheets.values.update({
-                                spreadsheetId: spreadsheetId,
-                                range: 'Kontak!A1',
-                                valueInputOption: 'USER_ENTERED',
-                                resource: { values: dataToInsert }
-                            });
-                             if(logError) logError("Sheets API 'update' response:", updateResponse);
-
-                            const sheetUrl = `https://docs.google.com/spreadsheets/d/${spreadsheetId}`;
-                            const toastMessage = getTranslation('toastGSheetSuccess', sheetUrl);
-                            showToast(toastMessage, 10000);
-
-                        } catch (error) {
-                            // This new catch block ensures any error inside is logged.
-                            logError("Error saving to Google Sheet", error);
-                            let errorMessage = "An unknown error occurred.";
-                            if (error.result && error.result.error) {
-                                 errorMessage = `Error ${error.result.error.code}: ${error.result.error.message}`;
-                            } else if (error.message) {
-                                errorMessage = error.message;
-                            }
-                            showToast(getTranslation('toastGSheetSaveError', errorMessage), 6000);
+                        if(logError) logError("Starting Google Sheet save process.");
+                        const contacts = await dbLogic.getAllContacts();
+                        if (contacts.length === 0) {
+                            showToast(getTranslation('toastNoContactSave'));
+                            return;
                         }
+
+                        showToast("Mencari file Google Sheet...", 2000);
+
+                        let spreadsheetId;
+                        const findResponse = await gapi.client.drive.files.list({
+                            q: `mimeType='application/vnd.google-apps.spreadsheet' and name='${SPREADSHEET_NAME}' and trashed=false`,
+                            fields: 'files(id, name)',
+                        });
+                        if(logError) logError("Drive API 'list' response:", findResponse);
+
+                        if (findResponse.result.files && findResponse.result.files.length > 0) {
+                            spreadsheetId = findResponse.result.files[0].id;
+                            showToast("File ditemukan, memperbarui data...", 2000);
+                        } else {
+                            showToast("File tidak ditemukan, membuat file baru...", 3000);
+                            const createResponse = await gapi.client.sheets.spreadsheets.create({
+                                properties: { title: SPREADSHEET_NAME },
+                                sheets: [{ properties: { title: 'Kontak' } }]
+                            });
+                            if(logError) logError("Sheets API 'create' response:", createResponse);
+                            spreadsheetId = createResponse.result.spreadsheetId;
+                        }
+
+                        if (!spreadsheetId) throw new Error("Could not find or create spreadsheet.");
+
+                        showToast("Membaca data dari Google Sheet...", 2000);
+                        const sheetDataResponse = await gapi.client.sheets.spreadsheets.values.get({
+                            spreadsheetId: spreadsheetId,
+                            range: 'Kontak!A2:K', // Start from A2 to skip header
+                        });
+                        if(logError) logError("Sheets API 'get' response:", sheetDataResponse);
+
+                        const remoteValues = sheetDataResponse.result.values || [];
+
+                        const headers = ['Nama', 'Jabatan', 'Perusahaan', 'Jenis Perusahaan', 'Telepon Kantor', 'WhatsApp', 'Email', 'Acara', 'Tanggal', 'Catatan', 'Tags'];
+
+                        showToast("Menggabungkan data...", 2000);
+                        const mergedContacts = mergeAndDeduplicate(contacts, remoteValues, headers);
+
+                        const values = mergedContacts.map(c => [
+                            c.nama || '', c.jabatan || '', c.perusahaan || '', c.jenis_perusahaan || '',
+                            c.telepon_kantor || '', c.whatsapp || '', c.email || '', c.acara || '',
+                            c.tanggal || '', c.catatan || '', (c.tags || []).join(', ')
+                        ]);
+
+                        const dataToInsert = [headers, ...values];
+
+                        showToast("Mengosongkan data lama...", 2000);
+                        await gapi.client.sheets.spreadsheets.values.clear({
+                            spreadsheetId: spreadsheetId,
+                            range: 'Kontak!A:K',
+                        });
+
+                        showToast("Menyimpan data baru...", 3000);
+                        const updateResponse = await gapi.client.sheets.spreadsheets.values.update({
+                            spreadsheetId: spreadsheetId,
+                            range: 'Kontak!A1',
+                            valueInputOption: 'USER_ENTERED',
+                            resource: { values: dataToInsert }
+                        });
+                         if(logError) logError("Sheets API 'update' response:", updateResponse);
+
+                        const sheetUrl = `https://docs.google.com/spreadsheets/d/${spreadsheetId}`;
+                        const toastMessage = getTranslation('toastGSheetSuccess', sheetUrl);
+                        showToast(toastMessage, 10000);
+
+                    } catch (error) {
+                        logError("Error saving to Google Sheet", error);
+                        let errorMessage = "An unknown error occurred.";
+                        if (error.result && error.result.error) {
+                             errorMessage = `Error ${error.result.error.code}: ${error.result.error.message}`;
+                        } else if (error.message) {
+                            errorMessage = error.message;
+                        }
+                        showToast(getTranslation('toastGSheetSaveError', errorMessage), 6000);
                     } finally {
                         button.disabled = false;
                         button.innerHTML = getTranslation('exportGSheet');
                     }
                 };
 
-                // This is the new token refresh logic.
                 const ensureValidTokenAndExecute = () => {
-                    if (!tokenClient) {
-                         if(logError) logError("Token client not ready for saving.");
-                         showToast("Google client not ready. Please wait a moment.");
-                         return;
-                    }
-
                     tokenClient.callback = async (tokenResponse) => {
                         if (tokenResponse.error) {
                             logError("Token refresh/auth error", tokenResponse);
                             showToast(`Google Auth Error: ${tokenResponse.error}`);
+                            // Restore button state on auth failure
+                            button.disabled = false;
+                            button.innerHTML = getTranslation('exportGSheet');
                             return;
                         }
-                        // EXPLICIT FIX for COOP: Extract the access_token and set it.
                         const tokenObject = { 'access_token': tokenResponse.access_token };
                         gapi.client.setToken(tokenObject);
                         localStorage.setItem('google_token', JSON.stringify(tokenObject));
@@ -1820,14 +1818,11 @@ END:VCALENDAR`;
                         await executeSave();
                     };
 
-                    // If user is already logged in, silent refresh. Otherwise, prompt for login.
                     if (gapi.client.getToken() === null) {
-                        if(logError) logError("Not logged in. Requesting access with consent prompt.");
                         showToast(getTranslation('toastGSheetLogin'), 4000);
                         tokenClient.requestAccessToken({ prompt: 'consent' });
                     } else {
-                         if(logError) logError("Already logged in. Requesting silent token refresh.");
-                         tokenClient.requestAccessToken({ prompt: '' });
+                        tokenClient.requestAccessToken({ prompt: '' });
                     }
                 };
 
