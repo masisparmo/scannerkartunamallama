@@ -299,7 +299,6 @@
                         apiKey: GOOGLE_API_KEY,
                     });
 
-                    // Explicitly load the Drive and Sheets APIs
                     await Promise.all([
                         gapi.client.load('https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'),
                         gapi.client.load('https://www.googleapis.com/discovery/v1/apis/sheets/v4/rest'),
