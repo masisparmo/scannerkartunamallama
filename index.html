@@ -346,9 +346,6 @@
                         }
                     }
 
-                    document.getElementById('google-login-btn').addEventListener('click', () => handleAuthClick());
-                    document.getElementById('google-logout-btn').addEventListener('click', handleSignoutClick);
-
                     updateAuthUI();
                 }
             }
@@ -400,6 +397,11 @@
                 const googleUserEmail = document.getElementById('google-user-email');
                 const token = gapi.client.getToken();
 
+                // Guard against running this when the results screen isn't visible
+                if (!googleLoginBtn || !googleAuthStatus || !googleUserEmail) {
+                    return;
+                }
+
                 if (googleAuthReady) {
                     googleLoginBtn.disabled = false;
                     googleLoginBtn.classList.remove('opacity-50', 'cursor-not-allowed');
@@ -414,7 +416,7 @@
                     })
                     .then(response => {
                         if (!response.ok) {
-                            if (response.status === 401) { handleSignoutClick(); }
+                            if (response.status === 401) { handleSignoutClick(); } // If token is invalid, sign out
                             throw new Error('Failed to fetch user info');
                         }
                         return response.json();
@@ -431,7 +433,11 @@
                     googleAuthStatus.classList.add('hidden');
                     googleUserEmail.textContent = '';
                 }
-                refreshResults();
+
+                // Only refresh the results list (which updates export buttons) if it's visible
+                if (otherSelectors.screens.results && !otherSelectors.screens.results.classList.contains('hidden')) {
+                    refreshResults();
+                }
             }
 
             if ('serviceWorker' in navigator) {
@@ -1623,6 +1629,9 @@ END:VCALENDAR`;
             }
 
             function updateExportButtons(contacts) {
+                const exportContainer = document.getElementById('export-buttons-container');
+                if (!exportContainer) return; // Guard clause
+
                 let buttonsHTML = '';
                 if (collaborationSession.isActive) {
                     buttonsHTML = `
@@ -1652,17 +1661,21 @@ END:VCALENDAR`;
                         `;
                     }
                 }
-                otherSelectors.exportButtonsContainer.innerHTML = buttonsHTML;
+                exportContainer.innerHTML = buttonsHTML;
 
-                if (contacts.length > 0) {
-                    if (document.getElementById('export-csv-btn')) document.getElementById('export-csv-btn').addEventListener('click', () => exportCSV(contacts));
-                    if (document.getElementById('export-vcf-btn')) document.getElementById('export-vcf-btn').addEventListener('click', () => exportVCF(contacts[0]));
-                    if (document.getElementById('export-zip-btn')) document.getElementById('export-zip-btn').addEventListener('click', () => exportZIP(contacts));
-                    if (document.getElementById('export-gsheet-btn')) {
-                         const gsheetBtn = document.getElementById('export-gsheet-btn');
-                         gsheetBtn.addEventListener('click', () => saveAllToGoogleSheet(gsheetBtn));
-                    }
-                }
+                // Event listeners are now attached only once in initializeApp,
+                // but we re-bind them here based on the dynamic content.
+                // We use event delegation on the container for robustness.
+                exportContainer.onclick = function(event) {
+                    const target = event.target.closest('button');
+                    if (!target) return;
+
+                    const id = target.id;
+                    if (id === 'export-csv-btn') exportCSV(contacts);
+                    else if (id === 'export-vcf-btn') exportVCF(contacts[0]);
+                    else if (id === 'export-zip-btn') exportZIP(contacts);
+                    else if (id === 'export-gsheet-btn') saveAllToGoogleSheet(target);
+                };
             }
 
             async function saveAllToGoogleSheet(button) {
@@ -1963,6 +1976,10 @@ END:VCALENDAR`;
             }
 
             initializeApp();
+
+            // --- Centralized Event Listeners ---
+            document.getElementById('google-login-btn')?.addEventListener('click', () => handleAuthClick());
+            document.getElementById('google-logout-btn')?.addEventListener('click', handleSignoutClick);
 
             [otherSelectors.langToggleInitial, otherSelectors.langToggleResults].forEach(btn => btn.addEventListener('click', toggleLanguage));
             createSessionBtn.addEventListener('click', () => showScreen('createSession'));
