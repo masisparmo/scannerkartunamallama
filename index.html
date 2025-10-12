@@ -287,10 +287,6 @@
             let gapiInited = false;
             let gisInited = false;
             let googleAuthReady = false;
-            let googleAuthReadyPromiseResolver;
-            const googleAuthReadyPromise = new Promise(resolve => {
-                googleAuthReadyPromiseResolver = resolve;
-            });
 
             // --- Google Auth Functions ---
             window.gapiLoaded = function() {
@@ -334,7 +330,6 @@
             function checkApisReady() {
                 if (gapiInited && gisInited && !googleAuthReady) {
                     googleAuthReady = true;
-                    googleAuthReadyPromiseResolver(); // Resolve the promise
 
                     const storedToken = localStorage.getItem('google_token');
                     if (storedToken) {
@@ -351,12 +346,10 @@
                 }
             }
 
-            async function handleAuthClick(callback) {
-                await googleAuthReadyPromise; // Wait for APIs to be ready
-
+            function handleAuthClick(callback) {
                 if (!tokenClient) {
-                    if (logError) logError("Token client not initialized after ready promise.");
-                    if (showToast) showToast("Google Login service is not available.");
+                    if (logError) logError("Token client not initialized.");
+                    if (showToast) showToast("Google Login is not ready yet. Please wait.");
                     return;
                 }
 
@@ -1695,9 +1688,6 @@ END:VCALENDAR`;
 
             async function saveAllToGoogleSheet(button) {
                 const SPREADSHEET_NAME = "Data Kontak Scanner Pintar";
-
-                // Wait for Google Auth to be ready before doing anything
-                await googleAuthReadyPromise;
 
                 const executeSave = async () => {
                     const originalHTML = button.innerHTML;
