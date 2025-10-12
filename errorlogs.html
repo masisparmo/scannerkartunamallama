@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application Error Logs - Scanner Pintar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { darkMode: 'class' }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .log-entry {
+            border-left: 4px solid #4f46e5;
+            transition: background-color 0.2s ease;
+        }
+        .log-entry:hover {
+            background-color: #1f2937;
+        }
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body class="bg-gray-900 text-gray-200">
+
+    <div class="container mx-auto p-4 sm:p-8">
+        <header class="flex justify-between items-center mb-6 pb-4 border-b border-gray-700">
+            <div>
+                <h1 class="text-3xl font-bold text-white">Application Error Logs</h1>
+                <p class="text-gray-400">Live monitoring of application errors from user devices.</p>
+            </div>
+            <div class="flex gap-4">
+                <a href="index.html" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition-colors">
+                    Back to App
+                </a>
+                <button id="copy-logs-btn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg transition-colors">
+                    Copy Logs
+                </button>
+                <button id="clear-logs-btn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition-colors">
+                    Clear All Logs
+                </button>
+            </div>
+        </header>
+
+        <main id="log-container" class="space-y-4">
+            <!-- Logs will be dynamically inserted here -->
+        </main>
+    </div>
+
+    <div id="toast" class="fixed bottom-5 right-5 bg-gray-100 text-gray-900 py-3 px-5 rounded-full shadow-lg opacity-0 transform translate-y-5 pointer-events-none transition-all">
+        <p id="toast-message"></p>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const logContainer = document.getElementById('log-container');
+            const clearLogsBtn = document.getElementById('clear-logs-btn');
+            const copyLogsBtn = document.getElementById('copy-logs-btn');
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toast-message');
+
+            function formatTimestamp(isoString) {
+                const date = new Date(isoString);
+                return date.toLocaleString('en-GB', {
+                    day: '2-digit',
+                    month: 'short',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    hour12: false
+                });
+            }
+
+            function renderLogs() {
+                logContainer.innerHTML = '';
+                try {
+                    const storedLogs = JSON.parse(localStorage.getItem('scannerErrorLogs') || '[]');
+                    if (storedLogs.length === 0) {
+                        logContainer.innerHTML = `
+                            <div class="text-center py-16">
+                                <h2 class="text-2xl font-semibold text-gray-400">No errors logged.</h2>
+                                <p class="text-gray-500">Everything seems to be running smoothly.</p>
+                            </div>
+                        `;
+                        return;
+                    }
+
+                    storedLogs.forEach(log => {
+                        const logEntry = document.createElement('div');
+                        logEntry.className = 'log-entry bg-gray-800 p-4 rounded-lg shadow-md';
+
+                        const sanitizedDetails = log.details.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+                        logEntry.innerHTML = `
+                            <div class="flex justify-between items-center mb-2">
+                                <h3 class="text-lg font-semibold text-red-400">${log.message}</h3>
+                                <span class="text-sm font-mono text-gray-500">${formatTimestamp(log.timestamp)}</span>
+                            </div>
+                            <pre class="text-gray-300 text-sm whitespace-pre-wrap bg-gray-900 p-3 rounded-md" style="font-family: 'Fira Code', monospace;">${sanitizedDetails || 'No additional details provided.'}</pre>
+                        `;
+                        logContainer.appendChild(logEntry);
+                    });
+
+                } catch (e) {
+                    logContainer.innerHTML = '<p class="text-red-500">Error: Could not parse logs from localStorage. The data may be corrupted.</p>';
+                    console.error("Failed to parse logs:", e);
+                }
+            }
+
+            function showToast(message, duration = 3000) {
+                toastMessage.textContent = message;
+                toast.classList.remove('opacity-0', 'translate-y-5');
+                setTimeout(() => { toast.classList.add('opacity-0', 'translate-y-5'); }, duration);
+            }
+
+            copyLogsBtn.addEventListener('click', () => {
+                try {
+                    const storedLogs = JSON.parse(localStorage.getItem('scannerErrorLogs') || '[]');
+                    if (storedLogs.length === 0) {
+                        showToast('No logs to copy.');
+                        return;
+                    }
+                    const logText = storedLogs.map(log => {
+                        return `[${formatTimestamp(log.timestamp)}] ${log.message}\n${log.details || 'No details.'}`;
+                    }).join('\n\n' + '-'.repeat(50) + '\n\n');
+
+                    navigator.clipboard.writeText(logText).then(() => {
+                        showToast('Logs copied to clipboard!');
+                    }).catch(err => {
+                        console.error('Failed to copy logs: ', err);
+                        showToast('Error: Could not copy logs.');
+                    });
+                } catch (e) {
+                    console.error("Failed to parse logs for copying:", e);
+                    showToast('Error: Could not parse logs.');
+                }
+            });
+
+            clearLogsBtn.addEventListener('click', () => {
+                if (confirm('Are you sure you want to delete all error logs? This action cannot be undone.')) {
+                    localStorage.removeItem('scannerErrorLogs');
+                    renderLogs();
+                }
+            });
+
+            // Initial render
+            renderLogs();
+
+            // Optional: Listen for storage changes from other tabs/windows
+            window.addEventListener('storage', (event) => {
+                if (event.key === 'scannerErrorLogs') {
+                    renderLogs();
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>

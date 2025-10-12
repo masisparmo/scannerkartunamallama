@@ -20,7 +20,7 @@ async def main():
         await expect(page.get_by_role("heading", name="Hasil Scan")).to_be_visible()
 
         # The key element to check is the Google Login button.
-        # It starts as disabled and is enabled by the `checkApisReady` function.
+        # It starts as disabled and should now be enabled by the logic in showScreen.
         login_button = page.get_by_role("button", name="LOGIN DENGAN GOOGLE")
 
         # Wait for the button to be enabled. This implicitly waits for the Google Auth
@@ -30,9 +30,9 @@ async def main():
 
         # Take a screenshot of the results footer to visually confirm the state
         results_footer = page.locator("#results-footer")
-        await results_footer.screenshot(path="jules-scratch/verification/verification.png")
+        await results_footer.screenshot(path="jules-scratch/verification/button_fix_verification.png")
 
-        print("Verification script completed successfully. Screenshot saved.")
+        print("Verification for button fix completed successfully. Button is enabled.")
 
         await browser.close()
 

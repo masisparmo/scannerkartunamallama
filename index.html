@@ -273,8 +273,8 @@
     <script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.polyfills.min.js"></script>
 
     <!-- Google API Libraries -->
-    <script async defer src="https://apis.google.com/js/api.js"></script>
-    <script async defer src="https://accounts.google.com/gsi/client"></script>
+    <script defer src="https://apis.google.com/js/api.js?onload=gapiLoaded"></script>
+    <script defer src="https://accounts.google.com/gsi/client?onload=gisLoaded"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -293,7 +293,7 @@
                 gapi.load('client', initializeGapiClient);
             };
 
-            async function initializeGapiClient() {
+            window.initializeGapiClient = async function() {
                 try {
                     await gapi.client.init({
                         apiKey: GOOGLE_API_KEY,
@@ -327,11 +327,6 @@
                 }
             };
 
-            const gapiScript = document.querySelector('script[src="https://apis.google.com/js/api.js"]');
-            gapiScript.onload = () => window.gapiLoaded();
-            const gisScript = document.querySelector('script[src="https://accounts.google.com/gsi/client"]');
-            gisScript.onload = () => window.gisLoaded();
-
             function checkApisReady() {
                 if (gapiInited && gisInited && !googleAuthReady) {
                     googleAuthReady = true;
@@ -339,14 +334,15 @@
                     const storedToken = localStorage.getItem('google_token');
                     if (storedToken) {
                         try {
-                            gapi.client.setToken(JSON.parse(storedToken));
+                            // Use the same explicit token format for consistency
+                            const tokenObject = JSON.parse(storedToken);
+                            gapi.client.setToken(tokenObject);
                         } catch (e) {
                             console.error("Failed to parse stored token", e);
                             localStorage.removeItem('google_token');
                         }
                     }
-
-                    updateAuthUI();
+                    updateGoogleButtonStates();
                 }
             }
 
@@ -403,11 +399,6 @@
                     return;
                 }
 
-                if (googleAuthReady) {
-                    googleLoginBtn.disabled = false;
-                    googleLoginBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-                }
-
                 if (token && token.access_token) {
                     googleLoginBtn.classList.add('hidden');
                     googleAuthStatus.classList.remove('hidden');
@@ -438,6 +429,19 @@
                 // Only refresh the results list (which updates export buttons) if it's visible
                 if (otherSelectors.screens.results && !otherSelectors.screens.results.classList.contains('hidden')) {
                     refreshResults();
+                }
+            }
+
+            function updateGoogleButtonStates() {
+                const googleLoginBtn = document.getElementById('google-login-btn');
+                if (googleLoginBtn && googleAuthReady) {
+                    googleLoginBtn.disabled = false;
+                    googleLoginBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                }
+                const gsheetBtn = document.getElementById('export-gsheet-btn');
+                if (gsheetBtn && googleAuthReady) {
+                    gsheetBtn.disabled = false;
+                    gsheetBtn.classList.remove('opacity-50', 'cursor-not-allowed');
                 }
             }
 
@@ -869,7 +873,7 @@
 
             function logError(message, errorObject = null) {
                 console.error(message, errorObject);
-                const timestamp = new Date().toLocaleTimeString();
+                const timestamp = new Date().toISOString();
 
                 let details = '';
                 if (errorObject) {
@@ -879,7 +883,21 @@
                     }
                 }
 
-                errorLogs.push({ timestamp, message, details });
+                const logEntry = { timestamp, message, details };
+                errorLogs.push(logEntry);
+
+                // Save to localStorage
+                try {
+                    const storedLogs = JSON.parse(localStorage.getItem('scannerErrorLogs') || '[]');
+                    storedLogs.unshift(logEntry); // Add new log to the beginning
+                    if (storedLogs.length > 100) { // Limit to 100 entries
+                        storedLogs.pop();
+                    }
+                    localStorage.setItem('scannerErrorLogs', JSON.stringify(storedLogs));
+                } catch (e) {
+                    console.error("Could not write to localStorage", e);
+                }
+
                 renderLogs();
             }
 
@@ -936,6 +954,7 @@
                     otherSelectors.screens[screenName].classList.remove('hidden');
                     if (screenName === 'results') {
                         refreshResults();
+                        updateGoogleButtonStates();
                     }
                 }
             }
