@@ -364,9 +364,10 @@
                         if (typeof callback === 'function') callback(false);
                         throw (resp);
                     }
-                    // CORRECTED: Use the response object directly to set the token.
-                    gapi.client.setToken(resp);
-                    localStorage.setItem('google_token', JSON.stringify(resp));
+                    // EXPLICIT FIX for COOP: Extract the access_token and set it.
+                    const tokenObject = { 'access_token': resp.access_token };
+                    gapi.client.setToken(tokenObject);
+                    localStorage.setItem('google_token', JSON.stringify(tokenObject));
                     await updateAuthUI();
                     if (showToast) showToast('Login Google berhasil!');
                     if (typeof callback === 'function') callback(true);
@@ -1788,9 +1789,10 @@ END:VCALENDAR`;
                             showToast(`Google Auth Error: ${tokenResponse.error}`);
                             return;
                         }
-                        // CORRECTED: Use the response object directly to set the token.
-                        gapi.client.setToken(tokenResponse);
-                        localStorage.setItem('google_token', JSON.stringify(tokenResponse));
+                        // EXPLICIT FIX for COOP: Extract the access_token and set it.
+                        const tokenObject = { 'access_token': tokenResponse.access_token };
+                        gapi.client.setToken(tokenObject);
+                        localStorage.setItem('google_token', JSON.stringify(tokenObject));
                         await updateAuthUI();
                         if(logError) logError("Token acquired successfully. Proceeding to save.");
                         await executeSave();
