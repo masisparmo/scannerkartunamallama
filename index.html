@@ -131,14 +131,6 @@
             </div>
 
             <div id="profile-screen" class="hidden screen flex-col"><header class="p-6 flex justify-between items-center border-b border-gray-200 dark:border-gray-700"><h2 class="text-2xl font-bold" data-translate-key="myProfileTitle">Profil Saya</h2><button id="back-to-home-from-profile" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-500 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white"><i data-lucide="x" class="w-6 h-6"></i></button></header><div class="p-8 space-y-4 flex-grow">
-                    <div class="border-b border-gray-200 dark:border-gray-700 pb-6 mb-6">
-                        <h3 class="text-lg font-semibold mb-3">Koneksi Google</h3>
-                        <div id="google-auth-container">
-                            <p id="google-auth-status" class="text-sm text-gray-500 mb-3">Anda belum terhubung ke akun Google.</p>
-                            <button id="google-auth-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-full">Hubungkan Akun Google</button>
-                            <button id="google-revoke-btn" class="hidden w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-4 rounded-full mt-2">Putuskan Akun Google</button>
-                        </div>
-                    </div>
                 <div><label for="profile-nama" class="text-sm font-medium text-gray-600 dark:text-gray-400" data-translate-key="yourNameLabel">Nama Anda</label><input type="text" id="profile-nama" data-translate-key-placeholder="yourNamePlaceholder" placeholder="Cth: Isparmo" class="w-full mt-1 p-3 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg"></div><div><label for="profile-jabatan" class="text-sm font-medium text-gray-600 dark:text-gray-400" data-translate-key="yourPositionLabel">Jabatan Anda</label><input type="text" id="profile-jabatan" data-translate-key-placeholder="yourPositionPlaceholder" placeholder="Cth: Marketing Manager" class="w-full mt-1 p-3 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg"></div><div><label for="profile-perusahaan" class="text-sm font-medium text-gray-600 dark:text-gray-400" data-translate-key="yourCompanyLabel">Nama Perusahaan Anda</label><input type="text" id="profile-perusahaan" data-translate-key-placeholder="yourCompanyPlaceholder" placeholder="Cth: PT Multibangun Rekatama Patria" class="w-full mt-1 p-3 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg"></div><div><label for="profile-deskripsi" class="text-sm font-medium text-gray-600 dark:text-gray-400" data-translate-key="companyDescLabel">Deskripsi Singkat Perusahaan</label><textarea id="profile-deskripsi" rows="3" data-translate-key-placeholder="companyDescPlaceholder" placeholder="Cth: Spesialis Geosintetik sejak 1995..." class="w-full mt-1 p-3 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg"></textarea></div></div><footer class="p-6"><button id="save-profile-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-full" data-translate-key="saveProfileBtn">SIMPAN PROFIL</button></footer></div>
 
             <div id="scanner-screen" class="hidden screen relative bg-black flex-grow"><video id="video" autoplay playsinline></video><div class="scan-frame"></div><div class="camera-overlay p-6"><div class="flex justify-between items-center"><p id="scan-mode-label" class="text-white font-medium text-sm bg-black/50 px-3 py-1 rounded-full" data-translate-key="scanInstructions">Arahkan ke Kartu Nama atau QR Code</p><button id="cancel-scan-btn" class="p-3 bg-black/50 rounded-full text-white hover:bg-black/80"><i data-lucide="x" class="w-6 h-6"></i></button></div><div class="flex justify-center items-center"><button id="capture-btn" class="w-20 h-20 bg-white rounded-full flex items-center justify-center shadow-2xl ring-4 ring-white/30 transition-transform transform hover:scale-110" data-translate-key="scanBtn">SCAN</button></div></div><canvas id="canvas" class="hidden"></canvas></div>
@@ -678,9 +670,6 @@
                     actionModal: document.getElementById('action-modal'), actionModalContent: document.getElementById('action-modal').querySelector('.modal-content'), closeActionModalBtn: document.getElementById('close-action-modal-btn'), actionModalHeader: document.getElementById('action-modal-header'), actionModalBody: document.getElementById('action-modal-body'), actionModalFooter: document.getElementById('action-modal-footer'),
                     langToggleInitial: document.getElementById('lang-toggle-initial'),
                     langToggleResults: document.getElementById('lang-toggle-results'),
-                    googleAuthBtn: document.getElementById('google-auth-btn'),
-                    googleRevokeBtn: document.getElementById('google-revoke-btn'),
-                    googleAuthStatus: document.getElementById('google-auth-status'),
                 };
             }
 
@@ -1503,7 +1492,7 @@ END:VCALENDAR`;
                         `;
                     }
                     if (contacts.length > 0) {
-                        const isGisLoadedAndSignedIn = gapi.client?.getToken() !== null;
+                        const isGisLoadedAndSignedIn = gapiInited && gapi.client.getToken() !== null;
                         const disabledAttr = isGisLoadedAndSignedIn ? '' : 'disabled';
                         const titleAttr = isGisLoadedAndSignedIn ? 'Simpan semua kontak ke Google Sheet Anda' : 'Hubungkan akun Google di menu Profil untuk mengaktifkan';
                         buttonsHTML += `
@@ -1526,27 +1515,16 @@ END:VCALENDAR`;
                 }
             }
 
-            async function saveAllToGoogleSheet(button) {
+            async function executeSaveToSheet(button) {
                 const originalHTML = button.innerHTML;
                 button.disabled = true;
                 button.innerHTML = `<div class="loader btn-loader"></div><span class="ml-2">${getTranslation('exportGSheetSaving')}</span>`;
 
                 try {
-                    if (!gapiInited || !gisInited) {
-                        throw new Error("Layanan Google belum siap. Mohon tunggu sebentar.");
-                    }
-                    if (gapi.client.getToken() === null) {
-                        showToast("Harap hubungkan akun Google Anda di menu Profil.");
-                        handleAuthClick(); // Meminta pengguna untuk login
-                        throw new Error("Otentikasi diperlukan.");
-                    }
-
-                    const fileName = "Data Kartu Nama Scanner Pintar";
-                    let sheetName;
-                    if (collaborationSession.isActive) {
-                        sheetName = collaborationSession.sessionAcara || "Data Kolaborasi";
-                    } else {
-                        sheetName = "Data Pribadi";
+                    const fileName = "Data Scan Kartu Nama";
+                    let sheetName = document.getElementById('session-acara').value.trim();
+                    if (!sheetName) {
+                        sheetName = "Data Kartu Nama";
                     }
 
                     let spreadsheetId = await findOrCreateSpreadsheet(fileName);
@@ -1560,13 +1538,40 @@ END:VCALENDAR`;
                         const spreadsheetUrl = `https://docs.google.com/spreadsheets/d/${spreadsheetId}`;
                         showToast(getTranslation('toastGSheetSaveSuccess', contacts.length, spreadsheetUrl), 8000);
                     }
-
                 } catch (error) {
-                    logError("Error saving to Google Sheet", error);
+                    logError("Error executing save to Google Sheet", error);
                     showToast(getTranslation('toastGSheetSaveError', error.message));
                 } finally {
                     button.disabled = false;
-                    button.innerHTML = getTranslation('exportGSheet');
+                    button.innerHTML = originalHTML;
+                }
+            }
+
+            async function saveAllToGoogleSheet(button) {
+                try {
+                    if (!gapiInited || !gisInited) {
+                        throw new Error("Layanan Google belum siap. Mohon tunggu sebentar.");
+                    }
+
+                    if (gapi.client.getToken() === null) {
+                        tokenClient.callback = (resp) => {
+                            if (resp.error) {
+                                logError("GIS Auth Error", resp);
+                                showToast(`Gagal otentikasi: ${resp.error}`);
+                                return;
+                            }
+                            gapi.client.setToken({ 'access_token': resp.access_token });
+                            updateSigninStatus(true);
+                            executeSaveToSheet(button);
+                        };
+                        tokenClient.requestAccessToken({ prompt: 'consent' });
+                    } else {
+                        await executeSaveToSheet(button);
+                    }
+
+                } catch (error) {
+                    logError("Error in saveAllToGoogleSheet flow", error);
+                    showToast(getTranslation('toastGSheetSaveError', error.message));
                 }
             }
 
@@ -1656,8 +1661,8 @@ END:VCALENDAR`;
                         // Mulai dari 1 untuk melewati header
                         for (let i = 1; i < existingValues.length; i++) {
                             const row = existingValues[i];
-                            // Kunci dibuat dari semua kolom kecuali kolom Timestamp terakhir
-                            const key = row.slice(0, -1).join('|');
+                            // Kunci dibuat dari kolom Nama, Perusahaan, dan WhatsApp
+                            const key = `${row[0]}|${row[2]}|${row[5]}`;
                             existingDataMap.set(key, { row, rowIndex: i + 1 });
                         }
                     }
@@ -1674,8 +1679,8 @@ END:VCALENDAR`;
                     const rowsToUpdate = [];
 
                     newContactsData.forEach(newRow => {
-                        // Kunci dibuat dari semua kolom kecuali kolom Timestamp terakhir
-                        const key = newRow.slice(0, -1).join('|');
+                        // Kunci dibuat dari kolom Nama, Perusahaan, dan WhatsApp
+                        const key = `${newRow[0]}|${newRow[2]}|${newRow[5]}`;
                         if (existingDataMap.has(key)) {
                             // Kontak sudah ada, siapkan untuk pembaruan
                             const { rowIndex } = existingDataMap.get(key);
@@ -1878,39 +1883,9 @@ END:VCALENDAR`;
                 gisInited = true;
             }
 
-            function handleAuthClick() {
-                if (!gisInited) {
-                    showToast("Layanan Google belum siap. Mohon coba lagi sebentar.");
-                    return;
-                }
-                if (gapi.client.getToken() === null) {
-                    tokenClient.requestAccessToken({ prompt: 'consent' });
-                } else {
-                    tokenClient.requestAccessToken({ prompt: '' });
-                }
-            }
-
-            function handleRevokeClick() {
-                const token = gapi.client.getToken();
-                if (token !== null) {
-                    google.accounts.oauth2.revoke(token.access_token, () => {
-                        gapi.client.setToken(null); // Clear the token
-                        updateSigninStatus(false);
-                        showToast('Koneksi Google telah diputuskan.');
-                    });
-                }
-            }
-
             function updateSigninStatus(isSignedIn) {
-                otherSelectors.googleAuthBtn.classList.toggle('hidden', isSignedIn);
-                otherSelectors.googleRevokeBtn.classList.toggle('hidden', !isSignedIn);
-
-                if (isSignedIn) {
-                    otherSelectors.googleAuthStatus.textContent = 'Terhubung dengan akun Google.';
-                } else {
-                    otherSelectors.googleAuthStatus.textContent = 'Anda belum terhubung ke akun Google.';
-                }
-                // Muat ulang hasil untuk memperbarui status tombol G-Sheet
+                // Fungsi ini sekarang hanya bertanggung jawab untuk me-refresh tombol
+                // di halaman hasil jika status login berubah.
                 if (document.getElementById('results-screen').classList.contains('hidden') === false) {
                     refreshResults();
                 }
@@ -2100,9 +2075,6 @@ END:VCALENDAR`;
                     otherInput.classList.add('hidden');
                 }
             });
-
-            otherSelectors.googleAuthBtn.addEventListener('click', handleAuthClick);
-            otherSelectors.googleRevokeBtn.addEventListener('click', handleRevokeClick);
 
             initializeApp();
         });
