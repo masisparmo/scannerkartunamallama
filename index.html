@@ -1809,6 +1809,8 @@ END:VCALENDAR`;
                             showToast(`Gagal otentikasi: ${tokenResponse.error}`);
                             return;
                         }
+                        // Perbaikan: Secara eksplisit atur access_token untuk menghindari masalah CO-OP
+                        gapi.client.setToken({ 'access_token': tokenResponse.access_token });
                         updateSigninStatus(true);
                         showToast('Berhasil terhubung dengan Google.');
                     },
