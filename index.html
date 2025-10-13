@@ -1492,11 +1492,9 @@ END:VCALENDAR`;
                         `;
                     }
                     if (contacts.length > 0) {
-                        const isGisLoadedAndSignedIn = gapiInited && gapi.client.getToken() !== null;
-                        const disabledAttr = isGisLoadedAndSignedIn ? '' : 'disabled';
-                        const titleAttr = isGisLoadedAndSignedIn ? 'Simpan semua kontak ke Google Sheet Anda' : 'Hubungkan akun Google di menu Profil untuk mengaktifkan';
+                        // Tombol ini sekarang selalu aktif. Logika login ditangani saat di-klik.
                         buttonsHTML += `
-                            <button id="export-gsheet-btn" ${disabledAttr} class="col-span-2 w-full bg-emerald-600 text-white font-bold py-3 px-4 rounded-full shadow-lg flex items-center justify-center gap-2 text-base mt-2 disabled:bg-gray-400 disabled:cursor-not-allowed" title="${titleAttr}">
+                            <button id="export-gsheet-btn" class="col-span-2 w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-4 rounded-full shadow-lg flex items-center justify-center gap-2 text-base mt-2">
                                 ${getTranslation('exportGSheet')}
                             </button>
                         `;
