@@ -21,32 +21,6 @@
     <meta name="apple-mobile-web-app-title" content="Scanner Pintar">
     <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/masisparmo/scannerkartunamallama/refs/heads/main/scanner-pintar-192.png">
 
-    <script>
-        window.onerror = function (message, source, lineno, colno, error) {
-            try {
-                const errorMessage = `Pesan: ${message}\nSumber: ${source}\nBaris: ${lineno}, Kolom: ${colno}\nError Object: ${JSON.stringify(error, Object.getOwnPropertyNames(error))}`;
-
-                const modal = document.getElementById('fatal-error-modal');
-                const errorPre = document.getElementById('fatal-error-message');
-
-                if (modal && errorPre) {
-                    errorPre.textContent = errorMessage;
-                    modal.classList.remove('hidden');
-                    // Ensure lucide icons are rendered if not already
-                    if (window.lucide) {
-                        window.lucide.createIcons();
-                    }
-                } else {
-                    // Fallback for very early errors where the DOM might not be ready
-                    alert("Fatal Error:\n" + errorMessage);
-                }
-            } catch (e) {
-                // Fallback if the error handler itself fails
-                alert("An error occurred in the error handler:\n" + e.message);
-            }
-            return true; // Prevents the default browser error handling
-        };
-    </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -278,19 +252,6 @@
     <div id="confirm-modal" class="modal-backdrop hidden fixed inset-0 bg-black/60 z-50 p-4"><div class="modal-content bg-white dark:bg-gray-800 rounded-2xl shadow-xl w-full max-w-sm p-6 transform scale-95 opacity-0"><h3 class="text-lg font-bold mb-2" data-translate-key="confirmActionTitle">Konfirmasi Tindakan</h3><p id="confirm-message" class="text-gray-600 dark:text-gray-400 mb-6"></p><div class="flex justify-end items-center gap-3"><button id="cancel-confirm-btn" class="modal-button bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-500 text-gray-800 dark:text-gray-200" data-translate-key="cancelBtn">BATAL</button><button id="confirm-action-btn" class="modal-button bg-red-600 hover:bg-red-700 text-white" data-translate-key="continueBtn">LANJUTKAN</button></div></div></div>
     <div id="toast" class="toast fixed bottom-5 right-5 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 py-3 px-5 rounded-full shadow-lg opacity-0 transform translate-y-5 pointer-events-none"><p id="toast-message"></p></div>
 
-    <div id="fatal-error-modal" class="hidden fixed inset-0 bg-black/80 z-[9999] p-4 flex items-center justify-center">
-        <div class="bg-red-100 dark:bg-red-900/50 border-4 border-red-500 rounded-2xl shadow-2xl w-full max-w-2xl p-6">
-            <div class="flex items-center gap-4">
-                <div class="text-red-500"><i data-lucide="alert-triangle" class="w-12 h-12"></i></div>
-                <div>
-                    <h3 class="text-2xl font-bold text-red-800 dark:text-red-200">Terjadi Error Fatal</h3>
-                    <p class="text-red-700 dark:text-red-300 mt-1">Aplikasi tidak dapat melanjutkan. Mohon screenshot halaman ini dan kirimkan ke tim support.</p>
-                </div>
-            </div>
-            <pre id="fatal-error-message" class="mt-4 bg-white/80 dark:bg-black/50 text-sm text-red-900 dark:text-red-100 p-4 rounded-lg overflow-x-auto whitespace-pre-wrap font-mono"></pre>
-        </div>
-    </div>
-
     <!-- Log Viewer Elements -->
     <button id="log-icon" class="hidden p-2 bg-gray-800 text-white rounded-full shadow-lg hover:bg-gray-700 transition-colors uppercase">Log</button>
     <div id="log-viewer-modal" class="modal-backdrop hidden fixed inset-0 bg-black/70 z-50 p-4 flex flex-col">
@@ -317,8 +278,6 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            let otherSelectors;
-
             // --- Google API Configuration & State ---
             const GOOGLE_CLIENT_ID = '328921559379-s3mmi3dlpj39qtkgl4itt5q2ukl1nmid.apps.googleusercontent.com';
             const GOOGLE_API_KEY = ''; // API Key is not strictly needed for this OAuth flow.
@@ -478,6 +437,7 @@
                     refreshResults();
                 }
             }
+
 
             if ('serviceWorker' in navigator) {
                 window.addEventListener('load', () => {
@@ -764,7 +724,7 @@
                     footerAbout: "About",
                     footerHelp: "Help",
                     footerTerms: "Terms",
-                    footerPrivacy: "Privasi",
+                    footerPrivacy: "Privacy",
                     footerCopyright: "&copy; 2025 SCANNER PINTAR oleh Isparmo & M. Hasan",
                     // Misc
                     unnamedContact: "Unnamed",
@@ -871,6 +831,8 @@
             const collabSessionName = document.getElementById('collab-session-name');
             const collabUserName = document.getElementById('collab-user-name');
             const exitCollabBtn = document.getElementById('exit-collab-btn');
+
+            let otherSelectors;
 
             function initializeSelectors() {
                 return {
@@ -1228,7 +1190,7 @@
                 return contact;
             }
 
-            window.refreshResults = async function() {
+            async function refreshResults() {
                 if (!dbLogic.db) return;
                 const allContacts = await dbLogic.getAllContacts();
 
@@ -1249,7 +1211,7 @@
 
                 const count = filteredContacts.length;
                 otherSelectors.homeContactCount.textContent = allContacts.length;
-                otherSelectors.resultsContactCount.textContent = count;
+                document.getElementById('results-contact-count').textContent = count;
                 otherSelectors.resultsList.innerHTML = '';
 
                 if (count === 0) {
@@ -2021,8 +1983,8 @@ END:VCALENDAR`;
                 }
             }
 
-            // --- Centralized Event Listeners ---
             initializeApp();
+            // --- Centralized Event Listeners ---
             document.getElementById('google-login-btn')?.addEventListener('click', () => handleAuthClick());
             document.getElementById('google-logout-btn')?.addEventListener('click', handleSignoutClick);
 
