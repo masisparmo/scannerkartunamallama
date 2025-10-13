@@ -627,7 +627,7 @@
 
             // --- Google API Integration ---
             const CLIENT_ID = "328921559379-s3mmi3dlpj39qtkgl4itt5q2ukl1nmid.apps.googleusercontent.com";
-            const SCOPES = "https://www.googleapis.com/auth/drive.file";
+            const SCOPES = "https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/spreadsheets";
             let tokenClient;
             let gapiInited = false;
             let gisInited = false;
@@ -1539,19 +1539,18 @@ END:VCALENDAR`;
                     }
 
                     const fileName = "Data Scan Kartu Nama";
-                    let spreadsheetId = await findOrCreateSpreadsheet(fileName);
+                    const sheetName = otherSelectors.sessionAcaraInput.value.trim() || "Data Kartu Nama";
 
-                    if (spreadsheetId) {
-                        const contacts = await dbLogic.getAllContacts();
-                        if (contacts.length === 0) {
-                            showToast(getTranslation('toastNoContactSave'));
-                        } else {
-                            await writeDataToSheet(spreadsheetId, contacts);
-                            const spreadsheetUrl = `https://docs.google.com/spreadsheets/d/${spreadsheetId}`;
-                            showToast(getTranslation('toastGSheetSaveSuccess', contacts.length, spreadsheetUrl), 8000);
-                        }
+                    let spreadsheetId = await findOrCreateSpreadsheet(fileName);
+                    await findOrCreateSheetTab(spreadsheetId, sheetName);
+
+                    const contacts = await dbLogic.getAllContacts();
+                    if (contacts.length === 0) {
+                        showToast(getTranslation('toastNoContactSave'));
                     } else {
-                        throw new Error("Tidak dapat menemukan atau membuat spreadsheet.");
+                        await writeDataToSheet(spreadsheetId, sheetName, contacts);
+                        const spreadsheetUrl = `https://docs.google.com/spreadsheets/d/${spreadsheetId}`;
+                        showToast(getTranslation('toastGSheetSaveSuccess', contacts.length, spreadsheetUrl), 8000);
                     }
 
                 } catch (error) {
@@ -1564,7 +1563,7 @@ END:VCALENDAR`;
             }
 
             async function findOrCreateSpreadsheet(fileName) {
-                // 1. Cari file terlebih dahulu
+                // 1. Cari file
                 try {
                     const response = await gapi.client.drive.files.list({
                         q: `name='${fileName}' and mimeType='application/vnd.google-apps.spreadsheet' and trashed=false`,
@@ -1594,15 +1593,46 @@ END:VCALENDAR`;
                 }
             }
 
-            async function writeDataToSheet(spreadsheetId, contacts) {
+            async function findOrCreateSheetTab(spreadsheetId, sheetName) {
+                try {
+                    const response = await gapi.client.sheets.spreadsheets.get({
+                        spreadsheetId: spreadsheetId,
+                        fields: 'sheets.properties.title'
+                    });
+                    const sheets = response.result.sheets;
+                    const sheetExists = sheets.some(sheet => sheet.properties.title === sheetName);
+
+                    if (!sheetExists) {
+                        console.log(`Tab '${sheetName}' tidak ditemukan, membuat baru...`);
+                        await gapi.client.sheets.spreadsheets.batchUpdate({
+                            spreadsheetId: spreadsheetId,
+                            resource: {
+                                requests: [{
+                                    addSheet: {
+                                        properties: {
+                                            title: sheetName
+                                        }
+                                    }
+                                }]
+                            }
+                        });
+                    } else {
+                        console.log(`Tab '${sheetName}' sudah ada.`);
+                    }
+                } catch (err) {
+                    logError("Error finding or creating sheet tab", err);
+                    throw new Error("Gagal memeriksa atau membuat tab di Google Sheet.");
+                }
+            }
+
+            async function writeDataToSheet(spreadsheetId, sheetName, contacts) {
                 const HEADER = [
                     'Nama', 'Jabatan', 'Perusahaan', 'Jenis Perusahaan', 'Telepon Kantor',
                     'WhatsApp', 'Email', 'Acara', 'Tanggal', 'Catatan', 'Tags', 'Marketing', 'Timestamp'
                 ];
 
                 try {
-                    // 1. Periksa header
-                    const range = 'Sheet1!A1:M1';
+                    const range = `'${sheetName}'!A1:M1`;
                     const response = await gapi.client.sheets.spreadsheets.values.get({
                         spreadsheetId: spreadsheetId,
                         range: range,
@@ -1623,10 +1653,9 @@ END:VCALENDAR`;
                         dataToWrite.unshift(HEADER);
                     }
 
-                    // 3. Tulis data
                     await gapi.client.sheets.spreadsheets.values.append({
                         spreadsheetId: spreadsheetId,
-                        range: 'Sheet1!A1',
+                        range: `'${sheetName}'!A1`,
                         valueInputOption: 'USER_ENTERED',
                         resource: {
                             values: dataToWrite
