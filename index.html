@@ -350,34 +350,28 @@
                 }
             }
 
-            async function handleAuthClick(callback) {
+            async function handleAuthClick() {
                 await googleAuthReadyPromise; // Wait for APIs to be ready
-
-                if (!tokenClient) {
-                    if (logError) logError("Token client not initialized after ready promise.");
-                    if (showToast) showToast("Google Login service is not available.");
-                    return;
-                }
 
                 tokenClient.callback = async (resp) => {
                     if (resp.error !== undefined) {
                         if (logError) logError('Google Auth Error', resp);
-                        if (showToast) showToast(`Error: ${resp.error}`);
-                        if (typeof callback === 'function') callback(false);
+                        showToast(`Error: ${resp.error}`);
                         throw (resp);
                     }
-                    // EXPLICIT FIX for COOP: Extract the access_token and set it.
                     const tokenObject = { 'access_token': resp.access_token };
                     gapi.client.setToken(tokenObject);
                     localStorage.setItem('google_token', JSON.stringify(tokenObject));
                     await updateAuthUI();
-                    if (showToast) showToast('Login Google berhasil!');
-                    if (typeof callback === 'function') callback(true);
+                    showToast('Login Google berhasil!');
                 };
 
                 if (gapi.client.getToken() === null) {
+                    // If no token, must ask for consent. This opens the popup.
                     tokenClient.requestAccessToken({ prompt: 'consent' });
                 } else {
+                    // If a token exists, refresh it silently. This shouldn't open a popup
+                    // but ensures the token is valid for subsequent API calls.
                     tokenClient.requestAccessToken({ prompt: '' });
                 }
             }
@@ -948,7 +942,6 @@
                     otherSelectors.screens[screenName].classList.remove('hidden');
                     if (screenName === 'results') {
                         refreshResults();
-                        updateGoogleButtonStates();
                     }
                 }
             }
@@ -1789,33 +1782,37 @@ END:VCALENDAR`;
                     }
                 };
 
-                const ensureValidTokenAndExecute = () => {
-                    tokenClient.callback = async (tokenResponse) => {
-                        if (tokenResponse.error) {
-                            logError("Token refresh/auth error", tokenResponse);
-                            showToast(`Google Auth Error: ${tokenResponse.error}`);
-                            // Restore button state on auth failure
-                            button.disabled = false;
-                            button.innerHTML = getTranslation('exportGSheet');
-                            return;
-                        }
-                        const tokenObject = { 'access_token': tokenResponse.access_token };
-                        gapi.client.setToken(tokenObject);
-                        localStorage.setItem('google_token', JSON.stringify(tokenObject));
-                        await updateAuthUI();
-                        if(logError) logError("Token acquired successfully. Proceeding to save.");
-                        await executeSave();
-                    };
-
-                    if (gapi.client.getToken() === null) {
-                        showToast(getTranslation('toastGSheetLogin'), 4000);
-                        tokenClient.requestAccessToken({ prompt: 'consent' });
-                    } else {
-                        tokenClient.requestAccessToken({ prompt: '' });
+                // Set the callback for the token client. This will be executed after the user logs in
+                // or after a token is refreshed.
+                tokenClient.callback = async (tokenResponse) => {
+                    if (tokenResponse.error) {
+                        logError("Token refresh/auth error", tokenResponse);
+                        showToast(`Google Auth Error: ${tokenResponse.error}`);
+                        // Restore button state on auth failure
+                        button.disabled = false;
+                        button.innerHTML = getTranslation('exportGSheet');
+                        return;
                     }
+                    // After getting a valid token, explicitly set it for the gapi client
+                    const tokenObject = { 'access_token': tokenResponse.access_token };
+                    gapi.client.setToken(tokenObject);
+                    localStorage.setItem('google_token', JSON.stringify(tokenObject));
+                    await updateAuthUI(); // Update UI to show user is logged in
+
+                    if(logError) logError("Token acquired successfully. Proceeding to save.");
+                    await executeSave(); // Now that we are authenticated, execute the save logic.
                 };
 
-                ensureValidTokenAndExecute();
+                // Trigger the authentication flow.
+                if (gapi.client.getToken() === null) {
+                    // If there's no token, we must ask for consent.
+                    showToast(getTranslation('toastGSheetLogin'), 4000);
+                    tokenClient.requestAccessToken({ prompt: 'consent' });
+                } else {
+                    // If a token exists, it might be expired. Refresh it silently.
+                    // This will trigger the callback defined above.
+                    tokenClient.requestAccessToken({ prompt: '' });
+                }
             }
 
             function mergeAndDeduplicate(localContacts, remoteContactsAsArrays, headers) {
