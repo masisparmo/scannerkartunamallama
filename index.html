@@ -832,12 +832,12 @@
             const collabUserName = document.getElementById('collab-user-name');
             const exitCollabBtn = document.getElementById('exit-collab-btn');
 
-            let otherSelectors;
+            const { ...otherSelectors } = initializeSelectors();
 
             function initializeSelectors() {
                 return {
                     screens: { initial: document.getElementById('initial-screen'), scanner: document.getElementById('scanner-screen'), processing: document.getElementById('processing-screen'), results: document.getElementById('results-screen'), createSession: document.getElementById('create-session-screen'), profile: document.getElementById('profile-screen') },
-                    startScanBtn: document.getElementById('start-scan-btn'), uploadBtn: document.getElementById('upload-btn'), viewResultsBtn: document.getElementById('view-results-btn'), imageUploadInput: document.getElementById('image-upload-input'), captureBtn: document.getElementById('capture-btn'), cancelScanBtn: document.getElementById('cancel-scan-btn'), backToHomeBtn: document.getElementById('back-to-home-btn'), exportButtonsContainer: document.getElementById('export-buttons-container'), clearAllBtn: document.getElementById('clear-all-btn'), homeContactCount: document.getElementById('home-contact-count'), resultsContactCount: document.getElementById('results-contact-count'), resultsList: document.getElementById('results-list'), video: document.getElementById('video'), canvas: document.getElementById('canvas'), toast: document.getElementById('toast'), toastMessage: document.getElementById('toast-message'), processingTitle: document.getElementById('processing-title'), sessionAcaraInput: document.getElementById('session-acara'), sessionTanggalInput: document.getElementById('session-tanggal'), sessionCatatanInput: document.getElementById('session-catatan'), editModal: document.getElementById('edit-modal'), editModalContent: document.getElementById('edit-modal').querySelector('.modal-content'), cancelEditBtn: document.getElementById('cancel-edit-btn'), saveEditBtn: document.getElementById('save-edit-btn'), deleteContactBtn: document.getElementById('delete-contact-btn'), themeToggleInitial: document.getElementById('theme-toggle-initial'), themeToggleResults: document.getElementById('theme-toggle-results'), confirmModal: document.getElementById('confirm-modal'), confirmModalContent: document.getElementById('confirm-modal').querySelector('.modal-content'), confirmMessage: document.getElementById('confirm-message'), cancelConfirmBtn: document.getElementById('cancel-confirm-btn'), confirmActionBtn: document.getElementById('confirm-action-btn'),
+                    startScanBtn: document.getElementById('start-scan-btn'), uploadBtn: document.getElementById('upload-btn'), viewResultsBtn: document.getElementById('view-results-btn'), imageUploadInput: document.getElementById('image-upload-input'), captureBtn: document.getElementById('capture-btn'), cancelScanBtn: document.getElementById('cancel-scan-btn'), backToHomeBtn: document.getElementById('back-to-home-btn'), exportButtonsContainer: document.getElementById('export-buttons-container'), clearAllBtn: document.getElementById('clear-all-btn'), homeContactCount: document.getElementById('home-contact-count'), resultsContactCount: document.getElementById('results-contact-count').querySelector('span'), resultsList: document.getElementById('results-list'), video: document.getElementById('video'), canvas: document.getElementById('canvas'), toast: document.getElementById('toast'), toastMessage: document.getElementById('toast-message'), processingTitle: document.getElementById('processing-title'), sessionAcaraInput: document.getElementById('session-acara'), sessionTanggalInput: document.getElementById('session-tanggal'), sessionCatatanInput: document.getElementById('session-catatan'), editModal: document.getElementById('edit-modal'), editModalContent: document.getElementById('edit-modal').querySelector('.modal-content'), cancelEditBtn: document.getElementById('cancel-edit-btn'), saveEditBtn: document.getElementById('save-edit-btn'), deleteContactBtn: document.getElementById('delete-contact-btn'), themeToggleInitial: document.getElementById('theme-toggle-initial'), themeToggleResults: document.getElementById('theme-toggle-results'), confirmModal: document.getElementById('confirm-modal'), confirmModalContent: document.getElementById('confirm-modal').querySelector('.modal-content'), confirmMessage: document.getElementById('confirm-message'), cancelConfirmBtn: document.getElementById('cancel-confirm-btn'), confirmActionBtn: document.getElementById('confirm-action-btn'),
                     profileSettingsBtn: document.getElementById('profile-settings-btn'), backToHomeFromProfile: document.getElementById('back-to-home-from-profile'), saveProfileBtn: document.getElementById('save-profile-btn'),
                     actionModal: document.getElementById('action-modal'), actionModalContent: document.getElementById('action-modal').querySelector('.modal-content'), closeActionModalBtn: document.getElementById('close-action-modal-btn'), actionModalHeader: document.getElementById('action-modal-header'), actionModalBody: document.getElementById('action-modal-body'), actionModalFooter: document.getElementById('action-modal-footer'),
                     langToggleInitial: document.getElementById('lang-toggle-initial'),
@@ -948,6 +948,7 @@
                     otherSelectors.screens[screenName].classList.remove('hidden');
                     if (screenName === 'results') {
                         refreshResults();
+                        updateGoogleButtonStates();
                     }
                 }
             }
@@ -1937,7 +1938,6 @@ END:VCALENDAR`;
             }
 
             async function initializeApp() {
-                otherSelectors = initializeSelectors();
                 lucide.createIcons();
                 const savedTheme = localStorage.getItem('theme');
                 const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -1984,6 +1984,7 @@ END:VCALENDAR`;
             }
 
             initializeApp();
+
             // --- Centralized Event Listeners ---
             document.getElementById('google-login-btn')?.addEventListener('click', () => handleAuthClick());
             document.getElementById('google-logout-btn')?.addEventListener('click', handleSignoutClick);
