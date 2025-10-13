@@ -1504,7 +1504,7 @@ END:VCALENDAR`;
                     }
                     if (contacts.length > 0) {
                         buttonsHTML += `
-                            <button id="export-gsheet-btn" class="col-span-2 w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-4 rounded-full shadow-lg flex items-center justify-center gap-2 text-base mt-2">
+                            <button id="export-gsheet-btn" disabled class="col-span-2 w-full bg-emerald-600 text-white font-bold py-3 px-4 rounded-full shadow-lg flex items-center justify-center gap-2 text-base mt-2 disabled:bg-gray-400 disabled:cursor-not-allowed" title="Hubungkan akun Google di menu Profil untuk mengaktifkan">
                                 ${getTranslation('exportGSheet')}
                             </button>
                         `;
@@ -1538,8 +1538,13 @@ END:VCALENDAR`;
                         throw new Error("Otentikasi diperlukan.");
                     }
 
-                    const fileName = "Data Scan Kartu Nama";
-                    const sheetName = otherSelectors.sessionAcaraInput.value.trim() || "Data Kartu Nama";
+                    const fileName = "Data Kartu Nama Scanner Pintar";
+                    let sheetName;
+                    if (collaborationSession.isActive) {
+                        sheetName = collaborationSession.sessionAcara || "Data Kolaborasi";
+                    } else {
+                        sheetName = "Data Pribadi";
+                    }
 
                     let spreadsheetId = await findOrCreateSpreadsheet(fileName);
                     await findOrCreateSheetTab(spreadsheetId, sheetName);
@@ -1632,16 +1637,29 @@ END:VCALENDAR`;
                 ];
 
                 try {
-                    const range = `'${sheetName}'!A1:M1`;
+                    // 1. Dapatkan semua data yang ada dari sheet
+                    const fullRange = `'${sheetName}'!A:M`;
                     const response = await gapi.client.sheets.spreadsheets.values.get({
                         spreadsheetId: spreadsheetId,
-                        range: range,
+                        range: fullRange,
                     });
 
-                    const existingHeader = response.result.values ? response.result.values[0] : [];
-                    let needsHeader = HEADER.some((val, i) => val !== existingHeader[i]);
+                    const existingValues = response.result.values || [];
+                    let headerExists = false;
+                    const existingDataMap = new Map();
 
-                    const dataToWrite = contacts.map(c => [
+                    if (existingValues.length > 0 && JSON.stringify(existingValues[0]) === JSON.stringify(HEADER)) {
+                        headerExists = true;
+                        // Mulai dari 1 untuk melewati header
+                        for (let i = 1; i < existingValues.length; i++) {
+                            const row = existingValues[i];
+                            // Kunci dibuat dari semua kolom kecuali kolom Timestamp terakhir
+                            const key = row.slice(0, -1).join('|');
+                            existingDataMap.set(key, { row, rowIndex: i + 1 });
+                        }
+                    }
+
+                    const newContactsData = contacts.map(c => [
                         c.nama || '', c.jabatan || '', c.perusahaan || '', c.jenis_perusahaan || '',
                         c.telepon_kantor || '', c.whatsapp || '', c.email || '', c.acara || '',
                         c.tanggal || '', c.catatan || '', (c.tags || []).join(', '),
@@ -1649,23 +1667,62 @@ END:VCALENDAR`;
                         new Date().toISOString()
                     ]);
 
-                    if (needsHeader) {
-                        dataToWrite.unshift(HEADER);
-                    }
+                    const rowsToAppend = [];
+                    const rowsToUpdate = [];
 
-                    await gapi.client.sheets.spreadsheets.values.append({
-                        spreadsheetId: spreadsheetId,
-                        range: `'${sheetName}'!A1`,
-                        valueInputOption: 'USER_ENTERED',
-                        resource: {
-                            values: dataToWrite
+                    newContactsData.forEach(newRow => {
+                        // Kunci dibuat dari semua kolom kecuali kolom Timestamp terakhir
+                        const key = newRow.slice(0, -1).join('|');
+                        if (existingDataMap.has(key)) {
+                            // Kontak sudah ada, siapkan untuk pembaruan
+                            const { rowIndex } = existingDataMap.get(key);
+                            rowsToUpdate.push({
+                                range: `'${sheetName}'!A${rowIndex}:M${rowIndex}`,
+                                values: [newRow]
+                            });
+                        } else {
+                            // Kontak baru, siapkan untuk ditambahkan
+                            rowsToAppend.push(newRow);
                         }
                     });
-                     console.log('Data berhasil ditulis ke Google Sheet.');
+
+                    // 2. Tambahkan header jika belum ada
+                    if (!headerExists) {
+                        rowsToAppend.unshift(HEADER);
+                    }
+
+                    // 3. Lakukan operasi penambahan (append) jika ada data baru
+                    if (rowsToAppend.length > 0) {
+                        await gapi.client.sheets.spreadsheets.values.append({
+                            spreadsheetId: spreadsheetId,
+                            range: `'${sheetName}'!A1`,
+                            valueInputOption: 'USER_ENTERED',
+                            resource: {
+                                values: rowsToAppend
+                            }
+                        });
+                        console.log(`${rowsToAppend.length} baris baru ditambahkan.`);
+                    }
+
+                    // 4. Lakukan operasi pembaruan (update) jika ada data yang sama
+                    if (rowsToUpdate.length > 0) {
+                        await gapi.client.sheets.spreadsheets.values.batchUpdate({
+                            spreadsheetId: spreadsheetId,
+                            resource: {
+                                valueInputOption: 'USER_ENTERED',
+                                data: rowsToUpdate
+                            }
+                        });
+                        console.log(`${rowsToUpdate.length} baris yang ada diperbarui.`);
+                    }
+
+                    if (rowsToAppend.length === 0 && rowsToUpdate.length === 0) {
+                        console.log("Tidak ada data baru untuk ditambahkan atau diperbarui.");
+                    }
 
                 } catch (err) {
                     logError("Error writing data to sheet", err);
-                    throw new Error(`Gagal menulis data ke Sheet: ${err.result.error.message}`);
+                    throw new Error(`Gagal menulis data ke Sheet: ${err.result ? err.result.error.message : err.message}`);
                 }
             }
 
@@ -1844,10 +1901,21 @@ END:VCALENDAR`;
             function updateSigninStatus(isSignedIn) {
                 otherSelectors.googleAuthBtn.classList.toggle('hidden', isSignedIn);
                 otherSelectors.googleRevokeBtn.classList.toggle('hidden', !isSignedIn);
+
+                const gsheetBtn = document.getElementById('export-gsheet-btn');
+
                 if (isSignedIn) {
                     otherSelectors.googleAuthStatus.textContent = 'Terhubung dengan akun Google.';
+                    if (gsheetBtn) {
+                        gsheetBtn.disabled = false;
+                        gsheetBtn.title = 'Simpan semua kontak ke Google Sheet Anda';
+                    }
                 } else {
                     otherSelectors.googleAuthStatus.textContent = 'Anda belum terhubung ke akun Google.';
+                    if (gsheetBtn) {
+                        gsheetBtn.disabled = true;
+                        gsheetBtn.title = 'Hubungkan akun Google di menu Profil untuk mengaktifkan';
+                    }
                 }
             }
             // --- End Google API Integration Functions ---
