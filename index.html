@@ -1503,8 +1503,11 @@ END:VCALENDAR`;
                         `;
                     }
                     if (contacts.length > 0) {
+                        const isGisLoadedAndSignedIn = gapi.client?.getToken() !== null;
+                        const disabledAttr = isGisLoadedAndSignedIn ? '' : 'disabled';
+                        const titleAttr = isGisLoadedAndSignedIn ? 'Simpan semua kontak ke Google Sheet Anda' : 'Hubungkan akun Google di menu Profil untuk mengaktifkan';
                         buttonsHTML += `
-                            <button id="export-gsheet-btn" disabled class="col-span-2 w-full bg-emerald-600 text-white font-bold py-3 px-4 rounded-full shadow-lg flex items-center justify-center gap-2 text-base mt-2 disabled:bg-gray-400 disabled:cursor-not-allowed" title="Hubungkan akun Google di menu Profil untuk mengaktifkan">
+                            <button id="export-gsheet-btn" ${disabledAttr} class="col-span-2 w-full bg-emerald-600 text-white font-bold py-3 px-4 rounded-full shadow-lg flex items-center justify-center gap-2 text-base mt-2 disabled:bg-gray-400 disabled:cursor-not-allowed" title="${titleAttr}">
                                 ${getTranslation('exportGSheet')}
                             </button>
                         `;
@@ -1902,20 +1905,14 @@ END:VCALENDAR`;
                 otherSelectors.googleAuthBtn.classList.toggle('hidden', isSignedIn);
                 otherSelectors.googleRevokeBtn.classList.toggle('hidden', !isSignedIn);
 
-                const gsheetBtn = document.getElementById('export-gsheet-btn');
-
                 if (isSignedIn) {
                     otherSelectors.googleAuthStatus.textContent = 'Terhubung dengan akun Google.';
-                    if (gsheetBtn) {
-                        gsheetBtn.disabled = false;
-                        gsheetBtn.title = 'Simpan semua kontak ke Google Sheet Anda';
-                    }
                 } else {
                     otherSelectors.googleAuthStatus.textContent = 'Anda belum terhubung ke akun Google.';
-                    if (gsheetBtn) {
-                        gsheetBtn.disabled = true;
-                        gsheetBtn.title = 'Hubungkan akun Google di menu Profil untuk mengaktifkan';
-                    }
+                }
+                // Muat ulang hasil untuk memperbarui status tombol G-Sheet
+                if (document.getElementById('results-screen').classList.contains('hidden') === false) {
+                    refreshResults();
                 }
             }
             // --- End Google API Integration Functions ---
