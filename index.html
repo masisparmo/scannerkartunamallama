@@ -1027,7 +1027,7 @@
 
                 const count = filteredContacts.length;
                 otherSelectors.homeContactCount.textContent = allContacts.length;
-                document.getElementById('results-contact-count').querySelector('span').textContent = count;
+                otherSelectors.resultsContactCount.textContent = count;
                 otherSelectors.resultsList.innerHTML = '';
 
                 if (count === 0) {
