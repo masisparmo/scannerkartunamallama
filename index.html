@@ -621,9 +621,6 @@
                 setLanguage(newLang);
             }
 
-            const BACKEND_API_URL = 'https://scanner-api-328921559379.asia-southeast1.run.app';
-            const EMAIL_GENERATOR_URL = `${BACKEND_API_URL}/generateFollowUpEmail`;
-            const WA_GENERATOR_URL = `${BACKEND_API_URL}/generateFollowUpWa`;
 
             let collaborationSession = { isActive: false, sessionId: null, sessionAcara: null, marketingName: null };
             let errorLogs = [];
@@ -1165,7 +1162,7 @@
                 emailBtn.innerHTML = `<div class="loader btn-loader"></div>`;
 
                 try {
-                    const response = await fetch(EMAIL_GENERATOR_URL, {
+                    const response = await fetch('https://scanner-api-328921559379.asia-southeast1.run.app/generateFollowUpEmail', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ contact, profile, lang: currentLang })
@@ -1206,7 +1203,7 @@
                 waAiBtn.innerHTML = `<div class="loader btn-loader"></div>`;
 
                 try {
-                    const response = await fetch(WA_GENERATOR_URL, {
+                    const response = await fetch('https://scanner-api-328921559379.asia-southeast1.run.app/generateFollowUpWa', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ contact, profile, lang: currentLang })
@@ -1493,7 +1490,7 @@ END:VCALENDAR`;
                         showToast("Error: Sesi kolaborasi tidak aktif.");
                         return;
                     }
-                    const response = await fetch(`${BACKEND_API_URL}/simpan-gsheet`, {
+                    const response = await fetch(`https://scanner-api-328921559379.asia-southeast1.run.app/simpan-gsheet`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
@@ -1980,7 +1977,7 @@ END:VCALENDAR`;
                 btn.innerHTML = `<div class="loader btn-loader"></div>`;
 
                 try {
-                    const response = await fetch(`/initiate-collab-session`, {
+                    const response = await fetch(`https://scanner-api-328921559379.asia-southeast1.run.app/initiate-collab-session`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ authCode, acara })
