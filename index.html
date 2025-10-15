@@ -1437,7 +1437,7 @@ END:VCALENDAR`;
                 collabUserName.textContent = collaborationSession.marketingName;
 
                 otherSelectors.sessionAcaraInput.value = collaborationSession.sessionAcara;
-                otherSelectors.sessionTanggalInput.value = new Date().toISOString().slice(0, 10);
+                otherSelectors.sessionTanggalInput.value = getLocalDateString();
             }
 
             function exitCollaborationMode() {
@@ -1802,13 +1802,21 @@ END:VCALENDAR`;
                 document.getElementById('profile-deskripsi').value = profile.deskripsi || '';
             }
 
+            function getLocalDateString() {
+                const today = new Date();
+                const year = today.getFullYear();
+                const month = String(today.getMonth() + 1).padStart(2, '0');
+                const day = String(today.getDate()).padStart(2, '0');
+                return `${year}-${month}-${day}`;
+            }
+
             async function initializeApp() {
                 lucide.createIcons();
                 const savedTheme = localStorage.getItem('theme');
                 const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
                 applyTheme(savedTheme ? savedTheme === 'dark' : prefersDark);
                 otherSelectors.sessionAcaraInput.value = localStorage.getItem('sessionAcara') || '';
-                otherSelectors.sessionTanggalInput.value = localStorage.getItem('sessionTanggal') || new Date().toISOString().slice(0, 10);
+                otherSelectors.sessionTanggalInput.value = localStorage.getItem('sessionTanggal') || getLocalDateString();
                 otherSelectors.sessionCatatanInput.value = localStorage.getItem('sessionCatatan') || '';
 
                 tagify = new Tagify(editTagsInput);
