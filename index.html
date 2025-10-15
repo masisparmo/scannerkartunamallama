@@ -122,7 +122,10 @@
 
             <div id="create-session-screen" class="hidden screen p-8 flex flex-col justify-center items-center text-center flex-grow">
                 <h2 class="text-2xl font-bold" data-translate-key="createCollabTitle">Buat Sesi Kolaborasi Baru</h2>
-                <p class="text-gray-500 dark:text-gray-400 mt-2 mb-8" data-translate-key="createCollabSubtitle">Masukkan nama acara untuk membuat sesi yang dapat dibagikan.</p>
+                <p class="text-gray-500 dark:text-gray-400 mt-2 mb-4" data-translate-key="createCollabSubtitle">Masukkan nama acara untuk membuat sesi yang dapat dibagikan.</p>
+                <p class="text-sm text-yellow-600 dark:text-yellow-400 bg-yellow-50 dark:bg-yellow-900/20 p-3 rounded-lg border border-yellow-200 dark:border-yellow-700/50 mb-6" data-translate-key="createCollabAuthInfo">
+                    Untuk melanjutkan, Anda akan diminta login dengan akun Google. Ini diperlukan agar hasil scan tim dapat disimpan secara otomatis ke file Google Sheet di Google Drive Anda.
+                </p>
                 <div class="w-full max-w-sm">
                      <label for="collab-session-name-input" class="text-sm font-medium text-gray-600 dark:text-gray-400 text-left block" data-translate-key="collabSessionNameLabel">Nama Acara / Sesi</label>
                      <input type="text" id="collab-session-name-input" data-translate-key-placeholder="collabSessionNamePlaceholder" placeholder="Contoh: Pameran Konstruksi 2025" class="w-full mt-1 p-3 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500">
@@ -331,6 +334,7 @@
                     sessionCreatedTitle: "Sesi Dibuat!",
                     sessionCreatedSubtitle: "Bagikan QR Code ini ke tim Anda untuk bergabung.",
                     confirmExitCollab: "Anda yakin ingin keluar dari sesi kolaborasi?",
+                    createCollabAuthInfo: "Untuk melanjutkan, Anda akan diminta login dengan akun Google. Ini diperlukan agar hasil scan tim dapat disimpan secara otomatis ke file Google Sheet di Google Drive Anda.",
                     // Profil
                     myProfileTitle: "Profil Saya",
                     yourNameLabel: "Nama Anda",
@@ -472,6 +476,7 @@
                     sessionCreatedTitle: "Session Created!",
                     sessionCreatedSubtitle: "Share this QR Code with your team to join.",
                     confirmExitCollab: "Are you sure you want to exit the collaboration session?",
+                    createCollabAuthInfo: "To continue, you will be asked to log in with your Google account. This is required so that the team's scan results can be automatically saved to a Google Sheet file in your Google Drive.",
                     // Profile
                     myProfileTitle: "My Profile",
                     yourNameLabel: "Your Name",
@@ -627,6 +632,7 @@
             const CLIENT_ID = "328921559379-s3mmi3dlpj39qtkgl4itt5q2ukl1nmid.apps.googleusercontent.com";
             const SCOPES = "https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/spreadsheets";
             let tokenClient;
+            let codeClient; // For collaboration flow
             let gapiInited = false;
             let gisInited = false;
             // --- End Google API Integration ---
@@ -1482,10 +1488,18 @@ END:VCALENDAR`;
 
             async function sendCollaborativeData(contact) {
                 try {
+                    if (!collaborationSession.isActive || !collaborationSession.sessionId) {
+                        logError("Attempted to send collaborative data without an active session.");
+                        showToast("Error: Sesi kolaborasi tidak aktif.");
+                        return;
+                    }
                     const response = await fetch(`${BACKEND_API_URL}/simpan-gsheet`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ contact: contact })
+                        body: JSON.stringify({
+                            contact: contact,
+                            sessionId: collaborationSession.sessionId
+                        })
                     });
                     const result = await response.json();
                     if (!response.ok || !result.success) throw new Error(result.error || 'Failed to send data.');
@@ -1905,7 +1919,7 @@ END:VCALENDAR`;
                     }
                 });
 
-                // GIS Client
+                // GIS Client (for individual G-Sheet save)
                 tokenClient = google.accounts.oauth2.initTokenClient({
                     client_id: CLIENT_ID,
                     scope: SCOPES,
@@ -1915,12 +1929,29 @@ END:VCALENDAR`;
                             showToast(`Gagal otentikasi: ${tokenResponse.error}`);
                             return;
                         }
-                        // Perbaikan: Secara eksplisit atur access_token untuk menghindari masalah CO-OP
                         gapi.client.setToken({ 'access_token': tokenResponse.access_token });
                         updateSigninStatus(true);
                         showToast('Berhasil terhubung dengan Google.');
                     },
                 });
+
+                // GIS Code Client (for collaboration session to get auth code)
+                codeClient = google.accounts.oauth2.initCodeClient({
+                    client_id: CLIENT_ID,
+                    scope: SCOPES,
+                    ux_mode: 'popup',
+                    callback: (response) => {
+                        if (response.code) {
+                            // Ini adalah perbaikan penting. Sekarang kita memanggil fungsi
+                            // yang benar-benar menangani kode otorisasi dan mengirimkannya ke backend.
+                            handleCollabSessionCreation(response.code);
+                        } else {
+                            logError("Google Code Client Error", response);
+                            showToast("Gagal mendapatkan kode otorisasi dari Google. Izin mungkin ditolak.");
+                        }
+                    },
+                });
+
                 gisInited = true;
             }
 
@@ -1936,15 +1967,61 @@ END:VCALENDAR`;
             [otherSelectors.langToggleInitial, otherSelectors.langToggleResults].forEach(btn => btn.addEventListener('click', toggleLanguage));
             createSessionBtn.addEventListener('click', () => showScreen('createSession'));
             cancelCreateSessionBtn.addEventListener('click', () => showScreen('initial'));
+
+            async function handleCollabSessionCreation(authCode) {
+                const acara = collabSessionNameInput.value.trim();
+                if (!acara) {
+                    showToast(getTranslation('toastEmptyEventName'));
+                    return;
+                }
+                const btn = generateSessionQRBtn;
+                const originalHTML = btn.innerHTML;
+                btn.disabled = true;
+                btn.innerHTML = `<div class="loader btn-loader"></div>`;
+
+                try {
+                    const response = await fetch(`/initiate-collab-session`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ authCode, acara })
+                    });
+
+                    const result = await response.json();
+                    if (!response.ok || !result.success) {
+                        throw new Error(result.error || 'Gagal memulai sesi kolaborasi di server.');
+                    }
+
+                    const { sessionId } = result;
+                    const baseUrl = window.location.origin + window.location.pathname;
+                    const collabUrl = `${baseUrl}?sesi=${sessionId}&acara=${encodeURIComponent(acara)}`;
+
+                    qrCodeContainer.innerHTML = '';
+                    new QRCode(qrCodeContainer, { text: collabUrl, width: 256, height: 256 });
+                    showSessionQRModal.classList.remove('hidden');
+
+                } catch (error) {
+                    logError("Error initiating collaboration session", error);
+                    showToast(`Error: ${error.message}`);
+                } finally {
+                    btn.disabled = false;
+                    btn.innerHTML = originalHTML;
+                }
+            }
+
             generateSessionQRBtn.addEventListener('click', () => {
                 const acara = collabSessionNameInput.value.trim();
-                if (!acara) { showToast(getTranslation('toastEmptyEventName')); return; }
-                const sessionId = acara.replace(/\s+/g, '-') + '-' + Date.now().toString(36);
-                const baseUrl = window.location.origin + window.location.pathname;
-                const collabUrl = `${baseUrl}?sesi=${sessionId}&acara=${encodeURIComponent(acara)}`;
-                qrCodeContainer.innerHTML = '';
-                new QRCode(qrCodeContainer, { text: collabUrl, width: 256, height: 256 });
-                showSessionQRModal.classList.remove('hidden');
+                if (!acara) {
+                    showToast(getTranslation('toastEmptyEventName'));
+                    return;
+                }
+
+                if (!codeClient) {
+                    showToast("Google Client belum siap. Mohon tunggu sebentar.");
+                    logError("Google Code Client not initialized on button click.");
+                    return;
+                }
+                // This call initiates the Google OAuth 2.0 flow.
+                codeClient.requestCode();
             });
             closeQrModalBtn.addEventListener('click', () => {
                 showSessionQRModal.classList.add('hidden');
