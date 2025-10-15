@@ -33,6 +33,9 @@
     <!-- Tagify CSS -->
     <link href="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.css" rel="stylesheet" type="text/css" />
 
+    <!-- Flatpickr CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
     <!-- Google API Libraries -->
     <script async defer src="https://apis.google.com/js/api.js"></script>
     <script async defer src="https://accounts.google.com/gsi/client"></script>
@@ -103,7 +106,7 @@
                 <div id="session-form-container" class="w-full text-left my-8 space-y-4">
                     <div><label for="session-acara" class="text-sm font-medium text-gray-600 dark:text-gray-400" data-translate-key="eventNameLabel">Nama Acara</label><input type="text" id="session-acara" data-translate-key-placeholder="eventNamePlaceholder" placeholder="Contoh: Pameran Konstruksi 2025" class="w-full mt-1 p-3 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500"></div>
                     <div class="grid grid-cols-2 gap-4">
-                        <div><label for="session-tanggal" class="text-sm font-medium text-gray-600 dark:text-gray-400" data-translate-key="dateLabel">Tanggal</label><input type="date" id="session-tanggal" class="w-full mt-1 p-3 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500"></div>
+                        <div><label for="session-tanggal" class="text-sm font-medium text-gray-600 dark:text-gray-400" data-translate-key="dateLabel">Tanggal</label><input type="text" id="session-tanggal" class="w-full mt-1 p-3 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500"></div>
                         <div><label for="session-catatan" class="text-sm font-medium text-gray-600 dark:text-gray-400" data-translate-key="notesLabel">Catatan</label><input type="text" id="session-catatan" data-translate-key-placeholder="notesPlaceholder" placeholder="Opsional" class="w-full mt-1 p-3 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500"></div>
                     </div>
                 </div>
@@ -210,7 +213,7 @@
                 <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label for="reminder-date" class="text-sm font-medium text-gray-600 dark:text-gray-400" data-translate-key="reminderDateLabel">Tanggal</label>
-                        <input type="date" id="reminder-date" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg">
+                        <input type="text" id="reminder-date" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg">
                     </div>
                     <div>
                         <label for="reminder-time" class="text-sm font-medium text-gray-600 dark:text-gray-400" data-translate-key="reminderTimeLabel">Jam</label>
@@ -245,7 +248,7 @@
         <label for="edit-tags" class="text-sm font-medium text-gray-600 dark:text-gray-400" data-translate-key="tagsLabel">Tags</label>
         <input type="text" id="edit-tags" name="edit-tags" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg">
     </div>
-    <hr class="border-gray-200 dark:border-gray-600 !my-4"><div><label for="edit-acara" class="text-sm font-medium text-gray-600 dark:text-gray-400" data-translate-key="eventLabel">Acara</label><input type="text" id="edit-acara" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"></div><div class="grid grid-cols-2 gap-3"><div><label for="edit-tanggal" class="text-sm font-medium text-gray-600 dark:text-gray-400" data-translate-key="dateLabel">Tanggal</label><input type="date" id="edit-tanggal" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"></div><div><label for="edit-catatan" class="text-sm font-medium text-gray-600 dark:text-gray-400" data-translate-key="notesLabel">Catatan</label><input type="text" id="edit-catatan" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"></div></div></form><div class="mt-6 flex items-center gap-3"><button id="delete-contact-btn" class="modal-button bg-red-600 hover:bg-red-700 text-white flex-1 flex items-center justify-center gap-2" data-translate-key="deleteBtn">HAPUS</button><button id="cancel-edit-btn" class="modal-button bg-blue-600 hover:bg-blue-700 text-white flex-1" data-translate-key="cancelBtn">BATAL</button><button id="save-edit-btn" class="modal-button bg-green-600 hover:bg-green-700 text-white flex-1" data-translate-key="saveBtn">SIMPAN</button></div></div></div>
+    <hr class="border-gray-200 dark:border-gray-600 !my-4"><div><label for="edit-acara" class="text-sm font-medium text-gray-600 dark:text-gray-400" data-translate-key="eventLabel">Acara</label><input type="text" id="edit-acara" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"></div><div class="grid grid-cols-2 gap-3"><div><label for="edit-tanggal" class="text-sm font-medium text-gray-600 dark:text-gray-400" data-translate-key="dateLabel">Tanggal</label><input type="text" id="edit-tanggal" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"></div><div><label for="edit-catatan" class="text-sm font-medium text-gray-600 dark:text-gray-400" data-translate-key="notesLabel">Catatan</label><input type="text" id="edit-catatan" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"></div></div></form><div class="mt-6 flex items-center gap-3"><button id="delete-contact-btn" class="modal-button bg-red-600 hover:bg-red-700 text-white flex-1 flex items-center justify-center gap-2" data-translate-key="deleteBtn">HAPUS</button><button id="cancel-edit-btn" class="modal-button bg-blue-600 hover:bg-blue-700 text-white flex-1" data-translate-key="cancelBtn">BATAL</button><button id="save-edit-btn" class="modal-button bg-green-600 hover:bg-green-700 text-white flex-1" data-translate-key="saveBtn">SIMPAN</button></div></div></div>
 
     <div id="confirm-modal" class="modal-backdrop hidden fixed inset-0 bg-black/60 z-50 p-4"><div class="modal-content bg-white dark:bg-gray-800 rounded-2xl shadow-xl w-full max-w-sm p-6 transform scale-95 opacity-0"><h3 class="text-lg font-bold mb-2" data-translate-key="confirmActionTitle">Konfirmasi Tindakan</h3><p id="confirm-message" class="text-gray-600 dark:text-gray-400 mb-6"></p><div class="flex justify-end items-center gap-3"><button id="cancel-confirm-btn" class="modal-button bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-500 text-gray-800 dark:text-gray-200" data-translate-key="cancelBtn">BATAL</button><button id="confirm-action-btn" class="modal-button bg-red-600 hover:bg-red-700 text-white" data-translate-key="continueBtn">LANJUTKAN</button></div></div></div>
     <div id="toast" class="toast fixed bottom-5 right-5 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 py-3 px-5 rounded-full shadow-lg opacity-0 transform translate-y-5 pointer-events-none"><p id="toast-message"></p></div>
@@ -269,6 +272,9 @@
     <!-- Tagify JS -->
     <script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify"></script>
     <script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.polyfills.min.js"></script>
+
+    <!-- Flatpickr JS -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -1244,6 +1250,14 @@
                 }, 300);
             }
 
+            function parseDate(dateString) {
+                if (!dateString) return null;
+                const parts = dateString.split('-');
+                if (parts.length !== 3) return null;
+                // parts[2] = YYYY, parts[1] = MM, parts[0] = DD
+                return new Date(parts[2], parts[1] - 1, parts[0]);
+            }
+
             function createICSFile() {
                 const contactId = document.getElementById('reminder-contact-id').value;
                 let reminderType = document.getElementById('reminder-type').value;
@@ -1251,7 +1265,7 @@
                     reminderType = document.getElementById('reminder-type-other').value;
                 }
                 const location = document.getElementById('reminder-location').value;
-                const date = document.getElementById('reminder-date').value;
+                const dateValue = document.getElementById('reminder-date').value;
                 const time = document.getElementById('reminder-time').value;
                 let alarm = document.getElementById('reminder-alarm').value;
                 if (alarm === 'lainnya') {
@@ -1259,12 +1273,21 @@
                 }
                 const notes = document.getElementById('reminder-notes').value;
 
-                if (!reminderType || !date || !time) {
+                if (!reminderType || !dateValue || !time) {
                     showToast("Harap isi semua kolom yang diperlukan.");
                     return;
                 }
 
-                const dtstart = new Date(`${date}T${time}`);
+                const parsedDate = parseDate(dateValue);
+                if (!parsedDate) {
+                    showToast("Format tanggal tidak valid. Harap gunakan DD-MM-YYYY.");
+                    return;
+                }
+
+                const [hour, minute] = time.split(':');
+                parsedDate.setHours(hour, minute);
+
+                const dtstart = parsedDate;
                 const dtend = new Date(dtstart.getTime() + 60 * 60 * 1000); // 1 hour duration
 
                 const pad = (i) => (i < 10 ? `0${i}` : i);
@@ -1807,7 +1830,7 @@ END:VCALENDAR`;
                 const year = today.getFullYear();
                 const month = String(today.getMonth() + 1).padStart(2, '0');
                 const day = String(today.getDate()).padStart(2, '0');
-                return `${year}-${month}-${day}`;
+                return `${day}-${month}-${year}`;
             }
 
             async function initializeApp() {
@@ -1816,8 +1839,18 @@ END:VCALENDAR`;
                 const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
                 applyTheme(savedTheme ? savedTheme === 'dark' : prefersDark);
                 otherSelectors.sessionAcaraInput.value = localStorage.getItem('sessionAcara') || '';
-                otherSelectors.sessionTanggalInput.value = localStorage.getItem('sessionTanggal') || getLocalDateString();
                 otherSelectors.sessionCatatanInput.value = localStorage.getItem('sessionCatatan') || '';
+
+                // Inisialisasi Flatpickr
+                const flatpickrConfig = {
+                    dateFormat: "d-m-Y",
+                };
+                flatpickr("#session-tanggal", { ...flatpickrConfig, defaultDate: "today" });
+                flatpickr("#reminder-date", flatpickrConfig);
+                flatpickr("#edit-tanggal", flatpickrConfig);
+
+                otherSelectors.sessionTanggalInput.value = localStorage.getItem('sessionTanggal') || getLocalDateString();
+
 
                 tagify = new Tagify(editTagsInput);
 
