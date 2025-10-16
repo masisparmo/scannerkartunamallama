@@ -915,7 +915,7 @@
             async function processImageWithAI(imageDataUrl) {
                 try {
                     otherSelectors.processingTitle.textContent = getTranslation('processingTitle');
-                    const extractResponse = await fetch(`${BACKEND_API_URL}/processBusinessCard`, {
+                    const extractResponse = await fetch(`https://scanner-api-328921559379.asia-southeast1.run.app/processBusinessCard`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ imageDataUrl })
