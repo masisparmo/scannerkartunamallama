@@ -114,7 +114,7 @@
                      <button id="start-scan-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-6 rounded-full shadow-lg transition-transform transform hover:scale-105 flex items-center justify-center gap-3 text-lg" data-translate-key="scanCardBtn">SCAN KARTU NAMA</button>
                      <button id="upload-btn" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-4 px-6 rounded-full shadow-lg transition-transform transform hover:scale-105 flex items-center justify-center gap-3 text-lg" data-translate-key="uploadGalleryBtn">UPLOAD DARI GALERI</button>
                      <div class="border-t border-gray-200 dark:border-gray-700 w-3/4 mx-auto my-2"></div>
-                     <button id="create-session-btn" class="w-full bg-gray-700 hover:bg-gray-800 text-white font-bold py-3 px-6 rounded-full shadow-lg flex items-center justify-center gap-3 text-base" data-translate-key="collabModeBtn">MODE KOLABURASI TIM</button>
+                     <button id="create-session-btn" class="w-full bg-gray-700 hover:bg-gray-800 text-white font-bold py-3 px-6 rounded-full shadow-lg flex items-center justify-center gap-3 text-base hidden" data-translate-key="collabModeBtn">MODE KOLABURASI TIM</button>
                      <button id="view-results-btn" class="w-full bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 font-bold py-3 px-6 rounded-full shadow-lg hover:bg-gray-300 dark:hover:bg-gray-600 flex items-center justify-center gap-2 uppercase"><span data-translate-key="viewResultsBtn">LIHAT HASIL SCAN</span> <span id="home-contact-count" class="bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-300 text-xs font-bold px-2 py-0.5 rounded-full">0</span></button>
                 </div>
                 <input type="file" id="image-upload-input" class="hidden" accept="image/*">
@@ -627,6 +627,7 @@
             const CLIENT_ID = "328921559379-s3mmi3dlpj39qtkgl4itt5q2ukl1nmid.apps.googleusercontent.com";
             const SCOPES = "https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/spreadsheets";
             let tokenClient;
+            let codeClient; // For collaboration flow
             let gapiInited = false;
             let gisInited = false;
             // --- End Google API Integration ---
@@ -1905,7 +1906,7 @@ END:VCALENDAR`;
                     }
                 });
 
-                // GIS Client
+                // GIS Client (for individual G-Sheet save)
                 tokenClient = google.accounts.oauth2.initTokenClient({
                     client_id: CLIENT_ID,
                     scope: SCOPES,
@@ -1915,12 +1916,27 @@ END:VCALENDAR`;
                             showToast(`Gagal otentikasi: ${tokenResponse.error}`);
                             return;
                         }
-                        // Perbaikan: Secara eksplisit atur access_token untuk menghindari masalah CO-OP
                         gapi.client.setToken({ 'access_token': tokenResponse.access_token });
                         updateSigninStatus(true);
                         showToast('Berhasil terhubung dengan Google.');
                     },
                 });
+
+                // GIS Code Client (for collaboration session to get auth code)
+                codeClient = google.accounts.oauth2.initCodeClient({
+                    client_id: CLIENT_ID,
+                    scope: SCOPES,
+                    ux_mode: 'popup',
+                    callback: (response) => {
+                        if (response.code) {
+                            handleCollabSessionCreation(response.code);
+                        } else {
+                            logError("Google Code Client Error", response);
+                            showToast("Gagal mendapatkan kode otorisasi dari Google.");
+                        }
+                    },
+                });
+
                 gisInited = true;
             }
 
@@ -1936,15 +1952,57 @@ END:VCALENDAR`;
             [otherSelectors.langToggleInitial, otherSelectors.langToggleResults].forEach(btn => btn.addEventListener('click', toggleLanguage));
             createSessionBtn.addEventListener('click', () => showScreen('createSession'));
             cancelCreateSessionBtn.addEventListener('click', () => showScreen('initial'));
+            async function handleCollabSessionCreation(authCode) {
+                const acara = collabSessionNameInput.value.trim();
+                if (!acara) {
+                    showToast(getTranslation('toastEmptyEventName'));
+                    return;
+                }
+                const btn = generateSessionQRBtn;
+                const originalHTML = btn.innerHTML;
+                btn.disabled = true;
+                btn.innerHTML = `<div class="loader btn-loader"></div>`;
+
+                try {
+                    const response = await fetch(`${BACKEND_API_URL}/initiate-collab-session`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ authCode, acara })
+                    });
+
+                    const result = await response.json();
+                    if (!response.ok || !result.success) {
+                        throw new Error(result.error || 'Gagal memulai sesi kolaborasi di server.');
+                    }
+
+                    const { sessionId } = result;
+                    const baseUrl = window.location.origin + window.location.pathname;
+                    const collabUrl = `${baseUrl}?sesi=${sessionId}&acara=${encodeURIComponent(acara)}`;
+
+                    qrCodeContainer.innerHTML = '';
+                    new QRCode(qrCodeContainer, { text: collabUrl, width: 256, height: 256 });
+                    showSessionQRModal.classList.remove('hidden');
+
+                } catch (error) {
+                    logError("Error initiating collaboration session", error);
+                    showToast(`Error: ${error.message}`);
+                } finally {
+                    btn.disabled = false;
+                    btn.innerHTML = originalHTML;
+                }
+            }
+
             generateSessionQRBtn.addEventListener('click', () => {
                 const acara = collabSessionNameInput.value.trim();
-                if (!acara) { showToast(getTranslation('toastEmptyEventName')); return; }
-                const sessionId = acara.replace(/\s+/g, '-') + '-' + Date.now().toString(36);
-                const baseUrl = window.location.origin + window.location.pathname;
-                const collabUrl = `${baseUrl}?sesi=${sessionId}&acara=${encodeURIComponent(acara)}`;
-                qrCodeContainer.innerHTML = '';
-                new QRCode(qrCodeContainer, { text: collabUrl, width: 256, height: 256 });
-                showSessionQRModal.classList.remove('hidden');
+                if (!acara) {
+                    showToast(getTranslation('toastEmptyEventName'));
+                    return;
+                }
+                if (!codeClient) {
+                    showToast("Google Client belum siap. Mohon tunggu sebentar.");
+                    return;
+                }
+                codeClient.requestCode();
             });
             closeQrModalBtn.addEventListener('click', () => {
                 showSessionQRModal.classList.add('hidden');
