@@ -1,0 +1,1525 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scanner Pintar - Analisa Kompetitor | AI-First Business Card Scanner</title>
+    <meta name="description" content="Analisis komprehensif Scanner Pintar vs 8 kompetitor utama. Teknologi AI terdepan, 100% gratis, dan fitur unik untuk profesional Indonesia.">
+    <style>
+        :root {
+            /* Primitive Color Tokens */
+            --color-white: rgba(255, 255, 255, 1);
+            --color-black: rgba(0, 0, 0, 1);
+            --color-cream-50: rgba(252, 252, 249, 1);
+            --color-cream-100: rgba(255, 255, 253, 1);
+            --color-gray-200: rgba(245, 245, 245, 1);
+            --color-gray-300: rgba(167, 169, 169, 1);
+            --color-gray-400: rgba(119, 124, 124, 1);
+            --color-slate-500: rgba(98, 108, 113, 1);
+            --color-brown-600: rgba(94, 82, 64, 1);
+            --color-charcoal-700: rgba(31, 33, 33, 1);
+            --color-charcoal-800: rgba(38, 40, 40, 1);
+            --color-slate-900: rgba(19, 52, 59, 1);
+            --color-teal-300: rgba(50, 184, 198, 1);
+            --color-teal-400: rgba(45, 166, 178, 1);
+            --color-teal-500: rgba(33, 128, 141, 1);
+            --color-teal-600: rgba(29, 116, 128, 1);
+            --color-teal-700: rgba(26, 104, 115, 1);
+            --color-teal-800: rgba(41, 150, 161, 1);
+            --color-red-400: rgba(255, 84, 89, 1);
+            --color-red-500: rgba(192, 21, 47, 1);
+            --color-orange-400: rgba(230, 129, 97, 1);
+            --color-orange-500: rgba(168, 75, 47, 1);
+            
+            /* RGB versions for opacity control */
+            --color-brown-600-rgb: 94, 82, 64;
+            --color-teal-500-rgb: 33, 128, 141;
+            --color-slate-900-rgb: 19, 52, 59;
+            --color-slate-500-rgb: 98, 108, 113;
+            --color-red-500-rgb: 192, 21, 47;
+            --color-red-400-rgb: 255, 84, 89;
+            --color-orange-500-rgb: 168, 75, 47;
+            --color-orange-400-rgb: 230, 129, 97;
+            
+            /* Background color tokens */
+            --color-bg-1: rgba(59, 130, 246, 0.08);
+            --color-bg-2: rgba(245, 158, 11, 0.08);
+            --color-bg-3: rgba(34, 197, 94, 0.08);
+            --color-bg-4: rgba(239, 68, 68, 0.08);
+            --color-bg-5: rgba(147, 51, 234, 0.08);
+            --color-bg-6: rgba(249, 115, 22, 0.08);
+            --color-bg-7: rgba(236, 72, 153, 0.08);
+            --color-bg-8: rgba(6, 182, 212, 0.08);
+            
+            /* Semantic Color Tokens */
+            --color-background: var(--color-cream-50);
+            --color-surface: var(--color-cream-100);
+            --color-text: var(--color-slate-900);
+            --color-text-secondary: var(--color-slate-500);
+            --color-primary: var(--color-teal-500);
+            --color-primary-hover: var(--color-teal-600);
+            --color-primary-active: var(--color-teal-700);
+            --color-secondary: rgba(var(--color-brown-600-rgb), 0.12);
+            --color-secondary-hover: rgba(var(--color-brown-600-rgb), 0.2);
+            --color-secondary-active: rgba(var(--color-brown-600-rgb), 0.25);
+            --color-border: rgba(var(--color-brown-600-rgb), 0.2);
+            --color-btn-primary-text: var(--color-cream-50);
+            --color-card-border: rgba(var(--color-brown-600-rgb), 0.12);
+            --color-card-border-inner: rgba(var(--color-brown-600-rgb), 0.12);
+            --color-error: var(--color-red-500);
+            --color-success: var(--color-teal-500);
+            --color-warning: var(--color-orange-500);
+            --color-info: var(--color-slate-500);
+            --color-focus-ring: rgba(var(--color-teal-500-rgb), 0.4);
+            --color-select-caret: rgba(var(--color-slate-900-rgb), 0.8);
+            
+            /* Typography */
+            --font-family-base: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            --font-size-xs: 11px;
+            --font-size-sm: 12px;
+            --font-size-base: 14px;
+            --font-size-lg: 16px;
+            --font-size-xl: 18px;
+            --font-size-2xl: 20px;
+            --font-size-3xl: 24px;
+            --font-size-4xl: 30px;
+            --font-weight-normal: 400;
+            --font-weight-medium: 500;
+            --font-weight-semibold: 550;
+            --font-weight-bold: 600;
+            --line-height-tight: 1.2;
+            --line-height-normal: 1.5;
+            
+            /* Spacing */
+            --space-4: 4px;
+            --space-8: 8px;
+            --space-12: 12px;
+            --space-16: 16px;
+            --space-20: 20px;
+            --space-24: 24px;
+            --space-32: 32px;
+            --space-48: 48px;
+            --space-64: 64px;
+            
+            /* Border Radius */
+            --radius-sm: 6px;
+            --radius-base: 8px;
+            --radius-lg: 12px;
+            --radius-xl: 16px;
+            --radius-full: 9999px;
+            
+            /* Shadows */
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.04), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.04), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+            
+            /* Animation */
+            --duration-fast: 150ms;
+            --duration-normal: 250ms;
+            --ease-standard: cubic-bezier(0.16, 1, 0.3, 1);
+            
+            /* Custom gradients */
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --color-gray-400-rgb: 119, 124, 124;
+                --color-teal-300-rgb: 50, 184, 198;
+                --color-gray-300-rgb: 167, 169, 169;
+                --color-gray-200-rgb: 245, 245, 245;
+                
+                --color-bg-1: rgba(29, 78, 216, 0.15);
+                --color-bg-2: rgba(180, 83, 9, 0.15);
+                --color-bg-3: rgba(21, 128, 61, 0.15);
+                --color-bg-4: rgba(185, 28, 28, 0.15);
+                --color-bg-5: rgba(107, 33, 168, 0.15);
+                --color-bg-6: rgba(194, 65, 12, 0.15);
+                --color-bg-7: rgba(190, 24, 93, 0.15);
+                --color-bg-8: rgba(8, 145, 178, 0.15);
+                
+                --color-background: var(--color-charcoal-700);
+                --color-surface: var(--color-charcoal-800);
+                --color-text: var(--color-gray-200);
+                --color-text-secondary: rgba(var(--color-gray-300-rgb), 0.7);
+                --color-primary: var(--color-teal-300);
+                --color-primary-hover: var(--color-teal-400);
+                --color-primary-active: var(--color-teal-800);
+                --color-secondary: rgba(var(--color-gray-400-rgb), 0.15);
+                --color-secondary-hover: rgba(var(--color-gray-400-rgb), 0.25);
+                --color-secondary-active: rgba(var(--color-gray-400-rgb), 0.3);
+                --color-border: rgba(var(--color-gray-400-rgb), 0.3);
+                --color-error: var(--color-red-400);
+                --color-success: var(--color-teal-300);
+                --color-warning: var(--color-orange-400);
+                --color-info: var(--color-gray-300);
+                --color-focus-ring: rgba(var(--color-teal-300-rgb), 0.4);
+                --color-btn-primary-text: var(--color-slate-900);
+                --color-card-border: rgba(var(--color-gray-400-rgb), 0.2);
+                --color-card-border-inner: rgba(var(--color-gray-400-rgb), 0.15);
+                --color-select-caret: rgba(var(--color-gray-200-rgb), 0.8);
+            }
+        }
+        
+        [data-theme="dark"] {
+            --color-gray-400-rgb: 119, 124, 124;
+            --color-teal-300-rgb: 50, 184, 198;
+            --color-gray-300-rgb: 167, 169, 169;
+            --color-gray-200-rgb: 245, 245, 245;
+            
+            --color-bg-1: rgba(29, 78, 216, 0.15);
+            --color-bg-2: rgba(180, 83, 9, 0.15);
+            --color-bg-3: rgba(21, 128, 61, 0.15);
+            --color-bg-4: rgba(185, 28, 28, 0.15);
+            --color-bg-5: rgba(107, 33, 168, 0.15);
+            --color-bg-6: rgba(194, 65, 12, 0.15);
+            --color-bg-7: rgba(190, 24, 93, 0.15);
+            --color-bg-8: rgba(8, 145, 178, 0.15);
+            
+            --color-background: var(--color-charcoal-700);
+            --color-surface: var(--color-charcoal-800);
+            --color-text: var(--color-gray-200);
+            --color-text-secondary: rgba(var(--color-gray-300-rgb), 0.7);
+            --color-primary: var(--color-teal-300);
+            --color-primary-hover: var(--color-teal-400);
+            --color-primary-active: var(--color-teal-800);
+            --color-secondary: rgba(var(--color-gray-400-rgb), 0.15);
+            --color-secondary-hover: rgba(var(--color-gray-400-rgb), 0.25);
+            --color-secondary-active: rgba(var(--color-gray-400-rgb), 0.3);
+            --color-border: rgba(var(--color-gray-400-rgb), 0.3);
+            --color-error: var(--color-red-400);
+            --color-success: var(--color-teal-300);
+            --color-warning: var(--color-orange-400);
+            --color-info: var(--color-gray-300);
+            --color-focus-ring: rgba(var(--color-teal-300-rgb), 0.4);
+            --color-btn-primary-text: var(--color-slate-900);
+            --color-card-border: rgba(var(--color-gray-400-rgb), 0.2);
+            --color-card-border-inner: rgba(var(--color-gray-400-rgb), 0.15);
+            --color-select-caret: rgba(var(--color-gray-200-rgb), 0.8);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: var(--font-family-base);
+            background-color: var(--color-background);
+            color: var(--color-text);
+            line-height: var(--line-height-normal);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            transition: all var(--duration-normal) var(--ease-standard);
+        }
+        
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--color-border);
+            z-index: 1000;
+            transition: all var(--duration-normal) var(--ease-standard);
+        }
+        
+        [data-theme="dark"] .navbar {
+            background: rgba(31, 33, 33, 0.95);
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--space-24);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: var(--space-12);
+            font-size: var(--font-size-xl);
+            font-weight: var(--font-weight-bold);
+            color: var(--color-primary);
+            text-decoration: none;
+        }
+        
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: var(--space-32);
+            align-items: center;
+        }
+        
+        .nav-menu a {
+            color: var(--color-text-secondary);
+            text-decoration: none;
+            font-weight: var(--font-weight-medium);
+            transition: color var(--duration-fast) var(--ease-standard);
+            position: relative;
+        }
+        
+        .nav-menu a:hover,
+        .nav-menu a.active {
+            color: var(--color-primary);
+        }
+        
+        .nav-menu a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--color-primary);
+        }
+        
+        .theme-toggle {
+            background: var(--color-secondary);
+            border: none;
+            border-radius: var(--radius-full);
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--duration-fast) var(--ease-standard);
+        }
+        
+        .theme-toggle:hover {
+            background: var(--color-secondary-hover);
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 120px 0 80px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><polygon fill="%23ffffff10" points="0,1000 1000,800 1000,1000"/><polygon fill="%23ffffff05" points="0,900 1000,700 1000,900 0,900"/></svg>');
+            background-size: cover;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 var(--space-24);
+        }
+        
+        .hero h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: var(--font-weight-bold);
+            margin-bottom: var(--space-24);
+            line-height: var(--line-height-tight);
+        }
+        
+        .hero p {
+            font-size: var(--font-size-xl);
+            margin-bottom: var(--space-32);
+            opacity: 0.9;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-32);
+            margin-top: var(--space-48);
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: var(--font-size-4xl);
+            font-weight: var(--font-weight-bold);
+            display: block;
+            margin-bottom: var(--space-8);
+        }
+        
+        .stat-label {
+            font-size: var(--font-size-base);
+            opacity: 0.8;
+        }
+        
+        /* Main Content */
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--space-64) var(--space-24);
+        }
+        
+        .section {
+            margin-bottom: var(--space-64);
+        }
+        
+        .section-title {
+            font-size: var(--font-size-3xl);
+            font-weight: var(--font-weight-bold);
+            margin-bottom: var(--space-32);
+            text-align: center;
+        }
+        
+        .section-subtitle {
+            font-size: var(--font-size-lg);
+            color: var(--color-text-secondary);
+            text-align: center;
+            margin-bottom: var(--space-48);
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        /* Competitors Section */
+        .filters {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-16);
+            margin-bottom: var(--space-32);
+            flex-wrap: wrap;
+        }
+        
+        .filter-btn {
+            padding: var(--space-8) var(--space-20);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-full);
+            background: var(--color-surface);
+            color: var(--color-text);
+            cursor: pointer;
+            transition: all var(--duration-fast) var(--ease-standard);
+            font-weight: var(--font-weight-medium);
+        }
+        
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: var(--color-primary);
+            color: white;
+            border-color: var(--color-primary);
+        }
+        
+        .search-box {
+            max-width: 400px;
+            margin: 0 auto var(--space-32);
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: var(--space-12) var(--space-16);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-base);
+            background: var(--color-surface);
+            color: var(--color-text);
+            font-size: var(--font-size-base);
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px var(--color-focus-ring);
+        }
+        
+        .competitors-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: var(--space-24);
+        }
+        
+        .competitor-card {
+            background: var(--color-surface);
+            border: 1px solid var(--color-card-border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-24);
+            transition: all var(--duration-normal) var(--ease-standard);
+            cursor: pointer;
+        }
+        
+        .competitor-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .competitor-header {
+            display: flex;
+            align-items: center;
+            gap: var(--space-16);
+            margin-bottom: var(--space-16);
+        }
+        
+        .competitor-logo {
+            font-size: var(--font-size-3xl);
+        }
+        
+        .competitor-info h3 {
+            font-size: var(--font-size-xl);
+            font-weight: var(--font-weight-bold);
+            margin-bottom: var(--space-4);
+        }
+        
+        .competitor-price {
+            color: var(--color-text-secondary);
+            font-size: var(--font-size-sm);
+        }
+        
+        .competitor-details {
+            margin-top: var(--space-16);
+        }
+        
+        .pros-cons {
+            display: none;
+            margin-top: var(--space-16);
+        }
+        
+        .pros-cons.show {
+            display: block;
+        }
+        
+        .pros,
+        .cons {
+            margin-bottom: var(--space-16);
+        }
+        
+        .pros h4,
+        .cons h4 {
+            font-size: var(--font-size-base);
+            font-weight: var(--font-weight-semibold);
+            margin-bottom: var(--space-8);
+        }
+        
+        .pros h4 {
+            color: var(--color-success);
+        }
+        
+        .cons h4 {
+            color: var(--color-error);
+        }
+        
+        .pros ul,
+        .cons ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .pros li {
+            padding: var(--space-4) 0;
+            position: relative;
+            padding-left: var(--space-20);
+        }
+        
+        .pros li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--color-success);
+            font-weight: var(--font-weight-bold);
+        }
+        
+        .cons li {
+            padding: var(--space-4) 0;
+            position: relative;
+            padding-left: var(--space-20);
+        }
+        
+        .cons li::before {
+            content: '✗';
+            position: absolute;
+            left: 0;
+            color: var(--color-error);
+            font-weight: var(--font-weight-bold);
+        }
+        
+        .category-badge {
+            display: inline-block;
+            padding: var(--space-4) var(--space-12);
+            border-radius: var(--radius-full);
+            font-size: var(--font-size-xs);
+            font-weight: var(--font-weight-semibold);
+            text-transform: uppercase;
+        }
+        
+        .category-premium {
+            background: var(--color-bg-7);
+            color: var(--color-warning);
+        }
+        
+        .category-free {
+            background: var(--color-bg-3);
+            color: var(--color-success);
+        }
+        
+        .category-crm {
+            background: var(--color-bg-1);
+            color: var(--color-primary);
+        }
+        
+        /* Comparison Table */
+        .table-container {
+            overflow-x: auto;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--color-card-border);
+            background: var(--color-surface);
+        }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px;
+        }
+        
+        .comparison-table th,
+        .comparison-table td {
+            padding: var(--space-16);
+            text-align: left;
+            border-bottom: 1px solid var(--color-card-border-inner);
+        }
+        
+        .comparison-table th {
+            background: var(--color-secondary);
+            font-weight: var(--font-weight-semibold);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        .scanner-pintar-col {
+            background: var(--color-bg-3) !important;
+            font-weight: var(--font-weight-semibold);
+        }
+        
+        .comparison-table td:first-child {
+            font-weight: var(--font-weight-semibold);
+            background: var(--color-secondary);
+            position: sticky;
+            left: 0;
+            z-index: 5;
+        }
+        
+        /* Differentiators */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-24);
+        }
+        
+        .feature-card {
+            background: var(--color-surface);
+            border: 1px solid var(--color-card-border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-24);
+            text-align: center;
+            transition: all var(--duration-normal) var(--ease-standard);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: var(--space-16);
+            display: block;
+        }
+        
+        .feature-card h3 {
+            font-size: var(--font-size-xl);
+            margin-bottom: var(--space-12);
+        }
+        
+        .feature-card p {
+            color: var(--color-text-secondary);
+            line-height: 1.6;
+        }
+        
+        /* Tech Stack */
+        .tech-stack {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--space-24);
+        }
+        
+        .tech-item {
+            background: var(--color-surface);
+            border: 1px solid var(--color-card-border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-24);
+            text-align: center;
+        }
+        
+        .tech-item h4 {
+            margin-bottom: var(--space-12);
+        }
+        
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+            }
+            
+            .hero {
+                padding: 100px 0 60px;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: var(--space-24);
+            }
+            
+            .main-content {
+                padding: var(--space-48) var(--space-16);
+            }
+            
+            .competitors-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .comparison-table {
+                font-size: var(--font-size-sm);
+            }
+            
+            .comparison-table th,
+            .comparison-table td {
+                padding: var(--space-8);
+            }
+        }
+        
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes countUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .fade-in {
+            animation: fadeInUp 0.6s var(--ease-standard);
+        }
+        
+        .count-animation {
+            animation: countUp 0.8s var(--ease-standard);
+        }
+        
+        /* Scroll Indicators */
+        .scroll-indicator {
+            position: fixed;
+            top: 70px;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--color-secondary);
+            z-index: 999;
+        }
+        
+        .scroll-progress {
+            height: 100%;
+            background: var(--color-primary);
+            width: 0%;
+            transition: width 0.1s ease;
+        }
+        
+        /* Loading States */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid var(--color-secondary);
+            border-radius: 50%;
+            border-top-color: var(--color-primary);
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Footer */
+        .footer {
+            background: var(--color-surface);
+            border-top: 1px solid var(--color-border);
+            padding: var(--space-48) 0 var(--space-24);
+            text-align: center;
+            color: var(--color-text-secondary);
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--space-24);
+        }
+        
+        .footer h3 {
+            margin-bottom: var(--space-16);
+            color: var(--color-text);
+        }
+        
+        .cta-section {
+            background: var(--gradient-secondary);
+            color: white;
+            padding: var(--space-64) 0;
+            text-align: center;
+            margin-bottom: 0;
+        }
+        
+        .cta-content {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 0 var(--space-24);
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background: white;
+            color: var(--color-slate-900);
+            padding: var(--space-16) var(--space-32);
+            border-radius: var(--radius-base);
+            text-decoration: none;
+            font-weight: var(--font-weight-semibold);
+            font-size: var(--font-size-lg);
+            margin-top: var(--space-24);
+            transition: all var(--duration-normal) var(--ease-standard);
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+    </style>
+</head>
+<body>
+    <!-- Scroll Progress Indicator -->
+    <div class="scroll-indicator">
+        <div class="scroll-progress" id="scrollProgress"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">
+                <span>🚀</span>
+                <span>Scanner Pintar</span>
+            </a>
+            <ul class="nav-menu">
+                <li><a href="#overview" class="nav-link">Overview</a></li>
+                <li><a href="#competitors" class="nav-link">Kompetitor</a></li>
+                <li><a href="#comparison" class="nav-link">Perbandingan</a></li>
+                <li><a href="#differentiators" class="nav-link">Keunggulan</a></li>
+                <li><a href="#tech-stack" class="nav-link">Teknologi</a></li>
+            </ul>
+            <button class="theme-toggle" id="themeToggle" title="Toggle Dark Mode">
+                <span id="themeIcon">🌙</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="overview">
+        <div class="hero-content">
+            <h1>Scanner Pintar vs Kompetitor</h1>
+            <p>Analisis mendalam Scanner Pintar sebagai solusi AI-first business card scanner untuk profesional Indonesia</p>
+            
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <span class="stat-number" data-count="8">0</span>
+                    <span class="stat-label">📊 Kompetitor Dianalisis</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" data-count="100">0</span>
+                    <span class="stat-label">💰 % Gratis Selamanya</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" data-count="13">0</span>
+                    <span class="stat-label">🏢 Kategori Industri</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" data-count="2">0</span>
+                    <span class="stat-label">🤖 Fitur AI Unik</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Competitors Overview -->
+        <section class="section" id="competitors">
+            <h2 class="section-title">Analisis 8 Kompetitor Utama</h2>
+            <p class="section-subtitle">Perbandingan fitur, harga, dan keunggulan Scanner Pintar dengan kompetitor terkemuka di pasar business card scanner</p>
+            
+            <div class="filters">
+                <button class="filter-btn active" data-filter="all">Semua</button>
+                <button class="filter-btn" data-filter="free">Gratis</button>
+                <button class="filter-btn" data-filter="crm">CRM</button>
+                <button class="filter-btn" data-filter="premium">Premium</button>
+            </div>
+            
+            <div class="search-box">
+                <input type="text" class="search-input" id="searchInput" placeholder="Cari kompetitor...">
+            </div>
+            
+            <div class="competitors-grid" id="competitorsGrid">
+                <!-- Competitor cards will be generated by JavaScript -->
+            </div>
+        </section>
+
+        <!-- Comparison Table -->
+        <section class="section" id="comparison">
+            <h2 class="section-title">Perbandingan Fitur Detail</h2>
+            <p class="section-subtitle">Tabel komprehensif membandingkan Scanner Pintar dengan semua kompetitor berdasarkan fitur kunci</p>
+            
+            <div class="table-container">
+                <table class="comparison-table" id="comparisonTable">
+                    <!-- Table content will be generated by JavaScript -->
+                </table>
+            </div>
+        </section>
+
+        <!-- Differentiators -->
+        <section class="section" id="differentiators">
+            <h2 class="section-title">Keunggulan Scanner Pintar</h2>
+            <p class="section-subtitle">Fitur-fitur unik yang membedakan Scanner Pintar dari kompetitor lainnya</p>
+            
+            <div class="features-grid" id="featuresGrid">
+                <!-- Feature cards will be generated by JavaScript -->
+            </div>
+        </section>
+
+        <!-- Tech Stack -->
+        <section class="section" id="tech-stack">
+            <h2 class="section-title">Teknologi Terdepan</h2>
+            <p class="section-subtitle">Stack teknologi AI terbaru yang mendukung performa superior Scanner Pintar</p>
+            
+            <div class="tech-stack" id="techStack">
+                <!-- Tech stack items will be generated by JavaScript -->
+            </div>
+        </section>
+    </main>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="cta-content">
+            <h2>Siap Mencoba Scanner Pintar?</h2>
+            <p>Bergabunglah dengan profesional Indonesia yang menggunakan teknologi AI terdepan untuk networking yang lebih efektif</p>
+            <a href="#" class="cta-button" target="_blank">Coba Gratis Sekarang 🚀</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <h3>Scanner Pintar</h3>
+            <p>AI-First Business Card Scanner untuk Profesional Indonesia</p>
+            <p style="margin-top: var(--space-16); font-size: var(--font-size-sm);">© 2025 Scanner Pintar. Analisis kompetitor - Oktober 2025</p>
+        </div>
+    </footer>
+
+    <script>
+        // Data
+        const competitorsData = [
+            {
+                name: 'CamCard',
+                logo: '📇',
+                price: '$9.99/bulan atau $49.99/tahun',
+                accuracy: '92-95%',
+                platform: 'iOS, Android, Web',
+                category: 'premium',
+                pros: [
+                    'Ekosistem matang dengan 100 juta+ pengguna global',
+                    'Digital business card creator dengan template kustom',
+                    'Multi-platform sync (iOS, Android, Web)',
+                    'Verifikasi manual 99.99% untuk akurasi tinggi',
+                    'Integrasi CRM luas (Salesforce, Excel, Outlook)'
+                ],
+                cons: [
+                    'Berbayar: $9.99-49.99/tahun',
+                    'Akurasi OCR standar hanya 92-95%',
+                    'Memerlukan akun untuk sinkronisasi cloud',
+                    'Antarmuka kompleks dengan banyak fitur',
+                    'Tidak menggunakan AI model terbaru'
+                ]
+            },
+            {
+                name: 'Zoho Card Scanner',
+                logo: '🔷',
+                price: 'Gratis (dengan Zoho CRM)',
+                accuracy: '~94%',
+                platform: 'iOS, Android',
+                category: 'crm',
+                pros: [
+                    'Integrasi native dengan Zoho CRM',
+                    'Gratis untuk pengguna Zoho',
+                    'Support 25 bahasa dengan deteksi otomatis',
+                    'Auto-sync langsung ke CRM',
+                    'Highlight field tidak akurat untuk review'
+                ],
+                cons: [
+                    'Terikat ekosistem Zoho CRM',
+                    'Akurasi OCR hanya ~94%',
+                    'Fitur terbatas di luar integrasi CRM',
+                    'Tidak ada klasifikasi industri otomatis',
+                    'Proses scanning butuh crop manual'
+                ]
+            },
+            {
+                name: 'HubSpot Business Card Scanner',
+                logo: '🟠',
+                price: 'Gratis (dengan HubSpot)',
+                accuracy: '~95%',
+                platform: 'iOS, Android',
+                category: 'crm',
+                pros: [
+                    'Gratis untuk semua pengguna HubSpot',
+                    'Akurasi OCR tinggi ~95%',
+                    'Integrasi seamless dengan HubSpot CRM',
+                    'Auto-sync kontak ke HubSpot database',
+                    'Workflow automation terintegrasi'
+                ],
+                cons: [
+                    'Terikat ekosistem HubSpot',
+                    'Tidak ada export Google Sheets native',
+                    'Fitur terbatas di luar HubSpot',
+                    'Tidak ada follow-up email generation',
+                    'Tidak ada klasifikasi industri'
+                ]
+            },
+            {
+                name: 'Adobe Scan',
+                logo: '🅰️',
+                price: 'Gratis (premium via subscription)',
+                accuracy: 'Tinggi (Adobe Sensei AI)',
+                platform: 'iOS, Android',
+                category: 'free',
+                pros: [
+                    'Gratis dengan fitur powerful',
+                    'Adobe Sensei AI untuk auto-detect',
+                    'Ekosistem Adobe luas (Document Cloud)',
+                    'Multi-purpose scanner (dokumen, cards, receipts)',
+                    'Export ke banyak format (PDF, Word, Excel)'
+                ],
+                cons: [
+                    'Fokus pada dokumen, bukan business card',
+                    'Tidak ada integrasi CRM native',
+                    'Tidak ada follow-up generation',
+                    'Save to contacts manual',
+                    'Bahasa business card terbatas'
+                ]
+            },
+            {
+                name: 'Microsoft Office Lens',
+                logo: 'Ⓜ️',
+                price: 'Gratis',
+                accuracy: '~80%',
+                platform: 'iOS, Android',
+                category: 'free',
+                pros: [
+                    'Sepenuhnya gratis tanpa batasan',
+                    'Multi-purpose scanner berbagai mode',
+                    'Integrasi Microsoft 365 ecosystem',
+                    'Export ke multiple format',
+                    'OCR untuk handwritten text'
+                ],
+                cons: [
+                    'Akurasi OCR rendah (~80%)',
+                    'Akan dihentikan September 2025',
+                    'Tidak ada AI follow-up generation',
+                    'Manual save to contacts',
+                    'Fokus ke document, bukan networking'
+                ]
+            },
+            {
+                name: 'ScanBizCards',
+                logo: '💼',
+                price: '$100/tahun untuk premium',
+                accuracy: '99.99% (dengan human transcription)',
+                platform: 'iOS, Android',
+                category: 'premium',
+                pros: [
+                    'Akurasi tertinggi 99.99% dengan human transcription',
+                    'Batch scanning dan conference badge scanning',
+                    'QR code scanning dan digital card sharing',
+                    'Integrasi Salesforce native',
+                    'Support 21 bahasa'
+                ],
+                cons: [
+                    'Mahal: $100/tahun untuk premium',
+                    'Free version sangat terbatas (2 card exports)',
+                    'Human transcription butuh waktu tunggu',
+                    'Tidak ada AI follow-up generation',
+                    'UI kurang modern'
+                ]
+            },
+            {
+                name: 'Covve Scan',
+                logo: '🎯',
+                price: 'Free trial 14 hari, kemudian berbayar',
+                accuracy: '99%+ (60+ bahasa)',
+                platform: 'iOS, Android',
+                category: 'premium',
+                pros: [
+                    'Akurasi tertinggi 99%+ dengan 60+ bahasa',
+                    'Kecepatan scan tercepat di pasar',
+                    'QR code untuk digital cards & LinkedIn',
+                    'AI-powered lead research',
+                    'GDPR compliant dari Eropa'
+                ],
+                cons: [
+                    'Berbayar setelah trial 14 hari',
+                    'Tidak ada follow-up email/WA generation',
+                    'Fokus lead capture, bukan automation',
+                    'Tidak ada klasifikasi industri otomatis',
+                    'Harga tidak transparan'
+                ]
+            },
+            {
+                name: 'ABBYY Business Card Reader',
+                logo: '📱',
+                price: 'Berbayar (harga bervariasi)',
+                accuracy: 'Tinggi (25 bahasa)',
+                platform: 'iOS, Android',
+                category: 'premium',
+                pros: [
+                    'Teknologi OCR terbaik dari ABBYY',
+                    'Support 25 bahasa, multi-language cards',
+                    'Auto-detect, auto-crop, auto-focus',
+                    'Sangat cepat (5 detik per kartu)',
+                    'Social media search integration'
+                ],
+                cons: [
+                    'Berbayar dengan harga tidak jelas',
+                    'Discontinued untuk Android',
+                    'Manual crop masih diperlukan',
+                    'Tidak ada AI follow-up generation',
+                    'Cloud sync butuh ABBYY Account'
+                ]
+            }
+        ];
+        
+        const featuresData = [
+            {
+                icon: '🤖',
+                title: 'Llama 4 Maverick AI',
+                description: 'Model multimodal terbaru dari Meta (April 2025) dengan 17B active parameters dan visual recognition superior'
+            },
+            {
+                icon: '💬',
+                title: 'AI Follow-up Generation',
+                description: 'Auto-generate email & WhatsApp follow-up dalam Bahasa Indonesia dengan personalisasi kontekstual'
+            },
+            {
+                icon: '🏢',
+                title: 'Klasifikasi Industri Otomatis',
+                description: '13 kategori industri spesifik Indonesia: Pertambangan, Teknologi, Properti, Kontraktor, dan lainnya'
+            },
+            {
+                icon: '📊',
+                title: 'Google Sheets Integration',
+                description: 'Penyimpanan langsung ke Google Sheets untuk kolaborasi tim real-time tanpa vendor lock-in'
+            },
+            {
+                icon: '⚡',
+                title: 'Groq Inference Speed',
+                description: 'Powered by Groq LPU untuk processing super cepat dengan latency minimal'
+            },
+            {
+                icon: '🇮🇩',
+                title: 'Optimized untuk Indonesia',
+                description: 'Format telepon Indonesia, Bahasa Indonesia native, jenis perusahaan lokal'
+            }
+        ];
+        
+        const comparisonData = {
+            headers: ['Fitur', 'Scanner Pintar', 'CamCard', 'Zoho', 'HubSpot', 'Adobe', 'Office Lens', 'ScanBizCards', 'Covve', 'ABBYY'],
+            rows: [
+                {
+                    feature: 'Harga',
+                    values: ['✅ Gratis', '$9.99-49.99/thn', 'Gratis*', 'Gratis*', 'Gratis', 'Gratis', '$100/thn', 'Berbayar', 'Berbayar']
+                },
+                {
+                    feature: 'Akurasi OCR',
+                    values: ['⭐ Tinggi (Llama 4)', '92-95%', '~94%', '~95%', 'Tinggi', '~80%', '99.99%*', '99%+', 'Tinggi']
+                },
+                {
+                    feature: 'AI Follow-up Email/WA',
+                    values: ['✅ Ada', '❌', '❌', '❌', '❌', '❌', '❌', '❌', '❌']
+                },
+                {
+                    feature: 'Klasifikasi Industri',
+                    values: ['✅ 13 kategori', '❌', '❌', '❌', '❌', '❌', '❌', '❌', '❌']
+                },
+                {
+                    feature: 'Google Sheets Integration',
+                    values: ['✅ Native', '❌', '❌', '❌', '❌', '❌', 'Manual CSV', 'Manual CSV', 'Manual CSV']
+                },
+                {
+                    feature: 'Vendor Lock-in',
+                    values: ['✅ Tidak ada', 'Ada', 'Zoho CRM', 'HubSpot', '❌', '❌', '❌', '❌', 'Ada']
+                },
+                {
+                    feature: 'QR Code Scan',
+                    values: ['✅ Ada', '❌', '❌', '❌', '❌', '❌', '✅', '✅', '❌']
+                }
+            ]
+        };
+        
+        const techStackData = [
+            {
+                name: 'Llama 4 Maverick',
+                description: '17B-128E model multimodal terbaru dari Meta',
+                color: '#4F46E5'
+            },
+            {
+                name: 'Groq API',
+                description: 'LPU inference super cepat untuk low latency',
+                color: '#F59E0B'
+            },
+            {
+                name: 'Google Cloud Platform',
+                description: 'Deployment scalable dan reliable',
+                color: '#EA4335'
+            },
+            {
+                name: 'Google Sheets API',
+                description: 'Integrasi native untuk kolaborasi tim',
+                color: '#34A853'
+            }
+        ];
+        
+        // State
+        let currentFilter = 'all';
+        let searchTerm = '';
+        let isDarkMode = false;
+        
+        // DOM Elements
+        const competitorsGrid = document.getElementById('competitorsGrid');
+        const comparisonTable = document.getElementById('comparisonTable');
+        const featuresGrid = document.getElementById('featuresGrid');
+        const techStack = document.getElementById('techStack');
+        const searchInput = document.getElementById('searchInput');
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const scrollProgress = document.getElementById('scrollProgress');
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            renderCompetitors();
+            renderComparisonTable();
+            renderFeatures();
+            renderTechStack();
+            initializeEventListeners();
+            initializeAnimations();
+            animateCounters();
+            updateScrollProgress();
+            
+            // Load theme preference (using variable instead of localStorage)
+            setTheme('light');
+        });
+        
+        // Theme Management
+        function setTheme(theme) {
+            isDarkMode = theme === 'dark';
+            document.documentElement.setAttribute('data-theme', theme);
+            themeIcon.textContent = isDarkMode ? '☀️' : '🌙';
+        }
+        
+        function toggleTheme() {
+            setTheme(isDarkMode ? 'light' : 'dark');
+        }
+        
+        // Render Functions
+        function renderCompetitors() {
+            const filteredCompetitors = competitorsData.filter(competitor => {
+                const matchesFilter = currentFilter === 'all' || competitor.category === currentFilter;
+                const matchesSearch = competitor.name.toLowerCase().includes(searchTerm.toLowerCase());
+                return matchesFilter && matchesSearch;
+            });
+            
+            competitorsGrid.innerHTML = filteredCompetitors.map(competitor => `
+                <div class="competitor-card" data-category="${competitor.category}">
+                    <div class="competitor-header">
+                        <div class="competitor-logo">${competitor.logo}</div>
+                        <div class="competitor-info">
+                            <h3>${competitor.name}</h3>
+                            <div class="competitor-price">${competitor.price}</div>
+                            <span class="category-badge category-${competitor.category}">${competitor.category}</span>
+                        </div>
+                    </div>
+                    <div class="competitor-details">
+                        <p><strong>Akurasi:</strong> ${competitor.accuracy}</p>
+                        <p><strong>Platform:</strong> ${competitor.platform}</p>
+                    </div>
+                    <div class="pros-cons">
+                        <div class="pros">
+                            <h4>✓ Keunggulan</h4>
+                            <ul>
+                                ${competitor.pros.map(pro => `<li>${pro}</li>`).join('')}
+                            </ul>
+                        </div>
+                        <div class="cons">
+                            <h4>✗ Kekurangan</h4>
+                            <ul>
+                                ${competitor.cons.map(con => `<li>${con}</li>`).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            
+            // Add click handlers for expandable cards
+            document.querySelectorAll('.competitor-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const proscons = card.querySelector('.pros-cons');
+                    proscons.classList.toggle('show');
+                });
+            });
+        }
+        
+        function renderComparisonTable() {
+            const headerRow = `
+                <tr>
+                    ${comparisonData.headers.map((header, index) => 
+                        `<th class="${index === 1 ? 'scanner-pintar-col' : ''}">${header}</th>`
+                    ).join('')}
+                </tr>
+            `;
+            
+            const bodyRows = comparisonData.rows.map(row => `
+                <tr>
+                    <td><strong>${row.feature}</strong></td>
+                    ${row.values.map((value, index) => 
+                        `<td class="${index === 0 ? 'scanner-pintar-col' : ''}">${value}</td>`
+                    ).join('')}
+                </tr>
+            `).join('');
+            
+            comparisonTable.innerHTML = headerRow + bodyRows;
+        }
+        
+        function renderFeatures() {
+            featuresGrid.innerHTML = featuresData.map(feature => `
+                <div class="feature-card">
+                    <span class="feature-icon">${feature.icon}</span>
+                    <h3>${feature.title}</h3>
+                    <p>${feature.description}</p>
+                </div>
+            `).join('');
+        }
+        
+        function renderTechStack() {
+            techStack.innerHTML = techStackData.map(tech => `
+                <div class="tech-item" style="border-left: 4px solid ${tech.color}">
+                    <h4>${tech.name}</h4>
+                    <p>${tech.description}</p>
+                </div>
+            `).join('');
+        }
+        
+        // Event Listeners
+        function initializeEventListeners() {
+            // Theme toggle
+            themeToggle.addEventListener('click', toggleTheme);
+            
+            // Search
+            searchInput.addEventListener('input', (e) => {
+                searchTerm = e.target.value;
+                renderCompetitors();
+            });
+            
+            // Filters
+            filterButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    filterButtons.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentFilter = btn.dataset.filter;
+                    renderCompetitors();
+                });
+            });
+            
+            // Scroll progress
+            window.addEventListener('scroll', updateScrollProgress);
+            
+            // Smooth scroll for nav links
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetId = link.getAttribute('href').slice(1);
+                    const targetElement = document.getElementById(targetId);
+                    if (targetElement) {
+                        const offsetTop = targetElement.offsetTop - 80;
+                        window.scrollTo({
+                            top: offsetTop,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        }
+        
+        // Animations
+        function initializeAnimations() {
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('fade-in');
+                    }
+                });
+            }, observerOptions);
+            
+            // Observe all sections
+            document.querySelectorAll('.section, .competitor-card, .feature-card, .tech-item').forEach(el => {
+                observer.observe(el);
+            });
+        }
+        
+        function animateCounters() {
+            const counters = document.querySelectorAll('.stat-number');
+            
+            const animateCounter = (counter) => {
+                const target = parseInt(counter.dataset.count);
+                const increment = target / 50;
+                let current = 0;
+                
+                const updateCounter = () => {
+                    if (current < target) {
+                        current += increment;
+                        counter.textContent = Math.ceil(current);
+                        setTimeout(updateCounter, 40);
+                    } else {
+                        counter.textContent = target + (target === 100 ? '%' : '');
+                    }
+                };
+                
+                updateCounter();
+            };
+            
+            // Trigger animation on scroll
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        animateCounter(entry.target);
+                        observer.unobserve(entry.target);
+                    }
+                });
+            });
+            
+            counters.forEach(counter => observer.observe(counter));
+        }
+        
+        function updateScrollProgress() {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            scrollProgress.style.width = scrolled + '%';
+            
+            // Update active nav link
+            const sections = document.querySelectorAll('section[id]');
+            let currentSection = '';
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 100;
+                const sectionHeight = section.offsetHeight;
+                if (winScroll >= sectionTop && winScroll < sectionTop + sectionHeight) {
+                    currentSection = section.id;
+                }
+            });
+            
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + currentSection) {
+                    link.classList.add('active');
+                }
+            });
+        }
+        
+        // Mobile menu toggle (for smaller screens)
+        function createMobileMenu() {
+            // This would be implemented for mobile responsiveness
+            // For now, we'll hide the menu on small screens via CSS
+        }
+        
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            // Toggle theme with Ctrl+Shift+D
+            if (e.ctrlKey && e.shiftKey && e.key === 'D') {
+                e.preventDefault();
+                toggleTheme();
+            }
+            
+            // Focus search with Ctrl+K
+            if (e.ctrlKey && e.key === 'k') {
+                e.preventDefault();
+                searchInput.focus();
+            }
+        });
+        
+        // Error handling for missing elements
+        window.addEventListener('error', (e) => {
+            console.error('Application error:', e.error);
+        });
+        
+        // Performance optimization: Debounce search
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+        
+        // Apply debounce to search
+        const debouncedSearch = debounce((term) => {
+            searchTerm = term;
+            renderCompetitors();
+        }, 300);
+        
+        searchInput.addEventListener('input', (e) => {
+            debouncedSearch(e.target.value);
+        });
+    </script>
+</body>
+</html>
