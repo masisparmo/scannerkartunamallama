@@ -1,344 +1,647 @@
 <!DOCTYPE html>
-<html lang="id" class="dark">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tentang Aplikasi | Scanner Pintar</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class'
-        }
-    </script>
+    <title>Tentang Aplikasi - Scanner Pintar</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f9fafb;
+            --text-primary: #111827;
+            --text-secondary: #6b7280;
+            --border-color: #e5e7eb;
+            --highlight-bg: #eff6ff;
+            --shadow: rgba(0,0,0,0.05);
+            --link-color: #667eea;
+        }
+        
+        body.dark-theme {
+            --bg-primary: #1f2937;
+            --bg-secondary: #111827;
+            --text-primary: #f9fafb;
+            --text-secondary: #9ca3af;
+            --border-color: #374151;
+            --highlight-bg: #374151;
+            --shadow: rgba(0,0,0,0.3);
+            --link-color: #818cf8;
+        }
+        
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background-color: var(--bg-secondary);
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
-        .feature-card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        
+        /* Header Styles */
+        header {
+            background-color: var(--bg-primary);
+            border-bottom: 1px solid var(--border-color);
+            padding: 18px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            transition: background-color 0.3s ease;
         }
-        .feature-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        
+        .header-content {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
         }
-        .dark .feature-card:hover {
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.1);
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .logo {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            flex-shrink: 0;
+        }
+        
+        .header-title-group {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        
+        .header-title {
+            font-size: 1.75em;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1.1;
+        }
+        
+        .header-subtitle {
+            font-size: 1em;
+            color: var(--text-secondary);
+            line-height: 1.2;
+            font-weight: 400;
+        }
+        
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .btn {
+            padding: 11px 22px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+        
+        .btn-lang {
+            background-color: #4b5563;
+            color: white;
+            min-width: 58px;
+            justify-content: center;
+            padding: 11px 18px;
+            font-weight: 600;
+        }
+        
+        .btn-lang:hover {
+            background-color: #374151;
+        }
+        
+        .btn-primary {
+            background-color: #667eea;
+            color: white;
+            font-weight: 500;
+        }
+        
+        .btn-primary:hover {
+            background-color: #5568d3;
+        }
+        
+        .btn-icon {
+            width: 46px;
+            height: 46px;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: transparent;
+            color: var(--text-primary);
+            border-radius: 10px;
+            font-size: 22px;
+            flex-shrink: 0;
+        }
+        
+        .btn-icon:hover {
+            background-color: var(--border-color);
+        }
+        
+        /* Content Styles */
+        .content-wrapper {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 56px 32px 80px;
+            background-color: var(--bg-secondary);
+        }
+        
+        .content-inner {
+            width: 100%;
+        }
+        
+        .content-section {
+            display: none;
+        }
+        
+        .content-section.active {
+            display: block;
+        }
+        
+        h2 {
+            color: var(--text-primary);
+            margin-top: 36px;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            font-weight: 700;
+        }
+        
+        h3 {
+            color: var(--text-primary);
+            margin-top: 32px;
+            margin-bottom: 16px;
+            font-size: 1.2em;
+            font-weight: 600;
+        }
+        
+        p {
+            margin-bottom: 18px;
+            color: var(--text-primary);
+            line-height: 1.8;
+            font-size: 1.05em;
+        }
+        
+        ul {
+            margin-left: 26px;
+            margin-bottom: 18px;
+        }
+        
+        li {
+            margin-bottom: 14px;
+            color: var(--text-primary);
+            line-height: 1.8;
+            font-size: 1.05em;
+        }
+        
+        strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+        
+        .highlight-box {
+            background-color: var(--highlight-bg);
+            border-left: 4px solid #667eea;
+            padding: 24px;
+            margin: 28px 0;
+            border-radius: 6px;
+            transition: background-color 0.3s ease;
+        }
+        
+        .contact-info {
+            background-color: var(--highlight-bg);
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin: 28px 0;
+            border-radius: 6px;
+            transition: background-color 0.3s ease;
+        }
+        
+        .contact-info p {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .contact-info strong {
+            min-width: 120px;
+        }
+        
+        a {
+            color: var(--link-color);
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Footer Styles */
+        footer {
+            background-color: var(--bg-primary);
+            border-top: 1px solid var(--border-color);
+            padding: 40px 0;
+            margin-top: auto;
+            transition: background-color 0.3s ease;
+        }
+        
+        .footer-content {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 32px;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 8px 0;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+        
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.95em;
+            transition: color 0.2s ease;
+            padding: 0 14px;
+        }
+        
+        .footer-links a:hover {
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+        
+        .footer-links .separator {
+            color: var(--border-color);
+            user-select: none;
+        }
+        
+        .footer-copyright {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.9em;
+        }
+        
+        .footer-copyright a {
+            color: var(--link-color);
+            font-weight: 500;
+        }
+        
+        @media (max-width: 768px) {
+            .header-content {
+                padding: 0 16px;
+                flex-wrap: wrap;
+            }
+            
+            .header-title {
+                font-size: 1.4em;
+            }
+            
+            .header-subtitle {
+                font-size: 0.9em;
+            }
+            
+            .logo {
+                width: 48px;
+                height: 48px;
+                font-size: 24px;
+                border-radius: 12px;
+            }
+            
+            .header-right {
+                width: 100%;
+                justify-content: flex-end;
+            }
+            
+            .btn-primary {
+                flex: 1;
+                max-width: 220px;
+            }
+            
+            .content-wrapper {
+                padding: 32px 20px 60px;
+            }
+            
+            h2 {
+                font-size: 1.3em;
+            }
+            
+            h3 {
+                font-size: 1.1em;
+            }
+            
+            p, li {
+                font-size: 1em;
+            }
+            
+            .footer-content {
+                padding: 0 20px;
+            }
+            
+            .footer-links {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .footer-links .separator {
+                display: none;
+            }
+            
+            .footer-links a {
+                padding: 6px 0;
+            }
         }
     </style>
 </head>
-<body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 antialiased">
-
-    <!-- App Container -->
-    <div class="max-w-4xl mx-auto p-4 sm:p-6 lg:p-8">
-
-        <!-- Header -->
-        <header class="flex justify-between items-center pb-6 border-b border-gray-200 dark:border-gray-700">
-            <div class="flex items-center gap-4">
-                <div class="p-2.5 bg-indigo-100 dark:bg-indigo-900/50 rounded-lg">
-                    <i data-lucide="contact-2" class="w-7 h-7 text-indigo-600 dark:text-indigo-400"></i>
-                </div>
-                <div>
-                    <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white" data-translate-key="mainTitle">Scanner Pintar</h1>
-                    <p class="text-sm text-gray-500 dark:text-gray-400" data-translate-key="pageTitle">Tentang Aplikasi</p>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="header-left">
+                <div class="logo">ℹ️</div>
+                <div class="header-title-group">
+                    <div class="header-title">Scanner Pintar</div>
+                    <div class="header-subtitle" id="header-subtitle">Tentang Aplikasi</div>
                 </div>
             </div>
-             <div class="flex items-center gap-4">
-                <button id="lang-toggle" class="inline-flex items-center gap-2 bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors shadow-sm text-sm">EN</button>
-                <a href="https://scankartunama.isparmo.com/" class="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors shadow-sm">
-                    <i data-lucide="home" class="w-4 h-4"></i>
-                    <span class="hidden sm:inline" data-translate-key="backToApp">Kembali ke Aplikasi</span>
+            <div class="header-right">
+                <button onclick="switchLanguage()" class="btn btn-lang" id="lang-toggle" type="button">EN</button>
+                <a href="https://scankartunama.isparmo.com/" class="btn btn-primary" id="back-btn">
+                    🏠 <span id="back-text">Kembali ke Aplikasi</span>
                 </a>
-                <button id="theme-toggle" class="p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
-                    <i data-lucide="sun" class="w-5 h-5 hidden"></i>
-                    <i data-lucide="moon" class="w-5 h-5 hidden"></i>
+                <button onclick="toggleTheme()" class="btn btn-icon" id="theme-toggle" type="button">
+                    🌙
                 </button>
             </div>
-        </header>
-
-        <main class="mt-8 space-y-12">
-
-            <!-- Section: Tentang Aplikasi -->
-            <section id="tentang">
-                <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4" data-translate-key="aboutTitle">Transformasi Digital untuk Jaringan Profesional Anda</h2>
-                <div class="text-gray-600 dark:text-gray-300 space-y-4 leading-relaxed">
-                    <p data-translate-key="aboutDesc1">
-                        <strong>Scanner Pintar</strong> adalah aplikasi web modern yang dirancang untuk merevolusi cara Anda mengelola kartu nama. Lupakan entri data manual yang memakan waktu. Dengan bantuan Kecerdasan Buatan (AI), aplikasi ini secara instan memindai, mengekstrak informasi, dan mengklasifikasikan data dari kartu nama langsung dari browser Anda.
-                    </p>
-                    <p data-translate-key="aboutDesc2">
-                        Dibuat untuk para profesional yang dinamis, tenaga penjualan, dan siapa saja yang sering bertukar kontak di berbagai acara, Scanner Pintar berfungsi sebagai jembatan antara pertemuan fisik dan manajemen kontak digital yang efisien. Tidak perlu instalasi, cukup buka di browser dan Anda siap untuk mengubah tumpukan kartu nama menjadi database yang terorganisir dan siap digunakan.
-                    </p>
-                </div>
-            </section>
-
-            <!-- Section: Fitur Utama -->
-            <section id="fitur">
-                <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6" data-translate-key="featuresTitle">Fitur Unggulan</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <!-- Fitur 1: Scan Cerdas AI -->
-                    <div class="feature-card bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700">
-                        <div class="flex items-center justify-center w-12 h-12 bg-blue-100 dark:bg-blue-900/50 rounded-lg mb-4">
-                            <i data-lucide="scan-line" class="w-6 h-6 text-blue-600 dark:text-blue-400"></i>
-                        </div>
-                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2" data-translate-key="feature1Title">Scan Cerdas dengan AI</h3>
-                        <p class="text-sm text-gray-500 dark:text-gray-400" data-translate-key="feature1Desc">Ambil foto kartu nama dan biarkan AI kami bekerja. Teknologi vision canggih akan mengekstrak nama, jabatan, perusahaan, email, dan nomor telepon, serta mengklasifikasikan jenis industri perusahaan secara otomatis.</p>
-                    </div>
-                    <!-- Fitur 2: Mode Kolaborasi Tim -->
-                    <div class="feature-card bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700">
-                        <div class="flex items-center justify-center w-12 h-12 bg-purple-100 dark:bg-purple-900/50 rounded-lg mb-4">
-                            <i data-lucide="users" class="w-6 h-6 text-purple-600 dark:text-purple-400"></i>
-                        </div>
-                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2" data-translate-key="feature2Title">Mode Kolaborasi Tim</h3>
-                        <p class="text-sm text-gray-500 dark:text-gray-400" data-translate-key="feature2Desc">Buat sesi acara dan bagikan QR Code ke tim Anda. Semua hasil scan dari anggota tim akan tersimpan secara real-time ke dalam satu Google Sheet yang sama, ideal untuk pameran atau event besar.</p>
-                    </div>
-                    <!-- Fitur 3: Asisten Follow-Up AI -->
-                    <div class="feature-card bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700">
-                        <div class="flex items-center justify-center w-12 h-12 bg-teal-100 dark:bg-teal-900/50 rounded-lg mb-4">
-                            <i data-lucide="sparkles" class="w-6 h-6 text-teal-600 dark:text-teal-400"></i>
-                        </div>
-                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2" data-translate-key="feature3Title">Asisten Follow-Up AI</h3>
-                        <p class="text-sm text-gray-500 dark:text-gray-400" data-translate-key="feature3Desc">Hemat waktu dengan membuat draf email atau pesan WhatsApp untuk follow-up secara otomatis. AI akan menyusun pesan profesional berdasarkan profil Anda dan detail kontak yang baru di-scan.</p>
-                    </div>
-                    <!-- Fitur 4: Penyimpanan Lokal & Aman -->
-                    <div class="feature-card bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700">
-                        <div class="flex items-center justify-center w-12 h-12 bg-amber-100 dark:bg-amber-900/50 rounded-lg mb-4">
-                            <i data-lucide="database" class="w-6 h-6 text-amber-600 dark:text-amber-400"></i>
-                        </div>
-                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2" data-translate-key="feature4Title">Penyimpanan Lokal & Aman</h3>
-                        <p class="text-sm text-gray-500 dark:text-gray-400" data-translate-key="feature4Desc">Privasi adalah prioritas. Semua data kontak yang Anda scan disimpan secara default hanya di perangkat (HP) Anda menggunakan IndexedDB, memberikan Anda kendali penuh atas data Anda.</p>
-                    </div>
-                    <!-- Fitur 5: Ekspor Data Fleksibel -->
-                    <div class="feature-card bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700">
-                        <div class="flex items-center justify-center w-12 h-12 bg-green-100 dark:bg-green-900/50 rounded-lg mb-4">
-                            <i data-lucide="file-output" class="w-6 h-6 text-green-600 dark:text-green-400"></i>
-                        </div>
-                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2" data-translate-key="feature5Title">Ekspor Data Fleksibel</h3>
-                        <p class="text-sm text-gray-500 dark:text-gray-400" data-translate-key="feature5Desc">Ekspor kontak Anda ke berbagai format sesuai kebutuhan: CSV untuk spreadsheet, VCF untuk impor ke kontak telepon (satu per satu atau dalam format ZIP), dan simpan massal ke Google Sheet.</p>
-                    </div>
-                     <!-- Fitur 6: QR Code Scanner -->
-                    <div class="feature-card bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-200 dark:border-gray-700">
-                        <div class="flex items-center justify-center w-12 h-12 bg-red-100 dark:bg-red-900/50 rounded-lg mb-4">
-                            <i data-lucide="qr-code" class="w-6 h-6 text-red-600 dark:text-red-400"></i>
-                        </div>
-                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2" data-translate-key="feature6Title">Pemindai QR Code Universal</h3>
-                        <p class="text-sm text-gray-500 dark:text-gray-400" data-translate-key="feature6Desc">Selain kartu nama, aplikasi ini juga mampu memindai berbagai jenis QR Code, termasuk VCard, tautan URL, dan teks biasa, menjadikannya alat pemindai serbaguna.</p>
-                    </div>
-                </div>
-            </section>
-            
-            <!-- Section: Privasi -->
-            <section id="privasi">
-                <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4" data-translate-key="privacyTitle">Privasi dan Keamanan Data Anda</h2>
-                 <div class="text-gray-600 dark:text-gray-300 space-y-4 leading-relaxed p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
-                    <p data-translate-key="privacyDesc1">
-                        Kami sangat menghargai privasi Anda. Berikut adalah komitmen kami terhadap keamanan data:
-                    </p>
-                    <ul class="list-disc list-inside space-y-2">
-                        <li data-translate-key="privacyLi1"><strong class="text-gray-700 dark:text-gray-200">Data Tersimpan di Perangkat Anda:</strong> Secara default, semua informasi kontak yang diekstrak disimpan dengan aman di dalam database browser pada perangkat Anda (local storage). Data ini tidak dikirim ke server kami tanpa persetujuan eksplisit dari Anda.</li>
-                        <li data-translate-key="privacyLi2"><strong class="text-gray-700 dark:text-gray-200">Pemrosesan Sesaat:</strong> Gambar kartu nama yang Anda unggah dikirim ke server kami hanya untuk tujuan analisis oleh AI. Gambar tersebut tidak disimpan secara permanen dan hanya diproses sesaat.</li>
-                        <li data-translate-key="privacyLi3"><strong class="text-gray-700 dark:text-gray-200">Kendali Penuh di Tangan Anda:</strong> Anda memiliki kendali penuh untuk menghapus data dari penyimpanan lokal kapan saja. Saat Anda menggunakan fitur ekspor ke Google Sheet atau Mode Kolaborasi, Anda secara sadar memilih untuk membagikan data tersebut ke platform pilihan Anda.</li>
-                        <li data-translate-key="privacyLi4"><strong class="text-gray-700 dark:text-gray-200">Tanpa Pelacakan Pengguna:</strong> Aplikasi ini tidak memerlukan login atau akun pengguna, sehingga meminimalkan pengumpulan data pribadi.</li>
+        </div>
+    </header>
+    
+    <div class="content-wrapper">
+        <div class="content-inner">
+            <!-- INDONESIAN VERSION -->
+            <div id="content-id" class="content-section active">
+                <h2>Transformasi Digital untuk Jaringan Profesional Anda</h2>
+                
+                <p><strong>Scanner Pintar</strong> adalah aplikasi web modern yang dirancang untuk merevolusi cara Anda mengelola kartu nama. Lupakan entri data manual yang memakan waktu. Dengan bantuan Kecerdasan Buatan (AI), aplikasi ini secara instan memindai, mengekstrak informasi, dan mengklasifikasikan data dari kartu nama langsung dari browser Anda.</p>
+                
+                <p>Dibuat untuk para profesional yang dinamis, tenaga penjualan, dan siapa saja yang sering bertukar kontak di berbagai acara, Scanner Pintar berfungsi sebagai jembatan antara pertemuan fisik dan manajemen kontak digital yang efisien. Tidak perlu instalasi, cukup buka di browser dan Anda siap untuk mengubah tumpukan kartu nama menjadi database yang terorganisir dan siap digunakan.</p>
+                
+                <h2>Fitur Unggulan</h2>
+                
+                <h3>Scan Cerdas dengan AI</h3>
+                <p>Ambil foto kartu nama dan biarkan AI kami bekerja. Teknologi vision canggih akan mengekstrak nama, jabatan, perusahaan, email, dan nomor telepon, serta mengklasifikasikan jenis industri perusahaan secara otomatis.</p>
+                
+                <h3>Asisten Follow-Up AI</h3>
+                <p>Hemat waktu dengan membuat draf email atau pesan WhatsApp untuk follow-up secara otomatis. AI akan menyusun pesan profesional berdasarkan profil Anda dan detail kontak yang baru di-scan.</p>
+                
+                <h3>Penyimpanan Lokal & Aman</h3>
+                <p>Privasi adalah prioritas. Semua data kontak yang Anda scan disimpan secara default hanya di perangkat Anda menggunakan IndexedDB, memberikan Anda kendali penuh atas data Anda.</p>
+                
+                <h3>Ekspor Data Fleksibel</h3>
+                <p>Ekspor kontak Anda ke berbagai format sesuai kebutuhan: CSV untuk spreadsheet, VCF untuk impor ke kontak telepon (satu per satu atau dalam format ZIP), dan simpan ke Google Sheet menggunakan akun Google Anda sendiri.</p>
+                
+                <h3>Pemindai QR Code Universal</h3>
+                <p>Selain kartu nama, aplikasi ini juga mampu memindai berbagai jenis QR Code, termasuk VCard, tautan URL, dan teks biasa, menjadikannya alat pemindai serbaguna.</p>
+                
+                <h2>Privasi dan Keamanan Data Anda</h2>
+                
+                <p>Kami sangat menghargai privasi Anda dan merancang aplikasi ini dengan prinsip privasi sebagai prioritas utama. Berikut adalah komitmen kami terhadap keamanan data:</p>
+                
+                <ul>
+                    <li><strong>Gambar Kartu Nama:</strong> Saat Anda memindai kartu nama, gambar tersebut dikirim ke penyedia layanan AI pihak ketiga untuk dianalisis. Gambar ini diproses sementara dan tidak disimpan secara permanen di server kami atau server pihak ketiga setelah analisis selesai.</li>
+                    
+                    <li><strong>Data Kontak yang Diekstrak:</strong> Informasi yang diekstrak dari kartu nama (seperti nama, jabatan, perusahaan, nomor telepon, email, dll.) disimpan secara default hanya di penyimpanan lokal (IndexedDB) browser pada perangkat Anda. Data ini sepenuhnya berada di bawah kendali Anda.</li>
+                </ul>
+                
+                <div class="highlight-box">
+                    <p><strong>Penyimpanan ke Google Sheet dengan Akun Google Anda:</strong></p>
+                    <p>Anda memiliki opsi untuk menyimpan data hasil ekstraksi kartu nama ke Google Sheet menggunakan <strong>akun Google milik Anda sendiri</strong>. Ketika Anda memilih untuk menggunakan fitur ini:</p>
+                    <ul>
+                        <li>Aplikasi akan meminta izin akses terbatas ke Google Drive Anda</li>
+                        <li>Akses ini <strong>hanya digunakan untuk</strong>:
+                            <ul>
+                                <li>Membuat file Google Sheet bernama "Data Scan Kartu Nama" di Google Drive Anda</li>
+                                <li>Mengecek keberadaan file tersebut untuk menghindari duplikasi</li>
+                                <li>Menambahkan data hasil ekstraksi kartu nama ke file tersebut</li>
+                            </ul>
+                        </li>
+                        <li>Aplikasi <strong>tidak akan mengakses, membaca, memodifikasi, atau menghapus</strong> file lain di Google Drive Anda</li>
+                        <li>Anda tetap memiliki kontrol penuh atas file "Data Scan Kartu Nama" dan dapat menghapus atau mengubahnya kapan saja melalui Google Drive Anda</li>
+                        <li>Anda dapat mencabut akses aplikasi ke Google Drive Anda kapan saja melalui pengaturan akun Google Anda</li>
                     </ul>
                 </div>
-            </section>
-
-            <!-- Section: Kontak Developer -->
-            <section id="kontak">
-                <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4" data-translate-key="contactTitle">Kontak Developer</h2>
-                <div class="p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 text-gray-600 dark:text-gray-300">
-                        <div class="flex items-center gap-3">
-                             <i data-lucide="user-circle" class="w-5 h-5 text-gray-400"></i>
-                            <div>
-                                <p class="text-sm text-gray-500" data-translate-key="contactNameLabel">Nama</p>
-                                <p class="font-semibold text-gray-800 dark:text-gray-200">Isparmo</p>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <i data-lucide="globe" class="w-5 h-5 text-gray-400"></i>
-                            <div>
-                                <p class="text-sm text-gray-500">Website</p>
-                                <a href="https://www.isparmo.com" target="_blank" rel="noopener noreferrer" class="font-semibold text-indigo-600 dark:text-indigo-400 hover:underline">www.isparmo.com</a>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-3">
-                             <i data-lucide="mail" class="w-5 h-5 text-gray-400"></i>
-                            <div>
-                                <p class="text-sm text-gray-500">Email</p>
-                                <a href="mailto:mail@isparmo.com" class="font-semibold text-indigo-600 dark:text-indigo-400 hover:underline">mail@isparmo.com</a>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <i data-lucide="smartphone" class="w-5 h-5 text-gray-400"></i>
-                            <div>
-                                <p class="text-sm text-gray-500" data-translate-key="contactPhoneLabel">HP / WhatsApp</p>
-                                <a href="https://wa.me/628121083060" target="_blank" rel="noopener noreferrer" class="font-semibold text-indigo-600 dark:text-indigo-400 hover:underline">0812 108 3060</a>
-                            </div>
-                        </div>
-                    </div>
+                
+                <ul>
+                    <li><strong>Tanpa Pelacakan Pengguna:</strong> Aplikasi ini tidak memerlukan login atau akun pengguna, sehingga meminimalkan pengumpulan data pribadi.</li>
+                    
+                    <li><strong>Kendali Penuh di Tangan Anda:</strong> Anda memiliki kendali penuh untuk menghapus semua data lokal kapan saja melalui fitur "Hapus Semua Data Lokal" di dalam aplikasi.</li>
+                </ul>
+                
+                <h2>Kontak Developer</h2>
+                
+                <div class="contact-info">
+                    <p><strong>Nama:</strong> Isparmo</p>
+                    <p><strong>Website:</strong> <a href="https://www.isparmo.com" target="_blank">www.isparmo.com</a></p>
+                    <p><strong>Email:</strong> <a href="mailto:support@isparmo.com">support@isparmo.com</a></p>
+                    <p><strong>HP / WhatsApp:</strong> <a href="https://wa.me/6281210830600" target="_blank">0812 108 3060</a></p>
                 </div>
-            </section>
-            
-        </main>
-
-        <!-- Footer -->
-        <footer class="text-center mt-12 py-6 border-t border-gray-200 dark:border-gray-700">
-            <div class="flex justify-center items-center gap-x-4 mb-4 text-sm text-gray-500 dark:text-gray-400">
-                <a href="https://scankartunama.isparmo.com/" class="hover:underline hover:text-indigo-500" data-translate-key="footerHome">Home</a>
-                <span class="text-gray-300 dark:text-gray-600">|</span>
-                <a href="about.html" class="hover:underline hover:text-indigo-500" data-translate-key="footerAbout">Tentang</a>
-                <span class="text-gray-300 dark:text-gray-600">|</span>
-                <a href="help.html" class="hover:underline hover:text-indigo-500" data-translate-key="footerHelp">Bantuan</a>
-                <span class="text-gray-300 dark:text-gray-600">|</span>
-                <a href="terms.html" class="hover:underline hover:text-indigo-500" data-translate-key="footerTerms">Ketentuan</a>
-                <span class="text-gray-300 dark:text-gray-600">|</span>
-                <a href="privacy.html" class="hover:underline hover:text-indigo-500" data-translate-key="footerPrivacy">Privasi</a>
             </div>
-            <p class="text-sm text-gray-500 dark:text-gray-400" data-translate-key="footerCopyright">&copy; 2025 Scanner Pintar. Dibuat oleh <a href="https://isparmo.com" target="_blank" rel="noopener noreferrer" class="font-semibold text-indigo-600 dark:text-indigo-400 hover:underline">Isparmo</a>.</p>
-        </footer>
-
+            
+            <!-- ENGLISH VERSION -->
+            <div id="content-en" class="content-section">
+                <h2>Digital Transformation for Your Professional Network</h2>
+                
+                <p><strong>Scanner Pintar</strong> is a modern web application designed to revolutionize the way you manage business cards. Forget time-consuming manual data entry. With the help of Artificial Intelligence (AI), this application instantly scans, extracts information, and classifies data from business cards directly from your browser.</p>
+                
+                <p>Built for dynamic professionals, sales teams, and anyone who frequently exchanges contacts at various events, Scanner Pintar serves as a bridge between physical meetings and efficient digital contact management. No installation required, just open it in your browser and you're ready to transform stacks of business cards into an organized, ready-to-use database.</p>
+                
+                <h2>Key Features</h2>
+                
+                <h3>Smart AI Scanning</h3>
+                <p>Take a photo of a business card and let our AI do the work. Advanced vision technology will extract names, titles, companies, emails, and phone numbers, as well as automatically classify the company's industry type.</p>
+                
+                <h3>AI Follow-Up Assistant</h3>
+                <p>Save time by automatically creating draft emails or WhatsApp messages for follow-ups. AI will compose professional messages based on your profile and newly scanned contact details.</p>
+                
+                <h3>Local & Secure Storage</h3>
+                <p>Privacy is a priority. All contact data you scan is stored by default only on your device using IndexedDB, giving you full control over your data.</p>
+                
+                <h3>Flexible Data Export</h3>
+                <p>Export your contacts to various formats as needed: CSV for spreadsheets, VCF for importing to phone contacts (one by one or in ZIP format), and save to Google Sheets using your own Google account.</p>
+                
+                <h3>Universal QR Code Scanner</h3>
+                <p>In addition to business cards, this application can also scan various types of QR Codes, including VCard, URL links, and plain text, making it a versatile scanning tool.</p>
+                
+                <h2>Your Data Privacy and Security</h2>
+                
+                <p>We greatly value your privacy and designed this application with privacy as a top priority. Here is our commitment to data security:</p>
+                
+                <ul>
+                    <li><strong>Business Card Images:</strong> When you scan a business card, the image is sent to a third-party AI service provider for analysis. This image is processed temporarily and is not stored permanently on our servers or third-party servers after analysis is complete.</li>
+                    
+                    <li><strong>Extracted Contact Data:</strong> Information extracted from business cards (such as name, title, company, phone number, email, etc.) is stored by default only in local storage (IndexedDB) in your device's browser. This data is entirely under your control.</li>
+                </ul>
+                
+                <div class="highlight-box">
+                    <p><strong>Storage to Google Sheets with Your Google Account:</strong></p>
+                    <p>You have the option to save extracted business card data to Google Sheets using <strong>your own Google account</strong>. When you choose to use this feature:</p>
+                    <ul>
+                        <li>The application will request limited access permission to your Google Drive</li>
+                        <li>This access is <strong>only used to</strong>:
+                            <ul>
+                                <li>Create a Google Sheet file named "Data Scan Kartu Nama" in your Google Drive</li>
+                                <li>Check the existence of this file to avoid duplication</li>
+                                <li>Add extracted business card data to this file</li>
+                            </ul>
+                        </li>
+                        <li>The application <strong>will not access, read, modify, or delete</strong> any other files in your Google Drive</li>
+                        <li>You maintain full control over the "Data Scan Kartu Nama" file and can delete or modify it at any time through your Google Drive</li>
+                        <li>You can revoke the application's access to your Google Drive at any time through your Google account settings</li>
+                    </ul>
+                </div>
+                
+                <ul>
+                    <li><strong>No User Tracking:</strong> This application does not require login or user accounts, thus minimizing personal data collection.</li>
+                    
+                    <li><strong>Full Control in Your Hands:</strong> You have full control to delete all local data at any time through the "Delete All Local Data" feature in the application.</li>
+                </ul>
+                
+                <h2>Developer Contact</h2>
+                
+                <div class="contact-info">
+                    <p><strong>Name:</strong> Isparmo</p>
+                    <p><strong>Website:</strong> <a href="https://www.isparmo.com" target="_blank">www.isparmo.com</a></p>
+                    <p><strong>Email:</strong> <a href="mailto:support@isparmo.com">support@isparmo.com</a></p>
+                    <p><strong>Phone / WhatsApp:</strong> <a href="https://wa.me/6281210830600" target="_blank">0812 108 3060</a></p>
+                </div>
+            </div>
+        </div>
     </div>
-
+    
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="https://scankartunama.isparmo.com">Home</a>
+                <span class="separator">|</span>
+                <a href="https://scankartunama.isparmo.com/about.html">Tentang</a>
+                <span class="separator">|</span>
+                <a href="https://scankartunama.isparmo.com/help.html">Bantuan</a>
+                <span class="separator">|</span>
+                <a href="https://scankartunama.isparmo.com/terms.html">Ketentuan</a>
+                <span class="separator">|</span>
+                <a href="https://scankartunama.isparmo.com/privacy.html">Privasi</a>
+            </div>
+            <div class="footer-copyright">
+                © 2025 Scanner Pintar. Dibuat oleh <a href="https://isparmo.com" target="_blank">Isparmo</a>.
+            </div>
+        </div>
+    </footer>
+    
     <script>
-        lucide.createIcons();
-
-        // --- DUAL LANGUAGE SCRIPT ---
-        const translations = {
+        let currentLang = 'id';
+        
+        // Language text mappings
+        const langTexts = {
             id: {
-                pageTitle: "Tentang Aplikasi",
-                mainTitle: "Scanner Pintar",
-                backToApp: "Kembali ke Aplikasi",
-                aboutTitle: "Transformasi Digital untuk Jaringan Profesional Anda",
-                aboutDesc1: '<strong>Scanner Pintar</strong> adalah aplikasi web modern yang dirancang untuk merevolusi cara Anda mengelola kartu nama. Lupakan entri data manual yang memakan waktu. Dengan bantuan Kecerdasan Buatan (AI), aplikasi ini secara instan memindai, mengekstrak informasi, dan mengklasifikasikan data dari kartu nama langsung dari browser Anda.',
-                aboutDesc2: 'Dibuat untuk para profesional yang dinamis, tenaga penjualan, dan siapa saja yang sering bertukar kontak di berbagai acara, Scanner Pintar berfungsi sebagai jembatan antara pertemuan fisik dan manajemen kontak digital yang efisien. Tidak perlu instalasi, cukup buka di browser dan Anda siap untuk mengubah tumpukan kartu nama menjadi database yang terorganisir dan siap digunakan.',
-                featuresTitle: "Fitur Unggulan",
-                feature1Title: "Scan Cerdas dengan AI",
-                feature1Desc: "Ambil foto kartu nama dan biarkan AI kami bekerja. Teknologi vision canggih akan mengekstrak nama, jabatan, perusahaan, email, dan nomor telepon, serta mengklasifikasikan jenis industri perusahaan secara otomatis.",
-                feature2Title: "Mode Kolaborasi Tim",
-                feature2Desc: "Buat sesi acara dan bagikan QR Code ke tim Anda. Semua hasil scan dari anggota tim akan tersimpan secara real-time ke dalam satu Google Sheet yang sama, ideal untuk pameran atau event besar.",
-                feature3Title: "Asisten Follow-Up AI",
-                feature3Desc: "Hemat waktu dengan membuat draf email atau pesan WhatsApp untuk follow-up secara otomatis. AI akan menyusun pesan profesional berdasarkan profil Anda dan detail kontak yang baru di-scan.",
-                feature4Title: "Penyimpanan Lokal & Aman",
-                feature4Desc: "Privasi adalah prioritas. Semua data kontak yang Anda scan disimpan secara default hanya di perangkat (HP) Anda menggunakan IndexedDB, memberikan Anda kendali penuh atas data Anda.",
-                feature5Title: "Ekspor Data Fleksibel",
-                feature5Desc: "Ekspor kontak Anda ke berbagai format sesuai kebutuhan: CSV untuk spreadsheet, VCF untuk impor ke kontak telepon (satu per satu atau dalam format ZIP), dan simpan massal ke Google Sheet.",
-                feature6Title: "Pemindai QR Code Universal",
-                feature6Desc: "Selain kartu nama, aplikasi ini juga mampu memindai berbagai jenis QR Code, termasuk VCard, tautan URL, dan teks biasa, menjadikannya alat pemindai serbaguna.",
-                privacyTitle: "Privasi dan Keamanan Data Anda",
-                privacyDesc1: "Kami sangat menghargai privasi Anda. Berikut adalah komitmen kami terhadap keamanan data:",
-                privacyLi1: '<strong class="text-gray-700 dark:text-gray-200">Data Tersimpan di Perangkat Anda:</strong> Secara default, semua informasi kontak yang diekstrak disimpan dengan aman di dalam database browser pada perangkat Anda (local storage). Data ini tidak dikirim ke server kami tanpa persetujuan eksplisit dari Anda.',
-                privacyLi2: '<strong class="text-gray-700 dark:text-gray-200">Pemrosesan Sesaat:</strong> Gambar kartu nama yang Anda unggah dikirim ke server kami hanya untuk tujuan analisis oleh AI. Gambar tersebut tidak disimpan secara permanen dan hanya diproses sesaat.',
-                privacyLi3: '<strong class="text-gray-700 dark:text-gray-200">Kendali Penuh di Tangan Anda:</strong> Anda memiliki kendali penuh untuk menghapus data dari penyimpanan lokal kapan saja. Saat Anda menggunakan fitur ekspor ke Google Sheet atau Mode Kolaborasi, Anda secara sadar memilih untuk membagikan data tersebut ke platform pilihan Anda.',
-                privacyLi4: '<strong class="text-gray-700 dark:text-gray-200">Tanpa Pelacakan Pengguna:</strong> Aplikasi ini tidak memerlukan login atau akun pengguna, sehingga meminimalkan pengumpulan data pribadi.',
-                contactTitle: "Kontak Developer",
-                contactNameLabel: "Nama",
-                contactPhoneLabel: "HP / WhatsApp",
-                footerHome: "Home",
-                footerAbout: "Tentang",
-                footerHelp: "Bantuan",
-                footerTerms: "Ketentuan",
-                footerPrivacy: "Privasi",
-                footerCopyright: '&copy; 2025 Scanner Pintar. Dibuat oleh <a href="https://isparmo.com" target="_blank" rel="noopener noreferrer" class="font-semibold text-indigo-600 dark:text-indigo-400 hover:underline">Isparmo</a>.'
+                subtitle: 'Tentang Aplikasi',
+                backBtn: 'Kembali ke Aplikasi'
             },
             en: {
-                pageTitle: "About The Application",
-                mainTitle: "Scanner Pintar",
-                backToApp: "Back to App",
-                aboutTitle: "Digital Transformation for Your Professional Network",
-                aboutDesc1: '<strong>Scanner Pintar</strong> is a modern web application designed to revolutionize the way you manage business cards. Forget time-consuming manual data entry. With the help of Artificial Intelligence (AI), this application instantly scans, extracts information, and classifies data from business cards directly from your browser.',
-                aboutDesc2: 'Built for dynamic professionals, sales teams, and anyone who frequently exchanges contacts at events, Scanner Pintar serves as a bridge between physical meetings and efficient digital contact management. No installation is needed—just open it in your browser, and you are ready to turn a stack of business cards into an organized and actionable database.',
-                featuresTitle: "Main Features",
-                feature1Title: "Smart AI Scanning",
-                feature1Desc: "Take a photo of a business card and let our AI do the work. Advanced vision technology will extract names, titles, companies, emails, and phone numbers, and automatically classify the company's industry type.",
-                feature2Title: "Team Collaboration Mode",
-                feature2Desc: "Create an event session and share a QR Code with your team. All scans from team members will be saved in real-time to the same Google Sheet, ideal for exhibitions or large events.",
-                feature3Title: "AI Follow-Up Assistant",
-                feature3Desc: "Save time by automatically drafting emails or WhatsApp messages for follow-ups. The AI will compose a professional message based on your profile and the newly scanned contact's details.",
-                feature4Title: "Local & Secure Storage",
-                feature4Desc: "Privacy is a priority. All contact data you scan is stored by default only on your device (phone) using IndexedDB, giving you full control over your data.",
-                feature5Title: "Flexible Data Export",
-                feature5Desc: "Export your contacts to various formats as needed: CSV for spreadsheets, VCF for importing into phone contacts (one by one or in a ZIP format), and bulk save to Google Sheets.",
-                feature6Title: "Universal QR Code Scanner",
-                feature6Desc: "In addition to business cards, this application can also scan various types of QR Codes, including VCards, URL links, and plain text, making it a versatile scanning tool.",
-                privacyTitle: "Your Data Privacy and Security",
-                privacyDesc1: "We highly value your privacy. Here is our commitment to data security:",
-                privacyLi1: '<strong class="text-gray-700 dark:text-gray-200">Data Stored on Your Device:</strong> By default, all extracted contact information is securely stored within the browser database on your device (local storage). This data is not sent to our servers without your explicit consent.',
-                privacyLi2: '<strong class="text-gray-700 dark:text-gray-200">Temporary Processing:</strong> The business card images you upload are sent to our servers solely for analysis by the AI. The images are not permanently stored and are only processed momentarily.',
-                privacyLi3: '<strong class="text-gray-700 dark:text-gray-200">Full Control in Your Hands:</strong> You have full control to delete data from local storage at any time. When you use the export to Google Sheet or Collaboration Mode features, you consciously choose to share that data with your chosen platform.',
-                privacyLi4: '<strong class="text-gray-700 dark:text-gray-200">No User Tracking:</strong> This application does not require a login or user account, thus minimizing the collection of personal data.',
-                contactTitle: "Developer Contact",
-                contactNameLabel: "Name",
-                contactPhoneLabel: "Phone / WhatsApp",
-                footerHome: "Home",
-                footerAbout: "About",
-                footerHelp: "Help",
-                footerTerms: "Terms",
-                footerPrivacy: "Privacy",
-                footerCopyright: '&copy; 2025 Scanner Pintar. Created by <a href="https://isparmo.com" target="_blank" rel="noopener noreferrer" class="font-semibold text-indigo-600 dark:text-indigo-400 hover:underline">Isparmo</a>.'
+                subtitle: 'About Application',
+                backBtn: 'Back to Application'
             }
         };
-
-        const langToggleBtn = document.getElementById('lang-toggle');
-        let currentLang = 'id';
-
-        function setLanguage(lang) {
-            currentLang = lang;
-            document.documentElement.lang = lang;
-            langToggleBtn.textContent = lang === 'id' ? 'EN' : 'ID';
-            document.querySelectorAll('[data-translate-key]').forEach(el => {
-                const key = el.getAttribute('data-translate-key');
-                if (translations[lang][key]) {
-                    el.innerHTML = translations[lang][key];
-                }
-            });
-            const titleKey = 'pageTitle';
-            document.title = `${translations[lang][titleKey]} | ${translations[lang]['mainTitle']}`;
-            localStorage.setItem('pageLang', lang);
+        
+        // Update header text based on language
+        function updateHeaderText(lang) {
+            document.getElementById('header-subtitle').textContent = langTexts[lang].subtitle;
+            document.getElementById('back-text').textContent = langTexts[lang].backBtn;
         }
-
-        langToggleBtn.addEventListener('click', () => {
-            const newLang = currentLang === 'id' ? 'en' : 'id';
-            setLanguage(newLang);
-        });
-
-        const themeToggleBtn = document.getElementById('theme-toggle');
-        const sunIcon = themeToggleBtn.querySelector('[data-lucide="sun"]');
-        const moonIcon = themeToggleBtn.querySelector('[data-lucide="moon"]');
-
-        function applyTheme(isDark) {
-            document.documentElement.classList.toggle('dark', isDark);
-            if (isDark) {
-                sunIcon.classList.remove('hidden');
-                moonIcon.classList.add('hidden');
-            } else {
-                moonIcon.classList.remove('hidden');
-                sunIcon.classList.add('hidden');
-            }
-            localStorage.setItem('theme', isDark ? 'dark' : 'light');
-        }
-
-        function toggleTheme() {
-            const isCurrentlyDark = document.documentElement.classList.contains('dark');
-            applyTheme(!isCurrentlyDark);
-        }
-
-        themeToggleBtn.addEventListener('click', toggleTheme);
-
-        document.addEventListener('DOMContentLoaded', () => {
+        
+        // Load saved theme on page load
+        (function() {
             const savedTheme = localStorage.getItem('theme');
-            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            applyTheme(savedTheme ? savedTheme === 'dark' : prefersDark);
-            
-            const savedLang = localStorage.getItem('pageLang');
-            if (savedLang && (savedLang === 'id' || savedLang === 'en')) {
-                setLanguage(savedLang);
-            } else {
-                setLanguage('id');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-theme');
+                document.getElementById('theme-toggle').textContent = '☀️';
             }
-        });
+        })();
+        
+        // Load saved language on page load
+        (function() {
+            const savedLang = localStorage.getItem('language');
+            if (savedLang === 'en') {
+                currentLang = 'en';
+                document.getElementById('content-id').classList.remove('active');
+                document.getElementById('content-en').classList.add('active');
+                document.getElementById('lang-toggle').textContent = 'ID';
+                updateHeaderText('en');
+            }
+        })();
+        
+        // Theme Toggle Function
+        function toggleTheme() {
+            const body = document.body;
+            const themeToggle = document.getElementById('theme-toggle');
+            
+            if (body.classList.contains('dark-theme')) {
+                body.classList.remove('dark-theme');
+                themeToggle.textContent = '🌙';
+                localStorage.setItem('theme', 'light');
+            } else {
+                body.classList.add('dark-theme');
+                themeToggle.textContent = '☀️';
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+        
+        // Language Toggle Function
+        function switchLanguage() {
+            const langToggle = document.getElementById('lang-toggle');
+            
+            if (currentLang === 'id') {
+                // Switch to English
+                currentLang = 'en';
+                document.getElementById('content-id').classList.remove('active');
+                document.getElementById('content-en').classList.add('active');
+                langToggle.textContent = 'ID';
+                updateHeaderText('en');
+                localStorage.setItem('language', 'en');
+            } else {
+                // Switch to Indonesian
+                currentLang = 'id';
+                document.getElementById('content-en').classList.remove('active');
+                document.getElementById('content-id').classList.add('active');
+                langToggle.textContent = 'EN';
+                updateHeaderText('id');
+                localStorage.setItem('language', 'id');
+            }
+        }
     </script>
 </body>
 </html>
