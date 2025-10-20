@@ -148,11 +148,6 @@
                         <p class="text-slate-400" data-translate-key="feature1Desc">Didukung Llama 4 Maverick, aplikasi kami mengekstrak nama, jabatan, email, dan bahkan mengklasifikasikan industri perusahaan secara akurat.</p>
                     </div>
                     <div class="feature-card p-8 rounded-2xl">
-                        <i data-lucide="users" class="w-10 h-10 mb-4 text-indigo-400"></i>
-                        <h3 class="text-xl font-bold text-white mb-2" data-translate-key="feature2Title">Kolaborasi Tim Real-time</h3>
-                        <p class="text-slate-400" data-translate-key="feature2Desc">Buat sesi acara, dan biarkan seluruh tim Anda memindai kontak yang secara otomatis terkonsolidasi ke dalam satu Google Sheet.</p>
-                    </div>
-                    <div class="feature-card p-8 rounded-2xl">
                         <i data-lucide="send" class="w-10 h-10 mb-4 text-indigo-400"></i>
                         <h3 class="text-xl font-bold text-white mb-2" data-translate-key="feature3Title">Follow-up Instan dengan AI</h3>
                         <p class="text-slate-400" data-translate-key="feature3Desc">AI membantu membuat draf pesan WhatsApp atau email profesional, memungkinkan Anda menindaklanjuti prospek saat momentum masih panas.</p>
@@ -161,6 +156,11 @@
                         <i data-lucide="file-output" class="w-10 h-10 mb-4 text-indigo-400"></i>
                         <h3 class="text-xl font-bold text-white mb-2" data-translate-key="feature4Title">Ekspor & Integrasi Mudah</h3>
                         <p class="text-slate-400" data-translate-key="feature4Desc">Ekspor semua data kontak ke format .CSV atau .VCF dengan satu klik. Siap untuk diimpor ke CRM atau sistem lain yang Anda gunakan.</p>
+                    </div>
+                    <div class="feature-card p-8 rounded-2xl">
+                        <i data-lucide="cloud" class="w-10 h-10 mb-4 text-indigo-400"></i>
+                        <h3 class="text-xl font-bold text-white mb-2" data-translate-key="feature2Title">Simpan ke Google Sheet Anda</h3>
+                        <p class="text-slate-400" data-translate-key="feature2Desc">Ekspor ke Google Sheet milik pengguna sendiri agar data kontak hasil ekstrak kartu nama bisa diolah lebih lanjut dan tersimpan secara aman di cloud.</p>
                     </div>
                     <div class="feature-card p-8 rounded-2xl">
                         <i data-lucide="shield-check" class="w-10 h-10 mb-4 text-indigo-400"></i>
@@ -231,7 +231,6 @@
                             <li class="flex items-center gap-3"><i data-lucide="check" class="w-5 h-5 text-green-500"></i><span data-translate-key="plan1Feat1">10 Scan AI per hari</span></li>
                             <li class="flex items-center gap-3"><i data-lucide="check" class="w-5 h-5 text-green-500"></i><span data-translate-key="plan1Feat2">Penyimpanan Kontak Lokal Tak Terbatas</span></li>
                             <li class="flex items-center gap-3"><i data-lucide="check" class="w-5 h-5 text-green-500"></i><span data-translate-key="plan1Feat3">Ekspor ke .CSV & .VCF</span></li>
-                             <li class="flex items-center gap-3 text-slate-500"><i data-lucide="x" class="w-5 h-5"></i><span data-translate-key="plan1Feat4">Mode Kolaborasi Tim</span></li>
                             <li class="flex items-center gap-3 text-slate-500"><i data-lucide="x" class="w-5 h-5"></i><span data-translate-key="plan1Feat5">Draf Follow-up dengan AI</span></li>
                         </ul>
                         <a href="https://scankartunama.isparmo.com/" target="_blank" class="w-full block text-center bg-slate-700 hover:bg-slate-600 text-white font-bold py-3 px-6 rounded-full" data-translate-key="plan1Cta">Mulai Sekarang</a>
@@ -247,7 +246,6 @@
                             <li class="flex items-center gap-3"><i data-lucide="check" class="w-5 h-5 text-green-500"></i><span class="font-bold" data-translate-key="plan2Feat1">Scan AI Tak Terbatas</span></li>
                             <li class="flex items-center gap-3"><i data-lucide="check" class="w-5 h-5 text-green-500"></i><span data-translate-key="plan2Feat2">Penyimpanan Kontak Lokal Tak Terbatas</span></li>
                             <li class="flex items-center gap-3"><i data-lucide="check" class="w-5 h-5 text-green-500"></i><span data-translate-key="plan2Feat3">Ekspor ke .CSV & .VCF</span></li>
-                            <li class="flex items-center gap-3"><i data-lucide="check" class="w-5 h-5 text-green-500"></i><span class="font-bold" data-translate-key="plan2Feat4">Mode Kolaborasi Tim</span></li>
                             <li class="flex items-center gap-3"><i data-lucide="check" class="w-5 h-5 text-green-500"></i><span class="font-bold" data-translate-key="plan2Feat5">Draf Follow-up dengan AI</span></li>
                         </ul>
                         <a href="#" class="w-full block text-center cta-button bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-full" data-translate-key="plan2Cta">Pilih Paket Pro</a>
@@ -282,6 +280,7 @@
                 </div>
                 <div class="flex gap-6 text-slate-400">
                      <a href="https://scankartunama.isparmo.com/about" class="hover:text-indigo-400" data-translate-key="footerAbout">Tentang</a>
+                     <a href="https://scankartunama.isparmo.com/help.html" class="hover:text-indigo-400" data-translate-key="footerHelp">Bantuan</a>
                      <a href="https://scankartunama.isparmo.com/privacy" class="hover:text-indigo-400" data-translate-key="footerPrivacy">Privasi</a>
                      <a href="https://scankartunama.isparmo.com/terms" class="hover:text-indigo-400" data-translate-key="footerTerms">Ketentuan</a>
                 </div>
@@ -314,8 +313,8 @@
                 featuresSubtitle: "Scanner Pintar bukan sekadar pemindai. Ini adalah platform lengkap untuk mengakselerasi siklus bisnis Anda, dari kontak pertama hingga kesepakatan.",
                 feature1Title: "Pemindaian AI Cerdas",
                 feature1Desc: "Didukung Llama 4 Maverick, aplikasi kami mengekstrak nama, jabatan, email, dan bahkan mengklasifikasikan industri perusahaan secara akurat.",
-                feature2Title: "Kolaborasi Tim Real-time",
-                feature2Desc: "Buat sesi acara, dan biarkan seluruh tim Anda memindai kontak yang secara otomatis terkonsolidasi ke dalam satu Google Sheet.",
+                feature2Title: "Simpan ke Google Sheet Anda",
+                feature2Desc: "Ekspor ke Google Sheet milik pengguna sendiri agar data kontak hasil ekstrak kartu nama bisa diolah lebih lanjut dan tersimpan secara aman di cloud.",
                 feature3Title: "Follow-up Instan dengan AI",
                 feature3Desc: "AI membantu membuat draf pesan WhatsApp atau email profesional, memungkinkan Anda menindaklanjuti prospek saat momentum masih panas.",
                 feature4Title: "Ekspor & Integrasi Mudah",
@@ -340,7 +339,6 @@
                 plan1Feat1: "10 Scan AI per hari",
                 plan1Feat2: "Penyimpanan Kontak Lokal Tak Terbatas",
                 plan1Feat3: "Ekspor ke .CSV & .VCF",
-                plan1Feat4: "Mode Kolaborasi Tim",
                 plan1Feat5: "Draf Follow-up dengan AI",
                 plan1Cta: "Mulai Sekarang",
                 popularBadge: "PALING POPULER",
@@ -351,7 +349,6 @@
                 plan2Feat1: "Scan AI Tak Terbatas",
                 plan2Feat2: "Penyimpanan Kontak Lokal Tak Terbatas",
                 plan2Feat3: "Ekspor ke .CSV & .VCF",
-                plan2Feat4: "Mode Kolaborasi Tim",
                 plan2Feat5: "Draf Follow-up dengan AI",
                 plan2Cta: "Pilih Paket Pro",
                 finalCtaTitle: "Siap Mengakselerasi Bisnis Anda?",
@@ -359,6 +356,7 @@
                 finalCtaButton: "Mulai Scan Gratis",
                 footerCopyright: "&copy; 2025 Scanner Pintar oleh Isparmo & M. Hasan.",
                 footerAbout: "Tentang",
+                footerHelp: "Bantuan",
                 footerPrivacy: "Privasi",
                 footerTerms: "Ketentuan"
             },
@@ -382,8 +380,8 @@
                 featuresSubtitle: "Scanner Pintar is not just a scanner. It's a complete platform to accelerate your business cycle, from first contact to deal.",
                 feature1Title: "Smart AI Scanning",
                 feature1Desc: "Powered by Llama 4 Maverick, our app accurately extracts names, titles, emails, and even classifies the company's industry.",
-                feature2Title: "Real-time Team Collaboration",
-                feature2Desc: "Create an event session, and let your entire team scan contacts that automatically consolidate into a single Google Sheet.",
+                feature2Title: "Save to Your Google Sheets",
+                feature2Desc: "Export to your own Google Sheets so extracted business card data can be processed further and stored securely in the cloud.",
                 feature3Title: "Instant AI-Powered Follow-ups",
                 feature3Desc: "AI helps draft professional WhatsApp messages or emails, allowing you to follow up with prospects while the momentum is hot.",
                 feature4Title: "Easy Export & Integration",
@@ -408,7 +406,6 @@
                 plan1Feat1: "10 AI Scans per day",
                 plan1Feat2: "Unlimited Local Contact Storage",
                 plan1Feat3: "Export to .CSV & .VCF",
-                plan1Feat4: "Team Collaboration Mode",
                 plan1Feat5: "AI-Powered Follow-up Drafts",
                 plan1Cta: "Get Started",
                 popularBadge: "MOST POPULAR",
@@ -419,7 +416,6 @@
                 plan2Feat1: "Unlimited AI Scans",
                 plan2Feat2: "Unlimited Local Contact Storage",
                 plan2Feat3: "Export to .CSV & .VCF",
-                plan2Feat4: "Team Collaboration Mode",
                 plan2Feat5: "AI-Powered Follow-up Drafts",
                 plan2Cta: "Choose Pro Plan",
                 finalCtaTitle: "Ready to Accelerate Your Business?",
@@ -427,6 +423,7 @@
                 finalCtaButton: "Start Scanning for Free",
                 footerCopyright: "&copy; 2025 Scanner Pintar by Isparmo & M. Hasan.",
                 footerAbout: "About",
+                footerHelp: "Help",
                 footerPrivacy: "Privacy",
                 footerTerms: "Terms"
             }
