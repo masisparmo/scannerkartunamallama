@@ -1,488 +1,563 @@
 <!DOCTYPE html>
-<html lang="id" class="dark">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Petunjuk & Bantuan | Scanner Pintar</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class'
-        }
-    </script>
+    <title>Petunjuk & Bantuan - Scanner Pintar</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f9fafb;
+            --text-primary: #111827;
+            --text-secondary: #6b7280;
+            --border-color: #e5e7eb;
+            --highlight-bg: #eff6ff;
+            --shadow: rgba(0,0,0,0.05);
+            --link-color: #667eea;
+        }
+        
+        body.dark-theme {
+            --bg-primary: #1f2937;
+            --bg-secondary: #111827;
+            --text-primary: #f9fafb;
+            --text-secondary: #9ca3af;
+            --border-color: #374151;
+            --highlight-bg: #374151;
+            --shadow: rgba(0,0,0,0.3);
+            --link-color: #818cf8;
+        }
+        
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background-color: var(--bg-secondary);
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
-        .faq-item details > summary {
-            list-style: none;
+        
+        header {
+            background-color: var(--bg-primary);
+            border-bottom: 1px solid var(--border-color);
+            padding: 18px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            transition: background-color 0.3s ease;
         }
-        .faq-item details > summary::-webkit-details-marker {
+        
+        .header-content {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .logo {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            flex-shrink: 0;
+        }
+        
+        .header-title-group {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        
+        .header-title {
+            font-size: 1.75em;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1.1;
+        }
+        
+        .header-subtitle {
+            font-size: 1em;
+            color: var(--text-secondary);
+            line-height: 1.2;
+            font-weight: 400;
+        }
+        
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .btn {
+            padding: 11px 22px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+        
+        .btn-lang {
+            background-color: #4b5563;
+            color: white;
+            min-width: 58px;
+            justify-content: center;
+            padding: 11px 18px;
+            font-weight: 600;
+        }
+        
+        .btn-lang:hover {
+            background-color: #374151;
+        }
+        
+        .btn-primary {
+            background-color: #667eea;
+            color: white;
+            font-weight: 500;
+        }
+        
+        .btn-primary:hover {
+            background-color: #5568d3;
+        }
+        
+        .btn-icon {
+            width: 46px;
+            height: 46px;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: transparent;
+            color: var(--text-primary);
+            border-radius: 10px;
+            font-size: 22px;
+            flex-shrink: 0;
+        }
+        
+        .btn-icon:hover {
+            background-color: var(--border-color);
+        }
+        
+        .content-wrapper {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 56px 32px 80px;
+            background-color: var(--bg-secondary);
+        }
+        
+        .content-inner {
+            width: 100%;
+        }
+        
+        .content-section {
             display: none;
         }
-        .faq-item details summary .chevron {
-            transition: transform 0.3s ease;
+        
+        .content-section.active {
+            display: block;
         }
-        .faq-item details[open] summary .chevron {
-            transform: rotate(180deg);
+        
+        h2 {
+            color: var(--text-primary);
+            margin-top: 36px;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            font-weight: 700;
+        }
+        
+        h2:first-child {
+            margin-top: 0;
+        }
+        
+        h3 {
+            color: var(--text-primary);
+            margin-top: 32px;
+            margin-bottom: 16px;
+            font-size: 1.2em;
+            font-weight: 600;
+        }
+        
+        p {
+            margin-bottom: 18px;
+            color: var(--text-primary);
+            line-height: 1.8;
+            font-size: 1.05em;
+        }
+        
+        ul {
+            margin-left: 26px;
+            margin-bottom: 18px;
+        }
+        
+        li {
+            margin-bottom: 14px;
+            color: var(--text-primary);
+            line-height: 1.8;
+            font-size: 1.05em;
+        }
+        
+        strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+        
+        a {
+            color: var(--link-color);
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        footer {
+            background-color: var(--bg-primary);
+            border-top: 1px solid var(--border-color);
+            padding: 40px 0;
+            margin-top: auto;
+            transition: background-color 0.3s ease;
+        }
+        
+        .footer-content {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 32px;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 8px 0;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+        
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.95em;
+            transition: color 0.2s ease;
+            padding: 0 14px;
+        }
+        
+        .footer-links a:hover {
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+        
+        .footer-links .separator {
+            color: var(--border-color);
+            user-select: none;
+        }
+        
+        .footer-copyright {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.9em;
+        }
+        
+        .footer-copyright a {
+            color: var(--link-color);
+            font-weight: 500;
+        }
+        
+        @media (max-width: 768px) {
+            .header-content {
+                padding: 0 16px;
+                flex-wrap: wrap;
+            }
+            
+            .header-title {
+                font-size: 1.4em;
+            }
+            
+            .header-subtitle {
+                font-size: 0.9em;
+            }
+            
+            .logo {
+                width: 48px;
+                height: 48px;
+                font-size: 24px;
+                border-radius: 12px;
+            }
+            
+            .header-right {
+                width: 100%;
+                justify-content: flex-end;
+            }
+            
+            .btn-primary {
+                flex: 1;
+                max-width: 220px;
+            }
+            
+            .content-wrapper {
+                padding: 32px 20px 60px;
+            }
+            
+            h2 {
+                font-size: 1.3em;
+            }
+            
+            h3 {
+                font-size: 1.1em;
+            }
+            
+            p, li {
+                font-size: 1em;
+            }
+            
+            .footer-content {
+                padding: 0 20px;
+            }
+            
+            .footer-links {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .footer-links .separator {
+                display: none;
+            }
+            
+            .footer-links a {
+                padding: 6px 0;
+            }
         }
     </style>
 </head>
-<body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 antialiased">
-
-    <!-- App Container -->
-    <div class="max-w-4xl mx-auto p-4 sm:p-6 lg:p-8">
-
-        <!-- Header -->
-        <header class="flex justify-between items-center pb-6 border-b border-gray-200 dark:border-gray-700">
-            <div class="flex items-center gap-4">
-                <div class="p-2.5 bg-indigo-100 dark:bg-indigo-900/50 rounded-lg">
-                    <i data-lucide="help-circle" class="w-7 h-7 text-indigo-600 dark:text-indigo-400"></i>
-                </div>
-                <div>
-                    <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white" data-translate-key="mainTitle">Scanner Pintar</h1>
-                    <p class="text-sm text-gray-500 dark:text-gray-400" data-translate-key="pageTitle">Petunjuk & Bantuan</p>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="header-left">
+                <div class="logo">❓</div>
+                <div class="header-title-group">
+                    <div class="header-title">Scanner Pintar</div>
+                    <div class="header-subtitle" id="header-subtitle">Petunjuk & Bantuan</div>
                 </div>
             </div>
-            <div class="flex items-center gap-4">
-                <button id="lang-toggle" class="inline-flex items-center gap-2 bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors shadow-sm text-sm">EN</button>
-                <a href="https://scankartunama.isparmo.com/" class="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors shadow-sm">
-                    <i data-lucide="home" class="w-4 h-4"></i>
-                    <span class="hidden sm:inline" data-translate-key="backToApp">Kembali ke Aplikasi</span>
+            <div class="header-right">
+                <button onclick="switchLanguage()" class="btn btn-lang" id="lang-toggle" type="button">EN</button>
+                <a href="https://scankartunama.isparmo.com/" class="btn btn-primary" id="back-btn">
+                    🏠 <span id="back-text">Kembali ke Aplikasi</span>
                 </a>
-                <button id="theme-toggle" class="p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
-                    <i data-lucide="sun" class="w-5 h-5 hidden"></i>
-                    <i data-lucide="moon" class="w-5 h-5 hidden"></i>
+                <button onclick="toggleTheme()" class="btn btn-icon" id="theme-toggle" type="button">
+                    🌙
                 </button>
             </div>
-        </header>
+        </div>
+    </header>
+    
+    <div class="content-wrapper">
+        <div class="content-inner">
+            <!-- INDONESIAN VERSION -->
+            <div id="content-id" class="content-section active">
+                <h2>Cara Menggunakan Scanner Pintar</h2>
+                
+                <h3>1. Persiapan Awal</h3>
+                <ul>
+                    <li><strong>Isi Profil Anda (Untuk Follow-up AI):</strong> Sebelum memulai, klik tombol <strong>PROFIL</strong> di pojok kanan atas halaman utama. Isi nama, jabatan, dan perusahaan Anda. Informasi ini akan digunakan oleh AI untuk membuat draf email dan pesan WhatsApp yang personal dan profesional.</li>
+                    <li><strong>Isi Informasi Acara (Opsional):</strong> Pada halaman utama, isi kolom "Nama Acara" dan "Tanggal". Informasi ini akan otomatis ditambahkan ke setiap kontak yang Anda pindai dalam sesi ini.</li>
+                </ul>
 
-        <main class="mt-8 space-y-16">
+                <h3>2. Memindai Kartu Nama atau QR Code</h3>
+                <ul>
+                    <li><strong>Pilih Metode Pindai:</strong> Klik <strong>SCAN KARTU NAMA</strong> untuk membuka kamera, atau <strong>UPLOAD DARI GALERI</strong> untuk memilih gambar yang sudah ada di perangkat Anda.</li>
+                    <li><strong>Ambil Gambar:</strong> Posisikan kartu nama atau QR Code di dalam frame. Pastikan pencahayaan cukup dan gambar fokus. Klik tombol Pindai. AI akan otomatis menganalisis dan mengekstrak informasinya.</li>
+                </ul>
+                
+                <h3>3. Mengelola dan Mengekspor Hasil</h3>
+                <ul>
+                    <li><strong>Lihat Hasil Scan:</strong> Klik <strong>Lihat Hasil Scan</strong> di halaman utama untuk melihat semua kontak yang tersimpan di perangkat Anda. Kontak diurutkan dari yang terbaru.</li>
+                    <li><strong>Edit atau Hapus Kontak:</strong> Di halaman hasil, klik tombol <strong>EDIT</strong> pada kartu kontak untuk mengedit informasi atau menghapus kontak dari halaman edit.</li>
+                    <li><strong>Gunakan Asisten Follow-Up AI:</strong> Klik pada kartu kontak (bukan tombol edit) untuk membuka menu tindakan. Pilih <strong>Draf Pesan WA</strong> atau <strong>Draf Email</strong> (memerlukan profil sudah terisi).</li>
+                    <li><strong>Ekspor Data:</strong> Di bagian bawah halaman hasil, pilih format ekspor yang diinginkan: <strong>CSV</strong> (untuk Excel/Sheets), <strong>VCF</strong> (untuk kontak HP), <strong>ZIP</strong> (kumpulan file VCF), atau <strong>SIMPAN KE GOOGLE SHEET</strong> (untuk menyimpan semua data lokal ke G-Sheet pribadi).</li>
+                </ul>
 
-            <!-- Section: Cara Penggunaan -->
-            <section id="cara-penggunaan">
-                <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6" data-translate-key="howToUseTitle">Cara Menggunakan Scanner Pintar</h2>
-                <div class="space-y-8">
-                    
-                    <!-- Langkah 1: Persiapan -->
-                    <div>
-                        <h3 class="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-200 flex items-center gap-3">
-                            <span class="flex items-center justify-center w-8 h-8 bg-indigo-600 text-white font-bold rounded-full flex-shrink-0">1</span>
-                            <span data-translate-key="step1Title">Persiapan Awal</span>
-                        </h3>
-                        <div class="relative pl-8 border-l-2 border-gray-200 dark:border-gray-700 ml-4">
-                            <div class="space-y-6 pt-2 pb-4">
-                                <div class="relative p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
-                                    <h4 class="font-semibold text-gray-900 dark:text-white mb-2" data-translate-key="step1_1Title">Isi Profil Anda (Penting untuk Follow-up AI)</h4>
-                                    <p class="text-sm text-gray-600 dark:text-gray-400" data-translate-key="step1_1Desc">Sebelum memulai, klik tombol <strong>PROFIL</strong> di pojok kanan atas halaman utama. Isi nama, jabatan, dan perusahaan Anda. Informasi ini akan digunakan oleh AI untuk membuat draf email dan pesan WhatsApp yang personal dan profesional.</p>
-                                </div>
-                                <div class="relative p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
-                                    <h4 class="font-semibold text-gray-900 dark:text-white mb-2" data-translate-key="step1_2Title">Isi Informasi Acara (Opsional)</h4>
-                                    <p class="text-sm text-gray-600 dark:text-gray-400" data-translate-key="step1_2Desc">Pada halaman utama, isi kolom "Nama Acara" dan "Tanggal". Informasi ini akan otomatis ditambahkan ke setiap kontak yang Anda pindai dalam sesi ini.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Langkah 2: Memindai Kartu Nama -->
-                    <div>
-                        <h3 class="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-200 flex items-center gap-3">
-                           <span class="flex items-center justify-center w-8 h-8 bg-indigo-600 text-white font-bold rounded-full flex-shrink-0">2</span>
-                           <span data-translate-key="step2Title">Memindai Kartu Nama atau QR Code</span>
-                        </h3>
-                        <div class="relative pl-8 border-l-2 border-gray-200 dark:border-gray-700 ml-4">
-                            <div class="space-y-6 pt-2 pb-4">
-                                <div class="relative p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
-                                    <h4 class="font-semibold text-gray-900 dark:text-white mb-2" data-translate-key="step2_1Title">Pilih Metode Pindai</h4>
-                                    <p class="text-sm text-gray-600 dark:text-gray-400" data-translate-key="step2_1Desc">Klik <strong>SCAN KARTU NAMA</strong> untuk membuka kamera, atau <strong>UPLOAD DARI GALERI</strong> untuk memilih gambar yang sudah ada di perangkat Anda.</p>
-                                </div>
-                                <div class="relative p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
-                                    <h4 class="font-semibold text-gray-900 dark:text-white mb-2" data-translate-key="step2_2Title">Ambil Gambar</h4>
-                                    <p class="text-sm text-gray-600 dark:text-gray-400" data-translate-key="step2_2Desc">Posisikan kartu nama atau QR Code di dalam frame. Pastikan pencahayaan cukup dan gambar fokus. Klik tombol Pindai. AI akan otomatis menganalisis dan mengekstrak informasinya.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Langkah 3: Mode Kolaborasi -->
-                    <div>
-                        <h3 class="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-200 flex items-center gap-3">
-                            <span class="flex items-center justify-center w-8 h-8 bg-indigo-600 text-white font-bold rounded-full flex-shrink-0">3</span>
-                            <span data-translate-key="step3Title">Menggunakan Mode Kolaborasi Tim</span>
-                        </h3>
-                         <div class="relative pl-8 border-l-2 border-gray-200 dark:border-gray-700 ml-4">
-                            <div class="space-y-6 pt-2 pb-4">
-                                <div class="relative p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
-                                    <h4 class="font-semibold text-gray-900 dark:text-white mb-2" data-translate-key="step3_1Title">Membuat Sesi (Leader Tim)</h4>
-                                    <p class="text-sm text-gray-600 dark:text-gray-400" data-translate-key="step3_1Desc">Di halaman utama, klik <strong>MODE KOLABORASI TIM</strong>, masukkan nama acara, lalu klik <strong>Buat QR Code</strong>. Bagikan QR Code yang muncul ke anggota tim Anda.</p>
-                                </div>
-                                 <div class="relative p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
-                                    <h4 class="font-semibold text-gray-900 dark:text-white mb-2" data-translate-key="step3_2Title">Bergabung ke Sesi (Anggota Tim)</h4>
-                                    <p class="text-sm text-gray-600 dark:text-gray-400" data-translate-key="step3_2Desc">Pindai QR Code dari Leader Tim menggunakan kamera HP Anda (atau aplikasi Scanner Pintar). Masukkan nama Anda untuk bergabung. Setelah bergabung, setiap kartu nama yang Anda pindai akan otomatis terkirim ke Google Sheet sesi tersebut.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Langkah 4: Mengelola Hasil -->
-                     <div>
-                        <h3 class="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-200 flex items-center gap-3">
-                            <span class="flex items-center justify-center w-8 h-8 bg-indigo-600 text-white font-bold rounded-full flex-shrink-0">4</span>
-                            <span data-translate-key="step4Title">Mengelola dan Mengekspor Hasil</span>
-                        </h4>
-                         <div class="relative pl-8 border-l-2 border-gray-200 dark:border-gray-700 ml-4">
-                            <div class="space-y-6 pt-2 pb-4">
-                                <div class="relative p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
-                                    <h4 class="font-semibold text-gray-900 dark:text-white mb-2" data-translate-key="step4_1Title">Lihat Hasil Scan</h4>
-                                    <p class="text-sm text-gray-600 dark:text-gray-400" data-translate-key="step4_1Desc">Klik <strong>Lihat Hasil Scan</strong> di halaman utama untuk melihat semua kontak yang tersimpan di perangkat Anda. Kontak diurutkan dari yang terbaru.</p>
-                                </div>
-                                <div class="relative p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
-                                    <h4 class="font-semibold text-gray-900 dark:text-white mb-2" data-translate-key="step4_2Title">Edit atau Hapus Kontak</h4>
-                                    <p class="text-sm text-gray-600 dark:text-gray-400" data-translate-key="step4_2Desc">Di halaman hasil, klik tombol <strong>EDIT</strong> pada kartu kontak untuk mengedit informasi yang salah atau menambahkan detail. Anda juga bisa menghapus kontak dari halaman edit.</p>
-                                </div>
-                                <div class="relative p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
-                                    <h4 class="font-semibold text-gray-900 dark:text-white mb-2" data-translate-key="step4_3Title">Gunakan Asisten Follow-Up AI</h4>
-                                    <p class="text-sm text-gray-600 dark:text-gray-400" data-translate-key="step4_3Desc">Klik pada kartu kontak (bukan tombol edit) untuk membuka menu tindakan. Pilih <strong>Draf Pesan WA</strong> atau <strong>Draf Email</strong>. Ingat, fitur ini memerlukan profil yang sudah terisi.</p>
-                                </div>
-                                <div class="relative p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
-                                    <h4 class="font-semibold text-gray-900 dark:text-white mb-2" data-translate-key="step4_4Title">Ekspor Data</h4>
-                                    <p class="text-sm text-gray-600 dark:text-gray-400" data-translate-key="step4_4Desc">Di bagian bawah halaman hasil, pilih format ekspor yang Anda inginkan: <strong>CSV</strong> (untuk Excel/Sheets), <strong>VCF</strong> (untuk kontak HP), <strong>ZIP</strong> (kumpulan file VCF), atau <strong>SIMPAN KE GOOGLE SHEET</strong> (untuk menyimpan semua data lokal ke G-Sheet pribadi).</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Section: F.A.Q. -->
-            <section id="faq">
-                <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6" data-translate-key="faqTitle">Frequently Asked Questions (F.A.Q.)</h2>
-                <div class="space-y-4">
-                    <div class="faq-item bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
-                        <details class="p-6">
-                            <summary class="font-semibold text-gray-900 dark:text-white cursor-pointer flex justify-between items-center" data-translate-key="faq1_q">
-                                Seberapa akurat hasil scan AI?
-                                <i data-lucide="chevron-down" class="chevron w-5 h-5"></i>
-                            </summary>
-                            <div class="mt-4 text-sm text-gray-600 dark:text-gray-400" data-translate-key="faq1_a">Akurasi sangat bergantung pada kualitas gambar: pencahayaan yang baik, gambar yang fokus, dan desain kartu nama yang jelas akan memberikan hasil terbaik. AI kami terus belajar, namun jika ada kesalahan, Anda dapat dengan mudah mengedit hasilnya.</div>
-                        </details>
-                    </div>
-                    <div class="faq-item bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
-                        <details class="p-6">
-                            <summary class="font-semibold text-gray-900 dark:text-white cursor-pointer flex justify-between items-center" data-translate-key="faq2_q">
-                                Apakah data saya aman? Di mana data disimpan?
-                                <i data-lucide="chevron-down" class="chevron w-5 h-5"></i>
-                            </summary>
-                            <div class="mt-4 text-sm text-gray-600 dark:text-gray-400" data-translate-key="faq2_a">Sangat aman. Secara default, semua data hasil scan disimpan secara lokal di dalam browser perangkat Anda (IndexedDB) dan tidak dikirim ke server kami. Anda memiliki kendali penuh. Data hanya dikirim ke Google Sheet jika Anda menggunakan Mode Kolaborasi atau fitur ekspor massal.</div>
-                        </details>
-                    </div>
-                    <div class="faq-item bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
-                        <details class="p-6">
-                            <summary class="font-semibold text-gray-900 dark:text-white cursor-pointer flex justify-between items-center" data-translate-key="faq3_q">
-                                Apakah aplikasi ini gratis?
-                                <i data-lucide="chevron-down" class="chevron w-5 h-5"></i>
-                            </summary>
-                            <div class="mt-4 text-sm text-gray-600 dark:text-gray-400" data-translate-key="faq3_a">Ya, saat ini Scanner Pintar gratis untuk digunakan. Aplikasi ini dibuat sebagai alat bantu untuk meningkatkan produktivitas dan efisiensi dalam manajemen kontak.</div>
-                        </details>
-                    </div>
-                     <div class="faq-item bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
-                        <details class="p-6">
-                            <summary class="font-semibold text-gray-900 dark:text-white cursor-pointer flex justify-between items-center" data-translate-key="faq4_q">
-                                Perangkat apa saja yang didukung?
-                                <i data-lucide="chevron-down" class="chevron w-5 h-5"></i>
-                            </summary>
-                            <div class="mt-4 text-sm text-gray-600 dark:text-gray-400" data-translate-key="faq4_a">
-                                Aplikasi ini adalah aplikasi web (web app) dan dapat berjalan di browser modern pada smartphone (Android & iOS), tablet, dan laptop. Untuk pengalaman terbaik, gunakan browser seperti Google Chrome, Safari, atau Firefox versi terbaru.
-                            </div>
-                        </details>
-                    </div>
-                     <div class="faq-item bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
-                        <details class="p-6">
-                            <summary class="font-semibold text-gray-900 dark:text-white cursor-pointer flex justify-between items-center" data-translate-key="faq5_q">
-                                Mengapa saya tidak bisa mengakses kamera?
-                                <i data-lucide="chevron-down" class="chevron w-5 h-5"></i>
-                            </summary>
-                            <div class="mt-4 text-sm text-gray-600 dark:text-gray-400" data-translate-key="faq5_a">Pastikan Anda telah memberikan izin akses kamera untuk situs web ini di pengaturan browser Anda. Saat pertama kali menekan tombol Scan, browser akan meminta izin. Jika tidak sengaja tertolak, Anda perlu mengizinkannya secara manual melalui pengaturan situs di browser Anda.</div>
-                        </details>
-                    </div>
-                     <div class="faq-item bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
-                        <details class="p-6">
-                            <summary class="font-semibold text-gray-900 dark:text-white cursor-pointer flex justify-between items-center" data-translate-key="faq6_q">
-                                Bagaimana cara kerja Mode Kolaborasi?
-                                <i data-lucide="chevron-down" class="chevron w-5 h-5"></i>
-                            </summary>
-                            <div class="mt-4 text-sm text-gray-600 dark:text-gray-400" data-translate-key="faq6_a">Leader tim membuat sesi yang terhubung ke sebuah Google Sheet. Anggota tim yang bergabung akan mengirimkan setiap hasil scan mereka ke Google Sheet tersebut secara otomatis. Data juga tetap tersimpan di perangkat masing-masing anggota sebagai cadangan.</div>
-                        </details>
-                    </div>
-                    <div class="faq-item bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
-                        <details class="p-6">
-                            <summary class="font-semibold text-gray-900 dark:text-white cursor-pointer flex justify-between items-center" data-translate-key="faq7_q">
-                                Bisakah saya mengedit data setelah di-scan?
-                                <i data-lucide="chevron-down" class="chevron w-5 h-5"></i>
-                            </summary>
-                            <div class="mt-4 text-sm text-gray-600 dark:text-gray-400" data-translate-key="faq7_a">Tentu saja. Di halaman "Lihat Hasil Scan", klik tombol EDIT pada kontak yang ingin Anda ubah. Anda bisa memperbaiki atau melengkapi informasi apa pun sebelum mengekspornya.</div>
-                        </details>
-                    </div>
-                     <div class="faq-item bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
-                        <details class="p-6">
-                            <summary class="font-semibold text-gray-900 dark:text-white cursor-pointer flex justify-between items-center" data-translate-key="faq8_q">
-                                Apakah saya perlu menginstal sesuatu?
-                                <i data-lucide="chevron-down" class="chevron w-5 h-5"></i>
-                            </summary>
-                            <div class="mt-4 text-sm text-gray-600 dark:text-gray-400" data-translate-key="faq8_a">Tidak perlu. Scanner Pintar adalah Progressive Web App (PWA). Anda bisa langsung menggunakannya dari browser. Untuk akses lebih cepat, Anda bisa menambahkannya ke layar utama (Add to Home Screen) ponsel Anda, sehingga berfungsi seperti aplikasi native.</div>
-                        </details>
-                    </div>
-                     <div class="faq-item bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
-                        <details class="p-6">
-                            <summary class="font-semibold text-gray-900 dark:text-white cursor-pointer flex justify-between items-center" data-translate-key="faq9_q">
-                                AI gagal mengekstrak informasi dengan benar. Apa yang harus saya lakukan?
-                                <i data-lucide="chevron-down" class="chevron w-5 h-5"></i>
-                            </summary>
-                            <div class="mt-4 text-sm text-gray-600 dark:text-gray-400" data-translate-key="faq9_a">Jika AI kesulitan, coba ambil ulang foto dengan kualitas lebih baik. Pastikan tidak ada bayangan, gambar tidak buram, dan kartu nama diletakkan di permukaan yang kontras. Jika masih ada kesalahan, Anda bisa dengan cepat memperbaikinya menggunakan fitur Edit di halaman hasil.</div>
-                        </details>
-                    </div>
-                     <div class="faq-item bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
-                        <details class="p-6">
-                            <summary class="font-semibold text-gray-900 dark:text-white cursor-pointer flex justify-between items-center" data-translate-key="faq10_q">
-                                Bisakah saya menggunakan aplikasi ini secara offline?
-                                <i data-lucide="chevron-down" class="chevron w-5 h-5"></i>
-                            </summary>
-                            <div class="mt-4 text-sm text-gray-600 dark:text-gray-400" data-translate-key="faq10_a">Anda dapat membuka aplikasi dan melihat data yang sudah tersimpan secara offline. Namun, untuk proses pemindaian kartu nama dengan AI dan sinkronisasi ke Google Sheet, Anda memerlukan koneksi internet yang aktif.</div>
-                        </details>
-                    </div>
-                </div>
-            </section>
-            
-            <!-- Section: Kontak & Dukungan -->
-            <section id="dukungan">
-                 <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4" data-translate-key="supportTitle">Kontak & Dukungan</h2>
-                <div class="p-6 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 text-center">
-                    <p class="text-gray-600 dark:text-gray-300" data-translate-key="supportDesc">Untuk pertanyaan, masukan, atau laporan bug, silakan kirim email ke tim dukungan kami.</p>
-                    <a href="mailto:support@isparmo.com" class="mt-4 inline-flex items-center gap-2 bg-indigo-100 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-300 font-semibold py-3 px-5 rounded-lg hover:bg-indigo-200 dark:hover:bg-indigo-900 transition-colors">
-                        <i data-lucide="mail" class="w-5 h-5"></i>
-                        support@isparmo.com
-                    </a>
-                </div>
-            </section>
-            
-        </main>
-
-        <!-- Footer -->
-        <footer class="text-center mt-16 py-6 border-t border-gray-200 dark:border-gray-700">
-             <div class="flex justify-center items-center gap-x-4 mb-4 text-sm text-gray-500 dark:text-gray-400">
-                <a href="https://scankartunama.isparmo.com/" class="hover:underline hover:text-indigo-500" data-translate-key="footerHome">Home</a>
-                <span class="text-gray-300 dark:text-gray-600">|</span>
-                <a href="about.html" class="hover:underline hover:text-indigo-500" data-translate-key="footerAbout">Tentang</a>
-                <span class="text-gray-300 dark:text-gray-600">|</span>
-                <a href="help.html" class="hover:underline hover:text-indigo-500" data-translate-key="footerHelp">Bantuan</a>
-                <span class="text-gray-300 dark:text-gray-600">|</span>
-                <a href="terms.html" class="hover:underline hover:text-indigo-500" data-translate-key="footerTerms">Ketentuan</a>
-                <span class="text-gray-300 dark:text-gray-600">|</span>
-                <a href="privacy.html" class="hover:underline hover:text-indigo-500" data-translate-key="footerPrivacy">Privasi</a>
+                <h2>Frequently Asked Questions (F.A.Q.)</h2>
+                <ul>
+                    <li><strong>Seberapa akurat hasil scan AI?</strong> Akurasi tergantung pada kualitas gambar dan kualitas cetak kartu nama. Pada kondisi optimal, tingkat akurasi bisa mencapai 90-95%.</li>
+                    <li><strong>Apakah data saya aman? Di mana data disimpan?</strong> Ya, data Anda aman. Semua data kontak disimpan secara default di penyimpanan lokal browser pada perangkat Anda (IndexedDB). Data tidak dikirim ke server kami kecuali Anda memilih untuk menggunakan fitur ekspor ke Google Sheet.</li>
+                    <li><strong>Apakah aplikasi ini gratis?</strong> Ya, Scanner Pintar sepenuhnya gratis untuk digunakan.</li>
+                    <li><strong>Perangkat apa saja yang didukung?</strong> Aplikasi ini mendukung semua perangkat dengan browser modern (Chrome, Firefox, Safari, Edge) baik di desktop maupun mobile.</li>
+                    <li><strong>Mengapa saya tidak bisa mengakses kamera?</strong> Pastikan Anda memberikan izin akses kamera pada browser. Periksa pengaturan browser Anda dan pastikan kamera tidak diblokir.</li>
+                    <li><strong>Bisakah saya mengedit data setelah di-scan?</strong> Ya, Anda dapat mengedit semua informasi yang telah di-ekstrak dengan mengklik tombol EDIT pada kartu kontak.</li>
+                    <li><strong>Apakah saya perlu menginstal sesuatu?</strong> Tidak, aplikasi ini berbasis web dan tidak memerlukan instalasi. Cukup buka di browser Anda.</li>
+                    <li><strong>AI gagal mengekstrak informasi dengan benar. Apa yang harus saya lakukan?</strong> Pastikan gambar jelas, fokus, dan pencahayaan cukup. Anda juga dapat mengedit hasil ekstraksi secara manual.</li>
+                    <li><strong>Bisakah saya menggunakan aplikasi ini secara offline?</strong> Fitur scan memerlukan koneksi internet untuk mengakses AI. Namun, data yang sudah tersimpan dapat diakses secara offline.</li>
+                </ul>
+                
+                <h3>Kontak & Dukungan</h3>
+                <p>Untuk pertanyaan, masukan, atau laporan bug, silakan kirim email ke tim dukungan kami: <a href="mailto:support@isparmo.com">support@isparmo.com</a></p>
             </div>
-            <p class="text-sm text-gray-500 dark:text-gray-400" data-translate-key="footerCopyright">&copy; 2025 Scanner Pintar. Dibuat oleh <a href="https://isparmo.com" target="_blank" rel="noopener noreferrer" class="font-semibold text-indigo-600 dark:text-indigo-400 hover:underline">Isparmo</a>.</p>
-        </footer>
+            
+            <!-- ENGLISH VERSION -->
+            <div id="content-en" class="content-section">
+                <h2>How to Use Scanner Pintar</h2>
+                
+                <h3>1. Initial Setup</h3>
+                <ul>
+                    <li><strong>Fill in Your Profile (For AI Follow-up):</strong> Before starting, click the <strong>PROFILE</strong> button in the top right corner of the main page. Fill in your name, title, and company. This information will be used by AI to create personalized and professional email drafts and WhatsApp messages.</li>
+                    <li><strong>Fill in Event Information (Optional):</strong> On the main page, fill in the "Event Name" and "Date" fields. This information will be automatically added to every contact you scan in this session.</li>
+                </ul>
 
+                <h3>2. Scanning Business Cards or QR Codes</h3>
+                <ul>
+                    <li><strong>Choose Scan Method:</strong> Click <strong>SCAN BUSINESS CARD</strong> to open the camera, or <strong>UPLOAD FROM GALLERY</strong> to select an existing image from your device.</li>
+                    <li><strong>Take a Picture:</strong> Position the business card or QR Code within the frame. Ensure adequate lighting and focus. Click the Scan button. AI will automatically analyze and extract the information.</li>
+                </ul>
+                
+                <h3>3. Managing and Exporting Results</h3>
+                <ul>
+                    <li><strong>View Scan Results:</strong> Click <strong>View Scan Results</strong> on the main page to see all contacts stored on your device. Contacts are sorted from newest to oldest.</li>
+                    <li><strong>Edit or Delete Contacts:</strong> On the results page, click the <strong>EDIT</strong> button on a contact card to edit information or delete the contact from the edit page.</li>
+                    <li><strong>Use AI Follow-Up Assistant:</strong> Click on a contact card (not the edit button) to open the action menu. Select <strong>Draft WA Message</strong> or <strong>Draft Email</strong> (requires profile to be filled).</li>
+                    <li><strong>Export Data:</strong> At the bottom of the results page, choose your desired export format: <strong>CSV</strong> (for Excel/Sheets), <strong>VCF</strong> (for phone contacts), <strong>ZIP</strong> (collection of VCF files), or <strong>SAVE TO GOOGLE SHEET</strong> (to save all local data to your personal G-Sheet).</li>
+                </ul>
+
+                <h2>Frequently Asked Questions (F.A.Q.)</h2>
+                <ul>
+                    <li><strong>How accurate is the AI scan?</strong> Accuracy depends on image quality and business card print quality. Under optimal conditions, accuracy can reach 90-95%.</li>
+                    <li><strong>Is my data safe? Where is data stored?</strong> Yes, your data is safe. All contact data is stored by default in local browser storage on your device (IndexedDB). Data is not sent to our servers unless you choose to use the export to Google Sheet feature.</li>
+                    <li><strong>Is this application free?</strong> Yes, Scanner Pintar is completely free to use.</li>
+                    <li><strong>What devices are supported?</strong> This application supports all devices with modern browsers (Chrome, Firefox, Safari, Edge) on both desktop and mobile.</li>
+                    <li><strong>Why can't I access the camera?</strong> Make sure you grant camera access permission to the browser. Check your browser settings and ensure the camera is not blocked.</li>
+                    <li><strong>Can I edit data after scanning?</strong> Yes, you can edit all extracted information by clicking the EDIT button on the contact card.</li>
+                    <li><strong>Do I need to install anything?</strong> No, this is a web-based application and requires no installation. Just open it in your browser.</li>
+                    <li><strong>AI failed to extract information correctly. What should I do?</strong> Ensure the image is clear, focused, and well-lit. You can also manually edit the extraction results.</li>
+                    <li><strong>Can I use this application offline?</strong> The scan feature requires an internet connection to access AI. However, already stored data can be accessed offline.</li>
+                </ul>
+                
+                <h3>Contact & Support</h3>
+                <p>For questions, feedback, or bug reports, please email our support team: <a href="mailto:support@isparmo.com">support@isparmo.com</a></p>
+            </div>
+        </div>
     </div>
-
+    
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="https://scankartunama.isparmo.com">Home</a>
+                <span class="separator">|</span>
+                <a href="https://scankartunama.isparmo.com/about.html">Tentang</a>
+                <span class="separator">|</span>
+                <a href="https://scankartunama.isparmo.com/help.html">Bantuan</a>
+                <span class="separator">|</span>
+                <a href="https://scankartunama.isparmo.com/terms.html">Ketentuan</a>
+                <span class="separator">|</span>
+                <a href="https://scankartunama.isparmo.com/privacy.html">Privasi</a>
+            </div>
+            <div class="footer-copyright">
+                © 2025 Scanner Pintar. Dibuat oleh <a href="https://isparmo.com" target="_blank">Isparmo</a>.
+            </div>
+        </div>
+    </footer>
+    
     <script>
-        lucide.createIcons();
+        let currentLang = 'id';
         
-        // --- DUAL LANGUAGE SCRIPT ---
-        const translations = {
+        // Language text mappings
+        const langTexts = {
             id: {
-                pageTitle: "Petunjuk & Bantuan",
-                mainTitle: "Scanner Pintar",
-                backToApp: "Kembali ke Aplikasi",
-                howToUseTitle: "Cara Menggunakan Scanner Pintar",
-                step1Title: "Persiapan Awal",
-                step1_1Title: "Isi Profil Anda (Penting untuk Follow-up AI)",
-                step1_1Desc: "Sebelum memulai, klik tombol <strong>PROFIL</strong> di pojok kanan atas halaman utama. Isi nama, jabatan, dan perusahaan Anda. Informasi ini akan digunakan oleh AI untuk membuat draf email dan pesan WhatsApp yang personal dan profesional.",
-                step1_2Title: "Isi Informasi Acara (Opsional)",
-                step1_2Desc: "Pada halaman utama, isi kolom \"Nama Acara\" dan \"Tanggal\". Informasi ini akan otomatis ditambahkan ke setiap kontak yang Anda pindai dalam sesi ini.",
-                step2Title: "Memindai Kartu Nama atau QR Code",
-                step2_1Title: "Pilih Metode Pindai",
-                step2_1Desc: "Klik <strong>SCAN KARTU NAMA</strong> untuk membuka kamera, atau <strong>UPLOAD DARI GALERI</strong> untuk memilih gambar yang sudah ada di perangkat Anda.",
-                step2_2Title: "Ambil Gambar",
-                step2_2Desc: "Posisikan kartu nama atau QR Code di dalam frame. Pastikan pencahayaan cukup dan gambar fokus. Klik tombol Pindai. AI akan otomatis menganalisis dan mengekstrak informasinya.",
-                step3Title: "Menggunakan Mode Kolaborasi Tim",
-                step3_1Title: "Membuat Sesi (Leader Tim)",
-                step3_1Desc: "Di halaman utama, klik <strong>MODE KOLABORASI TIM</strong>, masukkan nama acara, lalu klik <strong>Buat QR Code</strong>. Bagikan QR Code yang muncul ke anggota tim Anda.",
-                step3_2Title: "Bergabung ke Sesi (Anggota Tim)",
-                step3_2Desc: "Pindai QR Code dari Leader Tim menggunakan kamera HP Anda (atau aplikasi Scanner Pintar). Masukkan nama Anda untuk bergabung. Setelah bergabung, setiap kartu nama yang Anda pindai akan otomatis terkirim ke Google Sheet sesi tersebut.",
-                step4Title: "Mengelola dan Mengekspor Hasil",
-                step4_1Title: "Lihat Hasil Scan",
-                step4_1Desc: "Klik <strong>Lihat Hasil Scan</strong> di halaman utama untuk melihat semua kontak yang tersimpan di perangkat Anda. Kontak diurutkan dari yang terbaru.",
-                step4_2Title: "Edit atau Hapus Kontak",
-                step4_2Desc: "Di halaman hasil, klik tombol <strong>EDIT</strong> pada kartu kontak untuk mengedit informasi yang salah atau menambahkan detail. Anda juga bisa menghapus kontak dari halaman edit.",
-                step4_3Title: "Gunakan Asisten Follow-Up AI",
-                step4_3Desc: "Klik pada kartu kontak (bukan tombol edit) untuk membuka menu tindakan. Pilih <strong>Draf Pesan WA</strong> atau <strong>Draf Email</strong>. Ingat, fitur ini memerlukan profil yang sudah terisi.",
-                step4_4Title: "Ekspor Data",
-                step4_4Desc: "Di bagian bawah halaman hasil, pilih format ekspor yang Anda inginkan: <strong>CSV</strong> (untuk Excel/Sheets), <strong>VCF</strong> (untuk kontak HP), <strong>ZIP</strong> (kumpulan file VCF), atau <strong>SIMPAN KE GOOGLE SHEET</strong> (untuk menyimpan semua data lokal ke G-Sheet pribadi).",
-                faqTitle: "Frequently Asked Questions (F.A.Q.)",
-                faq1_q: "Seberapa akurat hasil scan AI?",
-                faq1_a: "Akurasi sangat bergantung pada kualitas gambar: pencahayaan yang baik, gambar yang fokus, dan desain kartu nama yang jelas akan memberikan hasil terbaik. AI kami terus belajar, namun jika ada kesalahan, Anda dapat dengan mudah mengedit hasilnya.",
-                faq2_q: "Apakah data saya aman? Di mana data disimpan?",
-                faq2_a: "Sangat aman. Secara default, semua data hasil scan disimpan secara lokal di dalam browser perangkat Anda (IndexedDB) dan tidak dikirim ke server kami. Anda memiliki kendali penuh. Data hanya dikirim ke Google Sheet jika Anda menggunakan Mode Kolaborasi atau fitur ekspor massal.",
-                faq3_q: "Apakah aplikasi ini gratis?",
-                faq3_a: "Ya, saat ini Scanner Pintar gratis untuk digunakan. Aplikasi ini dibuat sebagai alat bantu untuk meningkatkan produktivitas dan efisiensi dalam manajemen kontak.",
-                faq4_q: "Perangkat apa saja yang didukung?",
-                faq4_a: 'Aplikasi ini adalah aplikasi web (web app) dan dapat berjalan di browser modern pada smartphone (Android & iOS), tablet, dan laptop. Untuk pengalaman terbaik, gunakan browser seperti Google Chrome, Safari, atau Firefox versi terbaru.',
-                faq5_q: "Mengapa saya tidak bisa mengakses kamera?",
-                faq5_a: "Pastikan Anda telah memberikan izin akses kamera untuk situs web ini di pengaturan browser Anda. Saat pertama kali menekan tombol Scan, browser akan meminta izin. Jika tidak sengaja tertolak, Anda perlu mengizinkannya secara manual melalui pengaturan situs di browser Anda.",
-                faq6_q: "Bagaimana cara kerja Mode Kolaborasi?",
-                faq6_a: "Leader tim membuat sesi yang terhubung ke sebuah Google Sheet. Anggota tim yang bergabung akan mengirimkan setiap hasil scan mereka ke Google Sheet tersebut secara otomatis. Data juga tetap tersimpan di perangkat masing-masing anggota sebagai cadangan.",
-                faq7_q: "Bisakah saya mengedit data setelah di-scan?",
-                faq7_a: "Tentu saja. Di halaman \"Lihat Hasil Scan\", klik tombol EDIT pada kontak yang ingin Anda ubah. Anda bisa memperbaiki atau melengkapi informasi apa pun sebelum mengekspornya.",
-                faq8_q: "Apakah saya perlu menginstal sesuatu?",
-                faq8_a: "Tidak perlu. Scanner Pintar adalah Progressive Web App (PWA). Anda bisa langsung menggunakannya dari browser. Untuk akses lebih cepat, Anda bisa menambahkannya ke layar utama (Add to Home Screen) ponsel Anda, sehingga berfungsi seperti aplikasi native.",
-                faq9_q: "AI gagal mengekstrak informasi dengan benar. Apa yang harus saya lakukan?",
-                faq9_a: "Jika AI kesulitan, coba ambil ulang foto dengan kualitas lebih baik. Pastikan tidak ada bayangan, gambar tidak buram, dan kartu nama diletakkan di permukaan yang kontras. Jika masih ada kesalahan, Anda bisa dengan cepat memperbaikinya menggunakan fitur Edit di halaman hasil.",
-                faq10_q: "Bisakah saya menggunakan aplikasi ini secara offline?",
-                faq10_a: "Anda dapat membuka aplikasi dan melihat data yang sudah tersimpan secara offline. Namun, untuk proses pemindaian kartu nama dengan AI dan sinkronisasi ke Google Sheet, Anda memerlukan koneksi internet yang aktif.",
-                supportTitle: "Kontak & Dukungan",
-                supportDesc: "Untuk pertanyaan, masukan, atau laporan bug, silakan kirim email ke tim dukungan kami.",
-                footerHome: "Home",
-                footerAbout: "Tentang",
-                footerHelp: "Bantuan",
-                footerTerms: "Ketentuan",
-                footerPrivacy: "Privasi",
-                footerCopyright: '&copy; 2025 Scanner Pintar. Dibuat oleh <a href="https://isparmo.com" target="_blank" rel="noopener noreferrer" class="font-semibold text-indigo-600 dark:text-indigo-400 hover:underline">Isparmo</a>.'
+                subtitle: 'Petunjuk & Bantuan',
+                backBtn: 'Kembali ke Aplikasi'
             },
             en: {
-                pageTitle: "Instructions & Help",
-                mainTitle: "Scanner Pintar",
-                backToApp: "Back to App",
-                howToUseTitle: "How to Use Scanner Pintar",
-                step1Title: "Initial Setup",
-                step1_1Title: "Fill Out Your Profile (Important for AI Follow-ups)",
-                step1_1Desc: "Before you begin, click the <strong>PROFILE</strong> button in the top-right corner of the main page. Fill in your name, position, and company. This information will be used by the AI to create personal and professional draft emails and WhatsApp messages.",
-                step1_2Title: "Fill in Event Information (Optional)",
-                step1_2Desc: "On the main page, fill in the \"Event Name\" and \"Date\" fields. This information will be automatically added to every contact you scan in this session.",
-                step2Title: "Scanning a Business Card or QR Code",
-                step2_1Title: "Choose Scan Method",
-                step2_1Desc: "Click <strong>SCAN BUSINESS CARD</strong> to open the camera, or <strong>UPLOAD FROM GALLERY</strong> to select an existing image from your device.",
-                step2_2Title: "Capture the Image",
-                step2_2Desc: "Position the business card or QR Code within the frame. Ensure there is enough light and the image is in focus. Click the Scan button. The AI will automatically analyze and extract the information.",
-                step3Title: "Using Team Collaboration Mode",
-                step3_1Title: "Create a Session (Team Leader)",
-                step3_1Desc: "On the main page, click <strong>TEAM COLLABORATION MODE</strong>, enter the event name, then click <strong>Create QR Code</strong>. Share the generated QR Code with your team members.",
-                step3_2Title: "Join a Session (Team Member)",
-                step3_2Desc: "Scan the QR Code from the Team Leader using your phone's camera (or the Scanner Pintar app). Enter your name to join. After joining, every business card you scan will be automatically sent to the session's Google Sheet.",
-                step4Title: "Managing and Exporting Results",
-                step4_1Title: "View Scan Results",
-                step4_1Desc: "Click <strong>View Scan Results</strong> on the main page to see all contacts saved on your device. Contacts are sorted by the most recent.",
-                step4_2Title: "Edit or Delete a Contact",
-                step4_2Desc: "On the results page, click the <strong>EDIT</strong> button on a contact card to correct any wrong information or add details. You can also delete the contact from the edit page.",
-                step4_3Title: "Use the AI Follow-Up Assistant",
-                step4_3Desc: "Click on a contact card (not the edit button) to open the action menu. Select <strong>Draft WA Message</strong> or <strong>Draft Email</strong>. Remember, this feature requires a completed profile.",
-                step4_4Title: "Export Data",
-                step4_4Desc: "At the bottom of the results page, choose your desired export format: <strong>CSV</strong> (for Excel/Sheets), <strong>VCF</strong> (for phone contacts), <strong>ZIP</strong> (a collection of VCF files), or <strong>SAVE TO GOOGLE SHEET</strong> (to save all local data to a personal G-Sheet).",
-                faqTitle: "Frequently Asked Questions (F.A.Q.)",
-                faq1_q: "How accurate is the AI scan result?",
-                faq1_a: "Accuracy heavily depends on the image quality: good lighting, a focused image, and a clear business card design will yield the best results. Our AI is constantly learning, but if there are any errors, you can easily edit the results.",
-                faq2_q: "Is my data secure? Where is it stored?",
-                faq2_a: "Very secure. By default, all scanned data is stored locally within your device's browser (IndexedDB) and is not sent to our servers. You have full control. Data is only sent to Google Sheets if you use the Collaboration Mode or the bulk export feature.",
-                faq3_q: "Is this application free?",
-                faq3_a: "Yes, Scanner Pintar is currently free to use. This application was created as a tool to improve productivity and efficiency in contact management.",
-                faq4_q: "What devices are supported?",
-                faq4_a: 'This is a web app and can run on modern browsers on smartphones (Android & iOS), tablets, and laptops. For the best experience, use the latest version of browsers like Google Chrome, Safari, or Firefox.',
-                faq5_q: "Why can't I access the camera?",
-                faq5_a: "Please ensure you have granted camera access permission for this website in your browser settings. The first time you press the Scan button, the browser will ask for permission. If you accidentally denied it, you need to allow it manually through the site settings in your browser.",
-                faq6_q: "How does Collaboration Mode work?",
-                faq6_a: "The team leader creates a session linked to a Google Sheet. Team members who join will automatically send each of their scan results to that Google Sheet. The data is also saved on each member's device as a backup.",
-                faq7_q: "Can I edit the data after scanning?",
-                faq7_a: 'Of course. On the "View Scan Results" page, click the EDIT button on the contact you want to change. You can correct or complete any information before exporting it.',
-                faq8_q: "Do I need to install anything?",
-                faq8_a: "No installation needed. Scanner Pintar is a Progressive Web App (PWA). You can use it directly from your browser. For quicker access, you can add it to your phone's Home Screen, and it will function like a native app.",
-                faq9_q: "The AI failed to extract information correctly. What should I do?",
-                faq9_a: "If the AI has trouble, try retaking the photo with better quality. Ensure there are no shadows, the image is not blurry, and the business card is placed on a contrasting surface. If errors persist, you can quickly correct them using the Edit feature on the results page.",
-                faq10_q: "Can I use this application offline?",
-                faq10_a: "You can open the application and view already saved data offline. However, for the AI-powered business card scanning process and synchronization to Google Sheets, you will need an active internet connection.",
-                supportTitle: "Contact & Support",
-                supportDesc: "For questions, feedback, or bug reports, please send an email to our support team.",
-                footerHome: "Home",
-                footerAbout: "About",
-                footerHelp: "Help",
-                footerTerms: "Terms",
-                footerPrivacy: "Privacy",
-                footerCopyright: '&copy; 2025 Scanner Pintar. Created by <a href="https://isparmo.com" target="_blank" rel="noopener noreferrer" class="font-semibold text-indigo-600 dark:text-indigo-400 hover:underline">Isparmo</a>.'
+                subtitle: 'Help & Guide',
+                backBtn: 'Back to Application'
             }
         };
-
-        const langToggleBtn = document.getElementById('lang-toggle');
-        let currentLang = 'id';
-
-        function setLanguage(lang) {
-            currentLang = lang;
-            document.documentElement.lang = lang;
-            langToggleBtn.textContent = lang === 'id' ? 'EN' : 'ID';
-            document.querySelectorAll('[data-translate-key]').forEach(el => {
-                const key = el.getAttribute('data-translate-key');
-                // Special handling for FAQ questions to preserve the chevron icon
-                if (el.tagName === 'SUMMARY') {
-                    const icon = el.querySelector('.chevron');
-                    const text = translations[lang][key] || el.textContent.trim();
-                    el.innerHTML = text; // This might remove the icon, so we re-append it
-                    if (icon) {
-                        el.appendChild(icon);
-                    }
-                } else {
-                     if (translations[lang][key]) {
-                        el.innerHTML = translations[lang][key];
-                    }
-                }
-            });
-            const titleKey = 'pageTitle';
-            document.title = `${translations[lang][titleKey]} | ${translations[lang]['mainTitle']}`;
-            localStorage.setItem('pageLang', lang);
+        
+        // Update header text based on language
+        function updateHeaderText(lang) {
+            document.getElementById('header-subtitle').textContent = langTexts[lang].subtitle;
+            document.getElementById('back-text').textContent = langTexts[lang].backBtn;
         }
-
-        langToggleBtn.addEventListener('click', () => {
-            const newLang = currentLang === 'id' ? 'en' : 'id';
-            setLanguage(newLang);
-        });
-
-        const themeToggleBtn = document.getElementById('theme-toggle');
-        const sunIcon = themeToggleBtn.querySelector('[data-lucide="sun"]');
-        const moonIcon = themeToggleBtn.querySelector('[data-lucide="moon"]');
-
-        function applyTheme(isDark) {
-            document.documentElement.classList.toggle('dark', isDark);
-            if (isDark) {
-                sunIcon.classList.remove('hidden');
-                moonIcon.classList.add('hidden');
-            } else {
-                moonIcon.classList.remove('hidden');
-                sunIcon.classList.add('hidden');
-            }
-            localStorage.setItem('theme', isDark ? 'dark' : 'light');
-        }
-
-        function toggleTheme() {
-            const isCurrentlyDark = document.documentElement.classList.contains('dark');
-            applyTheme(!isCurrentlyDark);
-        }
-
-        themeToggleBtn.addEventListener('click', toggleTheme);
-
-        // Initial theme setup on page load
-        document.addEventListener('DOMContentLoaded', () => {
+        
+        // Load saved theme on page load
+        (function() {
             const savedTheme = localStorage.getItem('theme');
-            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            applyTheme(savedTheme ? savedTheme === 'dark' : prefersDark);
-            
-            const savedLang = localStorage.getItem('pageLang');
-            if (savedLang && (savedLang === 'id' || savedLang === 'en')) {
-                setLanguage(savedLang);
-            } else {
-                setLanguage('id');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-theme');
+                document.getElementById('theme-toggle').textContent = '☀️';
             }
-        });
+        })();
+        
+        // Load saved language on page load
+        (function() {
+            const savedLang = localStorage.getItem('language');
+            if (savedLang === 'en') {
+                currentLang = 'en';
+                document.getElementById('content-id').classList.remove('active');
+                document.getElementById('content-en').classList.add('active');
+                document.getElementById('lang-toggle').textContent = 'ID';
+                updateHeaderText('en');
+            }
+        })();
+        
+        // Theme Toggle Function
+        function toggleTheme() {
+            const body = document.body;
+            const themeToggle = document.getElementById('theme-toggle');
+            
+            if (body.classList.contains('dark-theme')) {
+                body.classList.remove('dark-theme');
+                themeToggle.textContent = '🌙';
+                localStorage.setItem('theme', 'light');
+            } else {
+                body.classList.add('dark-theme');
+                themeToggle.textContent = '☀️';
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+        
+        // Language Toggle Function
+        function switchLanguage() {
+            const langToggle = document.getElementById('lang-toggle');
+            
+            if (currentLang === 'id') {
+                // Switch to English
+                currentLang = 'en';
+                document.getElementById('content-id').classList.remove('active');
+                document.getElementById('content-en').classList.add('active');
+                langToggle.textContent = 'ID';
+                updateHeaderText('en');
+                localStorage.setItem('language', 'en');
+            } else {
+                // Switch to Indonesian
+                currentLang = 'id';
+                document.getElementById('content-en').classList.remove('active');
+                document.getElementById('content-id').classList.add('active');
+                langToggle.textContent = 'EN';
+                updateHeaderText('id');
+                localStorage.setItem('language', 'id');
+            }
+        }
     </script>
 </body>
 </html>
