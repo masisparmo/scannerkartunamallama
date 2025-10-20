@@ -1,270 +1,622 @@
 <!DOCTYPE html>
-<html lang="id" class="dark">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kebijakan Privasi | Scanner Pintar</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class'
-        }
-    </script>
+    <title>Kebijakan Privasi - Scanner Pintar</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f9fafb;
+            --text-primary: #111827;
+            --text-secondary: #6b7280;
+            --border-color: #e5e7eb;
+            --highlight-bg: #eff6ff;
+            --shadow: rgba(0,0,0,0.05);
+            --link-color: #667eea;
+        }
+        
+        body.dark-theme {
+            --bg-primary: #1f2937;
+            --bg-secondary: #111827;
+            --text-primary: #f9fafb;
+            --text-secondary: #9ca3af;
+            --border-color: #374151;
+            --highlight-bg: #374151;
+            --shadow: rgba(0,0,0,0.3);
+            --link-color: #818cf8;
+        }
+        
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background-color: var(--bg-secondary);
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
-        .privacy-section p, .privacy-section ul {
-            @apply text-gray-600 dark:text-gray-300 leading-relaxed;
+        
+        /* Header Styles */
+        header {
+            background-color: var(--bg-primary);
+            border-bottom: 1px solid var(--border-color);
+            padding: 18px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            transition: background-color 0.3s ease;
         }
-        .privacy-section ul {
-            @apply list-disc list-inside space-y-2 pl-4;
+        
+        .header-content {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .logo {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            flex-shrink: 0;
+        }
+        
+        .header-title-group {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        
+        .header-title {
+            font-size: 1.75em;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1.1;
+        }
+        
+        .header-subtitle {
+            font-size: 1em;
+            color: var(--text-secondary);
+            line-height: 1.2;
+            font-weight: 400;
+        }
+        
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .btn {
+            padding: 11px 22px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+        
+        .btn-lang {
+            background-color: #4b5563;
+            color: white;
+            min-width: 58px;
+            justify-content: center;
+            padding: 11px 18px;
+            font-weight: 600;
+        }
+        
+        .btn-lang:hover {
+            background-color: #374151;
+        }
+        
+        .btn-primary {
+            background-color: #667eea;
+            color: white;
+            font-weight: 500;
+        }
+        
+        .btn-primary:hover {
+            background-color: #5568d3;
+        }
+        
+        .btn-icon {
+            width: 46px;
+            height: 46px;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: transparent;
+            color: var(--text-primary);
+            border-radius: 10px;
+            font-size: 22px;
+            flex-shrink: 0;
+        }
+        
+        .btn-icon:hover {
+            background-color: var(--border-color);
+        }
+        
+        /* Content Styles */
+        .content-wrapper {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 56px 32px 80px;
+            background-color: var(--bg-secondary);
+        }
+        
+        .content-inner {
+            width: 100%;
+        }
+        
+        .content-section {
+            display: none;
+        }
+        
+        .content-section.active {
+            display: block;
+        }
+        
+        .last-updated {
+            color: var(--text-secondary);
+            font-size: 0.9em;
+            margin-bottom: 28px;
+        }
+        
+        h2 {
+            color: var(--text-primary);
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 1.875em;
+            font-weight: 700;
+        }
+        
+        h3 {
+            color: var(--text-primary);
+            margin-top: 36px;
+            margin-bottom: 16px;
+            font-size: 1.3em;
+            font-weight: 600;
+        }
+        
+        p {
+            margin-bottom: 18px;
+            color: var(--text-primary);
+            line-height: 1.8;
+            font-size: 1.05em;
+        }
+        
+        ul {
+            margin-left: 26px;
+            margin-bottom: 18px;
+        }
+        
+        li {
+            margin-bottom: 14px;
+            color: var(--text-primary);
+            line-height: 1.8;
+            font-size: 1.05em;
+        }
+        
+        strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+        
+        .highlight-box {
+            background-color: var(--highlight-bg);
+            border-left: 4px solid #667eea;
+            padding: 24px;
+            margin: 28px 0;
+            border-radius: 6px;
+            transition: background-color 0.3s ease;
+        }
+        
+        a {
+            color: var(--link-color);
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Footer Styles */
+        footer {
+            background-color: var(--bg-primary);
+            border-top: 1px solid var(--border-color);
+            padding: 40px 0;
+            margin-top: auto;
+            transition: background-color 0.3s ease;
+        }
+        
+        .footer-content {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 32px;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 8px 0;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+        
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.95em;
+            transition: color 0.2s ease;
+            padding: 0 14px;
+        }
+        
+        .footer-links a:hover {
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+        
+        .footer-links .separator {
+            color: var(--border-color);
+            user-select: none;
+        }
+        
+        .footer-copyright {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.9em;
+        }
+        
+        .footer-copyright a {
+            color: var(--link-color);
+            font-weight: 500;
+        }
+        
+        @media (max-width: 768px) {
+            .header-content {
+                padding: 0 16px;
+                flex-wrap: wrap;
+            }
+            
+            .header-title {
+                font-size: 1.4em;
+            }
+            
+            .header-subtitle {
+                font-size: 0.9em;
+            }
+            
+            .logo {
+                width: 48px;
+                height: 48px;
+                font-size: 24px;
+                border-radius: 12px;
+            }
+            
+            .header-right {
+                width: 100%;
+                justify-content: flex-end;
+            }
+            
+            .btn-primary {
+                flex: 1;
+                max-width: 220px;
+            }
+            
+            .content-wrapper {
+                padding: 32px 20px 60px;
+            }
+            
+            h2 {
+                font-size: 1.5em;
+            }
+            
+            h3 {
+                font-size: 1.2em;
+            }
+            
+            p, li {
+                font-size: 1em;
+            }
+            
+            .footer-content {
+                padding: 0 20px;
+            }
+            
+            .footer-links {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .footer-links .separator {
+                display: none;
+            }
+            
+            .footer-links a {
+                padding: 6px 0;
+            }
         }
     </style>
 </head>
-<body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 antialiased">
-
-    <!-- App Container -->
-    <div class="max-w-4xl mx-auto p-4 sm:p-6 lg:p-8">
-
-        <!-- Header -->
-        <header class="flex justify-between items-center pb-6 border-b border-gray-200 dark:border-gray-700">
-            <div class="flex items-center gap-4">
-                <div class="p-2.5 bg-indigo-100 dark:bg-indigo-900/50 rounded-lg">
-                    <i data-lucide="shield-check" class="w-7 h-7 text-indigo-600 dark:text-indigo-400"></i>
-                </div>
-                <div>
-                    <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white" data-translate-key="mainTitle">Scanner Pintar</h1>
-                    <p class="text-sm text-gray-500 dark:text-gray-400" data-translate-key="pageTitle">Kebijakan Privasi</p>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="header-left">
+                <div class="logo">🛡️</div>
+                <div class="header-title-group">
+                    <div class="header-title">Scanner Pintar</div>
+                    <div class="header-subtitle">Kebijakan Privasi</div>
                 </div>
             </div>
-            <div class="flex items-center gap-4">
-                <button id="lang-toggle" class="inline-flex items-center gap-2 bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors shadow-sm text-sm">EN</button>
-                <a href="https://scankartunama.isparmo.com/" class="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors shadow-sm">
-                    <i data-lucide="home" class="w-4 h-4"></i>
-                    <span class="hidden sm:inline" data-translate-key="backToApp">Kembali ke Aplikasi</span>
+            <div class="header-right">
+                <button onclick="switchLanguage()" class="btn btn-lang" id="lang-toggle" type="button">EN</button>
+                <a href="https://scankartunama.isparmo.com/" class="btn btn-primary">
+                    🏠 Kembali ke Aplikasi
                 </a>
-                <button id="theme-toggle" class="p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
-                    <i data-lucide="sun" class="w-5 h-5 hidden"></i>
-                    <i data-lucide="moon" class="w-5 h-5 hidden"></i>
+                <button onclick="toggleTheme()" class="btn btn-icon" id="theme-toggle" type="button">
+                    🌙
                 </button>
             </div>
-        </header>
-
-        <main class="mt-8 prose prose-indigo dark:prose-invert max-w-none">
-            <p class="text-sm text-gray-500 dark:text-gray-400" data-translate-key="lastUpdated">Terakhir diperbarui: 01 September 2025</p>
-            
-            <p data-translate-key="intro1">Kebijakan Privasi ini menjelaskan bagaimana informasi Anda dikumpulkan, digunakan, dan diungkapkan oleh Scanner Pintar ("Aplikasi", "Layanan"). Dengan menggunakan layanan kami, Anda setuju dengan pengumpulan dan penggunaan informasi sesuai dengan kebijakan ini.</p>
-            
-            <div class="space-y-8 mt-8">
-                <div class="privacy-section">
-                    <h3 class="text-xl font-bold text-gray-800 dark:text-gray-200 mb-3" data-translate-key="title1">1. Informasi yang Kami Proses</h3>
-                    <p data-translate-key="desc1_1">Kami merancang aplikasi ini dengan prinsip privasi sebagai prioritas utama. Kami tidak mengumpulkan data pribadi secara aktif. Berikut adalah jenis data yang berinteraksi dengan aplikasi:</p>
+        </div>
+    </header>
+    
+    <div class="content-wrapper">
+        <div class="content-inner">
+            <!-- INDONESIAN VERSION -->
+            <div id="content-id" class="content-section active">
+                <p class="last-updated">Terakhir diperbarui: 20 Oktober 2025</p>
+                
+                <p>Kebijakan Privasi ini menjelaskan bagaimana informasi Anda dikumpulkan, digunakan, dan diungkapkan oleh Scanner Pintar ("Aplikasi", "Layanan"). Dengan menggunakan layanan kami, Anda setuju dengan pengumpulan dan penggunaan informasi sesuai dengan kebijakan ini.</p>
+                
+                <h3>1. Informasi yang Kami Proses</h3>
+                
+                <p>Kami merancang aplikasi ini dengan prinsip privasi sebagai prioritas utama. Kami tidak mengumpulkan data pribadi secara aktif. Berikut adalah jenis data yang berinteraksi dengan aplikasi:</p>
+                
+                <ul>
+                    <li><strong>Gambar Kartu Nama:</strong> Saat Anda memindai kartu nama, gambar tersebut dikirim ke penyedia layanan AI pihak ketiga untuk dianalisis. Gambar ini diproses sementara dan tidak disimpan secara permanen di server kami atau server pihak ketiga setelah analisis selesai.</li>
+                    
+                    <li><strong>Data Kontak yang Diekstrak:</strong> Informasi yang diekstrak dari kartu nama (seperti nama, jabatan, perusahaan, nomor telepon, email, dll.) disimpan secara default hanya di penyimpanan lokal (IndexedDB) browser pada perangkat Anda. Data ini sepenuhnya berada di bawah kendali Anda.</li>
+                </ul>
+                
+                <div class="highlight-box">
+                    <p><strong>Penyimpanan ke Google Sheet dengan Akun Google Anda:</strong></p>
+                    <p>Anda memiliki opsi untuk menyimpan data hasil ekstraksi kartu nama ke Google Sheet menggunakan <strong>akun Google milik Anda sendiri</strong>. Ketika Anda memilih untuk menggunakan fitur ini:</p>
                     <ul>
-                        <li data-translate-key="desc1_li1"><strong>Gambar Kartu Nama:</strong> Saat Anda memindai kartu nama, gambar tersebut dikirim ke penyedia layanan AI pihak ketiga untuk dianalisis. Gambar ini diproses sementara dan tidak disimpan secara permanen di server kami atau server pihak ketiga setelah analisis selesai.</li>
-                        <li data-translate-key="desc1_li2"><strong>Data Kontak yang Diekstrak:</strong> Informasi yang diekstrak dari kartu nama (seperti nama, jabatan, perusahaan, dll.) disimpan secara default hanya di penyimpanan lokal (IndexedDB) browser pada perangkat Anda. Data ini sepenuhnya berada di bawah kendali Anda.</li>
-                        <li data-translate-key="desc1_li3"><strong>Informasi Sesi Kolaborasi:</strong> Saat Anda membuat atau bergabung dalam sesi kolaborasi, nama acara dan nama Anda (sebagai marketing) akan digunakan untuk mengidentifikasi sesi dan kontribusi data Anda di Google Sheet yang dituju.</li>
+                        <li>Aplikasi akan meminta izin akses terbatas ke Google Drive Anda</li>
+                        <li>Akses ini <strong>hanya digunakan untuk</strong>:
+                            <ul>
+                                <li>Membuat file Google Sheet bernama "Data Scan Kartu Nama" di Google Drive Anda</li>
+                                <li>Mengecek keberadaan file tersebut untuk menghindari duplikasi</li>
+                                <li>Menambahkan data hasil ekstraksi kartu nama ke file tersebut</li>
+                            </ul>
+                        </li>
+                        <li>Aplikasi <strong>tidak akan mengakses, membaca, memodifikasi, atau menghapus</strong> file lain di Google Drive Anda</li>
+                        <li>Anda tetap memiliki kontrol penuh atas file "Data Scan Kartu Nama" dan dapat menghapus atau mengubahnya kapan saja melalui Google Drive Anda</li>
+                        <li>Anda dapat mencabut akses aplikasi ke Google Drive Anda kapan saja melalui pengaturan akun Google Anda</li>
                     </ul>
                 </div>
                 
-                <div class="privacy-section">
-                    <h3 class="text-xl font-bold text-gray-800 dark:text-gray-200 mb-3" data-translate-key="title2">2. Bagaimana Kami Menggunakan Informasi</h3>
-                    <p data-translate-key="desc2_1">Informasi yang diproses oleh aplikasi digunakan semata-mata untuk menyediakan fungsionalitas inti Layanan:</p>
-                    <ul>
-                        <li data-translate-key="desc2_li1"><strong>Untuk Mengekstrak Data:</strong> Gambar kartu nama digunakan untuk mengekstrak informasi kontak melalui analisis AI.</li>
-                        <li data-translate-key="desc2_li2"><strong>Untuk Menyimpan Data:</strong> Data kontak yang diekstrak disimpan secara lokal di perangkat Anda agar Anda dapat mengakses, mengelola, dan mengekspornya.</li>
-                        <li data-translate-key="desc2_li3"><strong>Untuk Memfasilitasi Kolaborasi:</strong> Dalam mode kolaborasi, data kontak yang Anda pindai dikirim ke Google Sheet yang terkait dengan sesi acara untuk memungkinkan kerja tim yang efisien.</li>
-                    </ul>
-                </div>
-
-                 <div class="privacy-section">
-                    <h3 class="text-xl font-bold text-gray-800 dark:text-gray-200 mb-3" data-translate-key="title3">3. Berbagi dan Pengungkapan Informasi</h3>
-                    <p data-translate-key="desc3_1">Kami tidak menjual atau menyewakan informasi pribadi Anda. Kami hanya membagikan informasi dalam keadaan berikut:</p>
-                    <ul>
-                        <li data-translate-key="desc3_li1"><strong>Dengan Persetujuan Anda:</strong> Saat Anda menggunakan fitur ekspor ke Google Sheet atau Mode Kolaborasi Tim, Anda secara eksplisit mengarahkan aplikasi untuk mengirimkan data kontak yang tersimpan ke layanan Google Sheets. Penggunaan data oleh Google diatur oleh Kebijakan Privasi Google.</li>
-                        <li data-translate-key="desc3_li2"><strong>Penyedia Layanan:</strong> Kami menggunakan layanan AI pihak ketiga untuk pemrosesan gambar. Para penyedia ini hanya memiliki akses ke gambar untuk melakukan tugas analisis dan secara kontrak dilarang untuk menyimpan atau menggunakan data tersebut untuk tujuan lain.</li>
-                    </ul>
-                </div>
-
-                 <div class="privacy-section">
-                    <h3 class="text-xl font-bold text-gray-800 dark:text-gray-200 mb-3" data-translate-key="title4">4. Keamanan dan Penyimpanan Data</h3>
-                    <p data-translate-key="desc4">Kami berkomitmen untuk melindungi data Anda. Semua data hasil pindai disimpan secara default di dalam browser pada perangkat Anda, yang memberikan lapisan keamanan yang kuat karena data tidak meninggalkan perangkat Anda tanpa tindakan Anda. Anda memiliki kendali penuh untuk menghapus semua data lokal kapan saja melalui fitur "Hapus Semua Data Lokal" di dalam aplikasi.</p>
-                </div>
-
-                 <div class="privacy-section">
-                    <h3 class="text-xl font-bold text-gray-800 dark:text-gray-200 mb-3" data-translate-key="title5">5. Privasi Anak-Anak</h3>
-                    <p data-translate-key="desc5">Layanan kami tidak ditujukan untuk siapa pun yang berusia di bawah 13 tahun. Kami tidak secara sadar mengumpulkan informasi yang dapat diidentifikasi secara pribadi dari anak-anak di bawah 13 tahun.</p>
-                </div>
-
-                <div class="privacy-section">
-                    <h3 class="text-xl font-bold text-gray-800 dark:text-gray-200 mb-3" data-translate-key="title6">6. Perubahan pada Kebijakan Privasi Ini</h3>
-                    <p data-translate-key="desc6">Kami dapat memperbarui Kebijakan Privasi kami dari waktu ke waktu. Kami akan memberi tahu Anda tentang perubahan apa pun dengan memposting Kebijakan Privasi baru di halaman ini. Anda disarankan untuk meninjau Kebijakan Privasi ini secara berkala untuk setiap perubahan.</p>
-                </div>
-
-                <div class="privacy-section">
-                    <h3 class="text-xl font-bold text-gray-800 dark:text-gray-200 mb-3" data-translate-key="title7">7. Hubungi Kami</h3>
-                    <p data-translate-key="desc7">Jika Anda memiliki pertanyaan tentang Kebijakan Privasi ini, silakan hubungi kami melalui email di <a href="mailto:support@isparmo.com" class="text-indigo-600 dark:text-indigo-400 hover:underline">support@isparmo.com</a>.</p>
-                </div>
+                <h3>2. Bagaimana Kami Menggunakan Informasi</h3>
+                
+                <p>Informasi yang diproses oleh aplikasi digunakan semata-mata untuk menyediakan fungsionalitas inti Layanan:</p>
+                
+                <ul>
+                    <li><strong>Untuk Mengekstrak Data:</strong> Gambar kartu nama digunakan untuk mengekstrak informasi kontak melalui analisis AI.</li>
+                    
+                    <li><strong>Untuk Menyimpan Data:</strong> Data kontak yang diekstrak disimpan secara lokal di perangkat Anda agar Anda dapat mengakses, mengelola, dan mengekspornya. Jika Anda memilih, data juga dapat disimpan ke Google Sheet di akun Google Anda sendiri.</li>
+                </ul>
+                
+                <h3>3. Berbagi dan Pengungkapan Informasi</h3>
+                
+                <p>Kami tidak menjual atau menyewakan informasi pribadi Anda. Kami hanya membagikan informasi dalam keadaan berikut:</p>
+                
+                <ul>
+                    <li><strong>Dengan Persetujuan Anda:</strong> Saat Anda menggunakan fitur ekspor ke Google Sheet, Anda secara eksplisit mengarahkan aplikasi untuk mengirimkan data kontak yang tersimpan ke layanan Google Sheets. Penggunaan data oleh Google diatur oleh Kebijakan Privasi Google.</li>
+                    
+                    <li><strong>Penyedia Layanan:</strong> Kami menggunakan layanan AI pihak ketiga untuk pemrosesan gambar. Para penyedia ini hanya memiliki akses ke gambar untuk melakukan tugas analisis dan secara kontrak dilarang untuk menyimpan atau menggunakan data tersebut untuk tujuan lain.</li>
+                </ul>
+                
+                <h3>4. Keamanan dan Penyimpanan Data</h3>
+                
+                <p>Kami berkomitmen untuk melindungi data Anda. Semua data hasil pindai disimpan secara default di dalam browser pada perangkat Anda, yang memberikan lapisan keamanan yang kuat karena data tidak meninggalkan perangkat Anda tanpa tindakan Anda.</p>
+                
+                <p>Jika Anda memilih untuk menyimpan data ke Google Sheet, data akan disimpan di akun Google Anda sendiri dan dilindungi oleh sistem keamanan Google. Kami tidak memiliki akses ke data yang tersimpan di Google Sheet Anda.</p>
+                
+                <p>Anda memiliki kendali penuh untuk menghapus semua data lokal kapan saja melalui fitur "Hapus Semua Data Lokal" di dalam aplikasi.</p>
+                
+                <h3>5. Privasi Anak-Anak</h3>
+                
+                <p>Layanan kami tidak ditujukan untuk siapa pun yang berusia di bawah 13 tahun. Kami tidak secara sadar mengumpulkan informasi yang dapat diidentifikasi secara pribadi dari anak-anak di bawah 13 tahun.</p>
+                
+                <h3>6. Perubahan pada Kebijakan Privasi Ini</h3>
+                
+                <p>Kami dapat memperbarui Kebijakan Privasi kami dari waktu ke waktu. Kami akan memberi tahu Anda tentang perubahan apa pun dengan memposting Kebijakan Privasi baru di halaman ini. Anda disarankan untuk meninjau Kebijakan Privasi ini secara berkala untuk setiap perubahan.</p>
+                
+                <h3>7. Hubungi Kami</h3>
+                
+                <p>Jika Anda memiliki pertanyaan tentang Kebijakan Privasi ini, silakan hubungi kami melalui email di <a href="mailto:support@isparmo.com">support@isparmo.com</a>.</p>
             </div>
-        </main>
-
-        <!-- Footer -->
-        <footer class="text-center mt-12 py-6 border-t border-gray-200 dark:border-gray-700">
-             <div class="flex justify-center items-center gap-x-4 mb-4 text-sm text-gray-500 dark:text-gray-400">
-                <a href="https://scankartunama.isparmo.com/" class="hover:underline hover:text-indigo-500" data-translate-key="footerHome">Home</a>
-                <span class="text-gray-300 dark:text-gray-600">|</span>
-                <a href="about.html" class="hover:underline hover:text-indigo-500" data-translate-key="footerAbout">Tentang</a>
-                <span class="text-gray-300 dark:text-gray-600">|</span>
-                <a href="help.html" class="hover:underline hover:text-indigo-500" data-translate-key="footerHelp">Bantuan</a>
-                <span class="text-gray-300 dark:text-gray-600">|</span>
-                <a href="terms.html" class="hover:underline hover:text-indigo-500" data-translate-key="footerTerms">Ketentuan</a>
-                <span class="text-gray-300 dark:text-gray-600">|</span>
-                <a href="privacy.html" class="hover:underline hover:text-indigo-500" data-translate-key="footerPrivacy">Privasi</a>
-            </div>
-            <p class="text-sm text-gray-500 dark:text-gray-400" data-translate-key="footerCopyright">&copy; 2025 Scanner Pintar. Dibuat oleh <a href="https://isparmo.com" target="_blank" rel="noopener noreferrer" class="font-semibold text-indigo-600 dark:text-indigo-400 hover:underline">Isparmo</a>.</p>
-        </footer>
-
-    </div>
-
-    <script>
-        lucide.createIcons();
-
-        // --- DUAL LANGUAGE SCRIPT ---
-        const translations = {
-            id: {
-                pageTitle: "Kebijakan Privasi",
-                mainTitle: "Scanner Pintar",
-                backToApp: "Kembali ke Aplikasi",
-                lastUpdated: "Terakhir diperbarui: 01 September 2025",
-                intro1: 'Kebijakan Privasi ini menjelaskan bagaimana informasi Anda dikumpulkan, digunakan, dan diungkapkan oleh Scanner Pintar ("Aplikasi", "Layanan"). Dengan menggunakan layanan kami, Anda setuju dengan pengumpulan dan penggunaan informasi sesuai dengan kebijakan ini.',
-                title1: "1. Informasi yang Kami Proses",
-                desc1_1: "Kami merancang aplikasi ini dengan prinsip privasi sebagai prioritas utama. Kami tidak mengumpulkan data pribadi secara aktif. Berikut adalah jenis data yang berinteraksi dengan aplikasi:",
-                desc1_li1: "<strong>Gambar Kartu Nama:</strong> Saat Anda memindai kartu nama, gambar tersebut dikirim ke penyedia layanan AI pihak ketiga untuk dianalisis. Gambar ini diproses sementara dan tidak disimpan secara permanen di server kami atau server pihak ketiga setelah analisis selesai.",
-                desc1_li2: "<strong>Data Kontak yang Diekstrak:</strong> Informasi yang diekstrak dari kartu nama (seperti nama, jabatan, perusahaan, dll.) disimpan secara default hanya di penyimpanan lokal (IndexedDB) browser pada perangkat Anda. Data ini sepenuhnya berada di bawah kendali Anda.",
-                desc1_li3: "<strong>Informasi Sesi Kolaborasi:</strong> Saat Anda membuat atau bergabung dalam sesi kolaborasi, nama acara dan nama Anda (sebagai marketing) akan digunakan untuk mengidentifikasi sesi dan kontribusi data Anda di Google Sheet yang dituju.",
-                title2: "2. Bagaimana Kami Menggunakan Informasi",
-                desc2_1: "Informasi yang diproses oleh aplikasi digunakan semata-mata untuk menyediakan fungsionalitas inti Layanan:",
-                desc2_li1: "<strong>Untuk Mengekstrak Data:</strong> Gambar kartu nama digunakan untuk mengekstrak informasi kontak melalui analisis AI.",
-                desc2_li2: "<strong>Untuk Menyimpan Data:</strong> Data kontak yang diekstrak disimpan secara lokal di perangkat Anda agar Anda dapat mengakses, mengelola, dan mengekspornya.",
-                desc2_li3: "<strong>Untuk Memfasilitasi Kolaborasi:</strong> Dalam mode kolaborasi, data kontak yang Anda pindai dikirim ke Google Sheet yang terkait dengan sesi acara untuk memungkinkan kerja tim yang efisien.",
-                title3: "3. Berbagi dan Pengungkapan Informasi",
-                desc3_1: "Kami tidak menjual atau menyewakan informasi pribadi Anda. Kami hanya membagikan informasi dalam keadaan berikut:",
-                desc3_li1: "<strong>Dengan Persetujuan Anda:</strong> Saat Anda menggunakan fitur ekspor ke Google Sheet atau Mode Kolaborasi Tim, Anda secara eksplisit mengarahkan aplikasi untuk mengirimkan data kontak yang tersimpan ke layanan Google Sheets. Penggunaan data oleh Google diatur oleh Kebijakan Privasi Google.",
-                desc3_li2: "<strong>Penyedia Layanan:</strong> Kami menggunakan layanan AI pihak ketiga untuk pemrosesan gambar. Para penyedia ini hanya memiliki akses ke gambar untuk melakukan tugas analisis dan secara kontrak dilarang untuk menyimpan atau menggunakan data tersebut untuk tujuan lain.",
-                title4: "4. Keamanan dan Penyimpanan Data",
-                desc4: 'Kami berkomitmen untuk melindungi data Anda. Semua data hasil pindai disimpan secara default di dalam browser pada perangkat Anda, yang memberikan lapisan keamanan yang kuat karena data tidak meninggalkan perangkat Anda tanpa tindakan Anda. Anda memiliki kendali penuh untuk menghapus semua data lokal kapan saja melalui fitur "Hapus Semua Data Lokal" di dalam aplikasi.',
-                title5: "5. Privasi Anak-Anak",
-                desc5: "Layanan kami tidak ditujukan untuk siapa pun yang berusia di bawah 13 tahun. Kami tidak secara sadar mengumpulkan informasi yang dapat diidentifikasi secara pribadi dari anak-anak di bawah 13 tahun.",
-                title6: "6. Perubahan pada Kebijakan Privasi Ini",
-                desc6: "Kami dapat memperbarui Kebijakan Privasi kami dari waktu ke waktu. Kami akan memberi tahu Anda tentang perubahan apa pun dengan memposting Kebijakan Privasi baru di halaman ini. Anda disarankan untuk meninjau Kebijakan Privasi ini secara berkala untuk setiap perubahan.",
-                title7: "7. Hubungi Kami",
-                desc7: 'Jika Anda memiliki pertanyaan tentang Kebijakan Privasi ini, silakan hubungi kami melalui email di <a href="mailto:support@isparmo.com" class="text-indigo-600 dark:text-indigo-400 hover:underline">support@isparmo.com</a>.',
-                footerHome: "Home",
-                footerAbout: "Tentang",
-                footerHelp: "Bantuan",
-                footerTerms: "Ketentuan",
-                footerPrivacy: "Privasi",
-                footerCopyright: '&copy; 2025 Scanner Pintar. Dibuat oleh <a href="https://isparmo.com" target="_blank" rel="noopener noreferrer" class="font-semibold text-indigo-600 dark:text-indigo-400 hover:underline">Isparmo</a>.'
-            },
-            en: {
-                pageTitle: "Privacy Policy",
-                mainTitle: "Scanner Pintar",
-                backToApp: "Back to App",
-                lastUpdated: "Last updated: September 01, 2025",
-                intro1: 'This Privacy Policy describes how your information is collected, used, and disclosed by Scanner Pintar ("Application", "Service"). By using our service, you agree to the collection and use of information in accordance with this policy.',
-                title1: "1. Information We Process",
-                desc1_1: "We designed this application with privacy as a top priority. We do not actively collect personal data. Here are the types of data the application interacts with:",
-                desc1_li1: "<strong>Business Card Images:</strong> When you scan a business card, the image is sent to a third-party AI service provider for analysis. This image is processed temporarily and is not permanently stored on our servers or the third-party's servers after the analysis is complete.",
-                desc1_li2: "<strong>Extracted Contact Data:</strong> The information extracted from the business card (such as name, title, company, etc.) is stored by default only in the local storage (IndexedDB) of the browser on your device. This data is entirely under your control.",
-                desc1_li3: "<strong>Collaboration Session Information:</strong> When you create or join a collaboration session, the event name and your name (as a marketer) will be used to identify the session and your data contributions in the designated Google Sheet.",
-                title2: "2. How We Use Information",
-                desc2_1: "The information processed by the application is used solely to provide the core functionality of the Service:",
-                desc2_li1: "<strong>To Extract Data:</strong> Business card images are used to extract contact information through AI analysis.",
-                desc2_li2: "<strong>To Store Data:</strong> The extracted contact data is stored locally on your device so that you can access, manage, and export it.",
-                desc2_li3: "<strong>To Facilitate Collaboration:</strong> In collaboration mode, the contact data you scan is sent to the Google Sheet associated with the event session to enable efficient teamwork.",
-                title3: "3. Information Sharing and Disclosure",
-                desc3_1: "We do not sell or rent your personal information. We only share information under the following circumstances:",
-                desc3_li1: "<strong>With Your Consent:</strong> When you use the export to Google Sheet or Team Collaboration Mode features, you explicitly direct the application to send the stored contact data to the Google Sheets service. The use of data by Google is governed by Google's Privacy Policy.",
-                desc3_li2: "<strong>Service Providers:</strong> We use third-party AI services for image processing. These providers only have access to the images to perform the analysis task and are contractually forbidden from storing or using the data for any other purpose.",
-                title4: "4. Data Security and Storage",
-                desc4: 'We are committed to protecting your data. All scanned data is stored by default within the browser on your device, which provides a strong layer of security as the data does not leave your device without your action. You have full control to delete all local data at any time through the "Delete All Local Data" feature within the application.',
-                title5: "5. Children's Privacy",
-                desc5: "Our Service is not intended for anyone under the age of 13. We do not knowingly collect personally identifiable information from children under 13.",
-                title6: "6. Changes to This Privacy Policy",
-                desc6: "We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page. You are advised to review this Privacy Policy periodically for any changes.",
-                title7: "7. Contact Us",
-                desc7: 'If you have any questions about this Privacy Policy, please contact us via email at <a href="mailto:support@isparmo.com" class="text-indigo-600 dark:text-indigo-400 hover:underline">support@isparmo.com</a>.',
-                footerHome: "Home",
-                footerAbout: "About",
-                footerHelp: "Help",
-                footerTerms: "Terms",
-                footerPrivacy: "Privacy",
-                footerCopyright: '&copy; 2025 Scanner Pintar. Created by <a href="https://isparmo.com" target="_blank" rel="noopener noreferrer" class="font-semibold text-indigo-600 dark:text-indigo-400 hover:underline">Isparmo</a>.'
-            }
-        };
-
-        const langToggleBtn = document.getElementById('lang-toggle');
-        let currentLang = 'id';
-
-        function setLanguage(lang) {
-            currentLang = lang;
-            document.documentElement.lang = lang;
-            langToggleBtn.textContent = lang === 'id' ? 'EN' : 'ID';
-            document.querySelectorAll('[data-translate-key]').forEach(el => {
-                const key = el.getAttribute('data-translate-key');
-                if (translations[lang][key]) {
-                    el.innerHTML = translations[lang][key];
-                }
-            });
-            const titleKey = 'pageTitle';
-            document.title = `${translations[lang][titleKey]} | ${translations[lang]['mainTitle']}`;
-            localStorage.setItem('pageLang', lang);
-        }
-
-        langToggleBtn.addEventListener('click', () => {
-            const newLang = currentLang === 'id' ? 'en' : 'id';
-            setLanguage(newLang);
-        });
-
-        const themeToggleBtn = document.getElementById('theme-toggle');
-        const sunIcon = themeToggleBtn.querySelector('[data-lucide="sun"]');
-        const moonIcon = themeToggleBtn.querySelector('[data-lucide="moon"]');
-
-        function applyTheme(isDark) {
-            document.documentElement.classList.toggle('dark', isDark);
-            if (isDark) {
-                sunIcon.classList.remove('hidden');
-                moonIcon.classList.add('hidden');
-            } else {
-                moonIcon.classList.remove('hidden');
-                sunIcon.classList.add('hidden');
-            }
-            localStorage.setItem('theme', isDark ? 'dark' : 'light');
-        }
-
-        function toggleTheme() {
-            const isCurrentlyDark = document.documentElement.classList.contains('dark');
-            applyTheme(!isCurrentlyDark);
-        }
-
-        themeToggleBtn.addEventListener('click', toggleTheme);
-
-        document.addEventListener('DOMContentLoaded', () => {
-            const savedTheme = localStorage.getItem('theme');
-            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            applyTheme(savedTheme ? savedTheme === 'dark' : prefersDark);
             
-            const savedLang = localStorage.getItem('pageLang');
-            if (savedLang && (savedLang === 'id' || savedLang === 'en')) {
-                setLanguage(savedLang);
-            } else {
-                setLanguage('id');
+            <!-- ENGLISH VERSION -->
+            <div id="content-en" class="content-section">
+                <p class="last-updated">Last updated: October 20, 2025</p>
+                
+                <p>This Privacy Policy explains how your information is collected, used, and disclosed by Scanner Pintar ("Application", "Service"). By using our services, you agree to the collection and use of information in accordance with this policy.</p>
+                
+                <h3>1. Information We Process</h3>
+                
+                <p>We designed this application with privacy as a top priority. We do not actively collect personal data. The following are the types of data that interact with the application:</p>
+                
+                <ul>
+                    <li><strong>Business Card Images:</strong> When you scan a business card, the image is sent to a third-party AI service provider for analysis. This image is processed temporarily and is not stored permanently on our servers or third-party servers after analysis is complete.</li>
+                    
+                    <li><strong>Extracted Contact Data:</strong> Information extracted from business cards (such as name, title, company, phone number, email, etc.) is stored by default only in local storage (IndexedDB) in your device's browser. This data is entirely under your control.</li>
+                </ul>
+                
+                <div class="highlight-box">
+                    <p><strong>Storage to Google Sheets with Your Google Account:</strong></p>
+                    <p>You have the option to save extracted business card data to Google Sheets using <strong>your own Google account</strong>. When you choose to use this feature:</p>
+                    <ul>
+                        <li>The application will request limited access permission to your Google Drive</li>
+                        <li>This access is <strong>only used to</strong>:
+                            <ul>
+                                <li>Create a Google Sheet file named "Data Scan Kartu Nama" in your Google Drive</li>
+                                <li>Check the existence of this file to avoid duplication</li>
+                                <li>Add extracted business card data to this file</li>
+                            </ul>
+                        </li>
+                        <li>The application <strong>will not access, read, modify, or delete</strong> any other files in your Google Drive</li>
+                        <li>You maintain full control over the "Data Scan Kartu Nama" file and can delete or modify it at any time through your Google Drive</li>
+                        <li>You can revoke the application's access to your Google Drive at any time through your Google account settings</li>
+                    </ul>
+                </div>
+                
+                <h3>2. How We Use Information</h3>
+                
+                <p>Information processed by the application is used solely to provide the core functionality of the Service:</p>
+                
+                <ul>
+                    <li><strong>To Extract Data:</strong> Business card images are used to extract contact information through AI analysis.</li>
+                    
+                    <li><strong>To Store Data:</strong> Extracted contact data is stored locally on your device so you can access, manage, and export it. If you choose, data can also be saved to Google Sheets in your own Google account.</li>
+                </ul>
+                
+                <h3>3. Information Sharing and Disclosure</h3>
+                
+                <p>We do not sell or rent your personal information. We only share information under the following circumstances:</p>
+                
+                <ul>
+                    <li><strong>With Your Consent:</strong> When you use the export to Google Sheets feature, you explicitly direct the application to send stored contact data to Google Sheets services. Google's use of data is governed by Google's Privacy Policy.</li>
+                    
+                    <li><strong>Service Providers:</strong> We use third-party AI services for image processing. These providers only have access to images to perform analysis tasks and are contractually prohibited from storing or using that data for other purposes.</li>
+                </ul>
+                
+                <h3>4. Data Security and Storage</h3>
+                
+                <p>We are committed to protecting your data. All scanned data is stored by default in the browser on your device, which provides a strong layer of security because data does not leave your device without your action.</p>
+                
+                <p>If you choose to save data to Google Sheets, the data will be stored in your own Google account and protected by Google's security systems. We do not have access to data stored in your Google Sheets.</p>
+                
+                <p>You have full control to delete all local data at any time through the "Delete All Local Data" feature in the application.</p>
+                
+                <h3>5. Children's Privacy</h3>
+                
+                <p>Our services are not intended for anyone under the age of 13. We do not knowingly collect personally identifiable information from children under 13.</p>
+                
+                <h3>6. Changes to This Privacy Policy</h3>
+                
+                <p>We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page. You are advised to review this Privacy Policy periodically for any changes.</p>
+                
+                <h3>7. Contact Us</h3>
+                
+                <p>If you have any questions about this Privacy Policy, please contact us via email at <a href="mailto:support@isparmo.com">support@isparmo.com</a>.</p>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="https://scankartunama.isparmo.com">Home</a>
+                <span class="separator">|</span>
+                <a href="https://scankartunama.isparmo.com/about.html">Tentang</a>
+                <span class="separator">|</span>
+                <a href="https://scankartunama.isparmo.com/help.html">Bantuan</a>
+                <span class="separator">|</span>
+                <a href="https://scankartunama.isparmo.com/privacy.html">Privasi</a>
+            </div>
+            <div class="footer-copyright">
+                © 2025 Scanner Pintar. Dibuat oleh <a href="https://isparmo.com" target="_blank">Isparmo</a>.
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        let currentLang = 'id';
+        
+        // Load saved theme on page load
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-theme');
+                document.getElementById('theme-toggle').textContent = '☀️';
             }
-        });
+        })();
+        
+        // Load saved language on page load
+        (function() {
+            const savedLang = localStorage.getItem('language');
+            if (savedLang === 'en') {
+                currentLang = 'en';
+                document.getElementById('content-id').classList.remove('active');
+                document.getElementById('content-en').classList.add('active');
+                document.getElementById('lang-toggle').textContent = 'ID';
+            }
+        })();
+        
+        // Theme Toggle Function
+        function toggleTheme() {
+            const body = document.body;
+            const themeToggle = document.getElementById('theme-toggle');
+            
+            if (body.classList.contains('dark-theme')) {
+                body.classList.remove('dark-theme');
+                themeToggle.textContent = '🌙';
+                localStorage.setItem('theme', 'light');
+            } else {
+                body.classList.add('dark-theme');
+                themeToggle.textContent = '☀️';
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+        
+        // Language Toggle Function
+        function switchLanguage() {
+            const langToggle = document.getElementById('lang-toggle');
+            
+            if (currentLang === 'id') {
+                // Switch to English
+                currentLang = 'en';
+                document.getElementById('content-id').classList.remove('active');
+                document.getElementById('content-en').classList.add('active');
+                langToggle.textContent = 'ID';
+                localStorage.setItem('language', 'en');
+            } else {
+                // Switch to Indonesian
+                currentLang = 'id';
+                document.getElementById('content-en').classList.remove('active');
+                document.getElementById('content-id').classList.add('active');
+                langToggle.textContent = 'EN';
+                localStorage.setItem('language', 'id');
+            }
+        }
     </script>
 </body>
 </html>
