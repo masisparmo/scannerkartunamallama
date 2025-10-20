@@ -372,13 +372,13 @@
                 <div class="logo">🛡️</div>
                 <div class="header-title-group">
                     <div class="header-title">Scanner Pintar</div>
-                    <div class="header-subtitle">Kebijakan Privasi</div>
+                    <div class="header-subtitle" id="header-subtitle">Kebijakan Privasi</div>
                 </div>
             </div>
             <div class="header-right">
                 <button onclick="switchLanguage()" class="btn btn-lang" id="lang-toggle" type="button">EN</button>
-                <a href="https://scankartunama.isparmo.com/" class="btn btn-primary">
-                    🏠 Kembali ke Aplikasi
+                <a href="https://scankartunama.isparmo.com/" class="btn btn-primary" id="back-btn">
+                    <span id="back-text">Kembali ke Aplikasi</span>
                 </a>
                 <button onclick="toggleTheme()" class="btn btn-icon" id="theme-toggle" type="button">
                     🌙
@@ -561,6 +561,24 @@
     <script>
         let currentLang = 'id';
         
+        // Language text mappings
+        const langTexts = {
+            id: {
+                subtitle: 'Kebijakan Privasi',
+                backBtn: 'Kembali ke Aplikasi'
+            },
+            en: {
+                subtitle: 'Privacy Policy',
+                backBtn: 'Back to Application'
+            }
+        };
+        
+        // Update header text based on language
+        function updateHeaderText(lang) {
+            document.getElementById('header-subtitle').textContent = langTexts[lang].subtitle;
+            document.getElementById('back-text').textContent = langTexts[lang].backBtn;
+        }
+        
         // Load saved theme on page load
         (function() {
             const savedTheme = localStorage.getItem('theme');
@@ -578,6 +596,7 @@
                 document.getElementById('content-id').classList.remove('active');
                 document.getElementById('content-en').classList.add('active');
                 document.getElementById('lang-toggle').textContent = 'ID';
+                updateHeaderText('en');
             }
         })();
         
@@ -607,6 +626,7 @@
                 document.getElementById('content-id').classList.remove('active');
                 document.getElementById('content-en').classList.add('active');
                 langToggle.textContent = 'ID';
+                updateHeaderText('en');
                 localStorage.setItem('language', 'en');
             } else {
                 // Switch to Indonesian
@@ -614,6 +634,7 @@
                 document.getElementById('content-en').classList.remove('active');
                 document.getElementById('content-id').classList.add('active');
                 langToggle.textContent = 'EN';
+                updateHeaderText('id');
                 localStorage.setItem('language', 'id');
             }
         }
