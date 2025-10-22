@@ -628,7 +628,7 @@
             const SCOPES = "https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/drive.readonly";
             // PENTING: Ganti 'YOUR_DEVELOPER_KEY' dengan Kunci API Anda dari Google Cloud Console.
             // Kunci ini diperlukan agar Google Picker dapat berfungsi.
-            const DEVELOPER_KEY = 'YOUR_DEVELOPER_KEY';
+            const DEVELOPER_KEY = 'AIzaSyDSVhNVKV3id3Nw5Vg7LhFCsd-9iXDiL1k';
             let tokenClient;
             let codeClient; // For collaboration flow
             let gapiInited = false;
@@ -1599,6 +1599,10 @@ END:VCALENDAR`;
                             return;
                         }
 
+                        // Ambil nama marketing dari profil lokal
+                        const profile = JSON.parse(localStorage.getItem('userProfile')) || {};
+                        const marketingName = profile.nama || 'Tidak Diketahui';
+
                         // Kirim data ke backend untuk diproses
                         const response = await fetch(`${BACKEND_API_URL}/simpan-gsheet-pengguna`, {
                             method: 'POST',
@@ -1606,7 +1610,8 @@ END:VCALENDAR`;
                             body: JSON.stringify({
                                 contacts: contacts,
                                 spreadsheetId: spreadsheetId,
-                                accessToken: gapi.client.getToken().access_token
+                                accessToken: gapi.client.getToken().access_token,
+                                marketingName: marketingName
                             })
                         });
 
