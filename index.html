@@ -625,12 +625,11 @@
 
             // --- Google API Integration ---
             const CLIENT_ID = "328921559379-s3mmi3dlpj39qtkgl4itt5q2ukl1nmid.apps.googleusercontent.com";
-            // Catatan: drive.readonly untuk mencari file, drive.file untuk membuatnya jika tidak ditemukan.
-            const SCOPES = "https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/drive.readonly https://www.googleapis.com/auth/drive.file";
+            const SCOPES = "https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/spreadsheets";
             let tokenClient;
+            let codeClient; // For collaboration flow
             let gapiInited = false;
             let gisInited = false;
-            let oauthToken;
             // --- End Google API Integration ---
 
             const logIcon = document.getElementById('log-icon');
@@ -775,7 +774,6 @@
                     }
                 }
             }
-
 
             function applyTheme(isDark) {
                 document.documentElement.classList.toggle('dark', isDark);
@@ -1574,67 +1572,30 @@ END:VCALENDAR`;
             }
 
             async function saveAllToGoogleSheet(button) {
-                const profile = JSON.parse(localStorage.getItem('userProfile')) || {};
-                const marketingName = profile.nama || 'Unknown';
-
-                if (!gisInited || !gapiInited) {
-                    showToast("Layanan Google belum siap. Coba lagi beberapa saat.");
-                    return;
-                }
-
-                const startSaveProcess = async (token) => {
-                    const contacts = await dbLogic.getAllContacts();
-                    if (contacts.length === 0) {
-                        showToast(getTranslation('toastNoContactSave'));
-                        return;
+                try {
+                    if (!gapiInited || !gisInited) {
+                        throw new Error("Layanan Google belum siap. Mohon tunggu sebentar.");
                     }
 
-                    const originalHTML = button.innerHTML;
-                    button.disabled = true;
-                    button.innerHTML = `<div class="loader btn-loader"></div> ${getTranslation('exportGSheetSaving')}`;
-
-                    try {
-                        const response = await fetch(`${BACKEND_API_URL}/simpan-gsheet-pengguna`, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                                contacts: contacts,
-                                marketingName: marketingName,
-                                accessToken: token
-                            })
-                        });
-
-                        const result = await response.json();
-                        if (!response.ok) throw new Error(result.error || 'Gagal menyimpan ke Google Sheet.');
-
-                        const spreadsheetUrl = `https://docs.google.com/spreadsheets/d/${result.spreadsheetId}`;
-                        showToast(getTranslation('toastGSheetSaveSuccess', contacts.length, spreadsheetUrl), 8000);
-
-                    } catch (error) {
-                        logError("Gagal menyimpan ke GSheet pengguna", error);
-                        showToast(getTranslation('toastGSheetSaveError', error.message));
-                    } finally {
-                        button.disabled = false;
-                        button.innerHTML = originalHTML;
+                    if (gapi.client.getToken() === null) {
+                        tokenClient.callback = (resp) => {
+                            if (resp.error) {
+                                logError("GIS Auth Error", resp);
+                                showToast(`Gagal otentikasi: ${resp.error}`);
+                                return;
+                            }
+                            gapi.client.setToken({ 'access_token': resp.access_token });
+                            updateSigninStatus(true);
+                            executeSaveToSheet(button);
+                        };
+                        tokenClient.requestAccessToken({ prompt: 'consent' });
+                    } else {
+                        await executeSaveToSheet(button);
                     }
-                };
 
-                tokenClient.callback = async (resp) => {
-                    if (resp.error) {
-                        logError("GIS Auth Error", resp);
-                        showToast(`Gagal otentikasi: ${resp.error}`);
-                        return;
-                    }
-                    oauthToken = resp.access_token;
-                    await startSaveProcess(oauthToken);
-                };
-
-                if (!oauthToken) {
-                    // Jika kita tidak punya token, minta satu. Callback akan menangani penyimpanan.
-                    tokenClient.requestAccessToken({ prompt: 'consent' });
-                } else {
-                    // Jika kita sudah punya token, langsung gunakan.
-                    await startSaveProcess(oauthToken);
+                } catch (error) {
+                    logError("Error in saveAllToGoogleSheet flow", error);
+                    showToast(getTranslation('toastGSheetSaveError', error.message));
                 }
             }
 
@@ -1932,21 +1893,50 @@ END:VCALENDAR`;
 
             // --- Google API Integration Functions ---
             function initializeGoogleClients() {
-                gapi.load('client', () => {
-                    gapiInited = true;
+                // GAPI Client
+                gapi.load('client', async () => {
+                    try {
+                        await gapi.client.init({}); // Empty init is fine for now, will set token later
+                        await gapi.client.load('https://www.googleapis.com/discovery/v1/apis/drive/v3/rest');
+                        await gapi.client.load('https://sheets.googleapis.com/$discovery/rest?version=v4');
+                        gapiInited = true;
+                        updateSigninStatus(gapi.client.getToken() !== null);
+                    } catch (err) {
+                        logError("GAPI client initialization error", err);
+                    }
                 });
 
+                // GIS Client (for individual G-Sheet save)
                 tokenClient = google.accounts.oauth2.initTokenClient({
                     client_id: CLIENT_ID,
                     scope: SCOPES,
-                    callback: (resp) => {
-                        if (resp.error) {
-                           logError("GIS Auth Error in init", resp);
-                           return;
+                    callback: (tokenResponse) => {
+                        if (tokenResponse.error) {
+                            logError("GIS Token Error", tokenResponse);
+                            showToast(`Gagal otentikasi: ${tokenResponse.error}`);
+                            return;
                         }
-                        oauthToken = resp.access_token;
+                        gapi.client.setToken({ 'access_token': tokenResponse.access_token });
+                        updateSigninStatus(true);
+                        showToast('Berhasil terhubung dengan Google.');
                     },
                 });
+
+                // GIS Code Client (for collaboration session to get auth code)
+                codeClient = google.accounts.oauth2.initCodeClient({
+                    client_id: CLIENT_ID,
+                    scope: SCOPES,
+                    ux_mode: 'popup',
+                    callback: (response) => {
+                        if (response.code) {
+                            handleCollabSessionCreation(response.code);
+                        } else {
+                            logError("Google Code Client Error", response);
+                            showToast("Gagal mendapatkan kode otorisasi dari Google.");
+                        }
+                    },
+                });
+
                 gisInited = true;
             }
 
