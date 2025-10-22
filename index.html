@@ -626,11 +626,12 @@
             // --- Google API Integration ---
             const CLIENT_ID = "328921559379-s3mmi3dlpj39qtkgl4itt5q2ukl1nmid.apps.googleusercontent.com";
             const SCOPES = "https://www.googleapis.com/auth/spreadsheets";
-            // PENTING: Ganti 'YOUR_DEVELOPER_KEY' dengan Kunci API Anda dari Google Cloud Console.
-            // Kunci ini diperlukan agar Google Picker dapat berfungsi.
-            const DEVELOPER_KEY = 'AIzaSyDSVhNVKV3id3Nw5Vg7LhFCsd-9iXDiL1k';
             let tokenClient;
-            let codeClient; // For collaboration flow
+            let gapiInited = false;
+            let gisInited = false;
+            let pickerInited = false;
+            let developerKey = null;
+            let oauthToken;
             let gapiInited = false;
             let gisInited = false;
             // --- End Google API Integration ---
@@ -1542,95 +1543,240 @@ END:VCALENDAR`;
                 }
             }
 
-            async function saveAllToGoogleSheet(button) {
-                 try {
-                     if (!gapiInited || !gisInited) {
-                         throw new Error("Layanan Google belum siap. Mohon tunggu sebentar.");
-                     }
-                     if (gapi.client.getToken() === null) {
-                         tokenClient.callback = (resp) => {
-                             if (resp.error) {
-                                 logError("GIS Auth Error", resp);
-                                 showToast(`Gagal otentikasi: ${resp.error}`);
-                                 return;
-                             }
-                             gapi.client.setToken({ 'access_token': resp.access_token });
-                             updateSigninStatus(true);
-                             createPicker(button);
-                         };
-                         tokenClient.requestAccessToken({ prompt: 'consent' });
-                     } else {
-                         createPicker(button);
-                     }
-                 } catch (error) {
-                     logError("Error in saveAllToGoogleSheet flow", error);
-                     showToast(getTranslation('toastGSheetSaveError', error.message));
-                 }
-            }
+            async function executeSaveToSheet(button) {
+                const originalHTML = button.innerHTML;
+                button.disabled = true;
+                button.innerHTML = `<div class="loader btn-loader"></div><span class="ml-2">${getTranslation('exportGSheetSaving')}</span>`;
 
-            function createPicker(button) {
-                const view = new google.picker.View(google.picker.ViewId.SPREADSHEETS);
-                view.setMimeTypes("application/vnd.google-apps.spreadsheet");
+                try {
+                    const fileName = "Data Scan Kartu Nama";
+                    let sheetName = document.getElementById('session-acara').value.trim();
+                    if (!sheetName) {
+                        sheetName = "Data Kartu Nama";
+                    }
 
-                const picker = new google.picker.PickerBuilder()
-                    .enableFeature(google.picker.Feature.NAV_HIDDEN)
-                    .enableFeature(google.picker.Feature.CREATE_DOCUMENT)
-                    .setAppId(CLIENT_ID.split('-')[0])
-                    .setOAuthToken(gapi.client.getToken().access_token)
-                    .addView(view)
-                    .setDeveloperKey(DEVELOPER_KEY)
-                    .setCallback((data) => pickerCallback(data, button))
-                    .build();
-                picker.setVisible(true);
-            }
+                    let spreadsheetId = await findOrCreateSpreadsheet(fileName);
+                    await findOrCreateSheetTab(spreadsheetId, sheetName);
 
-            async function pickerCallback(data, button) {
-                if (data.action === google.picker.Action.PICKED) {
-                    const doc = data.docs[0];
-                    const spreadsheetId = doc.id;
-                    const originalHTML = button.innerHTML;
-                    button.disabled = true;
-                    button.innerHTML = `<div class="loader btn-loader"></div><span class="ml-2">${getTranslation('exportGSheetSaving')}</span>`;
-
-                    try {
-                        const contacts = await dbLogic.getAllContacts();
-                        if (contacts.length === 0) {
-                            showToast(getTranslation('toastNoContactSave'));
-                            return;
-                        }
-
-                        // Ambil nama marketing dari profil lokal
-                        const profile = JSON.parse(localStorage.getItem('userProfile')) || {};
-                        const marketingName = profile.nama || 'Tidak Diketahui';
-
-                        // Kirim data ke backend untuk diproses
-                        const response = await fetch(`${BACKEND_API_URL}/simpan-gsheet-pengguna`, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                                contacts: contacts,
-                                spreadsheetId: spreadsheetId,
-                                accessToken: gapi.client.getToken().access_token,
-                                marketingName: marketingName
-                            })
-                        });
-
-                        const result = await response.json();
-
-                        if (!response.ok || !result.success) {
-                            throw new Error(result.error || 'Gagal menyimpan data ke Google Sheet.');
-                        }
-
+                    const contacts = await dbLogic.getAllContacts();
+                    if (contacts.length === 0) {
+                        showToast(getTranslation('toastNoContactSave'));
+                    } else {
+                        await writeDataToSheet(spreadsheetId, sheetName, contacts);
                         const spreadsheetUrl = `https://docs.google.com/spreadsheets/d/${spreadsheetId}`;
                         showToast(getTranslation('toastGSheetSaveSuccess', contacts.length, spreadsheetUrl), 8000);
-
-                    } catch (error) {
-                        logError("Error saving data via picker flow", error);
-                        showToast(getTranslation('toastGSheetSaveError', error.message));
-                    } finally {
-                        button.disabled = false;
-                        button.innerHTML = originalHTML;
                     }
+                } catch (error) {
+                    logError("Error executing save to Google Sheet", error);
+                    showToast(getTranslation('toastGSheetSaveError', error.message));
+                } finally {
+                    button.disabled = false;
+                    button.innerHTML = originalHTML;
+                }
+            }
+
+            async function saveAllToGoogleSheet(button) {
+                const profile = JSON.parse(localStorage.getItem('userProfile')) || {};
+                const marketingName = profile.nama || 'Unknown';
+
+                if (!pickerInited || !gisInited) {
+                    showToast("Layanan Google belum siap. Coba lagi beberapa saat.");
+                    return;
+                }
+
+                tokenClient.callback = async (resp) => {
+                    if (resp.error) {
+                        logError("GIS Auth Error", resp);
+                        showToast(`Gagal otentikasi: ${resp.error}`);
+                        return;
+                    }
+                    oauthToken = resp.access_token;
+                    try {
+                        const devKey = await getDeveloperKey();
+                        if (devKey) {
+                            createPicker(marketingName);
+                        } else {
+                            throw new Error("Kunci developer tidak ditemukan.");
+                        }
+                    } catch(e) {
+                        logError("Picker creation failed", e);
+                        showToast(`Error: ${e.message}`);
+                    }
+                };
+
+                if (!oauthToken) {
+                    tokenClient.requestAccessToken({ prompt: 'consent' });
+                } else {
+                     try {
+                        const devKey = await getDeveloperKey();
+                        if (devKey) {
+                            createPicker(marketingName);
+                        } else {
+                           throw new Error("Kunci developer tidak ditemukan.");
+                        }
+                    } catch(e) {
+                        logError("Picker creation failed", e);
+                        showToast(`Error: ${e.message}`);
+                    }
+                }
+            }
+
+            async function findOrCreateSpreadsheet(fileName) {
+                // 1. Cari file
+                try {
+                    const response = await gapi.client.drive.files.list({
+                        q: `name='${fileName}' and mimeType='application/vnd.google-apps.spreadsheet' and trashed=false`,
+                        fields: 'files(id, name)',
+                        spaces: 'drive'
+                    });
+
+                    if (response.result.files.length > 0) {
+                        const fileId = response.result.files[0].id;
+                        console.log(`File ditemukan dengan ID: ${fileId}`);
+                        return fileId;
+                    } else {
+                        // 2. Jika tidak ditemukan, buat file baru
+                        console.log(`File '${fileName}' tidak ditemukan, membuat baru...`);
+                        const spreadsheet = await gapi.client.sheets.spreadsheets.create({
+                            properties: {
+                                title: fileName
+                            }
+                        });
+                        const newFileId = spreadsheet.result.spreadsheetId;
+                        console.log(`File baru dibuat dengan ID: ${newFileId}`);
+                        return newFileId;
+                    }
+                } catch (err) {
+                    logError("Error finding or creating spreadsheet", err);
+                    throw new Error("Gagal mencari atau membuat file di Google Drive.");
+                }
+            }
+
+            async function findOrCreateSheetTab(spreadsheetId, sheetName) {
+                try {
+                    const response = await gapi.client.sheets.spreadsheets.get({
+                        spreadsheetId: spreadsheetId,
+                        fields: 'sheets.properties.title'
+                    });
+                    const sheets = response.result.sheets;
+                    const sheetExists = sheets.some(sheet => sheet.properties.title === sheetName);
+
+                    if (!sheetExists) {
+                        console.log(`Tab '${sheetName}' tidak ditemukan, membuat baru...`);
+                        await gapi.client.sheets.spreadsheets.batchUpdate({
+                            spreadsheetId: spreadsheetId,
+                            resource: {
+                                requests: [{
+                                    addSheet: {
+                                        properties: {
+                                            title: sheetName
+                                        }
+                                    }
+                                }]
+                            }
+                        });
+                    } else {
+                        console.log(`Tab '${sheetName}' sudah ada.`);
+                    }
+                } catch (err) {
+                    logError("Error finding or creating sheet tab", err);
+                    throw new Error("Gagal memeriksa atau membuat tab di Google Sheet.");
+                }
+            }
+
+            async function writeDataToSheet(spreadsheetId, sheetName, contacts) {
+                const HEADER = [
+                    'Nama', 'Jabatan', 'Perusahaan', 'Jenis Perusahaan', 'Telepon Kantor',
+                    'WhatsApp', 'Email', 'Acara', 'Tanggal', 'Catatan', 'Tags', 'Marketing', 'Timestamp'
+                ];
+
+                try {
+                    // 1. Dapatkan semua data yang ada dari sheet
+                    const fullRange = `'${sheetName}'!A:M`;
+                    const response = await gapi.client.sheets.spreadsheets.values.get({
+                        spreadsheetId: spreadsheetId,
+                        range: fullRange,
+                    });
+
+                    const existingValues = response.result.values || [];
+                    let headerExists = false;
+                    const existingDataMap = new Map();
+
+                    if (existingValues.length > 0 && JSON.stringify(existingValues[0]) === JSON.stringify(HEADER)) {
+                        headerExists = true;
+                        // Mulai dari 1 untuk melewati header
+                        for (let i = 1; i < existingValues.length; i++) {
+                            const row = existingValues[i];
+                            // Kunci dibuat dari kolom Nama, Perusahaan, dan WhatsApp
+                            const key = `${row[0]}|${row[2]}|${row[5]}`;
+                            existingDataMap.set(key, { row, rowIndex: i + 1 });
+                        }
+                    }
+
+                    const newContactsData = contacts.map(c => [
+                        c.nama || '', c.jabatan || '', c.perusahaan || '', c.jenis_perusahaan || '',
+                        c.telepon_kantor || '', c.whatsapp || '', c.email || '', c.acara || '',
+                        c.tanggal || '', c.catatan || '', (c.tags || []).join(', '),
+                        collaborationSession.marketingName || (JSON.parse(localStorage.getItem('userProfile')) || {}).nama || '',
+                        new Date().toISOString()
+                    ]);
+
+                    const rowsToAppend = [];
+                    const rowsToUpdate = [];
+
+                    newContactsData.forEach(newRow => {
+                        // Kunci dibuat dari kolom Nama, Perusahaan, dan WhatsApp
+                        const key = `${newRow[0]}|${newRow[2]}|${newRow[5]}`;
+                        if (existingDataMap.has(key)) {
+                            // Kontak sudah ada, siapkan untuk pembaruan
+                            const { rowIndex } = existingDataMap.get(key);
+                            rowsToUpdate.push({
+                                range: `'${sheetName}'!A${rowIndex}:M${rowIndex}`,
+                                values: [newRow]
+                            });
+                        } else {
+                            // Kontak baru, siapkan untuk ditambahkan
+                            rowsToAppend.push(newRow);
+                        }
+                    });
+
+                    // 2. Tambahkan header jika belum ada
+                    if (!headerExists) {
+                        rowsToAppend.unshift(HEADER);
+                    }
+
+                    // 3. Lakukan operasi penambahan (append) jika ada data baru
+                    if (rowsToAppend.length > 0) {
+                        await gapi.client.sheets.spreadsheets.values.append({
+                            spreadsheetId: spreadsheetId,
+                            range: `'${sheetName}'!A1`,
+                            valueInputOption: 'USER_ENTERED',
+                            resource: {
+                                values: rowsToAppend
+                            }
+                        });
+                        console.log(`${rowsToAppend.length} baris baru ditambahkan.`);
+                    }
+
+                    // 4. Lakukan operasi pembaruan (update) jika ada data yang sama
+                    if (rowsToUpdate.length > 0) {
+                        await gapi.client.sheets.spreadsheets.values.batchUpdate({
+                            spreadsheetId: spreadsheetId,
+                            resource: {
+                                valueInputOption: 'USER_ENTERED',
+                                data: rowsToUpdate
+                            }
+                        });
+                        console.log(`${rowsToUpdate.length} baris yang ada diperbarui.`);
+                    }
+
+                    if (rowsToAppend.length === 0 && rowsToUpdate.length === 0) {
+                        console.log("Tidak ada data baru untuk ditambahkan atau diperbarui.");
+                    }
+
+                } catch (err) {
+                    logError("Error writing data to sheet", err);
+                    throw new Error(`Gagal menulis data ke Sheet: ${err.result ? err.result.error.message : err.message}`);
                 }
             }
 
@@ -1770,9 +1916,10 @@ END:VCALENDAR`;
             // --- Google API Integration Functions ---
             function initializeGoogleClients() {
                 // GAPI Client
-                gapi.load('client:picker', async () => {
+                gapi.load('client', async () => {
                     try {
                         await gapi.client.init({}); // Empty init is fine for now, will set token later
+                        await gapi.client.load('https://www.googleapis.com/discovery/v1/apis/drive/v3/rest');
                         await gapi.client.load('https://sheets.googleapis.com/$discovery/rest?version=v4');
                         gapiInited = true;
                         updateSigninStatus(gapi.client.getToken() !== null);
