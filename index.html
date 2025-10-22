@@ -625,15 +625,12 @@
 
             // --- Google API Integration ---
             const CLIENT_ID = "328921559379-s3mmi3dlpj39qtkgl4itt5q2ukl1nmid.apps.googleusercontent.com";
-            const SCOPES = "https://www.googleapis.com/auth/spreadsheets";
+            // Catatan: drive.readonly untuk mencari file, drive.file untuk membuatnya jika tidak ditemukan.
+            const SCOPES = "https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/drive.readonly https://www.googleapis.com/auth/drive.file";
             let tokenClient;
             let gapiInited = false;
             let gisInited = false;
-            let pickerInited = false;
-            let developerKey = null;
             let oauthToken;
-            let gapiInited = false;
-            let gisInited = false;
             // --- End Google API Integration ---
 
             const logIcon = document.getElementById('log-icon');
@@ -778,6 +775,7 @@
                     }
                 }
             }
+
 
             function applyTheme(isDark) {
                 document.documentElement.classList.toggle('dark', isDark);
@@ -1579,10 +1577,47 @@ END:VCALENDAR`;
                 const profile = JSON.parse(localStorage.getItem('userProfile')) || {};
                 const marketingName = profile.nama || 'Unknown';
 
-                if (!pickerInited || !gisInited) {
+                if (!gisInited || !gapiInited) {
                     showToast("Layanan Google belum siap. Coba lagi beberapa saat.");
                     return;
                 }
+
+                const startSaveProcess = async (token) => {
+                    const contacts = await dbLogic.getAllContacts();
+                    if (contacts.length === 0) {
+                        showToast(getTranslation('toastNoContactSave'));
+                        return;
+                    }
+
+                    const originalHTML = button.innerHTML;
+                    button.disabled = true;
+                    button.innerHTML = `<div class="loader btn-loader"></div> ${getTranslation('exportGSheetSaving')}`;
+
+                    try {
+                        const response = await fetch(`${BACKEND_API_URL}/simpan-gsheet-pengguna`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                contacts: contacts,
+                                marketingName: marketingName,
+                                accessToken: token
+                            })
+                        });
+
+                        const result = await response.json();
+                        if (!response.ok) throw new Error(result.error || 'Gagal menyimpan ke Google Sheet.');
+
+                        const spreadsheetUrl = `https://docs.google.com/spreadsheets/d/${result.spreadsheetId}`;
+                        showToast(getTranslation('toastGSheetSaveSuccess', contacts.length, spreadsheetUrl), 8000);
+
+                    } catch (error) {
+                        logError("Gagal menyimpan ke GSheet pengguna", error);
+                        showToast(getTranslation('toastGSheetSaveError', error.message));
+                    } finally {
+                        button.disabled = false;
+                        button.innerHTML = originalHTML;
+                    }
+                };
 
                 tokenClient.callback = async (resp) => {
                     if (resp.error) {
@@ -1591,33 +1626,15 @@ END:VCALENDAR`;
                         return;
                     }
                     oauthToken = resp.access_token;
-                    try {
-                        const devKey = await getDeveloperKey();
-                        if (devKey) {
-                            createPicker(marketingName);
-                        } else {
-                            throw new Error("Kunci developer tidak ditemukan.");
-                        }
-                    } catch(e) {
-                        logError("Picker creation failed", e);
-                        showToast(`Error: ${e.message}`);
-                    }
+                    await startSaveProcess(oauthToken);
                 };
 
                 if (!oauthToken) {
+                    // Jika kita tidak punya token, minta satu. Callback akan menangani penyimpanan.
                     tokenClient.requestAccessToken({ prompt: 'consent' });
                 } else {
-                     try {
-                        const devKey = await getDeveloperKey();
-                        if (devKey) {
-                            createPicker(marketingName);
-                        } else {
-                           throw new Error("Kunci developer tidak ditemukan.");
-                        }
-                    } catch(e) {
-                        logError("Picker creation failed", e);
-                        showToast(`Error: ${e.message}`);
-                    }
+                    // Jika kita sudah punya token, langsung gunakan.
+                    await startSaveProcess(oauthToken);
                 }
             }
 
@@ -1915,50 +1932,21 @@ END:VCALENDAR`;
 
             // --- Google API Integration Functions ---
             function initializeGoogleClients() {
-                // GAPI Client
-                gapi.load('client', async () => {
-                    try {
-                        await gapi.client.init({}); // Empty init is fine for now, will set token later
-                        await gapi.client.load('https://www.googleapis.com/discovery/v1/apis/drive/v3/rest');
-                        await gapi.client.load('https://sheets.googleapis.com/$discovery/rest?version=v4');
-                        gapiInited = true;
-                        updateSigninStatus(gapi.client.getToken() !== null);
-                    } catch (err) {
-                        logError("GAPI client initialization error", err);
-                    }
+                gapi.load('client', () => {
+                    gapiInited = true;
                 });
 
-                // GIS Client (for individual G-Sheet save)
                 tokenClient = google.accounts.oauth2.initTokenClient({
                     client_id: CLIENT_ID,
                     scope: SCOPES,
-                    callback: (tokenResponse) => {
-                        if (tokenResponse.error) {
-                            logError("GIS Token Error", tokenResponse);
-                            showToast(`Gagal otentikasi: ${tokenResponse.error}`);
-                            return;
+                    callback: (resp) => {
+                        if (resp.error) {
+                           logError("GIS Auth Error in init", resp);
+                           return;
                         }
-                        gapi.client.setToken({ 'access_token': tokenResponse.access_token });
-                        updateSigninStatus(true);
-                        showToast('Berhasil terhubung dengan Google.');
+                        oauthToken = resp.access_token;
                     },
                 });
-
-                // GIS Code Client (for collaboration session to get auth code)
-                codeClient = google.accounts.oauth2.initCodeClient({
-                    client_id: CLIENT_ID,
-                    scope: SCOPES,
-                    ux_mode: 'popup',
-                    callback: (response) => {
-                        if (response.code) {
-                            handleCollabSessionCreation(response.code);
-                        } else {
-                            logError("Google Code Client Error", response);
-                            showToast("Gagal mendapatkan kode otorisasi dari Google.");
-                        }
-                    },
-                });
-
                 gisInited = true;
             }
 
