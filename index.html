@@ -278,6 +278,7 @@
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
     <script>
+        console.log("JAVASCRIPT EXECUTION STARTED");
         document.addEventListener('DOMContentLoaded', () => {
             if ('serviceWorker' in navigator) {
                 window.addEventListener('load', () => {
@@ -1492,7 +1493,7 @@ END:VCALENDAR`;
                         sheetId: collaborationSession.sheetId,
                         eventName: collaborationSession.eventName
                     };
-                    const response = await fetch(`${BACKEND_API_URL}/simpan-kolaborasi`, {
+                    const response = await fetch(`${BACKEND_API_URL}/simpan-gsheet-pengguna`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(payload)
@@ -1542,6 +1543,7 @@ END:VCALENDAR`;
                         buttonsHTML += `
                             <div class="col-span-2 mt-2">
                                 <p class="text-xs text-center text-gray-500 dark:text-gray-400 mb-2" data-translate-key="personalGsheetInstruction"></p>
+                                <p class="text-xs text-center text-gray-500 dark:text-gray-400 mb-2" data-translate-key="collabGsheetInstruction"></p>
                                 <button id="export-gsheet-btn" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-4 rounded-full shadow-lg flex items-center justify-center gap-2 text-base">
                                     ${getTranslation('exportGSheet')}
                                 </button>
@@ -1757,9 +1759,9 @@ END:VCALENDAR`;
                 // GAPI Client
                 gapi.load('client', async () => {
                     try {
-                        await gapi.client.init({}); // Empty init is fine for now, will set token later
-                        await gapi.client.load('https://www.googleapis.com/discovery/v1/apis/drive/v3/rest');
-                        await gapi.client.load('https://sheets.googleapis.com/$discovery/rest?version=v4');
+                        // Inisialisasi GAPI client. Tidak perlu memuat pustaka Drive/Sheets
+                        // karena frontend hanya menggunakan Picker API dan tidak melakukan panggilan API langsung.
+                        await gapi.client.init({});
                         gapiInited = true;
                         updateSigninStatus(gapi.client.getToken() !== null);
                     } catch (err) {
