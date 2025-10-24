@@ -1855,6 +1855,7 @@ END:VCALENDAR`;
                         .enableFeature(google.picker.Feature.NAV_HIDDEN)
                         .setAppId(CLIENT_ID.split('-')[0])
                         .setOAuthToken(gapi.client.getToken().access_token)
+                        .setDeveloperKey(API_KEY)
                         .addView(view)
                         .setCallback(pickerCallback)
                         .build();
