@@ -171,6 +171,9 @@
                 </div>
                 <footer id="results-footer" style="display:none;" class="p-6 border-t border-gray-200 dark:border-gray-700">
                     <div id="export-buttons-container" class="grid grid-cols-2 gap-4"></div>
+                     <div id="gsheet-instructions" class="mt-4">
+                        <p class="text-xs text-center text-gray-500 dark:text-gray-400 mb-2">Pilih file Google Sheet untuk menyimpan data. Tab 'Data Kartu Nama' akan dibuat secara otomatis jika belum ada. <strong>PENTING</strong>: Bagikan file Google Sheet tersebut dengan akses 'Editor' ke email: <b class='text-indigo-400'>scanner-pintar@scanner-api-328921559379.iam.gserviceaccount.com</b>.</p>
+                    </div>
                     <button id="clear-all-btn" class="col-span-2 w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-full shadow-lg mt-4 flex items-center justify-center gap-2 uppercase" data-translate-key="deleteAllLocalDataBtn">HAPUS SEMUA DATA LOKAL</button>
                 </footer>
             </div>
@@ -436,7 +439,7 @@
                     exportZIP: "SIMPAN VCF .zip",
                     exportGSheet: "SIMPAN KE GOOGLE SHEET",
                     exportGSheetSaving: "Menyimpan...",
-                    personalGsheetInstruction: "Pilih file Google Sheet untuk menyimpan data. Tab 'Data Kartu Nama' akan dibuat secara otomatis jika belum ada.",
+                    personalGsheetInstruction: "Pilih file Google Sheet untuk menyimpan data. Tab 'Data Kartu Nama' akan dibuat secara otomatis jika belum ada. <strong>PENTING</strong>: Bagikan file Google Sheet tersebut dengan akses 'Editor' ke email: <b class='text-indigo-400'>scanner-pintar@scanner-api-328921559379.iam.gserviceaccount.com</b>.",
                     collabExportNote: "Data otomatis terkirim ke G-Sheet. Opsi ekspor di bawah hanya untuk data di HP ini."
                 },
                 en: {
@@ -580,7 +583,7 @@
                     exportZIP: "SAVE VCF .zip",
                     exportGSheet: "SAVE TO GOOGLE SHEET",
                     exportGSheetSaving: "Saving...",
-                    personalGsheetInstruction: "Select a Google Sheet file to save data. A 'Data Kartu Nama' tab will be created automatically if it doesn't exist.",
+                    personalGsheetInstruction: "Select a Google Sheet file to save data. A 'Data Kartu Nama' tab will be created automatically if it doesn't exist. <strong>IMPORTANT</strong>: Share the Google Sheet with 'Editor' access to: <b class='text-indigo-400'>scanner-pintar@scanner-api-328921559379.iam.gserviceaccount.com</b>.",
                     collabExportNote: "Data is automatically sent to G-Sheet. The export options below are only for data on this device."
                 }
             };
@@ -1544,8 +1547,6 @@ END:VCALENDAR`;
                         // Tombol ini sekarang selalu aktif. Logika login ditangani saat di-klik.
                         buttonsHTML += `
                             <div class="col-span-2 mt-2">
-                                <p class="text-xs text-center text-gray-500 dark:text-gray-400 mb-2" data-translate-key="personalGsheetInstruction"></p>
-                                <p class="text-xs text-center text-gray-500 dark:text-gray-400 mb-2" data-translate-key="collabGsheetInstruction"></p>
                                 <button id="export-gsheet-btn" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-4 rounded-full shadow-lg flex items-center justify-center gap-2 text-base">
                                     ${getTranslation('exportGSheet')}
                                 </button>
