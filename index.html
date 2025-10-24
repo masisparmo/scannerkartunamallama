@@ -1724,6 +1724,7 @@ END:VCALENDAR`;
 
                 try {
                     await dbLogic.init();
+                    window.dbLogic = dbLogic; // Expose for testing
 
                     let preferredLang = localStorage.getItem('scannerLang');
                     if (preferredLang !== 'id' && preferredLang !== 'en') {
@@ -1790,7 +1791,9 @@ END:VCALENDAR`;
                     gapi.load('client', async () => {
                         try {
                             // Inisialisasi GAPI client.
-                            await gapi.client.init({});
+                            await gapi.client.init({
+                                apiKey: API_KEY,
+                            });
                             gapiInited = true;
 
                             // GIS Client (for individual G-Sheet save)
@@ -1852,7 +1855,6 @@ END:VCALENDAR`;
                         .enableFeature(google.picker.Feature.NAV_HIDDEN)
                         .setAppId(CLIENT_ID.split('-')[0])
                         .setOAuthToken(gapi.client.getToken().access_token)
-                        .setDeveloperKey(API_KEY)
                         .addView(view)
                         .setCallback(pickerCallback)
                         .build();
