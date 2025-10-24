@@ -114,7 +114,7 @@
                      <button id="start-scan-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-6 rounded-full shadow-lg transition-transform transform hover:scale-105 flex items-center justify-center gap-3 text-lg" data-translate-key="scanCardBtn">SCAN KARTU NAMA</button>
                      <button id="upload-btn" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-4 px-6 rounded-full shadow-lg transition-transform transform hover:scale-105 flex items-center justify-center gap-3 text-lg" data-translate-key="uploadGalleryBtn">UPLOAD DARI GALERI</button>
                      <div class="border-t border-gray-200 dark:border-gray-700 w-3/4 mx-auto my-2"></div>
-                     <button id="create-session-btn" class="w-full bg-gray-700 hover:bg-gray-800 text-white font-bold py-3 px-6 rounded-full shadow-lg flex items-center justify-center gap-3 text-base" data-translate-key="collabModeBtn">MODE KOLABURASI TIM</button>
+                     <button id="create-session-btn" class="w-full bg-gray-700 hover:bg-gray-800 text-white font-bold py-3 px-6 rounded-full shadow-lg flex items-center justify-center gap-3 text-base hidden" data-translate-key="collabModeBtn">MODE KOLABURASI TIM</button>
                      <button id="view-results-btn" class="w-full bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 font-bold py-3 px-6 rounded-full shadow-lg hover:bg-gray-300 dark:hover:bg-gray-600 flex items-center justify-center gap-2 uppercase"><span data-translate-key="viewResultsBtn">LIHAT HASIL SCAN</span> <span id="home-contact-count" class="bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-300 text-xs font-bold px-2 py-0.5 rounded-full">0</span></button>
                 </div>
                 <input type="file" id="image-upload-input" class="hidden" accept="image/*">
@@ -126,10 +126,9 @@
                 <div class="w-full max-w-sm">
                      <label for="collab-session-name-input" class="text-sm font-medium text-gray-600 dark:text-gray-400 text-left block" data-translate-key="collabSessionNameLabel">Nama Acara / Sesi</label>
                      <input type="text" id="collab-session-name-input" data-translate-key-placeholder="collabSessionNamePlaceholder" placeholder="Contoh: Pameran Konstruksi 2025" class="w-full mt-1 p-3 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500">
-                     <p class="mt-4 text-xs text-gray-500 dark:text-gray-400 text-left" data-translate-key="collabGsheetInstruction"></p>
                      <div class="flex gap-4 mt-6">
                         <button id="cancel-create-session-btn" class="w-full bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 font-semibold py-3 px-4 rounded-full" data-translate-key="cancelBtn">BATAL</button>
-                        <button id="generate-session-qr-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-full uppercase" data-translate-key="createQrBtn">Pilih G-Sheet & Buat QR</button>
+                        <button id="generate-session-qr-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-full uppercase" data-translate-key="createQrBtn">Buat QR Code</button>
                      </div>
                 </div>
             </div>
@@ -278,7 +277,6 @@
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
     <script>
-        console.log("JAVASCRIPT EXECUTION STARTED");
         document.addEventListener('DOMContentLoaded', () => {
             if ('serviceWorker' in navigator) {
                 window.addEventListener('load', () => {
@@ -326,8 +324,7 @@
                     createCollabSubtitle: "Masukkan nama acara untuk membuat sesi yang dapat dibagikan.",
                     collabSessionNameLabel: "Nama Acara / Sesi",
                     collabSessionNamePlaceholder: "Contoh: Pameran Konstruksi 2025",
-                    createQrBtn: "Pilih G-Sheet & Buat QR",
-                    collabGsheetInstruction: "PENTING: Setelah memilih file, pastikan Anda membagikan (share) file Google Sheet tersebut dengan akses 'Editor' ke email: <b class='text-indigo-400'>scanner-pintar@scanner-api-328921559379.iam.gserviceaccount.com</b> agar tim Anda bisa menyimpan data.",
+                    createQrBtn: "Buat QR Code",
                     joinCollabTitle: "Gabung Sesi Kolaborasi",
                     joinCollabInvite: "Anda diundang ke sesi",
                     joinCollabPrompt: "Masukkan nama Anda:",
@@ -435,7 +432,6 @@
                     exportZIP: "SIMPAN VCF .zip",
                     exportGSheet: "SIMPAN KE GOOGLE SHEET",
                     exportGSheetSaving: "Menyimpan...",
-                    personalGsheetInstruction: "Silakan buat file Google Sheet kosong terlebih dahulu di Google Drive Anda untuk menjadi tujuan penyimpanan.",
                     collabExportNote: "Data otomatis terkirim ke G-Sheet. Opsi ekspor di bawah hanya untuk data di HP ini."
                 },
                 en: {
@@ -469,8 +465,7 @@
                     createCollabSubtitle: "Enter the event name to create a shareable session.",
                     collabSessionNameLabel: "Event / Session Name",
                     collabSessionNamePlaceholder: "Example: Construction Expo 2025",
-                    createQrBtn: "Select G-Sheet & Create QR",
-                    collabGsheetInstruction: "IMPORTANT: After selecting a file, ensure you share that Google Sheet file with 'Editor' access to the email: <b class='text-indigo-400'>scanner-pintar@scanner-api-328921559379.iam.gserviceaccount.com</b> so your team can save data.",
+                    createQrBtn: "Create QR Code",
                     joinCollabTitle: "Join Collaboration Session",
                     joinCollabInvite: "You are invited to the session",
                     joinCollabPrompt: "Enter your name:",
@@ -577,9 +572,8 @@
                     exportVCF: "SAVE .vcf",
                     exportZIP: "SAVE VCF .zip",
                     exportGSheet: "SAVE TO GOOGLE SHEET",
-                    exportGSheetSaving: "Saving...",
-                    personalGsheetInstruction: "Please create a blank Google Sheet file in your Google Drive first to serve as the save destination.",
-                    collabExportNote: "Data is automatically sent to G-Sheet. The export options below are only for data on this device."
+                    exportGSheetSaving: "Menyimpan...",
+                    collabExportNote: "Data otomatis terkirim ke G-Sheet. Opsi ekspor di bawah hanya untuk data di HP ini."
                 }
             };
 
@@ -626,13 +620,14 @@
             const EMAIL_GENERATOR_URL = `${BACKEND_API_URL}/generateFollowUpEmail`;
             const WA_GENERATOR_URL = `${BACKEND_API_URL}/generateFollowUpWa`;
 
-            let collaborationSession = { isActive: false, sheetId: null, eventName: null, marketingName: null };
+            let collaborationSession = { isActive: false, sessionId: null, sessionAcara: null, marketingName: null };
             let errorLogs = [];
 
             // --- Google API Integration ---
             const CLIENT_ID = "328921559379-s3mmi3dlpj39qtkgl4itt5q2ukl1nmid.apps.googleusercontent.com";
-            const SCOPES = "https://www.googleapis.com/auth/drive.file";
-            let tokenClient, pickerApiLoaded = false, oauthToken;
+            const SCOPES = "https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/spreadsheets";
+            let tokenClient;
+            let codeClient; // For collaboration flow
             let gapiInited = false;
             let gisInited = false;
             // --- End Google API Integration ---
@@ -832,7 +827,7 @@
                 const code = jsQR(imageData.data, imageData.width, imageData.height, { inversionAttempts: "dontInvert" });
                 if (code) {
                     stopCamera();
-                    if (code.data.includes('?sheetId=') && code.data.includes('&eventName=')) {
+                    if (code.data.includes('?sesi=') && code.data.includes('&acara=')) {
                         window.location.href = code.data;
                     } else {
                         processQRCode(code.data);
@@ -1462,21 +1457,21 @@ END:VCALENDAR`;
                 createSessionBtn.classList.add('hidden');
 
                 collaborationModeIndicator.classList.remove('hidden');
-                collabSessionName.textContent = collaborationSession.eventName;
+                collabSessionName.textContent = collaborationSession.sessionAcara;
                 collabUserName.textContent = collaborationSession.marketingName;
 
-                otherSelectors.sessionAcaraInput.value = collaborationSession.eventName;
+                otherSelectors.sessionAcaraInput.value = collaborationSession.sessionAcara;
                 otherSelectors.sessionTanggalInput.value = getLocalDateString();
             }
 
             function exitCollaborationMode() {
                 showConfirmModal(getTranslation('confirmExitCollab'), () => {
                     localStorage.removeItem('collaborationSession');
-                    collaborationSession = { isActive: false, sheetId: null, eventName: null, marketingName: null };
+                    collaborationSession = { isActive: false, sessionId: null, sessionAcara: null, marketingName: null };
 
                     const url = new URL(window.location);
-                    url.searchParams.delete('sheetId');
-                    url.searchParams.delete('eventName');
+                    url.searchParams.delete('sesi');
+                    url.searchParams.delete('acara');
                     window.history.pushState({}, '', url);
 
                     collaborationModeIndicator.classList.add('hidden');
@@ -1486,35 +1481,19 @@ END:VCALENDAR`;
                 });
             }
 
-           async function sendCollaborativeData(contact) {
+            async function sendCollaborativeData(contact) {
                 try {
-                    const payload = {
-                        contactData: contact,
-                        sheetId: collaborationSession.sheetId,
-                        eventName: collaborationSession.eventName
-                    };
-                    const response = await fetch(`${BACKEND_API_URL}/simpan-gsheet-pengguna`, {
+                    const response = await fetch(`${BACKEND_API_URL}/simpan-gsheet`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
+                        body: JSON.stringify({ contact: contact })
                     });
-                     if (!response.ok) {
-                        const errorText = await response.text();
-                        let errorMessage = `Gagal mengirim data: ${response.status}`;
-                        try {
-                            const errorJson = JSON.parse(errorText);
-                            errorMessage = `Gagal: ${errorJson.error || errorText}`;
-                        } catch (e) {
-                            errorMessage = `Gagal: ${errorText}`;
-                        }
-                        throw new Error(errorMessage);
-                    }
                     const result = await response.json();
-                    if (!result.success) throw new Error(result.error || 'Gagal mengirim data.');
+                    if (!response.ok || !result.success) throw new Error(result.error || 'Failed to send data.');
                     showToast(getTranslation('toastDataSentToGSheet', contact.nama));
                 } catch (error) {
                     logError("Failed to send collaborative data", error);
-                    showToast(getTranslation('toastFailSendGSheet', contact.nama) + ` (${error.message})`);
+                    showToast(getTranslation('toastFailSendGSheet', contact.nama));
                 }
             }
 
@@ -1541,13 +1520,9 @@ END:VCALENDAR`;
                     if (contacts.length > 0) {
                         // Tombol ini sekarang selalu aktif. Logika login ditangani saat di-klik.
                         buttonsHTML += `
-                            <div class="col-span-2 mt-2">
-                                <p class="text-xs text-center text-gray-500 dark:text-gray-400 mb-2" data-translate-key="personalGsheetInstruction"></p>
-                                <p class="text-xs text-center text-gray-500 dark:text-gray-400 mb-2" data-translate-key="collabGsheetInstruction"></p>
-                                <button id="export-gsheet-btn" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-4 rounded-full shadow-lg flex items-center justify-center gap-2 text-base">
-                                    ${getTranslation('exportGSheet')}
-                                </button>
-                            </div>
+                            <button id="export-gsheet-btn" class="col-span-2 w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-4 rounded-full shadow-lg flex items-center justify-center gap-2 text-base mt-2">
+                                ${getTranslation('exportGSheet')}
+                            </button>
                         `;
                     }
                 }
@@ -1558,66 +1533,228 @@ END:VCALENDAR`;
                     if (document.getElementById('export-vcf-btn')) document.getElementById('export-vcf-btn').addEventListener('click', () => exportVCF(contacts[0]));
                     if (document.getElementById('export-zip-btn')) document.getElementById('export-zip-btn').addEventListener('click', () => exportZIP(contacts));
                     if (document.getElementById('export-gsheet-btn')) {
-                         document.getElementById('export-gsheet-btn').addEventListener('click', handlePersonalPicker);
+                         const gsheetBtn = document.getElementById('export-gsheet-btn');
+                         gsheetBtn.addEventListener('click', () => saveAllToGoogleSheet(gsheetBtn));
                     }
                 }
             }
 
-            async function savePersonalDataToSheet(sheetId) {
-                const gsheetBtn = document.getElementById('export-gsheet-btn');
-                const originalHTML = gsheetBtn.innerHTML;
-                gsheetBtn.disabled = true;
-                gsheetBtn.innerHTML = `<div class="loader btn-loader"></div><span class="ml-2">${getTranslation('exportGSheetSaving')}</span>`;
+            async function executeSaveToSheet(button) {
+                const originalHTML = button.innerHTML;
+                button.disabled = true;
+                button.innerHTML = `<div class="loader btn-loader"></div><span class="ml-2">${getTranslation('exportGSheetSaving')}</span>`;
 
                 try {
+                    const fileName = "Data Scan Kartu Nama";
+                    let sheetName = document.getElementById('session-acara').value.trim();
+                    if (!sheetName) {
+                        sheetName = "Data Kartu Nama";
+                    }
+
+                    let spreadsheetId = await findOrCreateSpreadsheet(fileName);
+                    await findOrCreateSheetTab(spreadsheetId, sheetName);
+
                     const contacts = await dbLogic.getAllContacts();
                     if (contacts.length === 0) {
                         showToast(getTranslation('toastNoContactSave'));
-                        return;
-                    }
-
-                    let eventName = document.getElementById('session-acara').value.trim();
-                    if (!eventName) {
-                        eventName = "Data Kartu Nama";
-                    }
-
-                    const payload = {
-                        contacts: contacts,
-                        sheetId: sheetId,
-                        eventName: eventName
-                    };
-
-                    const response = await fetch(`${BACKEND_API_URL}/simpan-gsheet-pengguna`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-
-                    if (!response.ok) {
-                        const errorText = await response.text();
-                         let errorMessage = `Gagal menyimpan: ${response.status}`;
-                        try {
-                            const errorJson = JSON.parse(errorText);
-                            errorMessage = `Gagal: ${errorJson.error || errorText}`;
-                        } catch (e) {
-                             errorMessage = `Gagal: ${errorText}`;
-                        }
-                        throw new Error(errorMessage);
-                    }
-
-                    const result = await response.json();
-                    if (result.success) {
-                        const spreadsheetUrl = `https://docs.google.com/spreadsheets/d/${sheetId}`;
-                        showToast(getTranslation('toastGSheetSaveSuccess', contacts.length, spreadsheetUrl), 8000);
                     } else {
-                        throw new Error(result.error || 'Terjadi kesalahan di server.');
+                        await writeDataToSheet(spreadsheetId, sheetName, contacts);
+                        const spreadsheetUrl = `https://docs.google.com/spreadsheets/d/${spreadsheetId}`;
+                        showToast(getTranslation('toastGSheetSaveSuccess', contacts.length, spreadsheetUrl), 8000);
                     }
                 } catch (error) {
-                    logError("Error saving personal data to GSheet", error);
+                    logError("Error executing save to Google Sheet", error);
                     showToast(getTranslation('toastGSheetSaveError', error.message));
                 } finally {
-                    gsheetBtn.disabled = false;
-                    gsheetBtn.innerHTML = originalHTML;
+                    button.disabled = false;
+                    button.innerHTML = originalHTML;
+                }
+            }
+
+            async function saveAllToGoogleSheet(button) {
+                try {
+                    if (!gapiInited || !gisInited) {
+                        throw new Error("Layanan Google belum siap. Mohon tunggu sebentar.");
+                    }
+
+                    if (gapi.client.getToken() === null) {
+                        tokenClient.callback = (resp) => {
+                            if (resp.error) {
+                                logError("GIS Auth Error", resp);
+                                showToast(`Gagal otentikasi: ${resp.error}`);
+                                return;
+                            }
+                            gapi.client.setToken({ 'access_token': resp.access_token });
+                            updateSigninStatus(true);
+                            executeSaveToSheet(button);
+                        };
+                        tokenClient.requestAccessToken({ prompt: 'consent' });
+                    } else {
+                        await executeSaveToSheet(button);
+                    }
+
+                } catch (error) {
+                    logError("Error in saveAllToGoogleSheet flow", error);
+                    showToast(getTranslation('toastGSheetSaveError', error.message));
+                }
+            }
+
+            async function findOrCreateSpreadsheet(fileName) {
+                // 1. Cari file
+                try {
+                    const response = await gapi.client.drive.files.list({
+                        q: `name='${fileName}' and mimeType='application/vnd.google-apps.spreadsheet' and trashed=false`,
+                        fields: 'files(id, name)',
+                        spaces: 'drive'
+                    });
+
+                    if (response.result.files.length > 0) {
+                        const fileId = response.result.files[0].id;
+                        console.log(`File ditemukan dengan ID: ${fileId}`);
+                        return fileId;
+                    } else {
+                        // 2. Jika tidak ditemukan, buat file baru
+                        console.log(`File '${fileName}' tidak ditemukan, membuat baru...`);
+                        const spreadsheet = await gapi.client.sheets.spreadsheets.create({
+                            properties: {
+                                title: fileName
+                            }
+                        });
+                        const newFileId = spreadsheet.result.spreadsheetId;
+                        console.log(`File baru dibuat dengan ID: ${newFileId}`);
+                        return newFileId;
+                    }
+                } catch (err) {
+                    logError("Error finding or creating spreadsheet", err);
+                    throw new Error("Gagal mencari atau membuat file di Google Drive.");
+                }
+            }
+
+            async function findOrCreateSheetTab(spreadsheetId, sheetName) {
+                try {
+                    const response = await gapi.client.sheets.spreadsheets.get({
+                        spreadsheetId: spreadsheetId,
+                        fields: 'sheets.properties.title'
+                    });
+                    const sheets = response.result.sheets;
+                    const sheetExists = sheets.some(sheet => sheet.properties.title === sheetName);
+
+                    if (!sheetExists) {
+                        console.log(`Tab '${sheetName}' tidak ditemukan, membuat baru...`);
+                        await gapi.client.sheets.spreadsheets.batchUpdate({
+                            spreadsheetId: spreadsheetId,
+                            resource: {
+                                requests: [{
+                                    addSheet: {
+                                        properties: {
+                                            title: sheetName
+                                        }
+                                    }
+                                }]
+                            }
+                        });
+                    } else {
+                        console.log(`Tab '${sheetName}' sudah ada.`);
+                    }
+                } catch (err) {
+                    logError("Error finding or creating sheet tab", err);
+                    throw new Error("Gagal memeriksa atau membuat tab di Google Sheet.");
+                }
+            }
+
+            async function writeDataToSheet(spreadsheetId, sheetName, contacts) {
+                const HEADER = [
+                    'Nama', 'Jabatan', 'Perusahaan', 'Jenis Perusahaan', 'Telepon Kantor',
+                    'WhatsApp', 'Email', 'Acara', 'Tanggal', 'Catatan', 'Tags', 'Marketing', 'Timestamp'
+                ];
+
+                try {
+                    // 1. Dapatkan semua data yang ada dari sheet
+                    const fullRange = `'${sheetName}'!A:M`;
+                    const response = await gapi.client.sheets.spreadsheets.values.get({
+                        spreadsheetId: spreadsheetId,
+                        range: fullRange,
+                    });
+
+                    const existingValues = response.result.values || [];
+                    let headerExists = false;
+                    const existingDataMap = new Map();
+
+                    if (existingValues.length > 0 && JSON.stringify(existingValues[0]) === JSON.stringify(HEADER)) {
+                        headerExists = true;
+                        // Mulai dari 1 untuk melewati header
+                        for (let i = 1; i < existingValues.length; i++) {
+                            const row = existingValues[i];
+                            // Kunci dibuat dari kolom Nama, Perusahaan, dan WhatsApp
+                            const key = `${row[0]}|${row[2]}|${row[5]}`;
+                            existingDataMap.set(key, { row, rowIndex: i + 1 });
+                        }
+                    }
+
+                    const newContactsData = contacts.map(c => [
+                        c.nama || '', c.jabatan || '', c.perusahaan || '', c.jenis_perusahaan || '',
+                        c.telepon_kantor || '', c.whatsapp || '', c.email || '', c.acara || '',
+                        c.tanggal || '', c.catatan || '', (c.tags || []).join(', '),
+                        collaborationSession.marketingName || (JSON.parse(localStorage.getItem('userProfile')) || {}).nama || '',
+                        new Date().toISOString()
+                    ]);
+
+                    const rowsToAppend = [];
+                    const rowsToUpdate = [];
+
+                    newContactsData.forEach(newRow => {
+                        // Kunci dibuat dari kolom Nama, Perusahaan, dan WhatsApp
+                        const key = `${newRow[0]}|${newRow[2]}|${newRow[5]}`;
+                        if (existingDataMap.has(key)) {
+                            // Kontak sudah ada, siapkan untuk pembaruan
+                            const { rowIndex } = existingDataMap.get(key);
+                            rowsToUpdate.push({
+                                range: `'${sheetName}'!A${rowIndex}:M${rowIndex}`,
+                                values: [newRow]
+                            });
+                        } else {
+                            // Kontak baru, siapkan untuk ditambahkan
+                            rowsToAppend.push(newRow);
+                        }
+                    });
+
+                    // 2. Tambahkan header jika belum ada
+                    if (!headerExists) {
+                        rowsToAppend.unshift(HEADER);
+                    }
+
+                    // 3. Lakukan operasi penambahan (append) jika ada data baru
+                    if (rowsToAppend.length > 0) {
+                        await gapi.client.sheets.spreadsheets.values.append({
+                            spreadsheetId: spreadsheetId,
+                            range: `'${sheetName}'!A1`,
+                            valueInputOption: 'USER_ENTERED',
+                            resource: {
+                                values: rowsToAppend
+                            }
+                        });
+                        console.log(`${rowsToAppend.length} baris baru ditambahkan.`);
+                    }
+
+                    // 4. Lakukan operasi pembaruan (update) jika ada data yang sama
+                    if (rowsToUpdate.length > 0) {
+                        await gapi.client.sheets.spreadsheets.values.batchUpdate({
+                            spreadsheetId: spreadsheetId,
+                            resource: {
+                                valueInputOption: 'USER_ENTERED',
+                                data: rowsToUpdate
+                            }
+                        });
+                        console.log(`${rowsToUpdate.length} baris yang ada diperbarui.`);
+                    }
+
+                    if (rowsToAppend.length === 0 && rowsToUpdate.length === 0) {
+                        console.log("Tidak ada data baru untuk ditambahkan atau diperbarui.");
+                    }
+
+                } catch (err) {
+                    logError("Error writing data to sheet", err);
+                    throw new Error(`Gagal menulis data ke Sheet: ${err.result ? err.result.error.message : err.message}`);
                 }
             }
 
@@ -1729,16 +1866,16 @@ END:VCALENDAR`;
                     setLanguage(preferredLang);
 
                     const urlParams = new URLSearchParams(window.location.search);
-                    const sheetIdFromUrl = urlParams.get('sheetId');
-                    const eventNameFromUrl = urlParams.get('eventName');
+                    const sessionIdFromUrl = urlParams.get('sesi');
+                    const sessionAcaraFromUrl = urlParams.get('acara');
                     const savedSession = JSON.parse(localStorage.getItem('collaborationSession'));
 
-                    if (sheetIdFromUrl && eventNameFromUrl) {
-                        if (savedSession && savedSession.sheetId === sheetIdFromUrl && savedSession.marketingName) {
+                    if (sessionIdFromUrl && sessionAcaraFromUrl) {
+                        if (savedSession && savedSession.sessionId === sessionIdFromUrl && savedSession.marketingName) {
                             collaborationSession = savedSession;
                             setupCollaborationModeUI();
                         } else {
-                            joinSessionName.textContent = eventNameFromUrl;
+                            joinSessionName.textContent = sessionAcaraFromUrl;
                             joinSessionModal.classList.remove('hidden');
                         }
                     } else if (savedSession) {
@@ -1759,9 +1896,9 @@ END:VCALENDAR`;
                 // GAPI Client
                 gapi.load('client', async () => {
                     try {
-                        // Inisialisasi GAPI client. Tidak perlu memuat pustaka Drive/Sheets
-                        // karena frontend hanya menggunakan Picker API dan tidak melakukan panggilan API langsung.
-                        await gapi.client.init({});
+                        await gapi.client.init({}); // Empty init is fine for now, will set token later
+                        await gapi.client.load('https://www.googleapis.com/discovery/v1/apis/drive/v3/rest');
+                        await gapi.client.load('https://sheets.googleapis.com/$discovery/rest?version=v4');
                         gapiInited = true;
                         updateSigninStatus(gapi.client.getToken() !== null);
                     } catch (err) {
@@ -1785,6 +1922,21 @@ END:VCALENDAR`;
                     },
                 });
 
+                // GIS Code Client (for collaboration session to get auth code)
+                codeClient = google.accounts.oauth2.initCodeClient({
+                    client_id: CLIENT_ID,
+                    scope: SCOPES,
+                    ux_mode: 'popup',
+                    callback: (response) => {
+                        if (response.code) {
+                            handleCollabSessionCreation(response.code);
+                        } else {
+                            logError("Google Code Client Error", response);
+                            showToast("Gagal mendapatkan kode otorisasi dari Google.");
+                        }
+                    },
+                });
+
                 gisInited = true;
             }
 
@@ -1797,102 +1949,61 @@ END:VCALENDAR`;
             }
             // --- End Google API Integration Functions ---
 
-            let currentPickerCallback;
-            function pickerCallback(data) {
-                if (data.action === google.picker.Action.PICKED) {
-                    const fileId = data.docs[0].id;
-                    if (currentPickerCallback) {
-                        currentPickerCallback(fileId);
-                    }
-                }
-            }
-
-            function showPicker(callback) {
-                currentPickerCallback = callback;
-                const view = new google.picker.View(google.picker.ViewId.SPREADSHEETS);
-                const picker = new google.picker.PickerBuilder()
-                    .enableFeature(google.picker.Feature.NAV_HIDDEN)
-                    .setAppId(CLIENT_ID.split('-')[0])
-                    .setOAuthToken(oauthToken.access_token)
-                    .addView(view)
-                    .setCallback(pickerCallback)
-                    .build();
-                picker.setVisible(true);
-            }
-
-            async function handleCollabPicker() {
-                 if (!gapiInited || !gisInited) {
-                    showToast("Layanan Google belum siap. Mohon tunggu.");
-                    return;
-                }
-                const eventName = collabSessionNameInput.value.trim();
-                if (!eventName) {
-                    showToast(getTranslation('toastEmptyEventName'));
-                    return;
-                }
-
-                tokenClient.callback = (tokenResponse) => {
-                     if (tokenResponse.error) {
-                        logError("GIS Auth Error", tokenResponse);
-                        showToast(`Gagal otentikasi: ${tokenResponse.error}`);
-                        return;
-                    }
-                    oauthToken = tokenResponse;
-                    const collabCallback = (fileId) => {
-                        const baseUrl = window.location.origin + window.location.pathname;
-                        const collabUrl = `${baseUrl}?sheetId=${fileId}&eventName=${encodeURIComponent(eventName)}`;
-                        qrCodeContainer.innerHTML = '';
-                        new QRCode(qrCodeContainer, { text: collabUrl, width: 256, height: 256 });
-                        showSessionQRModal.classList.remove('hidden');
-                    };
-                    if (pickerApiLoaded) {
-                        showPicker(collabCallback);
-                    } else {
-                        gapi.load('picker', () => {
-                            pickerApiLoaded = true;
-                            showPicker(collabCallback);
-                        });
-                    }
-                };
-
-                if (gapi.client.getToken() === null) {
-                     tokenClient.requestAccessToken({ prompt: 'consent' });
-                } else {
-                     tokenClient.requestAccessToken({ prompt: '' });
-                }
-            }
-
-            async function handlePersonalPicker() {
-                if (!gapiInited || !gisInited) {
-                    showToast("Layanan Google belum siap. Mohon tunggu.");
-                    return;
-                }
-                 tokenClient.callback = (tokenResponse) => {
-                     if (tokenResponse.error) {
-                        logError("GIS Auth Error", tokenResponse);
-                        showToast(`Gagal otentikasi: ${tokenResponse.error}`);
-                        return;
-                    }
-                    oauthToken = tokenResponse;
-                    if (pickerApiLoaded) {
-                        showPicker(savePersonalDataToSheet);
-                    } else {
-                        gapi.load('picker', () => {
-                            pickerApiLoaded = true;
-                            showPicker(savePersonalDataToSheet);
-                        });
-                    }
-                };
-                 if (gapi.client.getToken() === null) {
-                     tokenClient.requestAccessToken({ prompt: 'consent' });
-                } else {
-                     tokenClient.requestAccessToken({ prompt: '' });
-                }
-            }
             [otherSelectors.langToggleInitial, otherSelectors.langToggleResults].forEach(btn => btn.addEventListener('click', toggleLanguage));
             createSessionBtn.addEventListener('click', () => showScreen('createSession'));
             cancelCreateSessionBtn.addEventListener('click', () => showScreen('initial'));
-            generateSessionQRBtn.addEventListener('click', handleCollabPicker);
+            async function handleCollabSessionCreation(authCode) {
+                const acara = collabSessionNameInput.value.trim();
+                if (!acara) {
+                    showToast(getTranslation('toastEmptyEventName'));
+                    return;
+                }
+                const btn = generateSessionQRBtn;
+                const originalHTML = btn.innerHTML;
+                btn.disabled = true;
+                btn.innerHTML = `<div class="loader btn-loader"></div>`;
+
+                try {
+                    const response = await fetch(`${BACKEND_API_URL}/initiate-collab-session`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ authCode, acara })
+                    });
+
+                    const result = await response.json();
+                    if (!response.ok || !result.success) {
+                        throw new Error(result.error || 'Gagal memulai sesi kolaborasi di server.');
+                    }
+
+                    const { sessionId } = result;
+                    const baseUrl = window.location.origin + window.location.pathname;
+                    const collabUrl = `${baseUrl}?sesi=${sessionId}&acara=${encodeURIComponent(acara)}`;
+
+                    qrCodeContainer.innerHTML = '';
+                    new QRCode(qrCodeContainer, { text: collabUrl, width: 256, height: 256 });
+                    showSessionQRModal.classList.remove('hidden');
+
+                } catch (error) {
+                    logError("Error initiating collaboration session", error);
+                    showToast(`Error: ${error.message}`);
+                } finally {
+                    btn.disabled = false;
+                    btn.innerHTML = originalHTML;
+                }
+            }
+
+            generateSessionQRBtn.addEventListener('click', () => {
+                const acara = collabSessionNameInput.value.trim();
+                if (!acara) {
+                    showToast(getTranslation('toastEmptyEventName'));
+                    return;
+                }
+                if (!codeClient) {
+                    showToast("Google Client belum siap. Mohon tunggu sebentar.");
+                    return;
+                }
+                codeClient.requestCode();
+            });
             closeQrModalBtn.addEventListener('click', () => {
                 showSessionQRModal.classList.add('hidden');
                 showScreen('initial');
@@ -1903,8 +2014,8 @@ END:VCALENDAR`;
                 const urlParams = new URLSearchParams(window.location.search);
                 collaborationSession = {
                     isActive: true,
-                    sheetId: urlParams.get('sheetId'),
-                    eventName: urlParams.get('eventName'),
+                    sessionId: urlParams.get('sesi'),
+                    sessionAcara: urlParams.get('acara'),
                     marketingName: marketingName
                 };
                 localStorage.setItem('collaborationSession', JSON.stringify(collaborationSession));
