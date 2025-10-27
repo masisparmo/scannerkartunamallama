@@ -3,1610 +3,973 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scanner Pintar - Pitch Deck | Hackathon Meta-Llama 2025</title>
+    <title>Scanner Pintar - Pitch Deck</title>
+    <!-- Memuat Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- 
+      FIX: 
+      - Skrip Lucide DIHAPUS. Kita tidak lagi menggunakannya.
+      - Ikon akan di-embed sebagai SVG inline.
+    -->
+    
+    <!-- Konfigurasi Kustom Tailwind & Font -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class', // Mengaktifkan mode gelap berbasis class
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            '50': '#eff6ff',
+                            '100': '#dbeafe',
+                            '200': '#bfdbfe',
+                            '300': '#93c5fd',
+                            '400': '#60a5fa',
+                            '500': '#3b82f6', // Biru dominan
+                            '600': '#2563eb',
+                            '700': '#1d4ed8',
+                            '800': '#1e40af',
+                            '900': '#1e3a8a',
+                            '950': '#172554',
+                        },
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'], // Menggunakan font Inter
+                    },
+                },
+            },
+        };
+    </script>
+    
+    <!-- Gaya CSS Kustom -->
     <style>
-        /* Theme and Language Controls */
-        .controls-header {
-            position: fixed;
-            top: var(--space-24);
-            right: var(--space-24);
-            display: flex;
-            gap: var(--space-12);
-            z-index: 2000;
-        }
-
-        .control-btn {
-            background: var(--color-surface);
-            border: 1px solid var(--color-card-border);
-            width: 48px;
-            height: 48px;
-            border-radius: var(--radius-lg);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: var(--shadow-lg);
-            font-size: 1.2rem;
-        }
-
-        .control-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 20px -5px rgba(0, 0, 0, 0.15);
-        }
-
-        .control-btn:active {
-            transform: translateY(0);
-        }
-        /* Design System - Blue Theme */
-        :root {
-            /* Blue Color Palette */
-            --blue-900: #1E3A8A;
-            --blue-800: #1E40AF;
-            --blue-700: #1D4ED8;
-            --blue-600: #2563EB;
-            --blue-500: #3B82F6;
-            --blue-400: #60A5FA;
-            --blue-300: #93C5FD;
-            --blue-200: #BFDBFE;
-            --blue-100: #DBEAFE;
-            --blue-50: #EFF6FF;
-            --accent-orange: #F97316;
-            --accent-green: #10B981;
-            --accent-purple: #8B5CF6;
-            
-            --blue-500-rgb: 59, 130, 246;
-            --blue-600-rgb: 37, 99, 235;
-            --blue-300-rgb: 147, 197, 253;
-            --color-white: rgba(255, 255, 255, 1);
-            --color-black: rgba(0, 0, 0, 1);
-            --color-cream-50: rgba(252, 252, 249, 1);
-            --color-cream-100: rgba(255, 255, 253, 1);
-            --color-gray-200: rgba(245, 245, 245, 1);
-            --color-gray-300: rgba(167, 169, 169, 1);
-            --color-gray-400: rgba(119, 124, 124, 1);
-            --color-slate-500: rgba(98, 108, 113, 1);
-            --color-brown-600: rgba(94, 82, 64, 1);
-            --color-charcoal-700: rgba(31, 33, 33, 1);
-            --color-charcoal-800: rgba(38, 40, 40, 1);
-            --color-slate-900: rgba(19, 52, 59, 1);
-            --color-teal-300: rgba(50, 184, 198, 1);
-            --color-teal-400: rgba(45, 166, 178, 1);
-            --color-teal-500: rgba(33, 128, 141, 1);
-            --color-teal-600: rgba(29, 116, 128, 1);
-            --color-teal-700: rgba(26, 104, 115, 1);
-            --color-red-400: rgba(255, 84, 89, 1);
-            --color-red-500: rgba(192, 21, 47, 1);
-            --color-orange-400: rgba(230, 129, 97, 1);
-            --color-orange-500: rgba(168, 75, 47, 1);
-
-            --color-brown-600-rgb: 94, 82, 64;
-            --color-teal-500-rgb: 33, 128, 141;
-            --color-slate-900-rgb: 19, 52, 59;
-            --color-slate-500-rgb: 98, 108, 113;
-
-            --color-bg-1: rgba(59, 130, 246, 0.08);
-            --color-bg-2: rgba(245, 158, 11, 0.08);
-            --color-bg-3: rgba(34, 197, 94, 0.08);
-            --color-bg-4: rgba(239, 68, 68, 0.08);
-            --color-bg-5: rgba(147, 51, 234, 0.08);
-            --color-bg-6: rgba(249, 115, 22, 0.08);
-            --color-bg-7: rgba(236, 72, 153, 0.08);
-            --color-bg-8: rgba(6, 182, 212, 0.08);
-
-            --color-background: var(--color-cream-50);
-            --color-surface: var(--color-cream-100);
-            --color-text: var(--color-slate-900);
-            --color-text-secondary: var(--color-slate-500);
-            --color-primary: var(--blue-600);
-            --color-primary-hover: var(--blue-700);
-            --color-primary-active: var(--blue-800);
-            --color-border: rgba(var(--color-brown-600-rgb), 0.2);
-            --color-card-border: rgba(var(--color-brown-600-rgb), 0.12);
-
-            --font-family-base: "FKGroteskNeue", "Geist", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            --space-8: 8px;
-            --space-16: 16px;
-            --space-24: 24px;
-            --space-32: 32px;
-            --radius-lg: 12px;
-            --radius-full: 9999px;
-            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-        }
-
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --color-gray-400-rgb: 119, 124, 124;
-                --color-teal-300-rgb: 50, 184, 198;
-                --color-gray-300-rgb: 167, 169, 169;
-                --color-gray-200-rgb: 245, 245, 245;
-
-                --color-bg-1: rgba(29, 78, 216, 0.15);
-                --color-bg-2: rgba(180, 83, 9, 0.15);
-                --color-bg-3: rgba(21, 128, 61, 0.15);
-                --color-bg-4: rgba(185, 28, 28, 0.15);
-                --color-bg-5: rgba(107, 33, 168, 0.15);
-                --color-bg-6: rgba(194, 65, 12, 0.15);
-                --color-bg-7: rgba(190, 24, 93, 0.15);
-                --color-bg-8: rgba(8, 145, 178, 0.15);
-
-                --color-background: var(--color-charcoal-700);
-                --color-surface: var(--color-charcoal-800);
-                --color-text: var(--color-gray-200);
-                --color-text-secondary: rgba(var(--color-gray-300-rgb), 0.7);
-                --color-primary: var(--blue-400);
-                --color-primary-hover: var(--blue-500);
-                --color-primary-active: var(--blue-600);
-                --color-border: rgba(var(--color-gray-400-rgb), 0.3);
-                --color-card-border: rgba(var(--color-gray-400-rgb), 0.2);
-            }
-        }
-
-        @font-face {
-            font-family: 'FKGroteskNeue';
-            src: url('https://r2cdn.perplexity.ai/fonts/FKGroteskNeue.woff2') format('woff2');
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
         body {
-            font-family: var(--font-family-base);
-            background: var(--color-background);
-            color: var(--color-text);
-            overflow: hidden;
-            -webkit-font-smoothing: antialiased;
+            font-family: 'Inter', sans-serif;
         }
-
-        .pitch-deck {
-            width: 100vw;
-            height: 100vh;
-            overflow-y: scroll;
-            scroll-snap-type: y mandatory;
+        /* Menambahkan scroll-padding-top agar navigasi sticky tidak menutupi judul bagian */
+        html {
+            scroll-padding-top: 80px;
             scroll-behavior: smooth;
-        }
-
-        .slide {
-            width: 100%;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: var(--space-32);
-            scroll-snap-align: start;
-            opacity: 0;
-            animation: fadeIn 0.6s ease-out forwards;
-        }
-
-        @keyframes fadeIn {
-            to {
-                opacity: 1;
-            }
-        }
-
-        .slide-content {
-            max-width: 1200px;
-            width: 100%;
-        }
-
-        /* Navigation */
-        .nav-controls {
-            position: fixed;
-            bottom: var(--space-32);
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            align-items: center;
-            gap: var(--space-16);
-            background: var(--color-surface);
-            padding: var(--space-16) var(--space-24);
-            border-radius: var(--radius-full);
-            box-shadow: var(--shadow-lg);
-            border: 1px solid var(--color-card-border);
-            z-index: 1000;
-        }
-
-        .nav-btn {
-            background: var(--color-primary);
-            color: var(--color-white);
-            border: none;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .nav-btn:hover {
-            background: var(--color-primary-hover);
-            transform: scale(1.1);
-        }
-
-        .nav-btn:disabled {
-            opacity: 0.3;
-            cursor: not-allowed;
-            transform: scale(1);
-        }
-
-        .progress-dots {
-            display: flex;
-            gap: var(--space-8);
-        }
-
-        .dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: var(--color-border);
-            transition: all 0.3s ease;
-        }
-
-        .dot.active {
-            background: var(--color-primary);
-            width: 24px;
-            border-radius: var(--radius-full);
-        }
-
-        /* Slide 1 - Title */
-        .slide-1 {
-            background: linear-gradient(135deg, var(--color-bg-1) 0%, var(--color-bg-8) 100%);
-            text-align: center;
-        }
-
-        .logo {
-            width: 120px;
-            height: 120px;
-            margin-bottom: var(--space-24);
-            animation: float 3s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-
-        .app-title {
-            font-size: 4rem;
-            font-weight: 700;
-            margin-bottom: var(--space-16);
-            letter-spacing: -0.02em;
-            background: linear-gradient(135deg, var(--blue-700), var(--blue-400));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .tagline {
-            font-size: 1.5rem;
-            color: var(--color-text-secondary);
-            margin-bottom: var(--space-8);
-        }
-
-        .subtitle {
-            font-size: 1.2rem;
-            color: var(--color-text-secondary);
-            margin-bottom: var(--space-8);
-        }
-
-        .team {
-            font-size: 1rem;
-            color: var(--color-text-secondary);
-            margin-bottom: var(--space-32);
-        }
-
-        .start-btn {
-            background: var(--color-primary);
-            color: var(--color-white);
-            padding: 16px 40px;
-            border: none;
-            border-radius: var(--radius-full);
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 12px rgba(var(--blue-500-rgb), 0.3);
-        }
-
-        .start-btn:hover {
-            background: var(--color-primary-hover);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(var(--blue-500-rgb), 0.4);
-        }
-
-        /* Slide 2 - Problem */
-        .slide-2 {
-            background: var(--color-bg-4);
-        }
-
-        .slide-title {
-            font-size: 3rem;
-            font-weight: 700;
-            margin-bottom: var(--space-32);
-            text-align: center;
-        }
-
-        .hook {
-            font-size: 1.3rem;
-            line-height: 1.6;
-            margin-bottom: var(--space-32);
-            padding: var(--space-24);
-            background: var(--color-surface);
-            border-radius: var(--radius-lg);
-            border-left: 4px solid var(--color-red-400);
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: var(--space-24);
-            margin-bottom: var(--space-32);
-        }
-
-        .stat-card {
-            background: var(--color-surface);
-            padding: var(--space-24);
-            border-radius: var(--radius-lg);
-            border: 1px solid var(--color-card-border);
-            text-align: center;
-        }
-
-        .stat-number {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: var(--color-primary);
-            margin-bottom: var(--space-8);
-        }
-
-        .stat-detail {
-            font-size: 1rem;
-            color: var(--color-text-secondary);
-        }
-
-        .pain-points {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: var(--space-16);
-        }
-
-        .pain-point {
-            background: var(--color-surface);
-            padding: var(--space-16);
-            border-radius: var(--radius-lg);
-            border: 1px solid var(--color-card-border);
-            display: flex;
-            align-items: center;
-            gap: var(--space-16);
-        }
-
-        .pain-icon {
-            font-size: 2rem;
-        }
-
-        /* Slide 3 - Solution */
-        .slide-3 {
-            background: var(--color-bg-3);
-        }
-
-        .solution-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: var(--space-32);
-            align-items: center;
-        }
-
-        .screenshot {
-            width: 100%;
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-lg);
-            border: 1px solid var(--color-card-border);
-        }
-
-        .solution-text h3 {
-            font-size: 1.5rem;
-            margin-bottom: var(--space-16);
-        }
-
-        .solution-text p {
-            font-size: 1.1rem;
-            line-height: 1.6;
-            margin-bottom: var(--space-16);
-            color: var(--color-text-secondary);
-        }
-
-        .flow-diagram {
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            margin-top: var(--space-24);
-            padding: var(--space-24);
-            background: var(--color-surface);
-            border-radius: var(--radius-lg);
-            border: 1px solid var(--color-card-border);
-        }
-
-        .flow-step {
-            text-align: center;
-        }
-
-        .flow-arrow {
-            font-size: 2rem;
-            color: var(--color-primary);
-        }
-
-        /* Slide 4 - Features */
-        .slide-4 {
-            background: var(--color-bg-5);
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: var(--space-24);
-        }
-
-        .feature-card {
-            background: var(--color-surface);
-            padding: var(--space-24);
-            border-radius: var(--radius-lg);
-            border: 1px solid var(--color-card-border);
-            transition: all 0.3s ease;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .feature-icon {
-            font-size: 2.5rem;
-            margin-bottom: var(--space-16);
-        }
-
-        .feature-card h3 {
-            font-size: 1.3rem;
-            margin-bottom: var(--space-16);
-        }
-
-        .feature-card ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        .feature-card li {
-            padding: var(--space-8) 0;
-            color: var(--color-text-secondary);
-            position: relative;
-            padding-left: var(--space-24);
-        }
-
-        .feature-card li::before {
-            content: "✓";
-            position: absolute;
-            left: 0;
-            color: var(--color-primary);
-            font-weight: bold;
-        }
-
-        /* Slide 5 - Tech Stack */
-        .slide-5 {
-            background: var(--color-bg-1);
-        }
-
-        .tech-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: var(--space-16);
-        }
-
-        .tech-card {
-            background: var(--color-surface);
-            padding: var(--space-24);
-            border-radius: var(--radius-lg);
-            border: 1px solid var(--color-card-border);
-            text-align: center;
-        }
-
-        .tech-label {
-            font-size: 0.9rem;
-            color: var(--color-text-secondary);
-            margin-bottom: var(--space-8);
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .tech-value {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: var(--color-text);
-        }
-
-        /* Slide 6 - Testimonials */
-        .slide-6 {
-            background: var(--color-bg-7);
-        }
-
-        .testimonials-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: var(--space-24);
-        }
-
-        .testimonial-card {
-            background: var(--color-surface);
-            padding: var(--space-32);
-            border-radius: var(--radius-lg);
-            border: 1px solid var(--color-card-border);
-            position: relative;
-        }
-
-        .quote-icon {
-            font-size: 3rem;
-            color: var(--color-primary);
-            opacity: 0.3;
-            position: absolute;
-            top: var(--space-16);
-            left: var(--space-24);
-        }
-
-        .testimonial-quote {
-            font-size: 1.1rem;
-            line-height: 1.6;
-            margin-bottom: var(--space-24);
-            font-style: italic;
-            color: var(--color-text-secondary);
-            position: relative;
-            z-index: 1;
-        }
-
-        .testimonial-author {
-            font-weight: 600;
-            color: var(--color-text);
-        }
-
-        .testimonial-role {
-            font-size: 0.9rem;
-            color: var(--color-text-secondary);
-        }
-
-        /* Slide 7 - Impact */
-        .slide-7 {
-            background: var(--color-bg-3);
-        }
-
-        .impact-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: var(--space-24);
-        }
-
-        .impact-card {
-            background: var(--color-surface);
-            padding: var(--space-32);
-            border-radius: var(--radius-lg);
-            border: 1px solid var(--color-card-border);
-            text-align: center;
-        }
-
-        .impact-metric {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--color-primary);
-            margin-bottom: var(--space-8);
-        }
-
-        .impact-label {
-            font-size: 1rem;
-            color: var(--color-text-secondary);
-        }
-
-        /* Slide 8 - Business Model */
-        .slide-8 {
-            background: var(--color-bg-2);
-        }
-
-        .pricing-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: var(--space-24);
-            margin-bottom: var(--space-32);
-        }
-
-        .pricing-card {
-            background: var(--color-surface);
-            padding: var(--space-32);
-            border-radius: var(--radius-lg);
-            border: 1px solid var(--color-card-border);
-            text-align: center;
-        }
-
-        .pricing-card.featured {
-            border: 2px solid var(--color-primary);
-            transform: scale(1.05);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .price {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: var(--color-primary);
-            margin: var(--space-16) 0;
-        }
-
-        .pricing-features {
-            list-style: none;
-            padding: 0;
-            margin: var(--space-24) 0;
-        }
-
-        .pricing-features li {
-            padding: var(--space-8) 0;
-            color: var(--color-text-secondary);
-        }
-
-        .profitability {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: var(--space-16);
-            padding: var(--space-24);
-            background: var(--color-surface);
-            border-radius: var(--radius-lg);
-            border: 1px solid var(--color-card-border);
-        }
-
-        .profit-item {
-            text-align: center;
-        }
-
-        .profit-value {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--color-primary);
-        }
-
-        /* Slide 9 - Responsible AI */
-        .slide-9 {
-            background: var(--color-bg-6);
-        }
-
-        .security-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: var(--space-16);
-        }
-
-        .security-item {
-            background: var(--color-surface);
-            padding: var(--space-24);
-            border-radius: var(--radius-lg);
-            border: 1px solid var(--color-card-border);
-            display: flex;
-            align-items: center;
-            gap: var(--space-16);
-        }
-
-        .security-icon {
-            font-size: 2rem;
-        }
-
-        /* Slide 10 - Roadmap */
-        .slide-10 {
-            background: var(--color-bg-5);
-        }
-
-        .roadmap-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: var(--space-24);
-        }
-
-        .roadmap-item {
-            background: var(--color-surface);
-            padding: var(--space-24);
-            border-radius: var(--radius-lg);
-            border: 1px solid var(--color-card-border);
-            position: relative;
-        }
-
-        .roadmap-icon {
-            font-size: 2.5rem;
-            margin-bottom: var(--space-16);
-        }
-
-        .roadmap-item h3 {
-            font-size: 1.2rem;
-            margin-bottom: var(--space-8);
-        }
-
-        /* Slide 11 - CTA */
-        .slide-11 {
-            background: linear-gradient(135deg, var(--color-bg-8) 0%, var(--color-bg-1) 100%);
-            text-align: center;
-        }
-
-        .cta-btn {
-            background: var(--color-primary);
-            color: var(--color-white);
-            padding: 20px 50px;
-            border: none;
-            border-radius: var(--radius-full);
-            font-size: 1.3rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 6px 20px rgba(var(--blue-500-rgb), 0.4);
-            text-decoration: none;
-            display: inline-block;
-            margin: var(--space-32) 0;
-        }
-
-        .cta-btn:hover {
-            background: var(--color-primary-hover);
-            transform: translateY(-3px);
-            box-shadow: 0 8px 30px rgba(var(--blue-500-rgb), 0.5);
-        }
-
-        .app-url {
-            font-size: 1.2rem;
-            color: var(--color-text-secondary);
-            margin: var(--space-24) 0;
-            word-break: break-all;
-        }
-
-        .thank-you {
-            font-size: 2rem;
-            font-weight: 600;
-            margin-top: var(--space-32);
-        }
-
-        /* Responsive */
-        /* Manual Theme Switching */
-        [data-theme="dark"] {
-            --color-background: #0d1117;
-            --color-surface: #161b22;
-            --color-text: #e6edf3;
-            --color-text-secondary: #7d8590;
-            --color-primary: var(--blue-400);
-            --color-primary-hover: var(--blue-500);
-            --color-primary-active: var(--blue-600);
-            --color-border: rgba(255, 255, 255, 0.2);
-            --color-card-border: #30363d;
-        }
-
-        [data-theme="light"] {
-            --color-background: #ffffff;
-            --color-surface: #f6f8fa;
-            --color-text: #1f2328;
-            --color-text-secondary: #656d76;
-            --color-primary: var(--blue-600);
-            --color-primary-hover: var(--blue-700);
-            --color-primary-active: var(--blue-800);
-            --color-border: rgba(0, 0, 0, 0.15);
-            --color-card-border: #d0d7de;
-        }
-
-        /* Smooth transitions for theme changes */
-        body, .slide, .card, .nav-controls, .control-btn {
-            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
-        }
-
-        @media (max-width: 768px) {
-            .controls-header {
-                top: var(--space-16);
-                right: var(--space-16);
-            }
-            
-            .control-btn {
-                width: 40px;
-                height: 40px;
-                font-size: 1rem;
-            }
-            .app-title {
-                font-size: 2.5rem;
-            }
-
-            .slide-title {
-                font-size: 2rem;
-            }
-
-            .solution-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .testimonials-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .pricing-card.featured {
-                transform: scale(1);
-            }
-
-            .profitability {
-                grid-template-columns: 1fr;
-            }
-
-            .logo {
-                width: 80px;
-                height: 80px;
-            }
         }
     </style>
 </head>
-<body data-theme="light">
-    <!-- Theme and Language Controls -->
-    <div class="controls-header">
-        <button class="control-btn" id="themeToggle" onclick="toggleTheme()" title="Toggle Dark/Light Mode">
-            <span id="themeIcon">🌙</span>
-        </button>
-        <button class="control-btn" id="langToggle" onclick="toggleLanguage()" title="Switch Language">
-            <span id="langIcon">EN</span>
-        </button>
-    </div>
-    <div class="pitch-deck" id="pitchDeck">
-        <!-- Slide 1: Title -->
-        <section class="slide slide-1" id="slide-1">
-            <div class="slide-content">
-                <img src="https://raw.githubusercontent.com/masisparmo/scannerkartunamallama/refs/heads/fitur-impor-ekspor/scanner-pintar.png" alt="Scanner Pintar Logo" class="logo">
-                <h1 class="app-title">SCANNER PINTAR</h1>
-                <p class="tagline">Smart Scan, Smarter Business</p>
-                <p class="subtitle">Hackathon Meta-Llama 2025</p>
-                <p class="team">Isparmo (Team Leader) &amp; Mohamad Hasan (Technical Lead)</p>
-                <button class="start-btn" onclick="nextSlide()">Mulai Presentasi</button>
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200 transition-colors duration-300">
+
+    <!-- ===== HEADER / NAVIGASI ===== -->
+    <header class="fixed top-0 left-0 right-0 z-50 w-full bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg shadow-sm dark:shadow-gray-800 border-b border-gray-200 dark:border-gray-700">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <a href="#" class="flex items-center space-x-2">
+                    <img src="https://raw.githubusercontent.com/masisparmo/scannerkartunamallama/refs/heads/fitur-impor-ekspor/scanner-pintar.png" alt="Scanner Pintar Logo" class="h-8 w-8">
+                    <span class="font-bold text-xl text-primary-600 dark:text-primary-500" data-lang-key="app_title">Scanner Pintar</span>
+                </a>
+                
+                <!-- Navigasi Desktop -->
+                <div class="hidden md:flex md:items-center md:space-x-6">
+                    <a href="#problem" class="font-medium text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400" data-lang-key="nav_problem">Masalah</a>
+                    <a href="#solution" class="font-medium text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400" data-lang-key="nav_solution">Solusi</a>
+                    <a href="#features" class="font-medium text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400" data-lang-key="nav_features">Fitur</a>
+                    <a href="#validation" class="font-medium text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400" data-lang-key="nav_validation">Validasi</a>
+                    <a href="#businessmodel" class="font-medium text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-4F00" data-lang-key="nav_model">Model Bisnis</a>
+                    <a href="#team" class="font-medium text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400" data-lang-key="nav_team">Tim</a>
+                </div>
+                
+                <!-- Tombol Toggles -->
+                <div class="flex items-center space-x-3">
+                    <button id="lang-toggle" class="p-2 rounded-full text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800" aria-label="Ganti Bahasa">
+                        <span class="font-semibold text-sm">ID</span>
+                    </button>
+                    <button id="theme-toggle" class="p-2 rounded-full text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800" aria-label="Ganti Tema">
+                        <!-- FIX: Ikon Sun SVG Inline -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 block dark:hidden">
+                            <circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path>
+                        </svg>
+                        <!-- FIX: Ikon Moon SVG Inline -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 hidden dark:block">
+                            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+                        </svg>
+                    </button>
+                    <!-- Tombol Coba Aplikasi -->
+                    <a href="https://scankartunama.isparmo.com/" target="_blank" class="hidden sm:inline-block bg-primary-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-primary-700 transition-colors" data-lang-key="btn_try_app">
+                        Coba Aplikasi
+                    </a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <main class="pt-16">
+
+        <!-- ===== HERO SECTION ===== -->
+        <section id="hero" class="relative container mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-32 overflow-hidden">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                <!-- Teks Hero -->
+                <div class="text-center md:text-left">
+                    <span class="inline-block bg-primary-100 dark:bg-primary-900/50 text-primary-700 dark:text-primary-300 px-4 py-1 rounded-full text-sm font-medium mb-4" data-lang-key="hero_category">
+                        Peningkatan Produktivitas
+                    </span>
+                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-gray-900 dark:text-white mb-4">
+                        <span data-lang-key="app_title">Scanner Pintar</span>
+                    </h1>
+                    <p class="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-8" data-lang-key="hero_tagline">
+                        Smart Scan, Smarter Business.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+                        <a href="https://scankartunama.isparmo.com/" target="_blank" class="bg-primary-600 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-primary-700 transition-colors shadow-lg" data-lang-key="btn_try_app">
+                            Coba Aplikasi
+                        </a>
+                        <a href="#features" class="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-8 py-3 rounded-lg text-lg font-semibold hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors" data-lang-key="btn_learn_more">
+                            Pelajari Fitur
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Gambar Hero -->
+                <div class="relative flex justify-center">
+                    <div class="absolute -inset-2 bg-gradient-to-r from-primary-400 to-blue-600 rounded-full opacity-30 dark:opacity-20 blur-3xl"></div>
+                    <img src="https://raw.githubusercontent.com/masisparmo/scannerkartunamallama/refs/heads/fitur-impor-ekspor/scanner-pintar_ui_dark.jpg" 
+                         alt="Screenshot Aplikasi Scanner Pintar" 
+                         class="relative w-full max-w-sm rounded-3xl shadow-2xl transform md:rotate-3"
+                         onerror="this.src='https://placehold.co/400x800/1e3a8a/dbeafe?text=Scanner+Pintar+UI'; this.onerror=null;">
+                </div>
             </div>
         </section>
 
-        <!-- Slide 2: Problem Statement -->
-        <section class="slide slide-2" id="slide-2">
-            <div class="slide-content">
-                <h2 class="slide-title">Masalah yang Dihadapi</h2>
-                <div class="hook">
-                    <strong>📌 Cerita Nyata:</strong> Marketing Manager kehilangan ratusan prospek di pameran JI Expo karena penyelenggara tidak membagikan data kontak pengunjung
+        <!-- ===== PROBLEM SECTION ===== -->
+        <section id="problem" class="py-20 md:py-28 bg-white dark:bg-gray-800/50">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-3xl mx-auto mb-16">
+                    <h2 class="text-base font-semibold text-primary-600 dark:text-primary-400" data-lang-key="problem_subtitle">Masalah</h2>
+                    <p class="mt-2 text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white" data-lang-key="problem_title">"Gesekan Produktivitas" yang Mahal</p>
+                    <p class="mt-4 text-lg text-gray-600 dark:text-gray-300" data-lang-key="problem_hook_intro">
+                        Bayangkan Anda baru saja selesai pameran besar. Ratusan prospek terkumpul, tapi...
+                    </p>
                 </div>
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-number">17.6%</div>
-                        <div class="stat-detail">waktu tenaga penjual = 7 jam per minggu untuk entri data manual</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number">&lt; 30%</div>
-                        <div class="stat-detail">waktu untuk benar-benar menjual (Salesforce)</div>
-                    </div>
+                
+                <!-- Hook Story -->
+                <div class="bg-primary-50 dark:bg-primary-900/30 border border-primary-200 dark:border-primary-700/50 rounded-xl p-8 max-w-4xl mx-auto text-center mb-16 shadow-lg">
+                    <!-- FIX: Ikon Alert-Triangle SVG Inline -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-12 w-12 text-primary-500 mx-auto mb-4">
+                        <path d="m21.73 18-8-14a2 2 0 0 0-3.46 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path><path d="M12 9v4"></path><path d="M12 17h.01"></path>
+                    </svg>
+                    <p class="text-xl font-medium text-gray-800 dark:text-gray-100" data-lang-key="problem_hook_quote">
+                        "Maaf, karena regulasi, kami tidak bisa membagikan nomor telepon atau WhatsApp pengunjung."
+                    </p>
+                    <p class="mt-2 text-gray-600 dark:text-gray-400" data-lang-key="problem_hook_desc">
+                        Ratusan prospek potensial, hilang dalam sekejap. Ini adalah pengalaman nyata yang melahirkan Scanner Pintar.
+                    </p>
                 </div>
-                <div class="pain-points">
-                    <div class="pain-point">
-                        <div class="pain-icon">⏱️</div>
-                        <div>
-                            <strong>Kehilangan Produktivitas</strong><br>
-                            <span style="color: var(--color-text-secondary);">7 jam/minggu untuk administrasi</span>
-                        </div>
-                    </div>
-                    <div class="pain-point">
-                        <div class="pain-icon">⏰</div>
-                        <div>
-                            <strong>Latensi Follow-up</strong><br>
-                            <span style="color: var(--color-text-secondary);">Berhari-hari delay menurunkan konversi</span>
-                        </div>
-                    </div>
-                    <div class="pain-point">
-                        <div class="pain-icon">❌</div>
-                        <div>
-                            <strong>Human Error</strong><br>
-                            <span style="color: var(--color-text-secondary);">Kartu hilang, data salah ketik</span>
-                        </div>
-                    </div>
 
+                <!-- Poin Masalah Inti -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
+                        <!-- FIX: Ikon Clock SVG Inline -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-10 w-10 text-primary-600 dark:text-primary-400 mb-4">
+                            <circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white" data-lang-key="problem1_title">Kehilangan Produktivitas</h3>
+                        <p class="mt-2 text-gray-600 dark:text-gray-400" data-lang-key="problem1_desc">
+                            Tim sales menghabiskan ~7 jam per minggu hanya untuk entri data manual. Waktu yang seharusnya untuk menjual.
+                        </p>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
+                        <!-- FIX: Ikon Trending-Down SVG Inline -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-10 w-10 text-primary-600 dark:text-primary-400 mb-4">
+                            <polyline points="22 17 13.5 8.5 8.5 13.5 2 7"></polyline><polyline points="16 17 22 17 22 11"></polyline>
+                        </svg>
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white" data-lang-key="problem2_title">Latensi Follow-up</h3>
+                        <p class="mt-2 text-gray-600 dark:text-gray-400" data-lang-key="problem2_desc">
+                            Jeda berhari-hari antara menerima kartu dan input ke CRM membuat momentum hilang dan konversi menurun drastis.
+                        </p>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
+                        <!-- FIX: Ikon X-Circle SVG Inline -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-10 w-10 text-primary-600 dark:text-primary-400 mb-4">
+                            <circle cx="12" cy="12" r="10"></circle><path d="m15 9-6 6"></path><path d="m9 9 6 6"></path>
+                        </svg>
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white" data-lang-key="problem3_title">Human Error & Kehilangan Data</h3>
+                        <p class="mt-2 text-gray-600 dark:text-gray-400" data-lang-key="problem3_desc">
+                            Kartu nama hilang, terselip, atau salah ketik saat input manual. Satu angka salah berarti satu prospek hilang selamanya.
+                        </p>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- Slide 3: Solution -->
-        <section class="slide slide-3" id="slide-3">
-            <div class="slide-content">
-                <h2 class="slide-title">Solusi Kami</h2>
-                <div class="solution-grid">
+        <!-- ===== IMPACT SECTION (BARU) ===== -->
+        <section id="impact" class="py-20 md:py-28">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-3xl mx-auto mb-16">
+                    <h2 class="text-base font-semibold text-primary-600 dark:text-primary-400" data-lang-key="impact_subtitle">Dampak (Impact)</h2>
+                    <p class="mt-2 text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white" data-lang-key="impact_title">Mengubah Waktu Administrasi Menjadi Waktu Produktif</p>
+                    <p class="mt-4 text-lg text-gray-600 dark:text-gray-300" data-lang-key="impact_desc">
+                        Solusi kami secara langsung mengatasi masalah bernilai tinggi di dunia bisnis.
+                    </p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <!-- Dampak 1 -->
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 hover:shadow-2xl transition-shadow duration-300">
+                        <div class="bg-primary-100 dark:bg-primary-900/50 text-primary-600 dark:text-primary-400 w-12 h-12 rounded-lg flex items-center justify-center mb-5">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-briefcase">
+                                <rect width="20" height="14" x="2" y="7" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white" data-lang-key="impact1_title">Penghematan Waktu Drastis</h3>
+                        <p class="mt-2 text-gray-600 dark:text-gray-400" data-lang-key="impact1_desc">
+                            Mengubah ~7 jam kerja administrasi per minggu per sales menjadi waktu produktif untuk follow-up.
+                        </p>
+                    </div>
+                    <!-- Dampak 2 -->
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 hover:shadow-2xl transition-shadow duration-300">
+                        <div class="bg-primary-100 dark:bg-primary-900/50 text-primary-600 dark:text-primary-400 w-12 h-12 rounded-lg flex items-center justify-center mb-5">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trending-up">
+                                <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline><polyline points="16 7 22 7 22 13"></polyline>
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white" data-lang-key="impact2_title">Akselerasi Siklus Penjualan</h3>
+                        <p class="mt-2 text-gray-600 dark:text-gray-400" data-lang-key="impact2_desc">
+                            Mempercepat proses follow-up dari 24-48 jam menjadi di bawah 1 jam, meningkatkan konversi prospek acara.
+                        </p>
+                    </div>
+                    <!-- Dampak 3 -->
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 hover:shadow-2xl transition-shadow duration-300">
+                        <div class="bg-primary-100 dark:bg-primary-900/50 text-primary-600 dark:text-primary-400 w-12 h-12 rounded-lg flex items-center justify-center mb-5">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check-circle-2">
+                                <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path><path d="m9 12 2 2 4-4"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white" data-lang-key="impact3_title">Peningkatan Kualitas Data</h3>
+                        <p class="mt-2 text-gray-600 dark:text-gray-400" data-lang-key="impact3_desc">
+                            Menghilangkan human error dari entri data manual, menghasilkan database CRM yang bersih dan andal.
+                        </p>
+                    </div>
+                    <!-- Dampak 4 -->
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 hover:shadow-2xl transition-shadow duration-300">
+                        <div class="bg-primary-100 dark:bg-primary-900/50 text-primary-600 dark:text-primary-400 w-12 h-12 rounded-lg flex items-center justify-center mb-5">
+                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-smile">
+                                <circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><line x1="9" x2="9.01" y1="9" y2="9"></line><line x1="15" x2="15.01" y1="9" y2="9"></line>
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white" data-lang-key="impact4_title">Pengalaman Pengguna (CX)</h3>
+                        <p class="mt-2 text-gray-600 dark:text-gray-400" data-lang-key="impact4_desc">
+                            Mengubah tugas yang membosankan dan rentan kesalahan menjadi pengalaman yang cepat, cerdas, dan memuaskan.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ===== VALIDATION SECTION ===== -->
+        <section id="validation" class="py-20 md:py-28 bg-white dark:bg-gray-800/50">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
                     <div>
-                        <img src="https://raw.githubusercontent.com/masisparmo/scannerkartunamallama/refs/heads/fitur-impor-ekspor/scanner-pintar_ui_dark.jpg" alt="Scanner Pintar App Screenshot" class="screenshot">
+                        <h2 class="text-base font-semibold text-primary-600 dark:text-primary-400" data-lang-key="solution_subtitle">Solusi</h2>
+                        <p class="mt-2 text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white" data-lang-key="solution_title">Jembatan Cerdas Antara Fisik & Digital</p>
+                        <p class="mt-6 text-lg text-gray-600 dark:text-gray-300" data-lang-key="solution_desc1">
+                            Kami tidak hanya membuat "scanner". Kami membangun <strong>jembatan cerdas</strong> antara interaksi fisik dan efisiensi digital.
+                        </p>
+                        <p class="mt-4 text-lg text-gray-600 dark:text-gray-300" data-lang-key="solution_desc2">
+                            <!-- UPDATE: Menambahkan 'Maverick' sesuai dokumen -->
+                            <strong>Scanner Pintar</strong> adalah Progressive Web App (PWA) bertenaga AI (Llama 4 Maverick) yang mengubah smartphone Anda menjadi alat akuisiensi prospek instan.
+                        </p>
+                        <p class="mt-4 text-lg text-gray-600 dark:text-gray-300" data-lang-key="solution_desc3">
+                            Satu kali foto, aplikasi kami tidak hanya mengekstrak teks (OCR), tetapi <strong>memahami, menstrurukturkan, dan mengklasifikasikan</strong> data kontak secara cerdas.
+                        </p>
                     </div>
-                    <div class="solution-text">
-                        <h3>Progressive Web App Bertenaga AI</h3>
-                        <p>PWA bertenaga AI Llama 4 Maverick yang mengubah smartphone menjadi alat akuisisi prospek instan dan cerdas</p>
-                        <div class="flow-diagram">
-                            <div class="flow-step">
-                                <div style="font-size: 2rem;">📸</div>
-                                <div>Foto</div>
-                            </div>
-                            <div class="flow-arrow">→</div>
-                            <div class="flow-step">
-                                <div style="font-size: 2rem;">🤖</div>
-                                <div>AI Analysis</div>
-                            </div>
-                            <div class="flow-arrow">→</div>
-                            <div class="flow-step">
-                                <div style="font-size: 2rem;">📊</div>
-                                <div>Data Terstruktur</div>
-                            </div>
+                    
+                    <div class="flex items-center justify-center p-8 bg-white dark:bg-gray-800/50 rounded-xl shadow-xl border border-gray-200 dark:border-gray-700">
+                        <div class="text-center">
+                            <!-- FIX: Ikon Contact SVG Inline -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-20 w-20 text-gray-400 dark:text-gray-500">
+                                <path d="M17 18a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2"></path><rect width="18" height="18" x="3" y="4" rx="2"></rect><circle cx="12" cy="10" r="2"></circle><line x1="8" x2="8" y1="2" y2="4"></line><line x1="16" x2="16" y1="2" y2="4"></line>
+                            </svg>
+                            <p class="font-semibold text-gray-500 dark:text-gray-400" data-lang-key="solution_from">Kartu Nama Fisik</p>
+                        </div>
+                        <!-- FIX: Ikon Arrow-Right SVG Inline -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-16 w-16 text-primary-500 mx-8 shrink-0">
+                            <path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path>
+                        </svg>
+                        <div class="text-center">
+                            <!-- FIX: Ikon Database SVG Inline -->
+                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-20 w-20 text-primary-600 dark:text-primary-400">
+                                <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M3 5V19A9 3 0 0 0 21 19V5"></path><path d="M3 12A9 3 0 0 0 21 12"></path>
+                            </svg>
+                             <p class="font-semibold text-primary-600 dark:text-primary-400" data-lang-key="solution_to">Data Terstruktur</p>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Slide 4: Key Features -->
-        <section class="slide slide-4" id="slide-4">
-            <div class="slide-content">
-                <h2 class="slide-title">Fitur Utama</h2>
-                <div class="features-grid">
-                    <div class="feature-card">
-                        <div class="feature-icon">🧠</div>
-                        <h3>Pemindaian Cerdas</h3>
-                        <ul>
-                            <li>Ekstraksi data kontekstual (nama, jabatan, perusahaan, email, telepon, WhatsApp)</li>
-                            <li>Klasifikasi industri otomatis</li>
+        <!-- ===== FEATURES SECTION ===== -->
+        <section id="features" class="py-20 md:py-28 bg-white dark:bg-gray-800/50">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-3xl mx-auto mb-16">
+                    <h2 class="text-base font-semibold text-primary-600 dark:text-primary-400" data-lang-key="features_subtitle">Fitur Utama</h2>
+                    <p class="mt-2 text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white" data-lang-key="features_title">Didukung oleh AI Cerdas</p>
+                    <p class="mt-4 text-lg text-gray-600 dark:text-gray-300" data-lang-key="features_desc">
+                        Semua yang Anda butuhkan untuk mengubah pertemuan menjadi peluang.
+                    </p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <!-- Fitur 1 -->
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 hover:shadow-2xl transition-shadow duration-300">
+                        <div class="bg-primary-100 dark:bg-primary-900/50 text-primary-600 dark:text-primary-400 w-12 h-12 rounded-lg flex items-center justify-center mb-5">
+                            <!-- FIX: Ikon Scan-Face SVG Inline -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-scan-face">
+                                <path d="M3 7V5a2 2 0 0 1 2-2h2"></path><path d="M17 3h2a2 2 0 0 1 2 2v2"></path><path d="M21 17v2a2 2 0 0 1-2 2h-2"></path><path d="M7 21H5a2 2 0 0 1-2-2v-2"></path><path d="M8 13a2 2 0 0 0-2 2v1"></path><path d="M18 13a2 2 0 0 1-2 2v1"></path><path d="M12 12c-1.66 0-3-1.79-3-4s1.34-4 3-4 3 1.79 3 4-1.34 4-3 4Z"></path><path d="M12 12h.01"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white" data-lang-key="feature1_title">Pemindaian Cerdas (AI)</h3>
+                        <p class="mt-2 text-gray-600 dark:text-gray-400" data-lang-key="feature1_desc">
+                            <!-- UPDATE: Deskripsi diperbarui dari dokumen -->
+                            Otomatis membedakan nama, jabatan, email, telepon kantor, WA, & mengklasifikasikan industri (misal: "Tambang", "Kontraktor").
+                        </p>
+                    </div>
+                    <!-- Fitur 2 -->
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 hover:shadow-2xl transition-shadow duration-300">
+                        <div class="bg-primary-100 dark:bg-primary-900/50 text-primary-600 dark:text-primary-400 w-12 h-12 rounded-lg flex items-center justify-center mb-5">
+                            <!-- FIX: Ikon Zap SVG Inline -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-zap">
+                                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white" data-lang-key="feature2_title">Tindakan Cepat Berbasis AI</h3>
+                        <p class="mt-2 text-gray-600 dark:text-gray-400" data-lang-key="feature2_desc">
+                            Satu klik untuk membuat draf email atau pesan WhatsApp follow-up profesional yang sudah dipersonalisasi.
+                        </p>
+                    </div>
+                    <!-- Fitur 3 -->
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 hover:shadow-2xl transition-shadow duration-300">
+                        <div class="bg-primary-100 dark:bg-primary-900/50 text-primary-600 dark:text-primary-400 w-12 h-12 rounded-lg flex items-center justify-center mb-5">
+                            <!-- FIX: Ikon Database SVG Inline -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-database">
+                                <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M3 5V19A9 3 0 0 0 21 19V5"></path><path d="M3 12A9 3 0 0 0 21 12"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white" data-lang-key="feature3_title">Manajemen Kontak Offline</h3>
+                        <p class="mt-2 text-gray-600 dark:text-gray-400" data-lang-key="feature3_desc">
+                            Semua data disimpan aman di IndexedDB peramban Anda. Akses, kelola, dan edit kontak bahkan tanpa internet.
+                        </p>
+                    </div>
+                    <!-- Fitur 4 -->
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 hover:shadow-2xl transition-shadow duration-300">
+                        <div class="bg-primary-100 dark:bg-primary-900/50 text-primary-600 dark:text-primary-400 w-12 h-12 rounded-lg flex items-center justify-center mb-5">
+                            <!-- FIX: Ikon Share-2 SVG Inline -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-share-2">
+                                <circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"></line><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"></line>
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white" data-lang-key="feature4_title">Ekspor Fleksibel</h3>
+                        <p class="mt-2 text-gray-600 dark:text-gray-400" data-lang-key="feature4_desc">
+                            <!-- UPDATE: Deskripsi diperbarui dari dokumen -->
+                            Ekspor data ke .CSV (CRM), .VCF (kontak HP), .ZIP, atau simpan online ke Google Sheet Anda.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== VALIDATION SECTION ===== -->
+        <section id="validation" class="py-20 md:py-28">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-3xl mx-auto mb-16">
+                    <h2 class="text-base font-semibold text-primary-600 dark:text-primary-400" data-lang-key="validation_subtitle">Validasi Pengguna</h2>
+                    <p class="mt-2 text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white" data-lang-key="validation_title">Apa Kata Target Audiens Kami</p>
+                    <p class="mt-4 text-lg text-gray-600 dark:text-gray-300" data-lang-key="validation_desc">
+                        Kami menguji prototipe fungsional kami pada para profesional di lapangan.
+                    </p>
+                </div>
+                
+                <!-- UPDATE: Grid diubah menjadi 2 kolom agar rapi -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Testimoni 1 -->
+                    <div class="bg-white dark:bg-gray-800/50 p-8 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
+                        <!-- FIX: Ikon Quote SVG Inline -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-10 w-10 text-primary-500 dark:text-primary-400 mb-4">
+                            <path d="M3 21c3 0 7-1 7-8V5c0-1.25-.75-2-2-2S6 3.75 6 5v6H3c-1 0-2 1-2 2v2c0 1 1 2 2 2z"></path><path d="M15 21c3 0 7-1 7-8V5c0-1.25-.75-2-2-2s-2 1.25-2 2v6h-3c-1 0-2 1-2 2v2c0 1 1 2 2 2z"></path>
+                        </svg>
+                        <blockquote class="text-lg text-gray-700 dark:text-gray-200 italic" data-lang-key="quote1_text">
+                            "Aplikasi yang sangat berguna... tidak ada istilah kata kartu nama client tercecer atau lupa taruh, karena semuanya sudah terangkum didalam satu database."
+                        </blockquote>
+                        <cite class="block mt-4 font-semibold text-gray-900 dark:text-white" data-lang-key="quote1_author">
+                            Tri Multibangun
+                            <span class="block text-sm font-normal text-gray-500 dark:text-gray-400" data-lang-key="quote1_role">Profesional IT</span>
+                        </cite>
+                    </div>
+                    <!-- Testimoni 2 -->
+                    <div class="bg-white dark:bg-gray-800/50 p-8 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
+                        <!-- FIX: Ikon Quote SVG Inline -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-10 w-10 text-primary-500 dark:text-primary-400 mb-4">
+                            <path d="M3 21c3 0 7-1 7-8V5c0-1.25-.75-2-2-2S6 3.75 6 5v6H3c-1 0-2 1-2 2v2c0 1 1 2 2 2z"></path><path d="M15 21c3 0 7-1 7-8V5c0-1.25-.75-2-2-2s-2 1.25-2 2v6h-3c-1 0-2 1-2 2v2c0 1 1 2 2 2z"></path>
+                        </svg>
+                        <blockquote class="text-lg text-gray-700 dark:text-gray-200 italic" data-lang-key="quote2_text">
+                            "overall sudah sangat bagus dan praktis... beberapa segmen/kolom sudah terisi dengan benar... ada beberapa segmen yang tidak tertangkap dengan baik... namun flaw ini hanya terjadi secara jarang, 1-2 cases saja."
+                        </blockquote>
+                        <cite class="block mt-4 font-semibold text-gray-900 dark:text-white" data-lang-key="quote2_author">
+                            Valdy Multibangun
+                            <span class="block text-sm font-normal text-gray-500 dark:text-gray-400" data-lang-key="quote2_role">Profesional Engineer</span>
+                        </cite>
+                    </div>
+                    <!-- UPDATE: Testimoni 3 Baru Ditambahkan -->
+                    <div class="bg-white dark:bg-gray-800/50 p-8 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
+                        <!-- FIX: Ikon Quote SVG Inline -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-10 w-10 text-primary-500 dark:text-primary-400 mb-4">
+                            <path d="M3 21c3 0 7-1 7-8V5c0-1.25-.75-2-2-2S6 3.75 6 5v6H3c-1 0-2 1-2 2v2c0 1 1 2 2 2z"></path><path d="M15 21c3 0 7-1 7-8V5c0-1.25-.75-2-2-2s-2 1.25-2 2v6h-3c-1 0-2 1-2 2v2c0 1 1 2 2 2z"></path>
+                        </svg>
+                        <blockquote class="text-lg text-gray-700 dark:text-gray-200 italic" data-lang-key="quote3_text">
+                            "...sangat memudahkan saya dalam input data kartu nama klien dengan akurat, apalagi disaat kondisi ramai, seperti saat exhibition, workshop dan saat meeting penting..."
+                        </blockquote>
+                        <cite class="block mt-4 font-semibold text-gray-900 dark:text-white" data-lang-key="quote3_author">
+                            Sandi MRP
+                            <span class="block text-sm font-normal text-gray-500 dark:text-gray-400" data-lang-key="quote3_role">Profesional</span>
+                        </cite>
+                    </div>
+                    <!-- UPDATE: Testimoni 4 Baru Ditambahkan -->
+                    <div class="bg-white dark:bg-gray-800/50 p-8 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
+                        <!-- FIX: Ikon Quote SVG Inline -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-10 w-10 text-primary-500 dark:text-primary-400 mb-4">
+                            <path d="M3 21c3 0 7-1 7-8V5c0-1.25-.75-2-2-2S6 3.75 6 5v6H3c-1 0-2 1-2 2v2c0 1 1 2 2 2z"></path><path d="M15 21c3 0 7-1 7-8V5c0-1.25-.75-2-2-2s-2 1.25-2 2v6h-3c-1 0-2 1-2 2v2c0 1 1 2 2 2z"></path>
+                        </svg>
+                        <blockquote class="text-lg text-gray-700 dark:text-gray-200 italic" data-lang-key="quote4_text">
+                            "Bagus banget, sangat membantu untuk mengumpulkan database dari kartu nama."
+                        </blockquote>
+                        <cite class="block mt-4 font-semibold text-gray-900 dark:text-white" data-lang-key="quote4_author">
+                            Karjo Genpro Tangerang
+                            <span class="block text-sm font-normal text-gray-500 dark:text-gray-400" data-lang-key="quote4_role">Pengguna</span>
+                        </cite>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== BUSINESS MODEL SECTION ===== -->
+        <section id="businessmodel" class="py-20 md:py-28 bg-white dark:bg-gray-800/50">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-3xl mx-auto mb-16">
+                    <h2 class="text-base font-semibold text-primary-600 dark:text-primary-400" data-lang-key="model_subtitle">Model Bisnis</h2>
+                    <p class="mt-2 text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white" data-lang-key="model_title">Model Freemium yang Skalabel</p>
+                    <p class="mt-4 text-lg text-gray-600 dark:text-gray-300" data-lang-key="model_desc">
+                        Akses gratis untuk akuisisi pengguna massal, dan paket Pro yang sangat terjangkau untuk tim profesional.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                    <!-- Paket Freemium -->
+                    <div class="border border-gray-300 dark:border-gray-700 rounded-xl p-8 shadow-lg">
+                        <h3 class="text-2xl font-bold text-gray-900 dark:text-white" data-lang-key="plan_free_title">Freemium</h3>
+                        <p class="text-4xl font-extrabold text-gray-900 dark:text-white my-4" data-lang-key="plan_free_price">Gratis</p>
+                        <p class="text-gray-600 dark:text-gray-400 mb-6" data-lang-key="plan_free_target">Untuk akuisisi pengguna massal & penggunaan individual.</p>
+                        <ul class="space-y-3">
+                            <li class="flex items-center space-x-3">
+                                <!-- FIX: Ikon Check SVG Inline -->
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 text-green-500">
+                                    <path d="M20 6 9 17l-5-5"></path>
+                                </svg>
+                                <!-- UPDATE: Kuota diubah sesuai permintaan -->
+                                <span class="text-gray-700 dark:text-gray-300" data-lang-key="plan_free_feat1">Kuota 20 scan/bulan</span>
+                            </li>
+                            <li class="flex items-center space-x-3">
+                                <!-- FIX: Ikon Check SVG Inline -->
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 text-green-500">
+                                    <path d="M20 6 9 17l-5-5"></path>
+                                </svg>
+                                <span class="text-gray-700 dark:text-gray-300" data-lang-key="plan_free_feat2">Penyimpanan lokal tak terbatas</span>
+                            </li>
+                            <li class="flex items-center space-x-3">
+                                <!-- FIX: Ikon Check SVG Inline -->
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 text-green-500">
+                                    <path d="M20 6 9 17l-5-5"></path>
+                                </svg>
+                                <span class="text-gray-700 dark:text-gray-300" data-lang-key="plan_free_feat3">Ekspor manual (.CSV / .VCF)</span>
+                            </li>
                         </ul>
                     </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">⚡</div>
-                        <h3>Tindakan Cepat Berbasis AI</h3>
-                        <ul>
-                            <li>Draf email follow-up profesional (1 klik)</li>
-                            <li>Draf pesan WhatsApp siap pakai</li>
-                        </ul>
-                    </div>
-
-                    <div class="feature-card">
-                        <div class="feature-icon">📤</div>
-                        <h3>Ekspor Fleksibel</h3>
-                        <ul>
-                            <li>Format CSV (Excel/CRM)</li>
-                            <li>Format VCF (kontak HP)</li>
-                            <li>Format ZIP (batch VCF)</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Slide 5: Tech Stack -->
-        <section class="slide slide-5" id="slide-5">
-            <div class="slide-content">
-                <h2 class="slide-title">Teknologi</h2>
-                <div class="tech-grid">
-                    <div class="tech-card">
-                        <div class="tech-label">AI Model</div>
-                        <div class="tech-value">Llama 4 Maverick</div>
-                    </div>
-                    <div class="tech-card">
-                        <div class="tech-label">AI Provider</div>
-                        <div class="tech-value">Groq</div>
-                    </div>
-                    <div class="tech-card">
-                        <div class="tech-label">Frontend</div>
-                        <div class="tech-value">PWA (HTML, Tailwind, JS)</div>
-                    </div>
-                    <div class="tech-card">
-                        <div class="tech-label">Backend</div>
-                        <div class="tech-value">Node.js + GCP Functions</div>
-                    </div>
-                    <div class="tech-card">
-                        <div class="tech-label">Database</div>
-                        <div class="tech-value">IndexedDB (browser)</div>
-                    </div>
-                    <div class="tech-card">
-                        <div class="tech-label">Hosting</div>
-                        <div class="tech-value">GitHub Pages + GCP</div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Slide 6: User Validation -->
-        <section class="slide slide-6" id="slide-6">
-            <div class="slide-content">
-                <h2 class="slide-title">Testimoni Pengguna</h2>
-                <div class="testimonials-grid">
-                    <div class="testimonial-card">
-                        <div class="quote-icon">&ldquo;</div>
-                        <p class="testimonial-quote">Aplikasi yang sangat berguna, terkhususnya untuk perusahaan yang sedang mengadakan pameran... tidak ada istilah kata kartu nama client tercecer atau lupa taruh, karena semuanya sudah terangkum didalam satu database.</p>
-                        <div class="testimonial-author">Tri Multibangun</div>
-                        <div class="testimonial-role">Profesional IT</div>
-                    </div>
-                    <div class="testimonial-card">
-                        <div class="quote-icon">&ldquo;</div>
-                        <p class="testimonial-quote">overall sudah sangat bagus dan praktis dalam penggunaannya, beberapa segmen/kolom sudah terisi dengan benar, contoh seperti nama, nomor telepon... ada beberapa segmen yang tidak tertangkap dengan baik... namun flaw ini hanya terjadi secara jarang, 1-2 cases saja.</p>
-                        <div class="testimonial-author">Valdy Multibangun</div>
-                        <div class="testimonial-role">Profesional Engineer</div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Slide 7: Impact -->
-        <section class="slide slide-7" id="slide-7">
-            <div class="slide-content">
-                <h2 class="slide-title">Dampak &amp; Hasil</h2>
-                <div class="impact-grid">
-                    <div class="impact-card">
-                        <div class="impact-metric">7 jam → menit</div>
-                        <div class="impact-label">Penghematan Waktu per Minggu</div>
-                    </div>
-                    <div class="impact-card">
-                        <div class="impact-metric">24-48 jam → &lt;1 jam</div>
-                        <div class="impact-label">Akselerasi Follow-up</div>
-                    </div>
-                    <div class="impact-card">
-                        <div class="impact-metric">Zero Error</div>
-                        <div class="impact-label">Peningkatan Kualitas Data</div>
-                    </div>
-                    <div class="impact-card">
-                        <div class="impact-metric">⭐ Cepat, Cerdas</div>
-                        <div class="impact-label">Pengalaman Pengguna</div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Slide 8: Business Model -->
-        <section class="slide slide-8" id="slide-8">
-            <div class="slide-content">
-                <h2 class="slide-title">Model Bisnis</h2>
-                <div class="pricing-grid">
-                    <div class="pricing-card">
-                        <h3>FREEMIUM</h3>
-                        <div class="price">GRATIS</div>
-                        <ul class="pricing-features">
-                            <li>✓ 10 scan/hari</li>
-                            <li>✓ Penyimpanan lokal unlimited</li>
-                            <li>✓ Ekspor manual</li>
-                        </ul>
-                    </div>
-                    <div class="pricing-card featured">
-                        <h3>PRO</h3>
-                        <div class="price">Rp 19.900<span style="font-size: 1rem;">/bulan</span></div>
-                        <ul class="pricing-features">
-                            <li>✓ Unlimited scan</li>
-                            <li>✓ Draf follow-up cerdas (Email &amp; WA)</li>
-                            <li>✓ Dukungan prioritas</li>
+                    
+                    <!-- Paket Pro -->
+                    <div class="border-2 border-primary-600 dark:border-primary-500 rounded-xl p-8 shadow-2xl relative">
+                        <span class="absolute top-0 -translate-y-1/2 bg-primary-600 text-white px-4 py-1 rounded-full text-sm font-semibold" data-lang-key="plan_pro_badge">Paling Populer</span>
+                        <h3 class="text-2xl font-bold text-primary-600 dark:text-primary-400" data-lang-key="plan_pro_title">Pro</h3>
+                        <p class="text-4xl font-extrabold text-gray-900 dark:text-white my-4">
+                            <span data-lang-key="plan_pro_price">Rp 19.900,-</span>
+                            <span class="text-lg font-normal text-gray-500 dark:text-gray-400" data-lang-key="plan_pro_per_month">/ bulan</span>
+                        </p>
+                        <p class="text-gray-600 dark:text-gray-400 mb-6" data-lang-key="plan_pro_target">Untuk power users, tim penjualan, dan perusahaan.</p>
+                        <ul class="space-y-3">
+                            <li class="flex items-center space-x-3">
+                                <!-- FIX: Ikon Check-Circle-2 SVG Inline -->
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 text-primary-600 dark:text-primary-400">
+                                    <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path><path d="m9 12 2 2 4-4"></path>
+                                </svg>
+                                <span class="font-semibold text-gray-700 dark:text-gray-300" data-lang-key="plan_pro_feat1">Scan Tak Terbatas</span>
+                            </li>
+                            <li class="flex items-center space-x-3">
+                                <!-- FIX: Ikon Check-Circle-2 SVG Inline -->
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 text-primary-600 dark:text-primary-400">
+                                    <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path><path d="m9 12 2 2 4-4"></path>
+                                </svg>
+                                <span class="font-semibold text-gray-700 dark:text-gray-300" data-lang-key="plan_pro_feat2">Draf Follow-up Cerdas (AI)</span>
+                            </li>
+                            <!-- UPDATE: Fitur kolaborasi dihapus sesuai permintaan -->
                         </ul>
                     </div>
                 </div>
-                <div class="profitability">
-                    <div class="profit-item">
-                        <div class="profit-value">Rp 3.468</div>
-                        <div>Biaya per User</div>
+            </div>
+        </section>
+        
+        <!-- ===== RESPONSIBLE AI SECTION (BARU) ===== -->
+        <section id="responsible-ai" class="py-20 md:py-28">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-3xl mx-auto mb-16">
+                    <h2 class="text-base font-semibold text-primary-600 dark:text-primary-400" data-lang-key="ai_subtitle">Responsible AI Implementation</h2>
+                    <p class="mt-2 text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white" data-lang-key="ai_title">Privasi & Kontrol Pengguna adalah Fondasi Kami</p>
+                    <p class="mt-4 text-lg text-gray-600 dark:text-gray-300" data-lang-key="ai_desc">
+                        Kami memahami bahwa data kontak adalah informasi yang sangat sensitif.
+                    </p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Prinsip 1 -->
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-10 w-10 text-primary-600 dark:text-primary-400 mb-4">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="m9 12 2 2 4-4"></path>
+                        </svg>
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white" data-lang-key="ai1_title">1. Prinsip Inti: Privasi & Kontrol</h3>
+                        <ul class="mt-2 space-y-3 text-gray-600 dark:text-gray-400">
+                            <li class="flex space-x-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 text-green-500 shrink-0 mt-1"><path d="M20 6 9 17l-5-5"></path></svg>
+                                <span data-lang-key="ai1_li1"><strong>Penyimpanan Sisi Klien:</strong> Data Anda adalah milik Anda. Disimpan di IndexedDB browser Anda, bukan server kami.</span>
+                            </li>
+                            <li class="flex space-x-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 text-green-500 shrink-0 mt-1"><path d="M20 6 9 17l-5-5"></path></svg>
+                                <span data-lang-key="ai1_li2"><strong>Persetujuan Eksplisit:</strong> Tidak ada akses kamera atau pengiriman data tanpa izin dan tindakan jelas dari Anda.</span>
+                            </li>
+                        </ul>
                     </div>
-                    <div class="profit-item">
-                        <div class="profit-value">82.6%</div>
-                        <div>Margin Keuntungan</div>
+                    <!-- Prinsip 2 -->
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-10 w-10 text-primary-600 dark:text-primary-400 mb-4">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                        </svg>
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white" data-lang-key="ai2_title">2. Keamanan dalam Pemrosesan</h3>
+                        <ul class="mt-2 space-y-3 text-gray-600 dark:text-gray-400">
+                            <li class="flex space-x-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 text-green-500 shrink-0 mt-1"><path d="M20 6 9 17l-5-5"></path></svg>
+                                <span data-lang-key="ai2_li1"><strong>Pemrosesan Ephemeral:</strong> Gambar diproses on-the-fly dan tidak disimpan di server kami setelah ekstraksi.</span>
+                            </li>
+                            <li class="flex space-x-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 text-green-500 shrink-0 mt-1"><path d="M20 6 9 17l-5-5"></path></svg>
+                                <span data-lang-key="ai2_li2"><strong>Interaksi Aman:</strong> Kami hanya meneruskan draf (Email/WA) ke aplikasi default Anda. Kami tidak memiliki akses login.</span>
+                            </li>
+                             <li class="flex space-x-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 text-green-500 shrink-0 mt-1"><path d="M20 6 9 17l-5-5"></path></svg>
+                                <span data-lang-key="ai2_li3"><strong>Transmisi Aman:</strong> Semua komunikasi dienkripsi menggunakan HTTPS.</span>
+                            </li>
+                        </ul>
                     </div>
-                    <div class="profit-item">
-                        <div class="profit-value">Rp 16.432</div>
-                        <div>Profit per User/Bulan</div>
+                    <!-- Prinsip 3 -->
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-10 w-10 text-primary-600 dark:text-primary-400 mb-4">
+                            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect><path d="m9 14 2 2 4-4"></path>
+                        </svg>
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white" data-lang-key="ai3_title">3. Transparansi & Akuntabilitas</h3>
+                        <ul class="mt-2 space-y-3 text-gray-600 dark:text-gray-400">
+                            <li class="flex space-x-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 text-green-500 shrink-0 mt-1"><path d="M20 6 9 17l-5-5"></path></svg>
+                                <span data-lang-key="ai3_li1"><strong>Mitigasi Halusinasi AI:</strong> Hasil pindaian adalah draf. Pengguna adalah editor akhir yang memverifikasi data sebelum disimpan, memberikan lapisan verifikasi manusia yang penting.</span>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Slide 9: Responsible AI -->
-        <section class="slide slide-9" id="slide-9">
-            <div class="slide-content">
-                <h2 class="slide-title">Privasi &amp; Keamanan</h2>
-                <div class="security-grid">
-                    <div class="security-item">
-                        <div class="security-icon">🔒</div>
-                        <div>
-                            <strong>Penyimpanan di sisi klien</strong><br>
-                            <span style="color: var(--color-text-secondary);">Data tersimpan di IndexedDB lokal</span>
-                        </div>
+        <!-- ===== TEAM SECTION ===== -->
+        <section id="team" class="py-20 md:py-28">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-3xl mx-auto mb-16">
+                    <h2 class="text-base font-semibold text-primary-600 dark:text-primary-400" data-lang-key="team_subtitle">Tim Pengembang</h2>
+                    <p class="mt-2 text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white" data-lang-key="team_title">Dibuat oleh Profesional, untuk Profesional</p>
+                </div>
+                
+                <div class="flex flex-col md:flex-row justify-center gap-10">
+                    <!-- Anggota Tim 1 -->
+                    <div class="text-center">
+                        <img class="w-32 h-32 rounded-full mx-auto mb-4 bg-gray-200 dark:bg-gray-700 flex items-center justify-center border-4 border-primary-300 dark:border-primary-600" 
+                             src="https://placehold.co/128x128/3b82f6/ffffff?text=I" alt="Foto Isparmo">
+                        <h3 class="text-xl font-bold text-gray-900 dark:text-white" data-lang-key="team1_name">Isparmo</h3>
+                        <p class="text-primary-600 dark:text-primary-400 font-medium" data-lang-key="team1_role">Team Leader & Marketing</p>
                     </div>
-                    <div class="security-item">
-                        <div class="security-icon">⏱️</div>
-                        <div>
-                            <strong>Pemrosesan sementara</strong><br>
-                            <span style="color: var(--color-text-secondary);">Gambar tidak disimpan (ephemeral)</span>
-                        </div>
-                    </div>
-                    <div class="security-item">
-                        <div class="security-icon">🔐</div>
-                        <div>
-                            <strong>Transmisi aman</strong><br>
-                            <span style="color: var(--color-text-secondary);">Semua komunikasi melalui HTTPS</span>
-                        </div>
-                    </div>
-                    <div class="security-item">
-                        <div class="security-icon">✅</div>
-                        <div>
-                            <strong>Persetujuan eksplisit</strong><br>
-                            <span style="color: var(--color-text-secondary);">Akses kamera atas izin pengguna</span>
-                        </div>
-                    </div>
-                    <div class="security-item">
-                        <div class="security-icon">🌟</div>
-                        <div>
-                            <strong>Transparansi AI</strong><br>
-                            <span style="color: var(--color-text-secondary);">Hasil sebagai draf untuk verifikasi</span>
-                        </div>
+                    <!-- Anggota Tim 2 -->
+                    <div class="text-center">
+                        <img class="w-32 h-32 rounded-full mx-auto mb-4 bg-gray-200 dark:bg-gray-700 flex items-center justify-center border-4 border-primary-300 dark:border-primary-600" 
+                             src="https://placehold.co/128x128/3b82f6/ffffff?text=MH" alt="Foto Mohamad Hasan">
+                        <h3 class="text-xl font-bold text-gray-900 dark:text-white" data-lang-key="team2_name">Mohamad Hasan</h3>
+                        <p class="text-primary-600 dark:text-primary-400 font-medium" data-lang-key="team2_role">Technical Lead & Developer</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Slide 10: Roadmap -->
-        <section class="slide slide-10" id="slide-10">
-            <div class="slide-content">
-                <h2 class="slide-title">Rencana Pengembangan</h2>
-                <div class="roadmap-grid">
-                    <div class="roadmap-item">
-                        <div class="roadmap-icon">🔗</div>
-                        <h3>Integrasi CRM</h3>
-                        <p style="color: var(--color-text-secondary);">HubSpot, Salesforce, Zoho</p>
-                    </div>
-                    <div class="roadmap-item">
-                        <div class="roadmap-icon">🔔</div>
-                        <h3>Pengingat Follow-up</h3>
-                        <p style="color: var(--color-text-secondary);">Notifikasi otomatis untuk tindak lanjut</p>
-                    </div>
-                    <div class="roadmap-item">
-                        <div class="roadmap-icon">📊</div>
-                        <h3>Analitik &amp; Dashboard</h3>
-                        <p style="color: var(--color-text-secondary);">Insight bisnis dan performa tim</p>
-                    </div>
-                    <div class="roadmap-item">
-                        <div class="roadmap-icon">📱</div>
-                        <h3>Aplikasi Mobile Native</h3>
-                        <p style="color: var(--color-text-secondary);">iOS &amp; Android</p>
-                    </div>
+    </main>
+    
+    <!-- ===== FOOTER (UPDATE) ===== -->
+    <footer class="bg-gray-900 text-gray-400 border-t border-gray-800 dark:border-gray-700">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-8">
+                <!-- Bagian Kiri: Logo & Copyright -->
+                <div class="flex flex-col items-center md:items-start text-center md:text-left">
+                    <a href="#" class="flex items-center space-x-2 mb-4">
+                        <img src="https://raw.githubusercontent.com/masisparmo/scannerkartunamallama/refs/heads/fitur-impor-ekspor/scanner-pintar.png" alt="Scanner Pintar Logo" class="h-8 w-8">
+                        <span class="font-bold text-xl text-white" data-lang-key="app_title">Scanner Pintar</span>
+                    </a>
+                    <p class="text-sm" data-lang-key="footer_copyright">
+                        © 2025 Scanner Pintar oleh Isparmo & M. Hasan
+                    </p>
                 </div>
+                
+                <!-- Bagian Kanan: Link Navigasi -->
+                <nav class="flex flex-wrap justify-center md:justify-end gap-x-6 gap-y-2">
+                    <a href="#" class="text-sm hover:text-white transition-colors" data-lang-key="footer_about">Tentang</a>
+                    <a href="#" class="text-sm hover:text-white transition-colors" data-lang-key="footer_help">Bantuan</a>
+                    <a href="#" class="text-sm hover:text-white transition-colors" data-lang-key="footer_privacy">Privasi</a>
+                    <a href="#" class="text-sm hover:text-white transition-colors" data-lang-key="footer_terms">Ketentuan</a>
+                </nav>
             </div>
-        </section>
+        </div>
+    </footer>
 
-        <!-- Slide 11: Call to Action -->
-        <section class="slide slide-11" id="slide-11">
-            <div class="slide-content">
-                <h2 class="slide-title">Mari Bergabung!</h2>
-                <p style="font-size: 1.5rem; margin-bottom: var(--space-24); color: var(--color-text-secondary);">Transformasi cara Anda mengelola kontak bisnis dimulai dari sini</p>
-                <a href="https://scankartunama.isparmo.com/" target="_blank" class="cta-btn">Coba Scanner Pintar Sekarang</a>
-                <div class="app-url">🔗 scankartunama.isparmo.com</div>
-                <div class="thank-you">Terima Kasih! 🙏</div>
-            </div>
-        </section>
-    </div>
-
-    <!-- Navigation Controls -->
-    <div class="nav-controls">
-        <button class="nav-btn" id="prevBtn" onclick="prevSlide()" disabled>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="15 18 9 12 15 6"></polyline>
-            </svg>
-        </button>
-        <div class="progress-dots" id="progressDots"></div>
-        <button class="nav-btn" id="nextBtn" onclick="nextSlide()">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="9 18 15 12 9 6"></polyline>
-            </svg>
-        </button>
-    </div>
-
+    <!-- ===== JAVASCRIPT ===== -->
+    
+    <!-- 
+      FIX: 
+      - Script dipindahkan ke akhir <body>.
+    -->
     <script>
-        // Translations Object
-        const translations = {
+        // --- 1. KAMUS KONTEN (LOKALISASI) ---
+        const content = {
             id: {
-                appTitle: "SCANNER PINTAR",
-                tagline: "Smart Scan, Smarter Business",
-                subtitle: "Hackathon Meta-Llama 2025",
-                team: "Isparmo (Team Leader) & Mohamad Hasan (Technical Lead)",
-                startBtn: "Mulai Presentasi",
-                problemTitle: "Masalah yang Dihadapi",
-                problemHook: "Marketing Manager kehilangan ratusan prospek di pameran JI Expo karena penyelenggara tidak membagikan data kontak pengunjung",
-                stat1Number: "17.6%",
-                stat1Detail: "waktu tenaga penjual = 7 jam per minggu untuk entri data manual",
-                stat2Number: "< 30%",
-                stat2Detail: "waktu untuk benar-benar menjual (Salesforce)",
-                pain1Title: "Kehilangan Produktivitas",
-                pain1Desc: "7 jam/minggu untuk administrasi",
-                pain2Title: "Latensi Follow-up",
-                pain2Desc: "Berhari-hari delay menurunkan konversi",
-                pain3Title: "Human Error",
-                pain3Desc: "Kartu hilang, data salah ketik",
+                // Navigasi
+                'nav_problem': 'Masalah',
+                'nav_solution': 'Solusi',
+                'nav_features': 'Fitur',
+                'nav_validation': 'Validasi',
+                'nav_model': 'Model Bisnis',
+                'nav_team': 'Tim',
+                'btn_try_app': 'Coba Aplikasi',
+                'app_title': 'Scanner Pintar',
+                
+                // Hero
+                'hero_category': 'Peningkatan Produktivitas',
+                'hero_tagline': 'Smart Scan, Smarter Business.',
+                'btn_learn_more': 'Pelajari Fitur',
 
-                solutionTitle: "Solusi Kami",
-                solutionHeading: "Progressive Web App Bertenaga AI",
-                solutionDesc: "PWA bertenaga AI Llama 4 Maverick yang mengubah smartphone menjadi alat akuisisi prospek instan dan cerdas",
-                flowStep1: "Foto",
-                flowStep2: "AI Analysis",
-                flowStep3: "Data Terstruktur",
-                featuresTitle: "Fitur Utama",
-                feature1Title: "Pemindaian Cerdas",
-                feature1Item1: "Ekstraksi data kontekstual (nama, jabatan, perusahaan, email, telepon, WhatsApp)",
-                feature1Item2: "Klasifikasi industri otomatis",
-                feature2Title: "Tindakan Cepat Berbasis AI",
-                feature2Item1: "Draf email follow-up profesional (1 klik)",
-                feature2Item2: "Draf pesan WhatsApp siap pakai",
+                // Problem
+                'problem_subtitle': 'Masalah',
+                'problem_title': '"Gesekan Produktivitas" yang Mahal',
+                'problem_hook_intro': 'Bayangkan Anda baru saja selesai pameran besar. Ratusan prospek terkumpul, tapi...',
+                'problem_hook_quote': '"Maaf, karena regulasi, kami tidak bisa membagikan nomor telepon atau WhatsApp pengunjung."',
+                'problem_hook_desc': 'Ratusan prospek potensial, hilang dalam sekejap. Ini adalah pengalaman nyata yang melahirkan Scanner Pintar.',
+                'problem1_title': 'Kehilangan Produktivitas',
+                'problem1_desc': 'Tim sales menghabiskan ~7 jam per minggu hanya untuk entri data manual. Waktu yang seharusnya untuk menjual.',
+                'problem2_title': 'Latensi Follow-up',
+                'problem2_desc': 'Jeda berhari-hari antara menerima kartu dan input ke CRM membuat momentum hilang dan konversi menurun drastis.',
+                'problem3_title': 'Human Error & Kehilangan Data',
+                'problem3_desc': 'Kartu nama hilang, terselip, atau salah ketik saat input manual. Satu angka salah berarti satu prospek hilang selamanya.',
 
-                feature3Title: "Ekspor Fleksibel",
-                feature3Item1: "Format CSV (Excel/CRM)",
-                feature3Item2: "Format VCF (kontak HP)",
-                feature3Item3: "Format ZIP (batch VCF)",
-                techTitle: "Teknologi",
-                testimonialsTitle: "Testimoni Pengguna",
-                testimonial1: "Aplikasi yang sangat berguna, terkhususnya untuk perusahaan yang sedang mengadakan pameran... tidak ada istilah kata kartu nama client tercecer atau lupa taruh, karena semuanya sudah terangkum didalam satu database.",
-                testimonial1Author: "Tri Multibangun",
-                testimonial1Role: "Profesional IT",
-                testimonial2: "overall sudah sangat bagus dan praktis dalam penggunaannya, beberapa segmen/kolom sudah terisi dengan benar, contoh seperti nama, nomor telepon... ada beberapa segmen yang tidak tertangkap dengan baik... namun flaw ini hanya terjadi secara jarang, 1-2 cases saja.",
-                testimonial2Author: "Valdy Multibangun",
-                testimonial2Role: "Profesional Engineer",
-                impactTitle: "Dampak & Hasil",
-                impact1Metric: "7 jam → menit",
-                impact1Label: "Penghematan Waktu per Minggu",
-                impact2Metric: "24-48 jam → <1 jam",
-                impact2Label: "Akselerasi Follow-up",
-                impact3Metric: "Zero Error",
-                impact3Label: "Peningkatan Kualitas Data",
-                impact4Metric: "⭐ Cepat, Cerdas",
-                impact4Label: "Pengalaman Pengguna",
-                businessTitle: "Model Bisnis",
-                freemiumTitle: "FREEMIUM",
-                freemiumPrice: "GRATIS",
-                freemiumFeature1: "✓ 10 scan/hari",
-                freemiumFeature2: "✓ Penyimpanan lokal unlimited",
-                freemiumFeature3: "✓ Ekspor manual",
-                proTitle: "PRO",
-                proPrice: "Rp 19.900",
-                proMonth: "/bulan",
-                proFeature1: "✓ Unlimited scan",
-                proFeature2: "✓ Draf follow-up cerdas (Email & WA)",
-                proFeature3: "✓ Dukungan prioritas",
-                profit1Value: "Rp 3.468",
-                profit1Label: "Biaya per User",
-                profit2Value: "82.6%",
-                profit2Label: "Margin Keuntungan",
-                profit3Value: "Rp 16.432",
-                profit3Label: "Profit per User/Bulan",
-                securityTitle: "Privasi & Keamanan",
-                security1Title: "Penyimpanan di sisi klien",
-                security1Desc: "Data tersimpan di IndexedDB lokal",
-                security2Title: "Pemrosesan sementara",
-                security2Desc: "Gambar tidak disimpan (ephemeral)",
-                security3Title: "Transmisi aman",
-                security3Desc: "Semua komunikasi melalui HTTPS",
-                security4Title: "Persetujuan eksplisit",
-                security4Desc: "Akses kamera atas izin pengguna",
-                security5Title: "Transparansi AI",
-                security5Desc: "Hasil sebagai draf untuk verifikasi",
-                roadmapTitle: "Rencana Pengembangan",
-                roadmap1Title: "Integrasi CRM",
-                roadmap1Desc: "HubSpot, Salesforce, Zoho",
-                roadmap2Title: "Pengingat Follow-up",
-                roadmap2Desc: "Notifikasi otomatis untuk tindak lanjut",
-                roadmap3Title: "Analitik & Dashboard",
-                roadmap3Desc: "Insight bisnis dan performa tim",
-                roadmap4Title: "Aplikasi Mobile Native",
-                roadmap4Desc: "iOS & Android",
-                ctaTitle: "Mari Bergabung!",
-                ctaSubtitle: "Transformasi cara Anda mengelola kontak bisnis dimulai dari sini",
-                ctaButton: "Coba Scanner Pintar Sekarang",
-                thankYou: "Terima Kasih! 🙏"
+                // Solution
+                'solution_subtitle': 'Solusi',
+                'solution_title': 'Jembatan Cerdas Antara Fisik & Digital',
+                'solution_desc1': 'Kami tidak hanya membuat "scanner". Kami membangun <strong>jembatan cerdas</strong> antara interaksi fisik dan efisiensi digital.',
+                'solution_desc2': '<strong>Scanner Pintar</strong> adalah Progressive Web App (PWA) bertenaga AI (Llama 4 Maverick) yang mengubah smartphone Anda menjadi alat akuisiensi prospek instan.', // UPDATE
+                'solution_desc3': 'Satu kali foto, aplikasi kami tidak hanya mengekstrak teks (OCR), tetapi <strong>memahami, menstrurukturkan, dan mengklasifikasikan</strong> data kontak secara cerdas.',
+                'solution_from': 'Kartu Nama Fisik',
+                'solution_to': 'Data Terstruktur',
+
+                // Features
+                'features_subtitle': 'Fitur Utama',
+                'features_title': 'Didukung oleh AI Cerdas',
+                'features_desc': 'Semua yang Anda butuhkan untuk mengubah pertemuan menjadi peluang.',
+                'feature1_title': 'Pemindaian Cerdas (AI)',
+                'feature1_desc': 'Otomatis membedakan nama, jabatan, email, telepon kantor, WA, & mengklasifikasikan industri (misal: "Tambang", "Kontraktor").', // UPDATE
+                'feature2_title': 'Tindakan Cepat Berbasis AI',
+                'feature2_desc': 'Satu klik untuk membuat draf email atau pesan WhatsApp follow-up profesional yang sudah dipersonalisasi.',
+                'feature3_title': 'Manajemen Kontak Offline',
+                'feature3_desc': 'Semua data disimpan aman di IndexedDB peramban Anda. Akses, kelola, dan edit kontak bahkan tanpa internet.',
+                'feature4_title': 'Ekspor Fleksibel',
+                'feature4_desc': 'Ekspor data ke .CSV (CRM), .VCF (kontak HP), .ZIP, atau simpan online ke Google Sheet Anda.', // UPDATE
+
+                // Impact (BARU)
+                'impact_subtitle': 'Dampak (Impact)',
+                'impact_title': 'Mengubah Waktu Administrasi Menjadi Waktu Produktif',
+                'impact_desc': 'Solusi kami secara langsung mengatasi masalah bernilai tinggi di dunia bisnis.',
+                'impact1_title': 'Penghematan Waktu Drastis',
+                'impact1_desc': 'Mengubah ~7 jam kerja administrasi per minggu per sales menjadi waktu produktif untuk follow-up.',
+                'impact2_title': 'Akselerasi Siklus Penjualan',
+                'impact2_desc': 'Mempercepat proses follow-up dari 24-48 jam menjadi di bawah 1 jam, meningkatkan konversi prospek acara.',
+                'impact3_title': 'Peningkatan Kualitas Data',
+                'impact3_desc': 'Menghilangkan human error dari entri data manual, menghasilkan database CRM yang bersih dan andal.',
+                'impact4_title': 'Pengalaman Pengguna (CX)',
+                'impact4_desc': 'Mengubah tugas yang membosankan dan rentan kesalahan menjadi pengalaman yang cepat, cerdas, dan memuaskan.',
+
+                // Validation
+                'validation_subtitle': 'Validasi Pengguna',
+                'validation_title': 'Apa Kata Target Audiens Kami',
+                'validation_desc': 'Kami menguji prototipe fungsional kami pada para profesional di lapangan.',
+                'quote1_text': '"Aplikasi yang sangat berguna... tidak ada istilah kata kartu nama client tercecer atau lupa taruh, karena semuanya sudah terangkum didalam satu database."', // Diperpendek
+                'quote1_author': 'Tri Multibangun',
+                'quote1_role': 'Profesional IT',
+                'quote2_text': '"overall sudah sangat bagus dan praktis... beberapa segmen/kolom sudah terisi dengan benar... ada beberapa segmen yang tidak tertangkap dengan baik... namun flaw ini hanya terjadi secara jarang, 1-2 cases saja."',
+                'quote2_author': 'Valdy Multibangun',
+                'quote2_role': 'Profesional Engineer',
+                'quote3_text': '"...sangat memudahkan saya dalam input data kartu nama klien dengan akurat, apalagi disaat kondisi ramai, seperti saat exhibition, workshop dan saat meeting penting..."', // BARU
+                'quote3_author': 'Sandi MRP', // BARU
+                'quote3_role': 'Profesional', // BARU
+                'quote4_text': '"Bagus banget, sangat membantu untuk mengumpulkan database dari kartu nama."', // BARU
+                'quote4_author': 'Karjo Genpro Tangerang', // BARU
+                'quote4_role': 'Pengguna', // BARU
+
+                // Business Model
+                'model_subtitle': 'Model Bisnis',
+                'model_title': 'Model Freemium yang Skalabel',
+                'model_desc': 'Akses gratis untuk akuisisi pengguna massal, dan paket Pro yang sangat terjangkau untuk tim profesional.',
+                'plan_free_title': 'Freemium',
+                'plan_free_price': 'Gratis',
+                'plan_free_target': 'Untuk akuisisi pengguna massal & penggunaan individual.',
+                'plan_free_feat1': 'Kuota 20 scan/bulan', // UPDATE
+                'plan_free_feat2': 'Penyimpanan lokal tak terbatas',
+                'plan_free_feat3': 'Ekspor manual (.CSV / .VCF)',
+                'plan_pro_badge': 'Paling Populer',
+                'plan_pro_title': 'Pro',
+                'plan_pro_price': 'Rp 19.900,-',
+                'plan_pro_per_month': '/ bulan',
+                'plan_pro_target': 'Untuk power users, tim penjualan, dan perusahaan.',
+                'plan_pro_feat1': 'Scan Tak Terbatas',
+                'plan_pro_feat2': 'Draf Follow-up Cerdas (AI)',
+                // plan_pro_feat3 DIHAPUS
+
+                // Responsible AI (BARU)
+                'ai_subtitle': 'Responsible AI Implementation',
+                'ai_title': 'Privasi & Kontrol Pengguna adalah Fondasi Kami',
+                'ai_desc': 'Kami memahami bahwa data kontak adalah informasi yang sangat sensitif.',
+                'ai1_title': '1. Prinsip Inti: Privasi & Kontrol',
+                'ai1_li1': '<strong>Penyimpanan Sisi Klien:</strong> Data Anda adalah milik Anda. Disimpan di IndexedDB browser Anda, bukan server kami.',
+                'ai1_li2': '<strong>Persetujuan Eksplisit:</strong> Tidak ada akses kamera atau pengiriman data tanpa izin dan tindakan jelas dari Anda.',
+                'ai2_title': '2. Keamanan dalam Pemrosesan',
+                'ai2_li1': '<strong>Pemrosesan Ephemeral:</strong> Gambar diproses on-the-fly dan tidak disimpan di server kami setelah ekstraksi.',
+                'ai2_li2': '<strong>Interaksi Aman:</strong> Kami hanya meneruskan draf (Email/WA) ke aplikasi default Anda. Kami tidak memiliki akses login.',
+                'ai2_li3': '<strong>Transmisi Aman:</strong> Semua komunikasi dienkripsi menggunakan HTTPS.',
+                'ai3_title': '3. Transparansi & Akuntabilitas',
+                'ai3_li1': '<strong>Mitigasi Halusinasi AI:</strong> Hasil pindaian adalah draf. Pengguna adalah editor akhir yang memverifikasi data sebelum disimpan, memberikan lapisan verifikasi manusia yang penting.',
+
+                // Team
+                'team_subtitle': 'Tim Pengembang',
+                'team_title': 'Dibuat oleh Profesional, untuk Profesional',
+                'team1_name': 'Isparmo',
+                'team1_role': 'Team Leader & Marketing',
+                'team2_name': 'Mohamad Hasan',
+                'team2_role': 'Technical Lead & Developer',
+                
+                // Footer (UPDATE)
+                'footer_copyright': '© 2025 Scanner Pintar oleh Isparmo & M. Hasan',
+                'footer_about': 'Tentang',
+                'footer_help': 'Bantuan',
+                'footer_privacy': 'Privasi',
+                'footer_terms': 'Ketentuan'
             },
             en: {
-                appTitle: "SCANNER PINTAR",
-                tagline: "Smart Scan, Smarter Business",
-                subtitle: "Hackathon Meta-Llama 2025",
-                team: "Isparmo (Team Leader) & Mohamad Hasan (Technical Lead)",
-                startBtn: "Start Presentation",
-                problemTitle: "The Problem",
-                problemHook: "Marketing Manager lost hundreds of prospects at JI Expo because organizers didn't share visitor contact data",
-                stat1Number: "17.6%",
-                stat1Detail: "of sales time = 7 hours/week for manual data entry",
-                stat2Number: "< 30%",
-                stat2Detail: "time for actual selling (Salesforce)",
-                pain1Title: "Lost Productivity",
-                pain1Desc: "7 hours/week for administration",
-                pain2Title: "Follow-up Latency",
-                pain2Desc: "Days of delay reduce conversion",
-                pain3Title: "Human Error",
-                pain3Desc: "Lost cards, typos",
+                // Navigasi
+                'nav_problem': 'Problem',
+                'nav_solution': 'Solution',
+                'nav_features': 'Features',
+                'nav_validation': 'Validation',
+                'nav_model': 'Business Model',
+                'nav_team': 'Team',
+                'btn_try_app': 'Try The App',
+                'app_title': 'Scanner Pintar', // Nama aplikasi tetap sama
 
-                solutionTitle: "The Solution",
-                solutionHeading: "AI-Powered Progressive Web App",
-                solutionDesc: "Progressive Web App powered by Llama 4 Maverick AI that transforms smartphones into instant and intelligent prospect acquisition tools",
-                flowStep1: "Photo",
-                flowStep2: "AI Analysis",
-                flowStep3: "Structured Data",
-                featuresTitle: "Key Features",
-                feature1Title: "Smart Scanning",
-                feature1Item1: "Contextual data extraction (name, position, company, email, phone, WhatsApp)",
-                feature1Item2: "Automatic industry classification",
-                feature2Title: "AI-Powered Quick Actions",
-                feature2Item1: "Professional follow-up email drafts (1 click)",
-                feature2Item2: "Ready-to-use WhatsApp message drafts",
+                // Hero
+                'hero_category': 'Productivity Boost',
+                'hero_tagline': 'Smart Scan, Smarter Business.',
+                'btn_learn_more': 'Learn More',
 
-                feature3Title: "Flexible Export",
-                feature3Item1: "CSV format (Excel/CRM)",
-                feature3Item2: "VCF format (phone contacts)",
-                feature3Item3: "ZIP format (batch VCF)",
-                techTitle: "Technology Stack",
-                testimonialsTitle: "User Testimonials",
-                testimonial1: "Very useful application, especially for companies holding exhibitions... no more lost or misplaced client business cards, as everything is compiled in one database.",
-                testimonial1Author: "Tri Multibangun",
-                testimonial1Role: "IT Professional",
-                testimonial2: "Overall very good and practical to use, several segments/columns are filled correctly, such as name, phone number... some segments are not captured well... but this flaw only occurs rarely, 1-2 cases only.",
-                testimonial2Author: "Valdy Multibangun",
-                testimonial2Role: "Professional Engineer",
-                impactTitle: "Impact & Results",
-                impact1Metric: "7 hours → minutes",
-                impact1Label: "Time Savings per Week",
-                impact2Metric: "24-48 hours → <1 hour",
-                impact2Label: "Follow-up Acceleration",
-                impact3Metric: "Zero Error",
-                impact3Label: "Data Quality Improvement",
-                impact4Metric: "⭐ Fast, Smart",
-                impact4Label: "User Experience",
-                businessTitle: "Business Model",
-                freemiumTitle: "FREEMIUM",
-                freemiumPrice: "FREE",
-                freemiumFeature1: "✓ 10 scans/day",
-                freemiumFeature2: "✓ Unlimited local storage",
-                freemiumFeature3: "✓ Manual export",
-                proTitle: "PRO",
-                proPrice: "IDR 19,900",
-                proMonth: "/month",
-                proFeature1: "✓ Unlimited scans",
-                proFeature2: "✓ Smart follow-up drafts (Email & WA)",
-                proFeature3: "✓ Priority support",
-                profit1Value: "IDR 3,468",
-                profit1Label: "Cost per User",
-                profit2Value: "82.6%",
-                profit2Label: "Profit Margin",
-                profit3Value: "IDR 16,432",
-                profit3Label: "Profit per User/Month",
-                securityTitle: "Privacy & Security",
-                security1Title: "Client-side storage",
-                security1Desc: "Data stored in local IndexedDB",
-                security2Title: "Ephemeral processing",
-                security2Desc: "Images not stored (ephemeral)",
-                security3Title: "Secure transmission",
-                security3Desc: "All communication via HTTPS",
-                security4Title: "Explicit consent",
-                security4Desc: "Camera access with user permission",
-                security5Title: "AI Transparency",
-                security5Desc: "Results as drafts for user verification",
-                roadmapTitle: "Development Roadmap",
-                roadmap1Title: "CRM Integration",
-                roadmap1Desc: "HubSpot, Salesforce, Zoho",
-                roadmap2Title: "Follow-up Reminder",
-                roadmap2Desc: "Automatic follow-up notifications",
-                roadmap3Title: "Analytics & Dashboard",
-                roadmap3Desc: "Business insights and team performance",
-                roadmap4Title: "Native Mobile Apps",
-                roadmap4Desc: "iOS & Android",
-                ctaTitle: "Join Us!",
-                ctaSubtitle: "Transform the way you manage business contacts starts here",
-                ctaButton: "Try Scanner Pintar",
-                thankYou: "Thank You! 🙏"
+                // Problem
+                'problem_subtitle': 'The Problem',
+                'problem_title': 'Costly "Productivity Friction"',
+                'problem_hook_intro': 'Imagine you just finished a major exhibition. Hundreds of leads collected, but...',
+                'problem_hook_quote': '"Sorry, due to regulations, we cannot share visitor phone numbers or WhatsApp."',
+                'problem_hook_desc': 'Hundreds of potential leads, gone in an instant. This is the real experience that inspired Scanner Pintar.',
+                'problem1_title': 'Lost Productivity',
+                'problem1_desc': 'Sales teams spend ~7 hours per week just on manual data entry. Time that should be spent selling.',
+                'problem2_title': 'Follow-up Latency',
+                'problem2_desc': 'The multi-day gap between receiving a card and CRM entry kills momentum and drastically reduces conversion.',
+                'problem3_title': 'Human Error & Data Loss',
+                'problem3_desc': 'Cards get lost, misplaced, or mistyped during manual input. One wrong digit means a prospect is lost forever.',
+
+                // Solution
+                'solution_subtitle': 'The Solution',
+                'solution_title': 'The Smart Bridge Between Physical & Digital',
+                'solution_desc1': 'We didn\'t just build a "scanner". We built a <strong>smart bridge</strong> between physical interaction and digital efficiency.',
+                'solution_desc2': '<strong>Scanner Pintar</strong> is an AI-powered (Llama 4 Maverick) Progressive Web App (PWA) that turns your smartphone into an instant lead acquisition tool.', // UPDATE
+                'solution_desc3': 'One photo, and our app doesn\'t just extract text (OCR), it <strong>understands, structures, and classifies</strong> contact data intelligently.',
+                'solution_from': 'Physical Business Card',
+                'solution_to': 'Structured Data',
+
+                // Features
+                'features_subtitle': 'Key Features',
+                'features_title': 'Powered by Intelligent AI',
+                'features_desc': 'Everything you need to turn encounters into opportunities.',
+                'feature1_title': 'Smart (AI) Scanning',
+                'feature1_desc': 'Automatically differentiates name, title, email, office phone, WA, & classifies industry (e.g., "Mining", "Contractor").', // UPDATE
+                'feature2_title': 'AI-Powered Quick Actions',
+                'feature2_desc': 'One click to draft a professional, personalized follow-up email or WhatsApp message.',
+                'feature3_title': 'Offline Contact Management',
+                'feature3_desc': 'All data is stored securely in your browser\'s IndexedDB. Access, manage, and edit contacts even without internet.',
+                'feature4_title': 'Flexible Export',
+                'feature4_desc': 'Export data to .CSV (CRM), .VCF (contacts), .ZIP, or save online to your Google Sheet.', // UPDATE
+
+                // Impact (BARU)
+                'impact_subtitle': 'Impact',
+                'impact_title': 'Turning Admin Time Into Productive Time',
+                'impact_desc': 'Our solution directly addresses high-value problems in the business world.',
+                'impact1_title': 'Drastic Time Savings',
+                'impact1_desc': 'Turns ~7 hours of admin work per week per salesperson into productive time for follow-ups.',
+                'impact2_title': 'Sales Cycle Acceleration',
+                'impact2_desc': 'Speeds up the follow-up process from 24-48 hours to under 1 hour, boosting event lead conversion.',
+                'impact3_title': 'Improved Data Quality',
+                'impact3_desc': 'Eliminates human error from manual data entry, resulting in a clean and reliable CRM database.',
+                'impact4_title': 'User Experience (CX)',
+                'impact4_desc': 'Transforms a tedious and error-prone task into a fast, smart, and satisfying experience.',
+
+                // Validation
+                'validation_subtitle': 'User Validation',
+                'validation_title': 'What Our Target Audience Says',
+                'validation_desc': 'We tested our functional prototype with professionals in the field.',
+                'quote1_text': '"A very useful application... no more lost or forgotten client business cards, because everything is summarized in one database."', // Shortened
+                'quote1_author': 'Tri Multibangun',
+                'quote1_role': 'IT Professional',
+                'quote2_text': '"overall it is very good and practical to use... several segments/columns are filled in correctly... there are some segments that are not captured well... but this flaw only occurs rarely, 1-2 cases only."',
+                'quote2_author': 'Valdy Multibangun',
+                'quote2_role': 'Professional Engineer',
+                'quote3_text': '"...really makes it easy for me to input client business card data accurately, especially in crowded conditions, like at exhibitions, workshops, and important meetings..."', // BARU
+                'quote3_author': 'Sandi MRP', // BARU
+                'quote3_role': 'Professional', // BARU
+                'quote4_text': '"Really good, very helpful for collecting a database from business cards."', // BARU
+                'quote4_author': 'Karjo Genpro Tangerang', // BARU
+                'quote4_role': 'User', // BARU
+
+                // Business Model
+                'model_subtitle': 'Business Model',
+                'model_title': 'A Scalable Freemium Model',
+                'model_desc': 'Free access for mass user acquisition, and a very affordable Pro plan for professional teams.',
+                'plan_free_title': 'Freemium',
+                'plan_free_price': 'Free',
+                'plan_free_target': 'For mass user acquisition & individual use.',
+                'plan_free_feat1': '20 scans/month quota', // UPDATE
+                'plan_free_feat2': 'Unlimited local storage',
+                'plan_free_feat3': 'Manual export (.CSV / .VCF)',
+                'plan_pro_badge': 'Most Popular',
+                'plan_pro_title': 'Pro',
+                'plan_pro_price': 'IDR 19,900', // Harga bisa disesuaikan untuk pasar EN
+                'plan_pro_per_month': '/ month',
+                'plan_pro_target': 'For power users, sales teams, and companies.',
+                'plan_pro_feat1': 'Unlimited Scans',
+                'plan_pro_feat2': 'Smart AI Follow-up Drafts',
+                // plan_pro_feat3 DELETED
+                
+                // Responsible AI (BARU)
+                'ai_subtitle': 'Responsible AI Implementation',
+                'ai_title': 'Built on a Foundation of Privacy & User Control',
+                'ai_desc': 'We understand that contact data is highly sensitive information.',
+                'ai1_title': '1. Core Principle: Privacy & Control',
+                'ai1_li1': '<strong>Client-Side Storage:</strong> Your data is yours. Stored in your browser\'s IndexedDB, not our servers.',
+                'ai1_li2': '<strong>Explicit Consent:</strong> No camera access or data sending without your clear action and permission.',
+                'ai2_title': '2. Security in Processing',
+                'ai2_li1': '<strong>Ephemeral Processing:</strong> Images are processed on-the-fly and not stored on our servers post-extraction.',
+                'ai2_li2': '<strong>Safe Interaction:</strong> We only pass drafts (Email/WA) to your default apps. We have no login access.',
+                'ai2_li3': '<strong>Secure Transmission:</strong> All communication is encrypted using HTTPS.',
+                'ai3_title': '3. Transparency & Accountability',
+                'ai3_li1': '<strong>AI Hallucination Mitigation:</strong> Scan results are drafts. The user is the final editor who verifies data before saving, providing a crucial human-in-the-loop verification.',
+
+                // Team
+                'team_subtitle': 'The Team',
+                'team_title': 'Built by Professionals, for Professionals',
+                'team1_name': 'Isparmo',
+                'team1_role': 'Team Leader & Marketing',
+                'team2_name': 'Mohamad Hasan',
+                'team2_role': 'Technical Lead & Developer',
+
+                // Footer (UPDATE)
+                'footer_copyright': '© 2025 Scanner Pintar by Isparmo & M. Hasan',
+                'footer_about': 'About',
+                'footer_help': 'Help',
+                'footer_privacy': 'Privacy',
+                'footer_terms': 'Terms'
             }
         };
 
-        // State management (in-memory, not localStorage)
-        let currentTheme = 'light';
-        let currentLang = 'id';
-        const totalSlides = 11;
-        let currentSlide = 1;
+        // --- 2. LOGIKA APLIKASI ---
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            const themeToggleBtn = document.getElementById('theme-toggle');
+            const langToggleBtn = document.getElementById('lang-toggle');
+            
+            // FIX: Tidak perlu query untuk sunIcon/moonIcon di sini.
+            // Tailwind akan menanganinya secara otomatis via dark: variant.
 
-        // Theme Toggle
-        function toggleTheme() {
-            currentTheme = currentTheme === 'light' ? 'dark' : 'light';
-            document.body.setAttribute('data-theme', currentTheme);
-            document.getElementById('themeIcon').textContent = currentTheme === 'light' ? '🌙' : '☀️';
-        }
+            let currentLang = localStorage.getItem('scannerPintarLang') || 'id';
+            let currentTheme = localStorage.getItem('scannerPintarTheme') || 'light';
 
-        // Language Toggle
-        function toggleLanguage() {
-            currentLang = currentLang === 'id' ? 'en' : 'id';
-            document.getElementById('langIcon').textContent = currentLang === 'id' ? 'EN' : 'ID';
-            updateContent();
-        }
+            // --- Fungsi Tema ---
+            function applyTheme(theme) {
+                if (theme === 'dark') {
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                }
+                // FIX: Logika show/hide ikon dihapus.
+                localStorage.setItem('scannerPintarTheme', theme);
+            }
 
-        // Update all content based on selected language
-        function updateContent() {
-            const t = translations[currentLang];
-            
-            // Slide 1
-            document.querySelector('.app-title').textContent = t.appTitle;
-            document.querySelector('.tagline').textContent = t.tagline;
-            document.querySelector('.subtitle').textContent = t.subtitle;
-            document.querySelector('.team').innerHTML = t.team.replace('&', '&amp;');
-            document.querySelector('.start-btn').textContent = t.startBtn;
-            
-            // Slide 2
-            document.querySelectorAll('.slide-title')[0].textContent = t.problemTitle;
-            document.querySelector('.hook').innerHTML = '<strong>📌 ' + (currentLang === 'id' ? 'Cerita Nyata:' : 'Real Story:') + '</strong> ' + t.problemHook;
-            document.querySelectorAll('.stat-number')[0].textContent = t.stat1Number;
-            document.querySelectorAll('.stat-detail')[0].textContent = t.stat1Detail;
-            document.querySelectorAll('.stat-number')[1].textContent = t.stat2Number;
-            document.querySelectorAll('.stat-detail')[1].textContent = t.stat2Detail;
-            document.querySelectorAll('.pain-point strong')[0].textContent = t.pain1Title;
-            document.querySelectorAll('.pain-point span')[0].textContent = t.pain1Desc;
-            document.querySelectorAll('.pain-point strong')[1].textContent = t.pain2Title;
-            document.querySelectorAll('.pain-point span')[1].textContent = t.pain2Desc;
-            document.querySelectorAll('.pain-point strong')[2].textContent = t.pain3Title;
-            document.querySelectorAll('.pain-point span')[2].textContent = t.pain3Desc;
-
-            
-            // Slide 3
-            document.querySelectorAll('.slide-title')[1].textContent = t.solutionTitle;
-            document.querySelector('.solution-text h3').textContent = t.solutionHeading;
-            document.querySelector('.solution-text p').textContent = t.solutionDesc;
-            document.querySelectorAll('.flow-step div')[1].textContent = t.flowStep1;
-            document.querySelectorAll('.flow-step div')[3].textContent = t.flowStep2;
-            document.querySelectorAll('.flow-step div')[5].textContent = t.flowStep3;
-            
-            // Slide 4
-            document.querySelectorAll('.slide-title')[2].textContent = t.featuresTitle;
-            document.querySelectorAll('.feature-card h3')[0].textContent = t.feature1Title;
-            document.querySelectorAll('.feature-card li')[0].textContent = t.feature1Item1;
-            document.querySelectorAll('.feature-card li')[1].textContent = t.feature1Item2;
-            document.querySelectorAll('.feature-card h3')[1].textContent = t.feature2Title;
-            document.querySelectorAll('.feature-card li')[2].textContent = t.feature2Item1;
-            document.querySelectorAll('.feature-card li')[3].textContent = t.feature2Item2;
-            document.querySelectorAll('.feature-card h3')[2].textContent = t.feature3Title;
-            document.querySelectorAll('.feature-card li')[4].textContent = t.feature3Item1;
-            document.querySelectorAll('.feature-card li')[5].textContent = t.feature3Item2;
-            document.querySelectorAll('.feature-card li')[6].textContent = t.feature3Item3;
-            
-            // Slide 5
-            document.querySelectorAll('.slide-title')[3].textContent = t.techTitle;
-            
-            // Slide 6
-            document.querySelectorAll('.slide-title')[4].textContent = t.testimonialsTitle;
-            document.querySelectorAll('.testimonial-quote')[0].textContent = t.testimonial1;
-            document.querySelectorAll('.testimonial-author')[0].textContent = t.testimonial1Author;
-            document.querySelectorAll('.testimonial-role')[0].textContent = t.testimonial1Role;
-            document.querySelectorAll('.testimonial-quote')[1].textContent = t.testimonial2;
-            document.querySelectorAll('.testimonial-author')[1].textContent = t.testimonial2Author;
-            document.querySelectorAll('.testimonial-role')[1].textContent = t.testimonial2Role;
-            
-            // Slide 7
-            document.querySelectorAll('.slide-title')[5].innerHTML = t.impactTitle.replace('&', '&amp;');
-            document.querySelectorAll('.impact-metric')[0].textContent = t.impact1Metric;
-            document.querySelectorAll('.impact-label')[0].textContent = t.impact1Label;
-            document.querySelectorAll('.impact-metric')[1].textContent = t.impact2Metric;
-            document.querySelectorAll('.impact-label')[1].textContent = t.impact2Label;
-            document.querySelectorAll('.impact-metric')[2].textContent = t.impact3Metric;
-            document.querySelectorAll('.impact-label')[2].textContent = t.impact3Label;
-            document.querySelectorAll('.impact-metric')[3].textContent = t.impact4Metric;
-            document.querySelectorAll('.impact-label')[3].textContent = t.impact4Label;
-            
-            // Slide 8
-            document.querySelectorAll('.slide-title')[6].textContent = t.businessTitle;
-            document.querySelectorAll('.pricing-card h3')[0].textContent = t.freemiumTitle;
-            document.querySelectorAll('.price')[0].textContent = t.freemiumPrice;
-            document.querySelectorAll('.pricing-features li')[0].textContent = t.freemiumFeature1;
-            document.querySelectorAll('.pricing-features li')[1].textContent = t.freemiumFeature2;
-            document.querySelectorAll('.pricing-features li')[2].textContent = t.freemiumFeature3;
-            document.querySelectorAll('.pricing-card h3')[1].textContent = t.proTitle;
-            document.querySelectorAll('.price')[1].innerHTML = t.proPrice + '<span style="font-size: 1rem;">' + t.proMonth + '</span>';
-            document.querySelectorAll('.pricing-features li')[3].textContent = t.proFeature1;
-            document.querySelectorAll('.pricing-features li')[4].textContent = t.proFeature2;
-            document.querySelectorAll('.pricing-features li')[5].textContent = t.proFeature3;
-            document.querySelectorAll('.profit-value')[0].textContent = t.profit1Value;
-            document.querySelectorAll('.profit-item div')[1].textContent = t.profit1Label;
-            document.querySelectorAll('.profit-value')[1].textContent = t.profit2Value;
-            document.querySelectorAll('.profit-item div')[3].textContent = t.profit2Label;
-            document.querySelectorAll('.profit-value')[2].textContent = t.profit3Value;
-            document.querySelectorAll('.profit-item div')[5].textContent = t.profit3Label;
-            
-            // Slide 9
-            document.querySelectorAll('.slide-title')[7].innerHTML = t.securityTitle.replace('&', '&amp;');
-            document.querySelectorAll('.security-item strong')[0].textContent = t.security1Title;
-            document.querySelectorAll('.security-item span')[0].textContent = t.security1Desc;
-            document.querySelectorAll('.security-item strong')[1].textContent = t.security2Title;
-            document.querySelectorAll('.security-item span')[1].textContent = t.security2Desc;
-            document.querySelectorAll('.security-item strong')[2].textContent = t.security3Title;
-            document.querySelectorAll('.security-item span')[2].textContent = t.security3Desc;
-            document.querySelectorAll('.security-item strong')[3].textContent = t.security4Title;
-            document.querySelectorAll('.security-item span')[3].textContent = t.security4Desc;
-            document.querySelectorAll('.security-item strong')[4].textContent = t.security5Title;
-            document.querySelectorAll('.security-item span')[4].textContent = t.security5Desc;
-            
-            // Slide 10
-            document.querySelectorAll('.slide-title')[8].textContent = t.roadmapTitle;
-            document.querySelectorAll('.roadmap-item h3')[0].textContent = t.roadmap1Title;
-            document.querySelectorAll('.roadmap-item p')[0].textContent = t.roadmap1Desc;
-            document.querySelectorAll('.roadmap-item h3')[1].textContent = t.roadmap2Title;
-            document.querySelectorAll('.roadmap-item p')[1].textContent = t.roadmap2Desc;
-            document.querySelectorAll('.roadmap-item h3')[2].textContent = t.roadmap3Title;
-            document.querySelectorAll('.roadmap-item p')[2].textContent = t.roadmap3Desc;
-            document.querySelectorAll('.roadmap-item h3')[3].textContent = t.roadmap4Title;
-            document.querySelectorAll('.roadmap-item p')[3].textContent = t.roadmap4Desc;
-            
-            // Slide 11
-            document.querySelectorAll('.slide-title')[9].textContent = t.ctaTitle;
-            document.querySelector('.slide-11 p').textContent = t.ctaSubtitle;
-            document.querySelector('.cta-btn').textContent = t.ctaButton;
-            document.querySelector('.thank-you').textContent = t.thankYou;
-        }
-
-        // Initialize progress dots
-        const progressDots = document.getElementById('progressDots');
-        for (let i = 1; i <= totalSlides; i++) {
-            const dot = document.createElement('div');
-            dot.className = 'dot' + (i === 1 ? ' active' : '');
-            dot.onclick = () => goToSlide(i);
-            progressDots.appendChild(dot);
-        }
-
-        function updateNavigation() {
-            // Update buttons
-            document.getElementById('prevBtn').disabled = currentSlide === 1;
-            document.getElementById('nextBtn').disabled = currentSlide === totalSlides;
-
-            // Update dots
-            const dots = document.querySelectorAll('.dot');
-            dots.forEach((dot, index) => {
-                dot.classList.toggle('active', index + 1 === currentSlide);
+            themeToggleBtn.addEventListener('click', () => {
+                currentTheme = document.documentElement.classList.contains('dark') ? 'light' : 'dark';
+                applyTheme(currentTheme);
             });
-        }
 
-        function goToSlide(slideNumber) {
-            if (slideNumber < 1 || slideNumber > totalSlides) return;
-            currentSlide = slideNumber;
-            const slideElement = document.getElementById(`slide-${slideNumber}`);
-            slideElement.scrollIntoView({ behavior: 'smooth' });
-            updateNavigation();
-        }
-
-        function nextSlide() {
-            if (currentSlide < totalSlides) {
-                goToSlide(currentSlide + 1);
-            }
-        }
-
-        function prevSlide() {
-            if (currentSlide > 1) {
-                goToSlide(currentSlide - 1);
-            }
-        }
-
-        // Keyboard navigation
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ') {
-                e.preventDefault();
-                nextSlide();
-            } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
-                e.preventDefault();
-                prevSlide();
-            }
-        });
-
-        // Detect scroll position to update current slide
-        let scrollTimeout;
-        document.getElementById('pitchDeck').addEventListener('scroll', () => {
-            clearTimeout(scrollTimeout);
-            scrollTimeout = setTimeout(() => {
-                const slides = document.querySelectorAll('.slide');
-                const scrollPosition = document.getElementById('pitchDeck').scrollTop;
-                
-                slides.forEach((slide, index) => {
-                    const slideTop = slide.offsetTop;
-                    const slideHeight = slide.offsetHeight;
-                    
-                    if (scrollPosition >= slideTop - slideHeight / 2 && 
-                        scrollPosition < slideTop + slideHeight / 2) {
-                        currentSlide = index + 1;
-                        updateNavigation();
+            // --- Fungsi Bahasa ---
+            function applyLanguage(lang) {
+                document.querySelectorAll('[data-lang-key]').forEach(el => {
+                    const key = el.dataset.langKey;
+                    if (content[lang] && content[lang][key]) {
+                        // Gunakan innerHTML untuk mempertahankan tag strong
+                        el.innerHTML = content[lang][key];
                     }
                 });
-            }, 100);
-        });
+                document.documentElement.lang = lang;
+                langToggleBtn.querySelector('span').textContent = lang.toUpperCase();
+                localStorage.setItem('scannerPintarLang', lang);
+            }
 
-        // Initialize
-        updateNavigation();
+            langToggleBtn.addEventListener('click', () => {
+                currentLang = (currentLang === 'id') ? 'en' : 'id';
+                applyLanguage(currentLang);
+            });
+
+            // --- Inisialisasi ---
+            applyTheme(currentTheme);
+            applyLanguage(currentLang);
+            
+            // FIX: Seluruh blok try...catch lucide DIHAPUS.
+        });
     </script>
+
 </body>
 </html>
