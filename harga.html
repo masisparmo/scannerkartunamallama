@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="id" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scanner Pintar - Model Bisnis & Monetisasi</title>
+    <!-- Memuat Tailwind CSS --><script src="https://cdn.tailwindcss.com"></script>
+    <!-- Memuat Font Inter --><link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Mengatur font default ke Inter */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        /* Transisi warna yang mulus untuk mode gelap/terang */
+        body, .card, .stat-card {
+            transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Style untuk accordion */
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        .accordion-button[aria-expanded="true"] .accordion-arrow {
+            transform: rotate(180deg);
+        }
+        .accordion-arrow {
+            transition: transform 0.3s ease;
+        }
+    </style>
+    
+    <!-- Konfigurasi Tailwind untuk mode gelap dan warna kustom --><script>
+        tailwind.config = {
+            darkMode: 'class', // Mengaktifkan mode gelap berdasarkan class 'dark' di <html>
+            theme: {
+                extend: {
+                    colors: {
+                        // Warna primer yang terinspirasi dari aplikasi produktivitas
+                        primary: {
+                            '50': '#f0fdf4',
+                            '100': '#dcfce7',
+                            '200': '#bbf7d0',
+                            '300': '#86efac',
+                            '400': '#4ade80',
+                            '500': '#22c55e', // Warna utama (hijau)
+                            '600': '#16a34a',
+                            '700': '#15803d',
+                            '800': '#166534',
+                            '900': '#14532d',
+                            '950': '#052e16',
+                        },
+                        // Warna untuk latar belakang mode gelap
+                        dark: {
+                            'bg': '#111827', // bg-gray-900
+                            'card': '#1f2937', // bg-gray-800
+                            'border': '#374151', // bg-gray-700
+                        },
+                        // Warna untuk latar belakang mode terang
+                        light: {
+                            'bg': '#f9fafb', // bg-gray-50
+                            'card': '#ffffff', // bg-white
+                            'border': '#e5e7eb', // bg-gray-200
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-light-bg dark:bg-dark-bg text-gray-900 dark:text-gray-100 min-h-screen antialiased">
+
+    <!-- Kontainer Utama --><div class="container mx-auto max-w-5xl p-4 sm:p-8">
+
+        <!-- Header: Logo, Judul, dan Tombol Mode Gelap/Terang --><header class="flex justify-between items-center mb-8 sm:mb-12">
+            <!-- Logo dan Judul Aplikasi --><div class="flex items-center space-x-3">
+                <!-- LOGO BARU DARI IMAGE --><img src="https://raw.githubusercontent.com/masisparmo/scannerkartunamallama/refs/heads/main/scanner-pintar.png" alt="Scanner Pintar Logo" class="h-10 w-10 object-contain rounded-full">
+                <h1 class="text-2xl sm:text-3xl font-bold text-primary-600 dark:text-primary-400">Scanner Pintar</h1>
+            </div>
+
+            <!-- Tombol Mode Gelap/Terang --><button id="theme-toggle" class="p-2 rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500">
+                <!-- Ikon Matahari (Mode Terang) --><svg id="theme-toggle-light-icon" class="w-6 h-6 hidden" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.707.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM10 18a1 1 0 01-1-1v-1a1 1 0 112 0v1a1 1 0 01-1 1zM5.05 14.95a1 1 0 10-1.414 1.414l.707.707a1 1 0 001.414-1.414l-.707-.707zM16.06 4.94a1 1 0 010-1.414l.707-.707a1 1 0 111.414 1.414l-.707.707a1 1 0 01-1.414 0zM4.94 4.94a1 1 0 00-1.414 0l-.707.707a1 1 0 101.414 1.414l.707-.707a1 1 0 000-1.414z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+                <!-- Ikon Bulan (Mode Gelap) --><svg id="theme-toggle-dark-icon" class="w-6 h-6 hidden" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+            </button>
+        </header>
+
+        <!-- Judul Infografis --><div class="text-center mb-10">
+            <h2 class="text-3xl sm:text-4xl font-extrabold mb-2">Model Bisnis & Monetisasi</h2>
+            <p class="text-lg text-gray-600 dark:text-gray-400">Pendekatan <span class="font-semibold text-primary-600 dark:text-primary-400">Freemium</span> untuk Produktivitas Maksimal</p>
+        </div>
+
+        <!-- Bagian 1: Struktur Paket (Grid) --><section class="mb-12">
+            <h3 class="text-2xl font-bold mb-6 text-center">Struktur Paket Pengguna</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                
+                <!-- Kartu Paket: Freemium --><div class="card bg-light-card dark:bg-dark-card rounded-xl shadow-lg border border-light-border dark:border-dark-border p-6 transform hover:scale-[1.02] transition-transform duration-300">
+                    <div class="flex items-center space-x-4 mb-4">
+                        <div class="p-3 bg-primary-100 dark:bg-primary-900 text-primary-600 dark:text-primary-300 rounded-lg">
+                            <!-- Ikon Hadiah --><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12v10H4V12"/><path d="M20 7H4v5h16V7z"/><path d="M12 12L8 7h8l-4 5z"/></svg>
+                        </div>
+                        <h4 class="text-2xl font-bold">Paket Freemium</h4>
+                    </div>
+                    <p class="text-gray-600 dark:text-gray-400 mb-4">Akuisisi pengguna dengan memberikan nilai inti aplikasi secara gratis.</p>
+                    <span class="inline-block bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 text-sm font-semibold px-3 py-1 rounded-full mb-4">GRATIS</span>
+                    <ul class="space-y-3">
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-primary-500 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                            <span><span class="font-semibold">Kuota:</span> 10x scan kartu nama per hari.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-primary-500 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                            <span><span class="font-semibold">Fitur Inti:</span> Pemindaian AI & penyimpanan lokal (IndexedDB).</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-primary-500 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                            <span><span class="font-semibold">Ekspor Data:</span> Penuh ke .CSV atau .VCF.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-red-500 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path></svg>
+                            <span><span class="font-semibold">Batasan:</span> Fitur follow-up cerdas (WhatsApp/Email) dinonaktifkan.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-red-500 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path></svg>
+                            <span><span class="font-semibold">Batasan:</span> Mode Kolaborasi Tim (Google Sheets) dinonaktifkan.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Kartu Paket: Pro --><div class="card bg-light-card dark:bg-dark-card rounded-xl shadow-xl border-2 border-primary-500 p-6 relative ring-2 ring-primary-500/30">
+                    <span class="absolute top-0 right-6 -mt-3 bg-primary-500 text-white text-xs font-bold px-3 py-1 rounded-full uppercase">Paling Populer</span>
+                    <div class="flex items-center space-x-4 mb-4">
+                        <div class="p-3 bg-primary-100 dark:bg-primary-900 text-primary-600 dark:text-primary-300 rounded-lg">
+                            <!-- Ikon Roket --><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.5-3 1.5-4.5 0s-1.5-3 0-4.5L13.5 4.5c1.5-1.5 3-1.5 4.5 0s1.5 3 0 4.5L4.5 16.5z"/><path d="m11.5 5.5 9 9"/><path d="m19 19-3-3"/><path d="m5 5 3 3"/></svg>
+                        </div>
+                        <h4 class="text-2xl font-bold">Paket Pro</h4>
+                    </div>
+                    <p class="text-gray-600 dark:text-gray-400 mb-4">Monetisasi dari power users dan tim yang butuh produktivitas penuh.</p>
+                    <div class="mb-4">
+                        <span class="text-4xl font-extrabold">Rp 19.900,-</span>
+                        <span class="text-gray-500 dark:text-gray-400">/ bulan</span>
+                    </div>
+                    <ul class="space-y-3">
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-primary-500 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                            <span><span class="font-semibold">Scan Tak Terbatas</span> (Unlimited).</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-primary-500 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                            <span>Semua fitur <span class="font-semibold">Freemium</span>.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-primary-500 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                            <span><span class="font-semibold">Follow-up Cerdas</span> via WhatsApp & Email (termasuk draf AI).</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-primary-500 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                            <span><span class="font-semibold">Mode Kolaborasi Tim</span> (Simpan ke Google Sheet).</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-primary-500 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                            <span>Dukungan prioritas.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bagian 2: Analisis Biaya & Profit (Stat Cards) --><section class="mb-12">
+            <h3 class="text-2xl font-bold mb-6 text-center">Analisis Keuangan per Pengguna Pro</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
+                
+                <!-- Stat Card 1: Biaya Variabel --><div class="stat-card bg-light-card dark:bg-dark-card rounded-xl shadow-lg border border-light-border dark:border-dark-border p-6 text-center">
+                    <div class="mx-auto p-3 bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-300 rounded-full w-14 h-14 flex items-center justify-center mb-3">
+                        <!-- Ikon Dolar --><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                    </div>
+                    <div class="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase">Total Biaya Variabel</div>
+                    <div class="text-3xl font-extrabold text-red-600 dark:text-red-400 mt-1">Rp 3.468,-</div>
+                    <div class="text-sm text-gray-500 dark:text-gray-400">/ pengguna / bulan</div>
+                </div>
+
+                <!-- Stat Card 2: Margin Keuntungan --><div class="stat-card bg-light-card dark:bg-dark-card rounded-xl shadow-2xl border-2 border-primary-500 p-6 text-center transform scale-105">
+                    <div class="mx-auto p-3 bg-primary-100 dark:bg-primary-900 text-primary-600 dark:text-primary-300 rounded-full w-14 h-14 flex items-center justify-center mb-3">
+                        <!-- Ikon Trending Up --><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
+                    </div>
+                    <div class="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase">Margin Keuntungan</div>
+                    <div class="text-5xl font-extrabold text-primary-600 dark:text-primary-400 mt-1">82.6%</div>
+                    <div class="text-sm text-gray-500 dark:text-gray-400">Model bisnis sangat sehat</div>
+                </div>
+
+                <!-- Stat Card 3: Harga Jual --><div class="stat-card bg-light-card dark:bg-dark-card rounded-xl shadow-lg border border-light-border dark:border-dark-border p-6 text-center">
+                    <div class="mx-auto p-3 bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300 rounded-full w-14 h-14 flex items-center justify-center mb-3">
+                        <!-- Ikon Tag Harga --><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+                    </div>
+                    <div class="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase">Harga Jual Ditetapkan</div>
+                    <div class="text-3xl font-extrabold text-blue-600 dark:text-blue-400 mt-1">Rp 19.900,-</div>
+                    <div class="text-sm text-gray-500 dark:text-gray-400">/ pengguna / bulan</div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Bagian 3: Detail Perhitungan (Accordion Interaktif) --><section class="mb-12">
+            <h3 class="text-2xl font-bold mb-6 text-center">Detail Perhitungan & Asumsi</h3>
+            <div class="max-w-3xl mx-auto space-y-4">
+                
+                <!-- Accordion Item 1: Asumsi Pengguna & Teknologi --><div class="bg-light-card dark:bg-dark-card rounded-lg border border-light-border dark:border-dark-border shadow-sm overflow-hidden">
+                    <h2>
+                        <button type="button" class="accordion-button flex items-center justify-between w-full p-5 font-medium text-left text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700" aria-expanded="false" data-accordion-target="#accordion-content-1">
+                            <span>Asumsi Pengguna & Teknologi</span>
+                            <!-- Ikon Panah --><svg class="accordion-arrow w-6 h-6 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                        </button>
+                    </h2>
+                    <div id="accordion-content-1" class="accordion-content">
+                        <div class="p-5 border-t border-light-border dark:border-dark-border">
+                            <ul class="list-disc list-inside space-y-2 text-gray-600 dark:text-gray-400">
+                                <li><span class="font-semibold">Model AI:</span> meta-llama/llama-4-maverick via Groq API.</li>
+                                <li><span class="font-semibold">Harga AI:</span> $0.45 per 1 juta token.</li>
+                                <li><span class="font-semibold">Infrastruktur:</span> Google Cloud Functions (Serverless).</li>
+                                <li><span class="font-semibold">Kurs Mata Uang:</span> $1 = Rp 16.400,-.</li>
+                                <li><span class="font-semibold">Aktivitas User Pro:</span> 300 scan & 20 draf email per bulan.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Accordion Item 2: Rincian Biaya per Pengguna Pro --><div class="bg-light-card dark:bg-dark-card rounded-lg border border-light-border dark:border-dark-border shadow-sm overflow-hidden">
+                    <h2>
+                        <button type="button" class="accordion-button flex items-center justify-between w-full p-5 font-medium text-left text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700" aria-expanded="false" data-accordion-target="#accordion-content-2">
+                            <span>Rincian Biaya per Pengguna Pro (Bulanan)</span>
+                            <!-- Ikon Panah --><svg class="accordion-arrow w-6 h-6 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                        </button>
+                    </h2>
+                    <div id="accordion-content-2" class="accordion-content">
+                        <div class="p-5 border-t border-light-border dark:border-dark-border">
+                            <p class="font-semibold mb-2">Biaya Scan Kartu Nama (300 scan):</p>
+                            <ul class="list-disc list-inside space-y-2 text-gray-600 dark:text-gray-400 mb-4 ml-4">
+                                <li><span class="font-semibold">Token:</span> 300 scan × 1.500 token/scan = 450.000 token.</li>
+                                <li><span class="font-semibold">Biaya (USD):</span> (450.000 / 1.000.000) × $0.45 = $0.2025.</li>
+                            </ul>
+                            <p class="font-semibold mb-2">Biaya Generate Email (20 email):</p>
+                            <ul class="list-disc list-inside space-y-2 text-gray-600 dark:text-gray-400 mb-4 ml-4">
+                                <li><span class="font-semibold">Token:</span> 20 email × 1.000 token/email = 20.000 token.</li>
+                                <li><span class="font-semibold">Biaya (USD):</span> (20.000 / 1.000.000) × $0.45 = $0.009.</li>
+                            </ul>
+                            <hr class="my-4 border-light-border dark:border-dark-border">
+                            <p class="font-semibold mb-2">Total Biaya Variabel:</p>
+                            <ul class="list-disc list-inside space-y-2 text-gray-600 dark:text-gray-400 ml-4">
+                                <li><span class="font-semibold">Total (USD):</span> $0.2025 + $0.009 = $0.2115.</li>
+                                <li><span class="font-semibold">Total (IDR):</span> $0.2115 × Rp 16.400 = <span class="text-red-600 dark:text-red-400 font-bold">Rp 3.468,-</span>.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Bagian 4: Analisis Skalabilitas --><section>
+            <div class="card bg-primary-50 dark:bg-primary-900/50 border border-primary-200 dark:border-primary-800 rounded-xl shadow-lg p-6 sm:p-8">
+                <div class="flex flex-col md:flex-row items-center">
+                    <div class="p-4 bg-primary-500 text-white rounded-lg mb-4 md:mb-0 md:mr-6 flex-shrink-0">
+                        <!-- Ikon Server/Layers --><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-bold text-primary-800 dark:text-primary-200 mb-2">Analisis Skalabilitas: Sangat Layak</h3>
+                        <p class="text-base text-primary-700 dark:text-primary-300">
+                            Model bisnis ini sangat skalabel. Karena arsitektur kami berbasis <span class="font-semibold">serverless</span> (Google Cloud Functions) dan API pihak ketiga (Groq), biaya operasional kami bersifat <span class="font-semibold">variabel murni</span>. Kami tidak memiliki biaya server tetap. Biaya hanya meningkat seiring dengan peningkatan jumlah pengguna aktif, menjaga model bisnis tetap ramping dan efisien.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer --><footer class="text-center mt-12 text-gray-500 dark:text-gray-400 text-sm">
+            Infografis Model Bisnis & Monetisasi &copy; 2025 Scanner Pintar.
+        </footer>
+
+    </div>
+
+    <!-- JavaScript untuk Mode Gelap/Terang dan Accordion --><script>
+        document.addEventListener('DOMContentLoaded', function () {
+            
+            // --- Logika Mode Gelap/Terang ---
+            const themeToggleBtn = document.getElementById('theme-toggle');
+            const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+            const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+            const htmlElement = document.documentElement;
+
+            // Fungsi untuk mengatur tema
+            function setTheme(theme) {
+                if (theme === 'dark') {
+                    htmlElement.classList.add('dark');
+                    themeToggleLightIcon.classList.add('hidden');
+                    themeToggleDarkIcon.classList.remove('hidden');
+                    localStorage.setItem('theme', 'dark');
+                } else {
+                    htmlElement.classList.remove('dark');
+                    themeToggleDarkIcon.classList.add('hidden');
+                    themeToggleLightIcon.classList.remove('hidden');
+                    localStorage.setItem('theme', 'light');
+                }
+            }
+
+            // Cek tema saat halaman dimuat
+            const storedTheme = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            
+            if (storedTheme) {
+                setTheme(storedTheme);
+            } else {
+                setTheme(prefersDark ? 'dark' : 'light');
+            }
+
+            // Event listener untuk tombol toggle
+            themeToggleBtn.addEventListener('click', function() {
+                if (htmlElement.classList.contains('dark')) {
+                    setTheme('light');
+                } else {
+                    setTheme('dark');
+                }
+            });
+
+            // --- Logika Accordion ---
+            const accordionButtons = document.querySelectorAll('.accordion-button');
+
+            accordionButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const targetId = button.getAttribute('data-accordion-target');
+                    const targetContent = document.querySelector(targetId);
+                    const isExpanded = button.getAttribute('aria-expanded') === 'true';
+
+                    // Tutup semua accordion lain (opsional, jika Anda ingin hanya satu yang terbuka)
+                    // accordionButtons.forEach(btn => {
+                    //     if (btn !== button) {
+                    //         btn.setAttribute('aria-expanded', 'false');
+                    //         const otherContent = document.querySelector(btn.getAttribute('data-accordion-target'));
+                    //         otherContent.style.maxHeight = null;
+                    //     }
+                    // });
+
+                    // Buka/tutup accordion yang diklik
+                    if (isExpanded) {
+                        button.setAttribute('aria-expanded', 'false');
+                        targetContent.style.maxHeight = null;
+                    } else {
+                        button.setAttribute('aria-expanded', 'true');
+                        targetContent.style.maxHeight = targetContent.scrollHeight + 'px';
+                    }
+                });
+            });
+
+        });
+    </script>
+
+</body>
+</html>
