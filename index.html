@@ -134,7 +134,7 @@
             </div>
 
             <div id="profile-screen" class="hidden screen flex-col"><header class="p-6 flex justify-between items-center border-b border-gray-200 dark:border-gray-700"><h2 class="text-2xl font-bold" data-translate-key="myProfileTitle">Profil Saya</h2><button id="back-to-home-from-profile" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-500 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white"><i data-lucide="x" class="w-6 h-6"></i></button></header><div class="p-8 space-y-4 flex-grow">
-                <div><label for="profile-nama" class="text-sm font-medium text-gray-600 dark:text-gray-400" data-translate-key="yourNameLabel">Nama Anda</label><input type="text" id="profile-nama" data-translate-key-placeholder="yourNamePlaceholder" placeholder="Cth: Isparmo" class="w-full mt-1 p-3 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg"></div><div><label for="profile-jabatan" class="text-sm font-medium text-gray-600 dark:text-gray-400" data-translate-key="yourPositionLabel">Jabatan Anda</label><input type="text" id="profile-jabatan" data-translate-key-placeholder="yourPositionPlaceholder" placeholder="Cth: Marketing Manager" class="w-full mt-1 p-3 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg"></div><div><label for="profile-perusahaan" class="text-sm font-medium text-gray-600 dark:text-gray-400" data-translate-key="yourCompanyLabel">Nama Perusahaan Anda</label><input type="text" id="profile-perusahaan" data-translate-key-placeholder="yourCompanyPlaceholder" placeholder="Cth: PT Multibangun Rekatama Patria" class="w-full mt-1 p-3 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg"></div><div><label for="profile-deskripsi" class="text-sm font-medium text-gray-600 dark:text-gray-400" data-translate-key="companyDescLabel">Deskripsi Singkat Perusahaan</label><textarea id="profile-deskripsi" rows="3" data-translate-key-placeholder="companyDescPlaceholder" placeholder="Cth: Spesialis Geosintetik sejak 1995..." class="w-full mt-1 p-3 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg"></textarea></div></div><footer class="p-6"><button id="save-profile-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-full" data-translate-key="saveProfileBtn">SIMPAN PROFIL</button></footer></div>
+                <div><label for="profile-nama" class="text-sm font-medium text-gray-600 dark:text-gray-400" data-translate-key="yourNameLabel">Nama Anda</label><input type="text" id="profile-nama" data-translate-key-placeholder="yourNamePlaceholder" placeholder="Cth: Isparmo" class="w-full mt-1 p-3 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg"></div><div><label for="profile-jabatan" class="text-sm font-medium text-gray-600 dark:text-gray-400" data-translate-key="yourPositionLabel">Jabatan Anda</label><input type="text" id="profile-jabatan" data-translate-key-placeholder="yourPositionPlaceholder" placeholder="Cth: Marketing Manager" class="w-full mt-1 p-3 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg"></div><div><label for="profile-perusahaan" class="text-sm font-medium text-gray-600 dark:text-gray-400" data-translate-key="yourCompanyLabel">Nama Perusahaan Anda</label><input type="text" id="profile-perusahaan" data-translate-key-placeholder="yourCompanyPlaceholder" placeholder="Cth: PT Multibangun Rekatama Patria" class="w-full mt-1 p-3 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg"></div><div><label for="profile-deskripsi" class="text-sm font-medium text-gray-600 dark:text-gray-400" data-translate-key="companyDescLabel">Deskripsi Singkat Perusahaan</label><textarea id="profile-deskripsi" rows="3" data-translate-key-placeholder="companyDescPlaceholder" placeholder="Cth: Spesialis Geosintetik sejak 1995..." class="w-full mt-1 p-3 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg"></textarea></div></div><footer class="p-6"><div class="grid grid-cols-2 gap-4 mb-4"><button id="import-profile-btn" class="w-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 font-bold py-3 px-6 rounded-full">IMPOR PROFIL</button><button id="export-profile-btn" class="w-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 font-bold py-3 px-6 rounded-full">EKSPOR PROFIL</button></div><input type="file" id="import-profile-input" class="hidden" accept=".spro"><button id="save-profile-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-full" data-translate-key="saveProfileBtn">SIMPAN PROFIL</button></footer></div>
 
             <div id="scanner-screen" class="hidden screen relative bg-black flex-grow"><video id="video" autoplay playsinline></video><div class="scan-frame"></div><div class="camera-overlay p-6"><div class="flex justify-between items-center"><p id="scan-mode-label" class="text-white font-medium text-sm bg-black/50 px-3 py-1 rounded-full" data-translate-key="scanInstructions">Arahkan ke Kartu Nama atau QR Code</p><button id="cancel-scan-btn" class="p-3 bg-black/50 rounded-full text-white hover:bg-black/80"><i data-lucide="x" class="w-6 h-6"></i></button></div><div class="flex justify-center items-center"><button id="capture-btn" class="w-20 h-20 bg-white rounded-full flex items-center justify-center shadow-2xl ring-4 ring-white/30 transition-transform transform hover:scale-110" data-translate-key="scanBtn">SCAN</button></div></div><canvas id="canvas" class="hidden"></canvas></div>
             <div id="processing-screen" class="hidden screen justify-center items-center text-center p-8 flex-grow"><div class="loader mb-6"></div><h2 id="processing-title" class="text-2xl font-bold text-gray-900 dark:text-white animate-pulse" data-translate-key="processingTitle">AI Menganalisis Gambar...</h2><p class="text-gray-500 dark:text-gray-400 mt-2" data-translate-key="processingSubtitle">Mohon tunggu sebentar...</p></div>
@@ -2277,6 +2277,89 @@ END:VCALENDAR`;
                 showToast(getTranslation('toastProfileSaved'));
                 showScreen('initial');
             });
+
+            // Fungsi untuk Impor dan Ekspor Profil
+            const importProfileBtn = document.getElementById('import-profile-btn');
+            const exportProfileBtn = document.getElementById('export-profile-btn');
+            const importProfileInput = document.getElementById('import-profile-input');
+
+            exportProfileBtn.addEventListener('click', async () => {
+                const profileData = {
+                    nama: document.getElementById('profile-nama').value,
+                    jabatan: document.getElementById('profile-jabatan').value,
+                    perusahaan: document.getElementById('profile-perusahaan').value,
+                    deskripsi: document.getElementById('profile-deskripsi').value,
+                };
+
+                if (!profileData.nama) {
+                    showToast("Nama tidak boleh kosong untuk ekspor profil.");
+                    return;
+                }
+
+                const jsonString = JSON.stringify(profileData, null, 2);
+                const blob = new Blob([jsonString], { type: 'application/json' });
+                const fileName = `${profileData.nama.replace(/\s+/g, '_')}.spro`;
+
+                try {
+                    if (window.showSaveFilePicker) {
+                        const handle = await window.showSaveFilePicker({
+                            suggestedName: fileName,
+                            types: [{
+                                description: 'Scanner Pintar Profile',
+                                accept: { 'application/json': ['.spro'] },
+                            }],
+                        });
+                        const writable = await handle.createWritable();
+                        await writable.write(blob);
+                        await writable.close();
+                        showToast("Profil berhasil diekspor.");
+                    } else {
+                        throw new Error('File System Access API not supported, using fallback.');
+                    }
+                } catch (err) {
+                    console.log('Fallback save method used:', err.message);
+                    const link = document.createElement('a');
+                    link.href = URL.createObjectURL(blob);
+                    link.download = fileName;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    showToast("Profil sedang diunduh...");
+                }
+            });
+
+            importProfileBtn.addEventListener('click', () => {
+                importProfileInput.click();
+            });
+
+            importProfileInput.addEventListener('change', (event) => {
+                const file = event.target.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    try {
+                        const importedData = JSON.parse(e.target.result);
+                        if (importedData.nama || importedData.jabatan || importedData.perusahaan || importedData.deskripsi) {
+                            document.getElementById('profile-nama').value = importedData.nama || '';
+                            document.getElementById('profile-jabatan').value = importedData.jabatan || '';
+                            document.getElementById('profile-perusahaan').value = importedData.perusahaan || '';
+                            document.getElementById('profile-deskripsi').value = importedData.deskripsi || '';
+                            showToast("Profil berhasil diimpor. Jangan lupa simpan.");
+                        } else {
+                            throw new Error("File tidak berisi data profil yang valid.");
+                        }
+                    } catch (error) {
+                        logError("Gagal mengimpor profil", error);
+                        showToast(`Gagal mengimpor file: ${error.message}`);
+                    } finally {
+                        importProfileInput.value = ''; // Reset input
+                    }
+                };
+                reader.readAsText(file);
+            });
+
+
             otherSelectors.closeActionModalBtn.addEventListener('click', closeActionModal);
 
             logIcon.addEventListener('click', () => {
