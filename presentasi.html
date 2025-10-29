@@ -55,41 +55,50 @@
             scroll-behavior: smooth;
         }
 
-        /* [EFEK BARU V3] Gaya untuk kartu interaktif */
+        /* ===== EFEK KARTU INTERAKTIF ===== */
         .card-interactive {
             position: relative;
-            transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
-            will-change: transform, box-shadow;
-            z-index: 1; /* Atur konteks tumpukan dasar */
+            overflow: hidden;
+            z-index: 1; /* Membuat stacking context baru */
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            will-change: transform;
         }
 
-        /* [EFEK BARU V3] Pseudo-element untuk efek cahaya bingkai neon */
         .card-interactive::before {
-            content: "";
+            content: '';
             position: absolute;
-            z-index: -1; /* Letakkan di BELAKANG kartu */
-            inset: -3px; /* Kontrol ketebalan bingkai (3px) */
-            border-radius: 1rem; /* Sedikit lebih besar dari radius kartu (rounded-xl = 0.75rem) */
+            inset: 0;
+            border-radius: inherit; /* Mengikuti border-radius parent */
+            padding: 2px; /* Ketebalan border */
+
+            /* Gradien cahaya yang posisinya dikontrol oleh JS via var(--x) dan var(--y) */
             background: radial-gradient(
-                250px circle at var(--x) var(--y),
-                rgba(60, 130, 246, 0.6) 0%, /* Warna neon biru */
-                transparent 100%
+                350px circle at var(--x) var(--y),
+                #60a5fa /* blue-400 */,
+                transparent 50%
             );
+
+            /* Trik masking untuk membuat border dari background */
+            -webkit-mask:
+                linear-gradient(#fff 0 0) content-box,
+                linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor; /* Untuk browser webkit lama */
+            mask-composite: exclude; /* Standar */
+
             opacity: 0;
             transition: opacity 0.3s ease-in-out;
-            will-change: opacity;
-            pointer-events: none;
+            pointer-events: none; /* Agar tidak mengganggu event mouse di kartu */
         }
 
         .card-interactive:hover {
-            transform: translateY(-6px) scale(1.02);
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2), 0 8px 12px rgba(0, 0, 0, 0.18);
-            z-index: 10; /* Angkat kartu di atas yang lain saat hover */
+            transform: translateY(-6px) scale(1.01);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
         }
 
         .card-interactive:hover::before {
-            opacity: 1; /* Tampilkan cahaya saat hover */
+            opacity: 1;
         }
+
     </style>
 </head>
 <body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200 transition-colors duration-300">
@@ -256,7 +265,7 @@
                         </p>
                     </div>
 
-                    <div class="flex items-center justify-center p-8 bg-white dark:bg-gray-800/50 rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 card-interactive">
+                    <div class="flex items-center justify-center p-8 bg-white dark:bg-gray-800/50 rounded-xl shadow-xl border border-gray-200 dark:border-gray-700">
                         <div class="text-center">
                             <!-- FIX: Ikon Contact SVG Inline -->
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-20 w-20 text-gray-400 dark:text-gray-500">
@@ -1006,7 +1015,7 @@
             
             // FIX: Seluruh blok try...catch lucide DIHAPUS.
 
-            // [EFEK BARU] Logika untuk efek cahaya bingkai neon yang mengikuti kursor
+            // --- Logika Kartu Interaktif ---
             document.querySelectorAll('.card-interactive').forEach(card => {
                 card.addEventListener('mousemove', e => {
                     const rect = card.getBoundingClientRect();
