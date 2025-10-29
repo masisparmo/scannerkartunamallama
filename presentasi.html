@@ -55,46 +55,37 @@
             scroll-behavior: smooth;
         }
 
-        /* === Card Hover Effect === */
-        @keyframes rotate_border {
-            to {
-                transform: rotate(360deg);
-            }
+        /* [EFEK BARU] Gaya untuk kartu interaktif */
+        .card-interactive {
+            position: relative; /* Kebutuhan untuk pseudo-element */
+            transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
+            will-change: transform, box-shadow;
+            overflow: hidden; /* Menyembunyikan glow yang keluar dari batas kartu */
         }
 
-        .card-interactive {
-            position: relative;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        /* [EFEK BARU] Pseudo-element untuk efek cahaya */
+        .card-interactive::before {
+            content: '';
+            position: absolute;
+            left: var(--x, 50%);
+            top: var(--y, 50%);
+            width: 150px; /* Lebar cahaya */
+            height: 150px; /* Tinggi cahaya */
+            background: radial-gradient(circle closest-side, rgba(60, 130, 246, 0.5), transparent);
+            transform: translate(-50%, -50%);
+            transition: left 0.2s ease-out, top 0.2s ease-out, background-color 0.3s ease-in-out;
+            opacity: 0; /* Awalnya tidak terlihat */
+            pointer-events: none; /* Cahaya tidak boleh menangkap event mouse */
         }
 
         .card-interactive:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-        }
-
-        .card-interactive::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            border-radius: inherit; /* Mengambil radius dari kelas .rounded-lg/.rounded-xl */
-            padding: 2px; /* Lebar border cahaya */
-            background: conic-gradient(from 180deg at 50% 50%, #93c5fd, #3b82f6, #1d4ed8, #3b82f6, #93c5fd);
-            animation: rotate_border 4s linear infinite;
-
-            /* Teknik masking untuk membuat efek border */
-            -webkit-mask:
-                linear-gradient(#fff 0 0) content-box,
-                linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor;
-            mask-composite: exclude;
-
-            opacity: 0;
-            transition: opacity 0.4s ease;
-            pointer-events: none; /* Pastikan pseudo-element tidak mengganggu klik */
+            transform: translateY(-6px) scale(1.02);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2), 0 8px 12px rgba(0, 0, 0, 0.18);
+            z-index: 10;
         }
 
         .card-interactive:hover::before {
-            opacity: 1;
+            opacity: 1; /* Tampilkan cahaya saat hover */
         }
     </style>
 </head>
@@ -194,7 +185,7 @@
                 </div>
                 
                 <!-- Hook Story -->
-                <div class="bg-primary-50 dark:bg-primary-900/30 border border-primary-200 dark:border-primary-700/50 rounded-xl p-8 max-w-4xl mx-auto text-center mb-16 shadow-lg card-interactive">
+                <div class="bg-primary-50 dark:bg-primary-900/30 border border-primary-200 dark:border-primary-700/50 rounded-xl p-8 max-w-4xl mx-auto text-center mb-16 shadow-lg">
                     <!-- FIX: Ikon Alert-Triangle SVG Inline -->
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-12 w-12 text-primary-500 mx-auto mb-4">
                         <path d="m21.73 18-8-14a2 2 0 0 0-3.46 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path><path d="M12 9v4"></path><path d="M12 17h.01"></path>
@@ -300,7 +291,7 @@
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                     <!-- Dampak 1 -->
-                    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 hover:shadow-2xl transition-shadow duration-300 card-interactive">
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 transition-shadow duration-300 card-interactive">
                         <div class="bg-primary-100 dark:bg-primary-900/50 text-primary-600 dark:text-primary-400 w-12 h-12 rounded-lg flex items-center justify-center mb-5">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-briefcase">
                                 <rect width="20" height="14" x="2" y="7" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
@@ -312,7 +303,7 @@
                         </p>
                     </div>
                     <!-- Dampak 2 -->
-                    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 hover:shadow-2xl transition-shadow duration-300 card-interactive">
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 transition-shadow duration-300 card-interactive">
                         <div class="bg-primary-100 dark:bg-primary-900/50 text-primary-600 dark:text-primary-400 w-12 h-12 rounded-lg flex items-center justify-center mb-5">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trending-up">
                                 <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline><polyline points="16 7 22 7 22 13"></polyline>
@@ -324,7 +315,7 @@
                         </p>
                     </div>
                     <!-- Dampak 3 -->
-                    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 hover:shadow-2xl transition-shadow duration-300 card-interactive">
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 transition-shadow duration-300 card-interactive">
                         <div class="bg-primary-100 dark:bg-primary-900/50 text-primary-600 dark:text-primary-400 w-12 h-12 rounded-lg flex items-center justify-center mb-5">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check-circle-2">
                                 <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path><path d="m9 12 2 2 4-4"></path>
@@ -336,7 +327,7 @@
                         </p>
                     </div>
                     <!-- Dampak 4 -->
-                    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 hover:shadow-2xl transition-shadow duration-300 card-interactive">
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 transition-shadow duration-300 card-interactive">
                         <div class="bg-primary-100 dark:bg-primary-900/50 text-primary-600 dark:text-primary-400 w-12 h-12 rounded-lg flex items-center justify-center mb-5">
                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-smile">
                                 <circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><line x1="9" x2="9.01" y1="9" y2="9"></line><line x1="15" x2="15.01" y1="9" y2="9"></line>
@@ -364,7 +355,7 @@
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                     <!-- Fitur 1 -->
-                    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 hover:shadow-2xl transition-shadow duration-300 card-interactive">
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 transition-shadow duration-300 card-interactive">
                         <div class="bg-primary-100 dark:bg-primary-900/50 text-primary-600 dark:text-primary-400 w-12 h-12 rounded-lg flex items-center justify-center mb-5">
                             <!-- FIX: Ikon Scan-Face SVG Inline -->
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-scan-face">
@@ -378,7 +369,7 @@
                         </p>
                     </div>
                     <!-- Fitur 2 -->
-                    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 hover:shadow-2xl transition-shadow duration-300 card-interactive">
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 transition-shadow duration-300 card-interactive">
                         <div class="bg-primary-100 dark:bg-primary-900/50 text-primary-600 dark:text-primary-400 w-12 h-12 rounded-lg flex items-center justify-center mb-5">
                             <!-- FIX: Ikon Zap SVG Inline -->
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-zap">
@@ -391,7 +382,7 @@
                         </p>
                     </div>
                     <!-- Fitur 3 -->
-                    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 hover:shadow-2xl transition-shadow duration-300 card-interactive">
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 transition-shadow duration-300 card-interactive">
                         <div class="bg-primary-100 dark:bg-primary-900/50 text-primary-600 dark:text-primary-400 w-12 h-12 rounded-lg flex items-center justify-center mb-5">
                             <!-- FIX: Ikon Database SVG Inline -->
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-database">
@@ -404,7 +395,7 @@
                         </p>
                     </div>
                     <!-- Fitur 4 -->
-                    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 hover:shadow-2xl transition-shadow duration-300 card-interactive">
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 transition-shadow duration-300 card-interactive">
                         <div class="bg-primary-100 dark:bg-primary-900/50 text-primary-600 dark:text-primary-400 w-12 h-12 rounded-lg flex items-center justify-center mb-5">
                             <!-- FIX: Ikon Share-2 SVG Inline -->
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-share-2">
@@ -1011,6 +1002,19 @@
             applyLanguage(currentLang);
             
             // FIX: Seluruh blok try...catch lucide DIHAPUS.
+
+            // [EFEK BARU] Logika untuk efek cahaya yang mengikuti kursor
+            const interactiveCards = document.querySelectorAll('.card-interactive');
+            interactiveCards.forEach(card => {
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+
+                    card.style.setProperty('--x', `${x}px`);
+                    card.style.setProperty('--y', `${y}px`);
+                });
+            });
         });
     </script>
 
