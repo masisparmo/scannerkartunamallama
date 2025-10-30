@@ -122,7 +122,10 @@
 
             <div id="create-session-screen" class="hidden screen p-8 flex flex-col justify-center items-center text-center flex-grow">
                 <h2 class="text-2xl font-bold" data-translate-key="createCollabTitleV2">Mode Kolaborasi (Host)</h2>
-                <p class="text-gray-500 dark:text-gray-400 mt-2 mb-8" data-translate-key="createCollabSubtitleV2">Isi detail di bawah ini untuk membuat QR Code bagi tim Anda.</p>
+                <p class="text-gray-500 dark:text-gray-400 mt-2 mb-4" data-translate-key="createCollabSubtitleV2">Isi detail di bawah ini untuk membuat QR Code bagi tim Anda.</p>
+                <p class="text-sm text-indigo-600 dark:text-indigo-400 mb-8">
+                    <a href="#" id="show-collab-help-btn" class="hover:underline">Butuh bantuan? Baca petunjuk lengkap di sini.</a>
+                </p>
                 <div class="w-full max-w-sm text-left space-y-4">
                     <div>
                         <label for="collab-apps-script-url" class="text-sm font-medium text-gray-600 dark:text-gray-400" data-translate-key="appsScriptUrlLabel">URL Web App Apps Script</label>
@@ -216,6 +219,170 @@
     </div>
 
     <!-- Modals -->
+    <div id="collab-help-modal" class="modal-backdrop hidden fixed inset-0 bg-black/60 z-50 p-4 flex items-center justify-center">
+        <div class="modal-content bg-white dark:bg-gray-800 rounded-2xl shadow-xl w-full max-w-2xl transform scale-95 opacity-0">
+            <div class="p-6 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+                <h3 class="text-xl font-bold">Petunjuk Pengaturan Mode Kolaborasi</h3>
+                <button id="close-collab-help-modal-btn" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+            <div id="collab-help-content" class="p-6 max-h-[70vh] overflow-y-auto text-sm text-gray-700 dark:text-gray-300 space-y-4">
+                    <p>Mode Kolaborasi memungkinkan Anda (sebagai Host) untuk mengumpulkan semua data pindaian dari tim Anda ke dalam satu Google Sheet. Ikuti langkah-langkah di bawah ini untuk menyiapkannya.</p>
+
+                    <h4 class="text-lg font-semibold pt-2">Langkah 1: Siapkan Google Sheet Anda</h4>
+                    <ol class="list-decimal list-inside space-y-2 pl-4">
+                        <li>Buka Google Sheet yang sudah ada atau buat yang baru. Ini akan menjadi tempat semua data tim Anda disimpan.</li>
+                        <li>Klik menu <strong>Extensions</strong> &gt; <strong>Apps Script</strong>. Ini akan membuka editor skrip di tab baru.</li>
+                    </ol>
+
+                    <h4 class="text-lg font-semibold pt-2">Langkah 2: Salin dan Tempel Kode Skrip</h4>
+                    <ol class="list-decimal list-inside space-y-2 pl-4">
+                        <li>Hapus semua kode contoh yang ada di editor Apps Script.</li>
+                        <li>Salin seluruh kode di bawah ini dan tempelkan ke dalam editor.</li>
+                    </ol>
+                    <div class="relative">
+                        <pre class="bg-gray-100 dark:bg-gray-900 p-4 rounded-lg text-xs overflow-x-auto"><code>// INSTRUCTIONS FOR HOST (v2):
+// 1. Open your Google Sheet.
+// 2. Go to Extensions > Apps Script.
+// 3. Copy all the code from this file and paste it into the \`Code.gs\` file in the Apps Script editor.
+// 4. CHANGE THE \`YOUR_SECRET_KEY\` variable below to a strong, unique secret key.
+// 5. Click the "Deploy" button > "New deployment".
+// 6. For "Select type", choose "Web app".
+// 7. In the "Description" field, you can write "Business Card Scanner Collaboration v2".
+// 8. For "Execute as", select "Me".
+// 9. For "Who has access", select "Anyone". **IMPORTANT: This is necessary for the script to receive data.**
+// 10. Click "Deploy".
+// 11. On the next screen, click "Authorize access" and approve the permissions for the script to edit your Google Sheets.
+// 12. After authorization, it will show you a "Web app URL". COPY this URL. You will need it for the Scanner Pintar app.
+
+// --- START OF SCRIPT ---
+
+// CONFIGURATION: Change this key to your own secret password.
+const SECRET_KEY = "GANTI_DENGAN_KUNCI_RAHASIA_ANDA";
+
+// Define the exact header columns and their order to match the app's "Edit Kontak" form.
+const HEADERS = [
+  "Timestamp", "Team Member", "Nama", "Jabatan", "Perusahaan", "Jenis Perusahaan",
+  "Telepon Kantor", "WhatsApp", "Email", "Tags", "Acara", "Tanggal", "Catatan"
+];
+
+function doPost(e) {
+  try {
+    const requestData = JSON.parse(e.postData.contents);
+    const { key, eventName, teamMember, cardData } = requestData;
+
+    if (key !== SECRET_KEY) {
+      return createJsonResponse({ "status": "error", "message": "Invalid Secret Key." });
+    }
+    if (!eventName || !teamMember || !cardData) {
+      return createJsonResponse({ "status": "error", "message": "Missing required data: eventName, teamMember, or cardData." });
+    }
+
+    const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+    let sheet = spreadsheet.getSheetByName(eventName);
+    if (!sheet) {
+      sheet = spreadsheet.insertSheet(eventName);
+      sheet.appendRow(HEADERS);
+    }
+
+    const dataRange = sheet.getDataRange();
+    const values = dataRange.getValues();
+    const headerRow = values[0];
+    const nameIndex = headerRow.indexOf("Nama");
+    const companyIndex = headerRow.indexOf("Perusahaan");
+    const whatsappIndex = headerRow.indexOf("WhatsApp");
+
+    let existingRowIndex = -1;
+    if (nameIndex > -1 && companyIndex > -1 && whatsappIndex > -1) {
+      for (let i = 1; i < values.length; i++) {
+        const row = values[i];
+        if (row[nameIndex] === cardData.nama &&
+            row[companyIndex] === cardData.perusahaan &&
+            row[whatsappIndex] === cardData.whatsapp) {
+          existingRowIndex = i + 1;
+          break;
+        }
+      }
+    }
+
+    const timestamp = new Date();
+    const newRowData = HEADERS.map(header => {
+        switch(header) {
+            case "Timestamp": return timestamp;
+            case "Team Member": return teamMember;
+            case "Nama": return cardData.nama || "";
+            case "Jabatan": return cardData.jabatan || "";
+            case "Perusahaan": return cardData.perusahaan || "";
+            case "Jenis Perusahaan": return cardData.jenis_perusahaan || "";
+            case "Telepon Kantor": return cardData.telepon_kantor ? "'" + cardData.telepon_kantor : "";
+            case "WhatsApp": return cardData.whatsapp || "";
+            case "Email": return cardData.email || "";
+            case "Tags": return (cardData.tags || []).join(', ');
+            case "Acara": return cardData.acara || "";
+            case "Tanggal": return cardData.tanggal || "";
+            case "Catatan": return cardData.catatan || "";
+            default: return "";
+        }
+    });
+
+    if (existingRowIndex !== -1) {
+      const range = sheet.getRange(existingRowIndex, 1, 1, HEADERS.length);
+      range.setValues([newRowData]);
+    } else {
+      sheet.appendRow(newRowData);
+    }
+    return createJsonResponse({ "status": "success" });
+  } catch (error) {
+    return createJsonResponse({ "status": "error", "message": error.toString() });
+  }
+}
+
+function createJsonResponse(obj) {
+  return ContentService
+    .createTextOutput(JSON.stringify(obj))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+</code></pre>
+                        <button class="copy-code-btn absolute top-2 right-2 p-2 bg-gray-300 dark:bg-gray-700 rounded-md text-xs hover:bg-gray-400 dark:hover:bg-gray-600">Salin Kode</button>
+                    </div>
+
+                    <h4 class="text-lg font-semibold pt-2">Langkah 3: Atur Kunci Rahasia (Secret Key)</h4>
+                    <ol class="list-decimal list-inside space-y-2 pl-4">
+                        <li>Di dalam kode yang baru saja Anda tempel, cari baris: <br><code>const SECRET_KEY = "GANTI_DENGAN_KUNCI_RAHASIA_ANDA";</code></li>
+                        <li>Ganti <code>GANTI_DENGAN_KUNCI_RAHASIA_ANDA</code> dengan kata sandi unik Anda sendiri. <strong>Penting:</strong> Kunci ini harus sama persis dengan yang Anda masukkan di aplikasi Scanner Pintar.</li>
+                        <li>Simpan proyek skrip dengan mengklik ikon disket.</li>
+                    </ol>
+
+                    <h4 class="text-lg font-semibold pt-2">Langkah 4: Deploy sebagai Web App</h4>
+                    <ol class="list-decimal list-inside space-y-2 pl-4">
+                        <li>Klik tombol biru <strong>Deploy</strong> di kanan atas, lalu pilih <strong>New deployment</strong>.</li>
+                        <li>Di sebelah "Select type", klik ikon roda gigi dan pilih <strong>Web app</strong>.</li>
+                        <li>Pada bagian "Configuration":
+                            <ul class="list-disc list-inside pl-6 mt-1">
+                                <li><strong>Description:</strong> (Opsional) Beri nama, contohnya "Scanner Pintar Kolaborasi".</li>
+                                <li><strong>Execute as:</strong> Pilih <strong>Me</strong>.</li>
+                                <li><strong>Who has access:</strong> Pilih <strong>Anyone</strong>. Ini penting agar aplikasi bisa mengirim data.</li>
+                            </ul>
+                        </li>
+                        <li>Klik <strong>Deploy</strong>.</li>
+                    </ol>
+
+                    <h4 class="text-lg font-semibold pt-2">Langkah 5: Otorisasi dan Salin URL</h4>
+                    <ol class="list-decimal list-inside space-y-2 pl-4">
+                        <li>Google akan meminta izin. Klik <strong>Authorize access</strong> dan ikuti petunjuk untuk menyetujui akses skrip ke Google Sheet Anda.</li>
+                        <li>Setelah berhasil, Anda akan melihat jendela "Deployment successful". Salin <strong>Web app URL</strong> yang ditampilkan.</li>
+                        <li>URL inilah yang Anda tempel ke kolom "URL Web App Apps Script" di aplikasi Scanner Pintar.</li>
+                    </ol>
+
+                    <p class="pt-4 font-semibold">Selesai! Sekarang Anda bisa mengisi ketiga kolom di aplikasi, membuat QR Code, dan membagikannya ke tim Anda.</p>
+                </div>
+            <div class="p-6 border-t border-gray-200 dark:border-gray-700 text-right">
+                <button id="ok-collab-help-modal-btn" class="modal-button bg-indigo-600 text-white hover:bg-indigo-700">Mengerti</button>
+            </div>
+        </div>
+    </div>
+
     <div id="action-modal" class="modal-backdrop hidden fixed inset-0 bg-black/60 z-50 p-4 flex items-end sm:items-center sm:justify-center"><div class="modal-content bg-white dark:bg-gray-800 rounded-t-2xl sm:rounded-2xl shadow-xl w-full max-w-md p-6 transform translate-y-full sm:scale-95 sm:translate-y-0 opacity-0"><div class="flex justify-between items-start mb-4"><div id="action-modal-header"></div><button id="close-action-modal-btn" class="p-2 -mr-2 -mt-2 text-gray-500 hover:text-gray-800 dark:hover:text-gray-200 rounded-full"><i data-lucide="x" class="w-6 h-6"></i></button></div><div id="action-modal-body" class="text-sm text-gray-600 dark:text-gray-400 mb-6"></div><div id="action-modal-footer" class="grid grid-cols-2 gap-3"></div></div></div>
     <div id="reminder-modal" class="modal-backdrop hidden fixed inset-0 bg-black/60 z-50 p-4 flex items-center justify-center">
         <div class="modal-content bg-white dark:bg-gray-800 rounded-2xl shadow-xl w-full max-w-md p-6 transform scale-95 opacity-0">
@@ -716,6 +883,10 @@
             const cancelJoinBtn = document.getElementById('cancel-join-btn');
             const confirmJoinBtn = document.getElementById('confirm-join-btn');
             const collaborationModeIndicator = document.getElementById('collaboration-mode-indicator');
+            const showCollabHelpBtn = document.getElementById('show-collab-help-btn');
+            const collabHelpModal = document.getElementById('collab-help-modal');
+            const closeCollabHelpModalBtn = document.getElementById('close-collab-help-modal-btn');
+            const okCollabHelpModalBtn = document.getElementById('ok-collab-help-modal-btn');
             const collabSessionName = document.getElementById('collab-session-name');
             const collabUserName = document.getElementById('collab-user-name');
             const exitCollabBtn = document.getElementById('exit-collab-btn');
@@ -2459,6 +2630,41 @@ END:VCALENDAR`;
                 }
             });
 
+            function showCollabHelpModal() {
+                collabHelpModal.classList.remove('hidden');
+                setTimeout(() => {
+                    collabHelpModal.classList.remove('opacity-0');
+                    collabHelpModal.querySelector('.modal-content').classList.remove('scale-95', 'opacity-0');
+                }, 10);
+            }
+
+            function hideCollabHelpModal() {
+                collabHelpModal.classList.add('opacity-0');
+                collabHelpModal.querySelector('.modal-content').classList.add('scale-95', 'opacity-0');
+                setTimeout(() => {
+                    collabHelpModal.classList.add('hidden');
+                }, 300);
+            }
+
+            showCollabHelpBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                showCollabHelpModal();
+            });
+
+            closeCollabHelpModalBtn.addEventListener('click', hideCollabHelpModal);
+            okCollabHelpModalBtn.addEventListener('click', hideCollabHelpModal);
+
+            collabHelpModal.querySelector('.copy-code-btn').addEventListener('click', (e) => {
+                const codeBlock = collabHelpModal.querySelector('pre code');
+                navigator.clipboard.writeText(codeBlock.innerText).then(() => {
+                    showToast('Kode berhasil disalin!');
+                    e.target.innerText = 'Disalin!';
+                    setTimeout(() => { e.target.innerText = 'Salin Kode'; }, 2000);
+                }).catch(err => {
+                    showToast('Gagal menyalin kode.');
+                    console.error('Failed to copy text: ', err);
+                });
+            });
 
             document.getElementById('cancel-reminder-btn').addEventListener('click', closeReminderModal);
             document.getElementById('create-reminder-btn').addEventListener('click', createICSFile);
