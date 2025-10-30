@@ -2702,13 +2702,16 @@ END:VCALENDAR`;
 
             document.getElementById('download-qrcode-btn').addEventListener('click', () => {
                 const qrCanvas = document.querySelector('#profile-qrcode-container canvas');
+                const profile = JSON.parse(localStorage.getItem('userProfile')) || {};
+
                 if (qrCanvas) {
                     const link = document.createElement('a');
-                    link.download = 'vcard-qrcode.png';
+                    const filename = (profile.nama || 'contact').replace(/\s+/g, '_').toLowerCase();
+                    link.download = `${filename}-qrcode.png`;
                     link.href = qrCanvas.toDataURL('image/png');
                     link.click();
                 } else {
-                    showToast("QR Code belum dibuat.");
+                    showToast("QR Code belum dibuat atau profil belum disimpan.");
                 }
             });
 
