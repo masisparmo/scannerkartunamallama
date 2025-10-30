@@ -2269,7 +2269,7 @@ END:VCALENDAR`;
                 if (profile.photo) {
                     photoPreview.src = profile.photo;
                 } else {
-                    photoPreview.src = 'https://via.placeholder.com/128';
+                    photoPreview.src = document.getElementById('profile-photo-preview').src;
                 }
             }
 
@@ -2656,10 +2656,11 @@ END:VCALENDAR`;
                     tabContentQrcode.classList.toggle('hidden', isProfileTab);
 
                     if (!isProfileTab) {
-                        // Use a short timeout to allow the browser to render the tab content before generating the QR code
-                        setTimeout(() => {
+                        // Wait for the next animation frame to ensure the tab content is visible
+                        // before attempting to generate the QR code inside it. This prevents a race condition.
+                        requestAnimationFrame(() => {
                             generateProfileQRCode();
-                        }, 50);
+                        });
                     }
                 });
             });
@@ -2720,9 +2721,9 @@ END:VCALENDAR`;
 
             function createProfileVCard(profile) {
                 let vCard = `BEGIN:VCARD\nVERSION:3.0\n`;
-                vCard += `FN:${profile.nama || ''}\n`;
-                vCard += `ORG:${profile.perusahaan || ''}\n`;
-                vCard += `TITLE:${profile.jabatan || ''}\n`;
+                if (profile.nama) vCard += `FN:${profile.nama}\n`;
+                if (profile.perusahaan) vCard += `ORG:${profile.perusahaan}\n`;
+                if (profile.jabatan) vCard += `TITLE:${profile.jabatan}\n`;
                 if (profile.whatsapp) vCard += `TEL;TYPE=CELL,VOICE:${profile.whatsapp}\n`;
                 if (profile.telp_kantor) vCard += `TEL;TYPE=WORK,VOICE:${profile.telp_kantor}\n`;
                 if (profile.email) vCard += `EMAIL:${profile.email}\n`;
@@ -2846,10 +2847,11 @@ END:VCALENDAR`;
                             document.getElementById('profile-telp-kantor').value = importedData.telp_kantor || '';
 
                             const photoPreview = document.getElementById('profile-photo-preview');
+                            const placeholderSvg = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTI4IiBoZWlnaHQ9IjEyOCIgdmlld0JveD0iMCAwIDEyOCAxMjgiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMjgiIGhlaWdodD0iMTI4IiByeD0iNjQiIGZpbGw9IiNFNEU0RTciLz4KPHBhdGggZD0iTTk0LjYwNTYgMTAzLjkxOUM5Mi4yMDI0IDEwMS43MDQgODguNzAyMSA5OS4zOTIgODQuODU2MiA5Ni43MDM5Qzc3LjgwNjYgOTEuNTc1MyA2OS41NDYxIDg4IDYwLjQzNTYgODhDNTEuMzI1MSA4OCA0My4wNjQ2IDkxLjU3NTMgMzUuMDE1IDk2LjcwMzlDMzEuMTY5MSA5OS4zOTIgMjcuNjY4OCAxMDEuNzA0IDI1LjI2NTYgMTAzLjkxOUMyMS4zNTIgMTA3LjU2NSAxOC4zMDgzIDEwOS4yMDggMTggMTA4LjAwMkMxOCAxMDQuNzM2IDIyLjEyMDQgOTQuODEzNyAyOS4zNjA4IDgzLjY3NjlDNjAuNDM1NiA0NC44ODIgNjkuNjE2MyA0NS40NDQxIDk2LjUwMDQgODMuNjc2OUMxMDMuNzQxIDk0LjgxMzcgMTA3Ljg2MSAxMDQuNzM2IDEwNy44NjEgMTA4LjAwMkMxMDcuNTUzIDEwOS4zMjkgMTA0Ljc2MiAxMDcuODQyIDEwMy4yMDkgMTA2LjQzMkM5OS44ODcyIDEwMy40MDkgOTcuMjc0OCAxMDEuOTg2IDk0LjYwNTYgMTAzLjkxOVoiIGZpbGw9IiNBMEEwQUIiLz4KPHBhdGggZD0iTTYwLjQzNTYgNzZDNzAuMzkxOCA3NiA3OC41MjE4IDY3Ljg2OTkgNzguUyMTggNTcuOTEzOEM3OC41MjE4IDQ4LjA1NzYgNzAuMzkxOCAzOS45MjczIDYwLjQzNTYgMzkuOTI3M0M1MC40Nzk0IDM5LjkyNzMgNDIuMzQ5NCA0OC4wNTc2IDQyLjM0OTQgNTcuOTEzOEM0Mi4zNDk0IDY3Ljg2OTkgNTAuNDc5NCA3NiA2MC40MzU2IDc2WiIgZmlsbD0iI0EwQTBBQiIvPgo8L3N2Zz4K';
                             if (importedData.photo) {
                                 photoPreview.src = importedData.photo;
                             } else {
-                                photoPreview.src = 'https://via.placeholder.com/128';
+                                photoPreview.src = placeholderSvg;
                             }
 
                             showToast("Profil berhasil diimpor. Jangan lupa simpan.");
