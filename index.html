@@ -181,10 +181,15 @@
                 </div>
 
                 <div id="tab-content-qrcode" class="hidden p-8 flex-grow flex flex-col items-center justify-center">
-                    <div id="profile-qrcode-container" class="p-4 bg-white rounded-lg shadow-md"></div>
+                    <div id="profile-qrcode-container" class="p-4 bg-white rounded-lg shadow-md min-h-[288px] w-[288px] flex items-center justify-center">
+                        <p id="qrcode-prompt" class="text-center text-sm text-gray-500 px-4" data-translate-key="generateQrPrompt">Klik tombol di bawah untuk membuat QR Code dari data profil Anda yang tersimpan.</p>
+                    </div>
                     <div class="mt-6 w-full flex flex-col gap-3">
-                         <button id="download-qrcode-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-full" data-translate-key="downloadQrPng">Download QR Code (PNG)</button>
-                         <button id="download-vcf-btn" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-full" data-translate-key="downloadVcf">Download vCard (.vcf)</button>
+                         <button id="generate-qrcode-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-full" data-translate-key="generateQrBtn">Generate QR Code</button>
+                         <div id="download-buttons-wrapper" class="hidden w-full flex-col gap-3">
+                             <button id="download-qrcode-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-full" data-translate-key="downloadQrPng">Download QR Code (PNG)</button>
+                             <button id="download-vcf-btn" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-full" data-translate-key="downloadVcf">Download vCard (.vcf)</button>
+                         </div>
                     </div>
                 </div>
 
@@ -625,6 +630,8 @@ function createJsonResponse(obj) {
                     // New Profile Fields
                     profileTab: "Profil",
                     vCardTab: "vCard QR Code",
+                    generateQrBtn: "Generate QR Code",
+                    generateQrPrompt: "Klik tombol di bawah untuk membuat QR Code dari data profil Anda yang tersimpan.",
                     profilePhotoLabel: "Foto Profil",
                     uploadPhotoBtn: "Upload Foto",
                     yourContactLabel: "No. HP/WA",
@@ -818,6 +825,8 @@ function createJsonResponse(obj) {
                     // New Profile Fields
                     profileTab: "Profile",
                     vCardTab: "vCard QR Code",
+                    generateQrBtn: "Generate QR Code",
+                    generateQrPrompt: "Click the button below to generate a QR Code from your saved profile data.",
                     profilePhotoLabel: "Profile Photo",
                     uploadPhotoBtn: "Upload Photo",
                     yourContactLabel: "Mobile/WA No.",
@@ -2656,11 +2665,10 @@ END:VCALENDAR`;
                     tabContentQrcode.classList.toggle('hidden', isProfileTab);
 
                     if (!isProfileTab) {
-                        // Wait for the next animation frame to ensure the tab content is visible
-                        // before attempting to generate the QR code inside it. This prevents a race condition.
-                        requestAnimationFrame(() => {
-                            generateProfileQRCode();
-                        });
+                        // Reset the QR code tab to its initial state whenever it's opened
+                        document.getElementById('profile-qrcode-container').innerHTML = `<p id="qrcode-prompt" class="text-center text-sm text-gray-500 px-4" data-translate-key="generateQrPrompt">${getTranslation('generateQrPrompt')}</p>`;
+                        document.getElementById('download-buttons-wrapper').classList.add('hidden');
+                        document.getElementById('generate-qrcode-btn').classList.remove('hidden');
                     }
                 });
             });
@@ -2720,12 +2728,21 @@ END:VCALENDAR`;
                         colorLight: "#ffffff",
                         correctLevel: QRCode.CorrectLevel.H
                     });
+
+                    // Manual override to fix visibility issue with the library
+                    const qrCanvas = container.querySelector('canvas');
+                    if (qrCanvas) {
+                        qrCanvas.style.display = 'block';
+                    }
+
+                    return true; // Indicate success
                 } catch(e) {
                     const container = document.getElementById('profile-qrcode-container');
                     logError("Error generating QR Code.", e);
                     if(container) {
                         container.innerHTML = '<p class="text-center text-sm text-gray-500">Terjadi kesalahan saat membuat QR Code. Coba periksa kembali data profil Anda dan simpan ulang.</p>';
                     }
+                    return false; // Indicate failure
                 }
             }
 
@@ -2778,6 +2795,18 @@ END:VCALENDAR`;
                 } else {
                     showToast("QR Code belum dibuat atau profil belum disimpan.");
                 }
+            });
+
+            document.getElementById('generate-qrcode-btn').addEventListener('click', () => {
+                // Use a minimal timeout to push the QR generation to the end of the event queue,
+                // ensuring the DOM is fully ready and visible after the button click.
+                setTimeout(() => {
+                    const success = generateProfileQRCode();
+                    if (success) {
+                        document.getElementById('generate-qrcode-btn').classList.add('hidden');
+                        document.getElementById('download-buttons-wrapper').classList.remove('hidden');
+                    }
+                }, 0);
             });
 
             document.getElementById('download-vcf-btn').addEventListener('click', () => {
