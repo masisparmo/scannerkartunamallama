@@ -154,10 +154,10 @@
 
                 <div class="border-b border-gray-200 dark:border-gray-700">
                     <nav class="flex -mb-px" aria-label="Tabs">
-                        <button id="tab-profile" class="profile-tab w-1/2 py-4 px-1 text-center border-b-2 font-medium text-sm text-indigo-600 dark:text-indigo-400 border-indigo-500" aria-current="page">
+                        <button id="tab-profile" class="profile-tab w-1/2 py-4 px-1 text-center border-b-2 font-medium text-sm text-indigo-600 dark:text-indigo-400 border-indigo-500" aria-current="page" data-translate-key="profileTab">
                             Profil
                         </button>
-                        <button id="tab-qrcode" class="profile-tab w-1/2 py-4 px-1 text-center border-b-2 font-medium text-sm text-gray-500 dark:text-gray-400 border-transparent hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-700">
+                        <button id="tab-qrcode" class="profile-tab w-1/2 py-4 px-1 text-center border-b-2 font-medium text-sm text-gray-500 dark:text-gray-400 border-transparent hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-700" data-translate-key="vCardTab">
                             vCard QR Code
                         </button>
                     </nav>
@@ -165,25 +165,26 @@
 
                 <div id="tab-content-profile" class="p-8 space-y-4 flex-grow overflow-y-auto">
                     <div class="flex flex-col items-center space-y-2">
-                        <img id="profile-photo-preview" src="https://via.placeholder.com/128" alt="Foto Profil" class="w-32 h-32 rounded-full object-cover">
+                        <p class="text-sm font-medium text-gray-600 dark:text-gray-400" data-translate-key="profilePhotoLabel">Foto Profil</p>
+                        <img id="profile-photo-preview" src="https://via.placeholder.com/128" alt="Profile photo preview" class="w-32 h-32 rounded-full object-cover">
                         <input type="file" id="profile-photo-input" class="hidden" accept="image/*">
-                        <button id="upload-photo-btn" class="text-sm text-indigo-600 hover:underline">Upload Foto</button>
+                        <button id="upload-photo-btn" class="text-sm text-indigo-600 hover:underline" data-translate-key="uploadPhotoBtn">Upload Foto</button>
                     </div>
                     <div><label for="profile-nama" class="text-sm font-medium text-gray-600 dark:text-gray-400" data-translate-key="yourNameLabel">Nama Anda</label><input type="text" id="profile-nama" data-translate-key-placeholder="yourNamePlaceholder" placeholder="Cth: Isparmo" class="w-full mt-1 p-3 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg"></div>
                     <div><label for="profile-jabatan" class="text-sm font-medium text-gray-600 dark:text-gray-400" data-translate-key="yourPositionLabel">Jabatan Anda</label><input type="text" id="profile-jabatan" data-translate-key-placeholder="yourPositionPlaceholder" placeholder="Cth: Marketing Manager" class="w-full mt-1 p-3 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg"></div>
                     <div><label for="profile-perusahaan" class="text-sm font-medium text-gray-600 dark:text-gray-400" data-translate-key="yourCompanyLabel">Nama Perusahaan Anda</label><input type="text" id="profile-perusahaan" data-translate-key-placeholder="yourCompanyPlaceholder" placeholder="Cth: PT Multibangun Rekatama Patria" class="w-full mt-1 p-3 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg"></div>
-                    <div><label for="profile-whatsapp" class="text-sm font-medium text-gray-600 dark:text-gray-400">No. HP/WA</label><input type="tel" id="profile-whatsapp" placeholder="Cth: 081234567890" class="w-full mt-1 p-3 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg"></div>
-                    <div><label for="profile-email" class="text-sm font-medium text-gray-600 dark:text-gray-400">Email</label><input type="email" id="profile-email" placeholder="Cth: marketing@mrp.co.id" class="w-full mt-1 p-3 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg"></div>
-                    <div><label for="profile-website" class="text-sm font-medium text-gray-600 dark:text-gray-400">Website</label><input type="url" id="profile-website" placeholder="Cth: https://www.mrp.co.id" class="w-full mt-1 p-3 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg"></div>
-                    <div><label for="profile-telp-kantor" class="text-sm font-medium text-gray-600 dark:text-gray-400">Telp. Kantor</label><input type="tel" id="profile-telp-kantor" placeholder="Cth: 021-1234567" class="w-full mt-1 p-3 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg"></div>
-                    <div><label for="profile-deskripsi" class="text-sm font-medium text-gray-600 dark:text-gray-400" data-translate-key="companyDescLabel">Catatan (dari Deskripsi Perusahaan)</label><textarea id="profile-deskripsi" rows="3" data-translate-key-placeholder="companyDescPlaceholder" placeholder="Cth: Spesialis Geosintetik sejak 1995..." class="w-full mt-1 p-3 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg"></textarea></div>
+                    <div><label for="profile-whatsapp" class="text-sm font-medium text-gray-600 dark:text-gray-400" data-translate-key="yourContactLabel">No. HP/WA</label><input type="tel" id="profile-whatsapp" placeholder="Cth: 081234567890" class="w-full mt-1 p-3 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg"></div>
+                    <div><label for="profile-email" class="text-sm font-medium text-gray-600 dark:text-gray-400" data-translate-key="yourEmailLabel">Email</label><input type="email" id="profile-email" placeholder="Cth: marketing@mrp.co.id" class="w-full mt-1 p-3 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg"></div>
+                    <div><label for="profile-website" class="text-sm font-medium text-gray-600 dark:text-gray-400" data-translate-key="yourWebsiteLabel">Website</label><input type="url" id="profile-website" placeholder="Cth: https://www.mrp.co.id" class="w-full mt-1 p-3 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg"></div>
+                    <div><label for="profile-telp-kantor" class="text-sm font-medium text-gray-600 dark:text-gray-400" data-translate-key="yourOfficePhoneLabel">Telp. Kantor</label><input type="tel" id="profile-telp-kantor" placeholder="Cth: 021-1234567" class="w-full mt-1 p-3 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg"></div>
+                    <div><label for="profile-deskripsi" class="text-sm font-medium text-gray-600 dark:text-gray-400" data-translate-key="notesFromDesc">Catatan (dari Deskripsi Perusahaan)</label><textarea id="profile-deskripsi" rows="3" data-translate-key-placeholder="companyDescPlaceholder" placeholder="Cth: Spesialis Geosintetik sejak 1995..." class="w-full mt-1 p-3 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg"></textarea></div>
                 </div>
 
                 <div id="tab-content-qrcode" class="hidden p-8 flex-grow flex flex-col items-center justify-center">
                     <div id="profile-qrcode-container" class="p-4 bg-white rounded-lg shadow-md"></div>
                     <div class="mt-6 w-full flex flex-col gap-3">
-                         <button id="download-qrcode-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-full">Download QR Code (PNG)</button>
-                         <button id="download-vcf-btn" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-full">Download vCard (.vcf)</button>
+                         <button id="download-qrcode-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-full" data-translate-key="downloadQrPng">Download QR Code (PNG)</button>
+                         <button id="download-vcf-btn" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-full" data-translate-key="downloadVcf">Download vCard (.vcf)</button>
                     </div>
                 </div>
 
@@ -621,6 +622,18 @@ function createJsonResponse(obj) {
                     companyDescLabel: "Deskripsi Singkat Perusahaan",
                     companyDescPlaceholder: "Cth: Spesialis Geosintetik sejak 1995...",
                     saveProfileBtn: "SIMPAN PROFIL",
+                    // New Profile Fields
+                    profileTab: "Profil",
+                    vCardTab: "vCard QR Code",
+                    profilePhotoLabel: "Foto Profil",
+                    uploadPhotoBtn: "Upload Foto",
+                    yourContactLabel: "No. HP/WA",
+                    yourEmailLabel: "Email",
+                    yourWebsiteLabel: "Website",
+                    yourOfficePhoneLabel: "Telp. Kantor",
+                    notesFromDesc: "Catatan (dari Deskripsi Perusahaan)",
+                    downloadQrPng: "Download QR Code (PNG)",
+                    downloadVcf: "Download vCard (.vcf)",
                     // Scanner & Proses
                     scanInstructions: "Arahkan ke Kartu Nama atau QR Code",
                     scanBtn: "SCAN",
@@ -802,6 +815,18 @@ function createJsonResponse(obj) {
                     companyDescLabel: "Short Company Description",
                     companyDescPlaceholder: "e.g., Geosynthetics specialist since 1995...",
                     saveProfileBtn: "SAVE PROFILE",
+                    // New Profile Fields
+                    profileTab: "Profile",
+                    vCardTab: "vCard QR Code",
+                    profilePhotoLabel: "Profile Photo",
+                    uploadPhotoBtn: "Upload Photo",
+                    yourContactLabel: "Mobile/WA No.",
+                    yourEmailLabel: "Email",
+                    yourWebsiteLabel: "Website",
+                    yourOfficePhoneLabel: "Office Phone",
+                    notesFromDesc: "Notes (from Company Description)",
+                    downloadQrPng: "Download QR Code (PNG)",
+                    downloadVcf: "Download vCard (.vcf)",
                     // Scanner & Processing
                     scanInstructions: "Point at a Business Card or QR Code",
                     scanBtn: "SCAN",
