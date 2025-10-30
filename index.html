@@ -2685,25 +2685,37 @@ END:VCALENDAR`;
             });
 
             function generateProfileQRCode() {
-                const profile = JSON.parse(localStorage.getItem('userProfile')) || {};
-                const vCardString = createProfileVCard(profile);
+                try {
+                    const profile = JSON.parse(localStorage.getItem('userProfile')) || {};
+                    const container = document.getElementById('profile-qrcode-container');
+                    container.innerHTML = ''; // Clear previous QR code
 
-                const container = document.getElementById('profile-qrcode-container');
-                container.innerHTML = ''; // Clear previous QR code
+                    if (!profile.nama) {
+                        container.innerHTML = '<p class="text-center text-sm text-gray-500">Silakan lengkapi dan simpan profil Anda terlebih dahulu.</p>';
+                        return;
+                    }
 
-                if (Object.keys(profile).length === 0 || !profile.nama) {
-                     container.innerHTML = '<p class="text-center text-sm text-gray-500">Silakan lengkapi dan simpan profil Anda terlebih dahulu.</p>';
-                     return;
+                    const vCardString = createProfileVCard(profile);
+
+                    if (!vCardString || typeof vCardString !== 'string') {
+                        throw new Error('vCard string is invalid');
+                    }
+
+                    new QRCode(container, {
+                        text: vCardString,
+                        width: 256,
+                        height: 256,
+                        colorDark: "#000000",
+                        colorLight: "#ffffff",
+                        correctLevel: QRCode.CorrectLevel.H
+                    });
+                } catch(e) {
+                    const container = document.getElementById('profile-qrcode-container');
+                    logError("Error generating QR Code.", e);
+                    if(container) {
+                        container.innerHTML = '<p class="text-center text-sm text-gray-500">Terjadi kesalahan saat membuat QR Code. Coba periksa kembali data profil Anda dan simpan ulang.</p>';
+                    }
                 }
-
-                new QRCode(container, {
-                    text: vCardString,
-                    width: 256,
-                    height: 256,
-                    colorDark: "#000000",
-                    colorLight: "#ffffff",
-                    correctLevel: QRCode.CorrectLevel.H
-                });
             }
 
             function createProfileVCard(profile) {
