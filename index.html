@@ -2534,7 +2534,7 @@ END:VCALENDAR`;
                 const selectedContacts = allContacts.filter(contact => selectedContactIds.has(contact.id));
 
                 const jsonString = JSON.stringify(selectedContacts, null, 2);
-                const blob = new Blob([jsonString], { type: 'application/json' });
+                const blob = new Blob([jsonString], { type: 'application/octet-stream' });
 
                 const today = new Date();
                 const mm = String(today.getMonth() + 1).padStart(2, '0');
@@ -2842,7 +2842,7 @@ END:VCALENDAR`;
                 }
 
                 const jsonString = JSON.stringify(profileData, null, 2);
-                const blob = new Blob([jsonString], { type: 'application/json' });
+                const blob = new Blob([jsonString], { type: 'application/octet-stream' });
                 const fileName = `${profileData.nama.replace(/\s+/g, '_')}.spro`;
 
                 try {
@@ -2851,7 +2851,7 @@ END:VCALENDAR`;
                             suggestedName: fileName,
                             types: [{
                                 description: 'Scanner Pintar Profile',
-                                accept: { 'application/json': ['.spro'] },
+                                accept: { 'application/octet-stream': ['.spro'] },
                             }],
                         });
                         const writable = await handle.createWritable();
