@@ -2736,11 +2736,17 @@ END:VCALENDAR`;
             const importProfileInput = document.getElementById('import-profile-input');
 
             exportProfileBtn.addEventListener('click', async () => {
+                const photoPreview = document.getElementById('profile-photo-preview');
                 const profileData = {
                     nama: document.getElementById('profile-nama').value,
                     jabatan: document.getElementById('profile-jabatan').value,
                     perusahaan: document.getElementById('profile-perusahaan').value,
                     deskripsi: document.getElementById('profile-deskripsi').value,
+                    whatsapp: document.getElementById('profile-whatsapp').value,
+                    email: document.getElementById('profile-email').value,
+                    website: document.getElementById('profile-website').value,
+                    telp_kantor: document.getElementById('profile-telp-kantor').value,
+                    photo: photoPreview.src.startsWith('data:image') ? photoPreview.src : null
                 };
 
                 if (!profileData.nama) {
@@ -2792,11 +2798,23 @@ END:VCALENDAR`;
                 reader.onload = (e) => {
                     try {
                         const importedData = JSON.parse(e.target.result);
-                        if (importedData.nama || importedData.jabatan || importedData.perusahaan || importedData.deskripsi) {
+                        if (importedData.nama || importedData.jabatan || importedData.perusahaan) {
                             document.getElementById('profile-nama').value = importedData.nama || '';
                             document.getElementById('profile-jabatan').value = importedData.jabatan || '';
                             document.getElementById('profile-perusahaan').value = importedData.perusahaan || '';
                             document.getElementById('profile-deskripsi').value = importedData.deskripsi || '';
+                            document.getElementById('profile-whatsapp').value = importedData.whatsapp || '';
+                            document.getElementById('profile-email').value = importedData.email || '';
+                            document.getElementById('profile-website').value = importedData.website || '';
+                            document.getElementById('profile-telp-kantor').value = importedData.telp_kantor || '';
+
+                            const photoPreview = document.getElementById('profile-photo-preview');
+                            if (importedData.photo) {
+                                photoPreview.src = importedData.photo;
+                            } else {
+                                photoPreview.src = 'https://via.placeholder.com/128';
+                            }
+
                             showToast("Profil berhasil diimpor. Jangan lupa simpan.");
                         } else {
                             throw new Error("File tidak berisi data profil yang valid.");
