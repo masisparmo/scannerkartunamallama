@@ -2771,13 +2771,6 @@ END:VCALENDAR`;
                 addField('URL', profile.website);
                 addField('NOTE', profile.deskripsi);
 
-                if (profile.photo && typeof profile.photo === 'string' && profile.photo.startsWith('data:image/jpeg;base64,')) {
-                    const base64Data = profile.photo.replace('data:image/jpeg;base64,', '');
-                    if (base64Data) {
-                        vCard += `PHOTO;ENCODING=b;TYPE=JPEG:${base64Data}\n`;
-                    }
-                }
-
                 vCard += `END:VCARD`;
                 return vCard;
             }
