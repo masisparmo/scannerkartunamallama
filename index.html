@@ -146,8 +146,56 @@
                 </div>
             </div>
 
-            <div id="profile-screen" class="hidden screen flex-col"><header class="p-6 flex justify-between items-center border-b border-gray-200 dark:border-gray-700"><h2 class="text-2xl font-bold" data-translate-key="myProfileTitle">Profil Saya</h2><button id="back-to-home-from-profile" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-500 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white"><i data-lucide="x" class="w-6 h-6"></i></button></header><div class="p-8 space-y-4 flex-grow">
-                <div><label for="profile-nama" class="text-sm font-medium text-gray-600 dark:text-gray-400" data-translate-key="yourNameLabel">Nama Anda</label><input type="text" id="profile-nama" data-translate-key-placeholder="yourNamePlaceholder" placeholder="Cth: Isparmo" class="w-full mt-1 p-3 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg"></div><div><label for="profile-jabatan" class="text-sm font-medium text-gray-600 dark:text-gray-400" data-translate-key="yourPositionLabel">Jabatan Anda</label><input type="text" id="profile-jabatan" data-translate-key-placeholder="yourPositionPlaceholder" placeholder="Cth: Marketing Manager" class="w-full mt-1 p-3 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg"></div><div><label for="profile-perusahaan" class="text-sm font-medium text-gray-600 dark:text-gray-400" data-translate-key="yourCompanyLabel">Nama Perusahaan Anda</label><input type="text" id="profile-perusahaan" data-translate-key-placeholder="yourCompanyPlaceholder" placeholder="Cth: PT Multibangun Rekatama Patria" class="w-full mt-1 p-3 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg"></div><div><label for="profile-deskripsi" class="text-sm font-medium text-gray-600 dark:text-gray-400" data-translate-key="companyDescLabel">Deskripsi Singkat Perusahaan</label><textarea id="profile-deskripsi" rows="3" data-translate-key-placeholder="companyDescPlaceholder" placeholder="Cth: Spesialis Geosintetik sejak 1995..." class="w-full mt-1 p-3 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg"></textarea></div></div><footer class="p-6"><div class="grid grid-cols-2 gap-4 mb-4"><button id="import-profile-btn" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-full text-sm">IMPOR PROFIL</button><button id="export-profile-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-full text-sm">EKSPOR PROFIL</button></div><input type="file" id="import-profile-input" class="hidden" accept=".spro"><button id="save-profile-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-full" data-translate-key="saveProfileBtn">SIMPAN PROFIL</button></footer></div>
+            <div id="profile-screen" class="hidden screen flex-col">
+                <header class="p-6 flex justify-between items-center border-b border-gray-200 dark:border-gray-700">
+                    <h2 class="text-2xl font-bold" data-translate-key="myProfileTitle">Profil Saya</h2>
+                    <button id="back-to-home-from-profile" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-500 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white"><i data-lucide="x" class="w-6 h-6"></i></button>
+                </header>
+
+                <div class="border-b border-gray-200 dark:border-gray-700">
+                    <nav class="flex -mb-px" aria-label="Tabs">
+                        <button id="tab-profile" class="profile-tab w-1/2 py-4 px-1 text-center border-b-2 font-medium text-sm text-indigo-600 dark:text-indigo-400 border-indigo-500" aria-current="page">
+                            Profil
+                        </button>
+                        <button id="tab-qrcode" class="profile-tab w-1/2 py-4 px-1 text-center border-b-2 font-medium text-sm text-gray-500 dark:text-gray-400 border-transparent hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-700">
+                            vCard QR Code
+                        </button>
+                    </nav>
+                </div>
+
+                <div id="tab-content-profile" class="p-8 space-y-4 flex-grow overflow-y-auto">
+                    <div class="flex flex-col items-center space-y-2">
+                        <img id="profile-photo-preview" src="https://via.placeholder.com/128" alt="Foto Profil" class="w-32 h-32 rounded-full object-cover">
+                        <input type="file" id="profile-photo-input" class="hidden" accept="image/*">
+                        <button id="upload-photo-btn" class="text-sm text-indigo-600 hover:underline">Upload Foto</button>
+                    </div>
+                    <div><label for="profile-nama" class="text-sm font-medium text-gray-600 dark:text-gray-400" data-translate-key="yourNameLabel">Nama Anda</label><input type="text" id="profile-nama" data-translate-key-placeholder="yourNamePlaceholder" placeholder="Cth: Isparmo" class="w-full mt-1 p-3 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg"></div>
+                    <div><label for="profile-jabatan" class="text-sm font-medium text-gray-600 dark:text-gray-400" data-translate-key="yourPositionLabel">Jabatan Anda</label><input type="text" id="profile-jabatan" data-translate-key-placeholder="yourPositionPlaceholder" placeholder="Cth: Marketing Manager" class="w-full mt-1 p-3 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg"></div>
+                    <div><label for="profile-perusahaan" class="text-sm font-medium text-gray-600 dark:text-gray-400" data-translate-key="yourCompanyLabel">Nama Perusahaan Anda</label><input type="text" id="profile-perusahaan" data-translate-key-placeholder="yourCompanyPlaceholder" placeholder="Cth: PT Multibangun Rekatama Patria" class="w-full mt-1 p-3 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg"></div>
+                    <div><label for="profile-whatsapp" class="text-sm font-medium text-gray-600 dark:text-gray-400">No. HP/WA</label><input type="tel" id="profile-whatsapp" placeholder="Cth: 081234567890" class="w-full mt-1 p-3 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg"></div>
+                    <div><label for="profile-email" class="text-sm font-medium text-gray-600 dark:text-gray-400">Email</label><input type="email" id="profile-email" placeholder="Cth: marketing@mrp.co.id" class="w-full mt-1 p-3 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg"></div>
+                    <div><label for="profile-website" class="text-sm font-medium text-gray-600 dark:text-gray-400">Website</label><input type="url" id="profile-website" placeholder="Cth: https://www.mrp.co.id" class="w-full mt-1 p-3 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg"></div>
+                    <div><label for="profile-telp-kantor" class="text-sm font-medium text-gray-600 dark:text-gray-400">Telp. Kantor</label><input type="tel" id="profile-telp-kantor" placeholder="Cth: 021-1234567" class="w-full mt-1 p-3 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg"></div>
+                    <div><label for="profile-deskripsi" class="text-sm font-medium text-gray-600 dark:text-gray-400" data-translate-key="companyDescLabel">Catatan (dari Deskripsi Perusahaan)</label><textarea id="profile-deskripsi" rows="3" data-translate-key-placeholder="companyDescPlaceholder" placeholder="Cth: Spesialis Geosintetik sejak 1995..." class="w-full mt-1 p-3 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg"></textarea></div>
+                </div>
+
+                <div id="tab-content-qrcode" class="hidden p-8 flex-grow flex flex-col items-center justify-center">
+                    <div id="profile-qrcode-container" class="p-4 bg-white rounded-lg shadow-md"></div>
+                    <div class="mt-6 w-full flex flex-col gap-3">
+                         <button id="download-qrcode-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-full">Download QR Code (PNG)</button>
+                         <button id="download-vcf-btn" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-full">Download vCard (.vcf)</button>
+                    </div>
+                </div>
+
+                <footer class="p-6">
+                    <div class="grid grid-cols-2 gap-4 mb-4">
+                        <button id="import-profile-btn" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-full text-sm">IMPOR PROFIL</button>
+                        <button id="export-profile-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-full text-sm">EKSPOR PROFIL</button>
+                    </div>
+                    <input type="file" id="import-profile-input" class="hidden" accept=".spro">
+                    <button id="save-profile-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-full" data-translate-key="saveProfileBtn">SIMPAN PROFIL</button>
+                </footer>
+            </div>
 
             <div id="scanner-screen" class="hidden screen relative bg-black flex-grow"><video id="video" autoplay playsinline></video><div class="scan-frame"></div><div class="camera-overlay p-6"><div class="flex justify-between items-center"><p id="scan-mode-label" class="text-white font-medium text-sm bg-black/50 px-3 py-1 rounded-full" data-translate-key="scanInstructions">Arahkan ke Kartu Nama atau QR Code</p><button id="cancel-scan-btn" class="p-3 bg-black/50 rounded-full text-white hover:bg-black/80"><i data-lucide="x" class="w-6 h-6"></i></button></div><div class="flex justify-center items-center"><button id="capture-btn" class="w-20 h-20 bg-white rounded-full flex items-center justify-center shadow-2xl ring-4 ring-white/30 transition-transform transform hover:scale-110" data-translate-key="scanBtn">SCAN</button></div></div><canvas id="canvas" class="hidden"></canvas></div>
             <div id="processing-screen" class="hidden screen justify-center items-center text-center p-8 flex-grow"><div class="loader mb-6"></div><h2 id="processing-title" class="text-2xl font-bold text-gray-900 dark:text-white animate-pulse" data-translate-key="processingTitle">AI Menganalisis Gambar...</h2><p class="text-gray-500 dark:text-gray-400 mt-2" data-translate-key="processingSubtitle">Mohon tunggu sebentar...</p></div>
@@ -2187,6 +2235,17 @@ END:VCALENDAR`;
                 document.getElementById('profile-jabatan').value = profile.jabatan || '';
                 document.getElementById('profile-perusahaan').value = profile.perusahaan || '';
                 document.getElementById('profile-deskripsi').value = profile.deskripsi || '';
+                document.getElementById('profile-whatsapp').value = profile.whatsapp || '';
+                document.getElementById('profile-email').value = profile.email || '';
+                document.getElementById('profile-website').value = profile.website || '';
+                document.getElementById('profile-telp-kantor').value = profile.telp_kantor || '';
+
+                const photoPreview = document.getElementById('profile-photo-preview');
+                if (profile.photo) {
+                    photoPreview.src = profile.photo;
+                } else {
+                    photoPreview.src = 'https://via.placeholder.com/128';
+                }
             }
 
             function getLocalDateString() {
@@ -2527,15 +2586,145 @@ END:VCALENDAR`;
             }
             otherSelectors.backToHomeFromProfile.addEventListener('click', () => showScreen('initial'));
             otherSelectors.saveProfileBtn.addEventListener('click', () => {
+                const photoPreview = document.getElementById('profile-photo-preview');
                 const profile = {
                     nama: document.getElementById('profile-nama').value,
                     jabatan: document.getElementById('profile-jabatan').value,
                     perusahaan: document.getElementById('profile-perusahaan').value,
                     deskripsi: document.getElementById('profile-deskripsi').value,
+                    whatsapp: document.getElementById('profile-whatsapp').value,
+                    email: document.getElementById('profile-email').value,
+                    website: document.getElementById('profile-website').value,
+                    telp_kantor: document.getElementById('profile-telp-kantor').value,
+                    photo: photoPreview.src.startsWith('data:image') ? photoPreview.src : null
                 };
                 localStorage.setItem('userProfile', JSON.stringify(profile));
                 showToast(getTranslation('toastProfileSaved'));
                 showScreen('initial');
+            });
+
+            // Profile Tabs Logic
+            const tabProfile = document.getElementById('tab-profile');
+            const tabQrcode = document.getElementById('tab-qrcode');
+            const tabContentProfile = document.getElementById('tab-content-profile');
+            const tabContentQrcode = document.getElementById('tab-content-qrcode');
+
+            [tabProfile, tabQrcode].forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const isProfileTab = tab.id === 'tab-profile';
+
+                    // Update tab styles
+                    tabProfile.classList.toggle('border-indigo-500', isProfileTab);
+                    tabProfile.classList.toggle('text-indigo-600', isProfileTab);
+                    tabProfile.classList.toggle('dark:text-indigo-400', isProfileTab);
+                    tabProfile.classList.toggle('border-transparent', !isProfileTab);
+                    tabProfile.classList.toggle('text-gray-500', !isProfileTab);
+
+                    tabQrcode.classList.toggle('border-indigo-500', !isProfileTab);
+                    tabQrcode.classList.toggle('text-indigo-600', !isProfileTab);
+                    tabQrcode.classList.toggle('dark:text-indigo-400', !isProfileTab);
+                    tabQrcode.classList.toggle('border-transparent', isProfileTab);
+                    tabQrcode.classList.toggle('text-gray-500', isProfileTab);
+
+                    // Update content visibility
+                    tabContentProfile.classList.toggle('hidden', !isProfileTab);
+                    tabContentQrcode.classList.toggle('hidden', isProfileTab);
+
+                    if (!isProfileTab) {
+                        // Use a short timeout to allow the browser to render the tab content before generating the QR code
+                        setTimeout(() => {
+                            generateProfileQRCode();
+                        }, 50);
+                    }
+                });
+            });
+
+            // Photo Upload Logic
+            const uploadPhotoBtn = document.getElementById('upload-photo-btn');
+            const profilePhotoInput = document.getElementById('profile-photo-input');
+            const profilePhotoPreview = document.getElementById('profile-photo-preview');
+
+            uploadPhotoBtn.addEventListener('click', () => profilePhotoInput.click());
+
+            profilePhotoInput.addEventListener('change', (event) => {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        resizeImage(e.target.result, 256, 256).then(resizedImage => {
+                            profilePhotoPreview.src = resizedImage;
+                        });
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            function generateProfileQRCode() {
+                const profile = JSON.parse(localStorage.getItem('userProfile')) || {};
+                const vCardString = createProfileVCard(profile);
+
+                const container = document.getElementById('profile-qrcode-container');
+                container.innerHTML = ''; // Clear previous QR code
+
+                if (Object.keys(profile).length === 0 || !profile.nama) {
+                     container.innerHTML = '<p class="text-center text-sm text-gray-500">Silakan lengkapi dan simpan profil Anda terlebih dahulu.</p>';
+                     return;
+                }
+
+                new QRCode(container, {
+                    text: vCardString,
+                    width: 256,
+                    height: 256,
+                    colorDark: "#000000",
+                    colorLight: "#ffffff",
+                    correctLevel: QRCode.CorrectLevel.H
+                });
+            }
+
+            function createProfileVCard(profile) {
+                let vCard = `BEGIN:VCARD\nVERSION:3.0\n`;
+                vCard += `FN:${profile.nama || ''}\n`;
+                vCard += `ORG:${profile.perusahaan || ''}\n`;
+                vCard += `TITLE:${profile.jabatan || ''}\n`;
+                if (profile.whatsapp) vCard += `TEL;TYPE=CELL,VOICE:${profile.whatsapp}\n`;
+                if (profile.telp_kantor) vCard += `TEL;TYPE=WORK,VOICE:${profile.telp_kantor}\n`;
+                if (profile.email) vCard += `EMAIL:${profile.email}\n`;
+                if (profile.website) vCard += `URL:${profile.website}\n`;
+                if (profile.deskripsi) vCard += `NOTE:${profile.deskripsi.replace(/\n/g, '\\n')}\n`;
+                 // Add photo if available
+                if (profile.photo && profile.photo.startsWith('data:image/jpeg;base64,')) {
+                    const base64Data = profile.photo.replace('data:image/jpeg;base64,', '');
+                    vCard += `PHOTO;ENCODING=b;TYPE=JPEG:${base64Data}\n`;
+                }
+                vCard += `END:VCARD`;
+                return vCard;
+            }
+
+            document.getElementById('download-qrcode-btn').addEventListener('click', () => {
+                const qrCanvas = document.querySelector('#profile-qrcode-container canvas');
+                if (qrCanvas) {
+                    const link = document.createElement('a');
+                    link.download = 'vcard-qrcode.png';
+                    link.href = qrCanvas.toDataURL('image/png');
+                    link.click();
+                } else {
+                    showToast("QR Code belum dibuat.");
+                }
+            });
+
+            document.getElementById('download-vcf-btn').addEventListener('click', () => {
+                const profile = JSON.parse(localStorage.getItem('userProfile')) || {};
+                if (!profile.nama) {
+                    showToast("Profil belum disimpan.");
+                    return;
+                }
+                const vCardString = createProfileVCard(profile);
+                const blob = new Blob([vCardString], { type: 'text/vcard;charset=utf-8;' });
+                const link = document.createElement("a");
+                link.href = URL.createObjectURL(blob);
+                const filename = (profile.nama || `contact`).replace(/\s+/g, '_').toLowerCase();
+                link.download = `${filename}.vcf`;
+                link.click();
             });
 
             // Fungsi untuk Impor dan Ekspor Profil
