@@ -1514,27 +1514,27 @@ END:VCALENDAR`;
                     tags: tagify.value.map(tag => tag.value)
                 };
 
-                if (collaborationSession.isActive) {
-                    // In collab mode, we don't save to local IndexedDB.
-                    // We directly send the data to the host's Google Sheet.
-                    await sendCollaborativeData(contactData);
-                    // After sending, we don't close the modal but go back to the initial screen
-                    // so the team member can scan the next card.
-                    showScreen('initial');
-                    closeEditModal();
+                // Always save to local IndexedDB first, regardless of the mode.
+                if (isNewContact) {
+                    await dbLogic.addContact(contactData);
+                    showToast(getTranslation('toastContactSaved'));
                 } else {
-                    // Normal mode: save to local IndexedDB.
-                    if (isNewContact) {
-                        await dbLogic.addContact(contactData);
-                        showToast(getTranslation('toastContactSaved'));
-                    } else {
-                        contactData.id = parseInt(idValue);
-                        await dbLogic.updateContact(contactData);
-                        showToast(getTranslation('toastContactUpdated'));
-                    }
-                    showScreen('results');
-                    closeEditModal();
+                    contactData.id = parseInt(idValue);
+                    await dbLogic.updateContact(contactData);
+                    showToast(getTranslation('toastContactUpdated'));
                 }
+
+                // If in collaboration mode, also send the data to the host's sheet.
+                if (collaborationSession.isActive) {
+                    await sendCollaborativeData(contactData);
+                    // Go back to the initial screen for the next scan.
+                    showScreen('initial');
+                } else {
+                    // In normal mode, go to the results screen.
+                    showScreen('results');
+                }
+
+                closeEditModal();
             }
 
             async function handleDeleteContact() {
