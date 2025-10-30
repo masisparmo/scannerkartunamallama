@@ -124,7 +124,7 @@
                 <h2 class="text-2xl font-bold" data-translate-key="createCollabTitleV2">Mode Kolaborasi (Host)</h2>
                 <p class="text-gray-500 dark:text-gray-400 mt-2 mb-4" data-translate-key="createCollabSubtitleV2">Isi detail di bawah ini untuk membuat QR Code bagi tim Anda.</p>
                 <p class="text-sm text-indigo-600 dark:text-indigo-400 mb-8">
-                    <a href="#" id="show-collab-help-btn" class="hover:underline">Butuh bantuan? Baca petunjuk lengkap di sini.</a>
+                    <a href="#" id="show-collab-help-btn" class="hover:underline" data-translate-key="collabHelpLink">Butuh bantuan? Baca petunjuk lengkap di sini.</a>
                 </p>
                 <div class="w-full max-w-sm text-left space-y-4">
                     <div>
@@ -222,24 +222,24 @@
     <div id="collab-help-modal" class="modal-backdrop hidden fixed inset-0 bg-black/60 z-50 p-4 flex items-center justify-center">
         <div class="modal-content bg-white dark:bg-gray-800 rounded-2xl shadow-xl w-full max-w-2xl transform scale-95 opacity-0">
             <div class="p-6 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
-                <h3 class="text-xl font-bold">Petunjuk Pengaturan Mode Kolaborasi</h3>
+                <h3 class="text-xl font-bold" data-translate-key="collabHelpTitle">Petunjuk Pengaturan Mode Kolaborasi</h3>
                 <button id="close-collab-help-modal-btn" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700">
                     <i data-lucide="x" class="w-6 h-6"></i>
                 </button>
             </div>
             <div id="collab-help-content" class="p-6 max-h-[70vh] overflow-y-auto text-sm text-gray-700 dark:text-gray-300 space-y-4">
-                    <p>Mode Kolaborasi memungkinkan Anda (sebagai Host) untuk mengumpulkan semua data pindaian dari tim Anda ke dalam satu Google Sheet. Ikuti langkah-langkah di bawah ini untuk menyiapkannya.</p>
+                    <p data-translate-key="collabHelpIntro">Mode Kolaborasi memungkinkan Anda (sebagai Host) untuk mengumpulkan semua data pindaian dari tim Anda ke dalam satu Google Sheet. Ikuti langkah-langkah di bawah ini untuk menyiapkannya.</p>
 
-                    <h4 class="text-lg font-semibold pt-2">Langkah 1: Siapkan Google Sheet Anda</h4>
+                    <h4 class="text-lg font-semibold pt-2" data-translate-key="collabHelpStep1Title">Langkah 1: Siapkan Google Sheet Anda</h4>
                     <ol class="list-decimal list-inside space-y-2 pl-4">
-                        <li>Buka Google Sheet yang sudah ada atau buat yang baru. Ini akan menjadi tempat semua data tim Anda disimpan.</li>
-                        <li>Klik menu <strong>Extensions</strong> &gt; <strong>Apps Script</strong>. Ini akan membuka editor skrip di tab baru.</li>
+                        <li data-translate-key="collabHelpStep1Item1">Buka Google Sheet yang sudah ada atau buat yang baru. Ini akan menjadi tempat semua data tim Anda disimpan.</li>
+                        <li data-translate-key="collabHelpStep1Item2">Klik menu <strong>Extensions</strong> &gt; <strong>Apps Script</strong>. Ini akan membuka editor skrip di tab baru.</li>
                     </ol>
 
-                    <h4 class="text-lg font-semibold pt-2">Langkah 2: Salin dan Tempel Kode Skrip</h4>
+                    <h4 class="text-lg font-semibold pt-2" data-translate-key="collabHelpStep2Title">Langkah 2: Salin dan Tempel Kode Skrip</h4>
                     <ol class="list-decimal list-inside space-y-2 pl-4">
-                        <li>Hapus semua kode contoh yang ada di editor Apps Script.</li>
-                        <li>Salin seluruh kode di bawah ini dan tempelkan ke dalam editor.</li>
+                        <li data-translate-key="collabHelpStep2Item1">Hapus semua kode contoh yang ada di editor Apps Script.</li>
+                        <li data-translate-key="collabHelpStep2Item2">Salin seluruh kode di bawah ini dan tempelkan ke dalam editor.</li>
                     </ol>
                     <div class="relative">
                         <pre class="bg-gray-100 dark:bg-gray-900 p-4 rounded-lg text-xs overflow-x-auto"><code>// INSTRUCTIONS FOR HOST (v2):
@@ -259,7 +259,7 @@
 // --- START OF SCRIPT ---
 
 // CONFIGURATION: Change this key to your own secret password.
-const SECRET_KEY = "GANTI_DENGAN_KUNCI_RAHASIA_ANDA";
+const SECRET_KEY = "YOUR_SECRET_KEY_HERE";
 
 // Define the exact header columns and their order to match the app's "Edit Kontak" form.
 const HEADERS = [
@@ -344,41 +344,41 @@ function createJsonResponse(obj) {
     .setMimeType(ContentService.MimeType.JSON);
 }
 </code></pre>
-                        <button class="copy-code-btn absolute top-2 right-2 p-2 bg-gray-300 dark:bg-gray-700 rounded-md text-xs hover:bg-gray-400 dark:hover:bg-gray-600">Salin Kode</button>
+                        <button class="copy-code-btn absolute top-2 right-2 p-2 bg-gray-300 dark:bg-gray-700 rounded-md text-xs hover:bg-gray-400 dark:hover:bg-gray-600" data-translate-key="collabHelpCopyCodeBtn">Salin Kode</button>
                     </div>
 
-                    <h4 class="text-lg font-semibold pt-2">Langkah 3: Atur Kunci Rahasia (Secret Key)</h4>
+                    <h4 class="text-lg font-semibold pt-2" data-translate-key="collabHelpStep3Title">Langkah 3: Atur Kunci Rahasia (Secret Key)</h4>
                     <ol class="list-decimal list-inside space-y-2 pl-4">
-                        <li>Di dalam kode yang baru saja Anda tempel, cari baris: <br><code>const SECRET_KEY = "GANTI_DENGAN_KUNCI_RAHASIA_ANDA";</code></li>
-                        <li>Ganti <code>GANTI_DENGAN_KUNCI_RAHASIA_ANDA</code> dengan kata sandi unik Anda sendiri. <strong>Penting:</strong> Kunci ini harus sama persis dengan yang Anda masukkan di aplikasi Scanner Pintar.</li>
-                        <li>Simpan proyek skrip dengan mengklik ikon disket.</li>
+                        <li data-translate-key="collabHelpStep3Item1">Di dalam kode yang baru saja Anda tempel, cari baris: <br><code>const SECRET_KEY = "GANTI_DENGAN_KUNCI_RAHASIA_ANDA";</code></li>
+                        <li data-translate-key="collabHelpStep3Item2">Ganti <code>GANTI_DENGAN_KUNCI_RAHASIA_ANDA</code> dengan kata sandi unik Anda sendiri. <strong>Penting:</strong> Kunci ini harus sama persis dengan yang Anda masukkan di aplikasi Scanner Pintar.</li>
+                        <li data-translate-key="collabHelpStep3Item3">Simpan proyek skrip dengan mengklik ikon disket.</li>
                     </ol>
 
-                    <h4 class="text-lg font-semibold pt-2">Langkah 4: Deploy sebagai Web App</h4>
+                    <h4 class="text-lg font-semibold pt-2" data-translate-key="collabHelpStep4Title">Langkah 4: Deploy sebagai Web App</h4>
                     <ol class="list-decimal list-inside space-y-2 pl-4">
-                        <li>Klik tombol biru <strong>Deploy</strong> di kanan atas, lalu pilih <strong>New deployment</strong>.</li>
-                        <li>Di sebelah "Select type", klik ikon roda gigi dan pilih <strong>Web app</strong>.</li>
-                        <li>Pada bagian "Configuration":
+                        <li data-translate-key="collabHelpStep4Item1">Klik tombol biru <strong>Deploy</strong> di kanan atas, lalu pilih <strong>New deployment</strong>.</li>
+                        <li data-translate-key="collabHelpStep4Item2">Di sebelah "Select type", klik ikon roda gigi dan pilih <strong>Web app</strong>.</li>
+                        <li data-translate-key="collabHelpStep4Item3">Pada bagian "Configuration":
                             <ul class="list-disc list-inside pl-6 mt-1">
-                                <li><strong>Description:</strong> (Opsional) Beri nama, contohnya "Scanner Pintar Kolaborasi".</li>
-                                <li><strong>Execute as:</strong> Pilih <strong>Me</strong>.</li>
-                                <li><strong>Who has access:</strong> Pilih <strong>Anyone</strong>. Ini penting agar aplikasi bisa mengirim data.</li>
+                                <li data-translate-key="collabHelpStep4Item3a"><strong>Description:</strong> (Opsional) Beri nama, contohnya "Scanner Pintar Kolaborasi".</li>
+                                <li data-translate-key="collabHelpStep4Item3b"><strong>Execute as:</strong> Pilih <strong>Me</strong>.</li>
+                                <li data-translate-key="collabHelpStep4Item3c"><strong>Who has access:</strong> Pilih <strong>Anyone</strong>. Ini penting agar aplikasi bisa mengirim data.</li>
                             </ul>
                         </li>
-                        <li>Klik <strong>Deploy</strong>.</li>
+                        <li data-translate-key="collabHelpStep4Item4">Klik <strong>Deploy</strong>.</li>
                     </ol>
 
-                    <h4 class="text-lg font-semibold pt-2">Langkah 5: Otorisasi dan Salin URL</h4>
+                    <h4 class="text-lg font-semibold pt-2" data-translate-key="collabHelpStep5Title">Langkah 5: Otorisasi dan Salin URL</h4>
                     <ol class="list-decimal list-inside space-y-2 pl-4">
-                        <li>Google akan meminta izin. Klik <strong>Authorize access</strong> dan ikuti petunjuk untuk menyetujui akses skrip ke Google Sheet Anda.</li>
-                        <li>Setelah berhasil, Anda akan melihat jendela "Deployment successful". Salin <strong>Web app URL</strong> yang ditampilkan.</li>
-                        <li>URL inilah yang Anda tempel ke kolom "URL Web App Apps Script" di aplikasi Scanner Pintar.</li>
+                        <li data-translate-key="collabHelpStep5Item1">Google akan meminta izin. Klik <strong>Authorize access</strong> dan ikuti petunjuk untuk menyetujui akses skrip ke Google Sheet Anda.</li>
+                        <li data-translate-key="collabHelpStep5Item2">Setelah berhasil, Anda akan melihat jendela "Deployment successful". Salin <strong>Web app URL</strong> yang ditampilkan.</li>
+                        <li data-translate-key="collabHelpStep5Item3">URL inilah yang Anda tempel ke kolom "URL Web App Apps Script" di aplikasi Scanner Pintar.</li>
                     </ol>
 
-                    <p class="pt-4 font-semibold">Selesai! Sekarang Anda bisa mengisi ketiga kolom di aplikasi, membuat QR Code, dan membagikannya ke tim Anda.</p>
+                    <p class="pt-4 font-semibold" data-translate-key="collabHelpOutro">Selesai! Sekarang Anda bisa mengisi ketiga kolom di aplikasi, membuat QR Code, dan membagikannya ke tim Anda.</p>
                 </div>
             <div class="p-6 border-t border-gray-200 dark:border-gray-700 text-right">
-                <button id="ok-collab-help-modal-btn" class="modal-button bg-indigo-600 text-white hover:bg-indigo-700">Mengerti</button>
+                <button id="ok-collab-help-modal-btn" class="modal-button bg-indigo-600 text-white hover:bg-indigo-700" data-translate-key="collabHelpUnderstandBtn">Mengerti</button>
             </div>
         </div>
     </div>
@@ -528,6 +528,34 @@ function createJsonResponse(obj) {
                     collabEventNamePlaceholder: "Contoh: Pameran Konstruksi 2025",
                     secretKeyLabel: "Secret Key",
                     secretKeyPlaceholder: "Kunci rahasia dari Apps Script",
+                    collabHelpLink: "Butuh bantuan? Baca petunjuk lengkap di sini.",
+                    collabHelpTitle: "Petunjuk Pengaturan Mode Kolaborasi",
+                    collabHelpIntro: "Mode Kolaborasi memungkinkan Anda (sebagai Host) untuk mengumpulkan semua data pindaian dari tim Anda ke dalam satu Google Sheet. Ikuti langkah-langkah di bawah ini untuk menyiapkannya.",
+                    collabHelpStep1Title: "Langkah 1: Siapkan Google Sheet Anda",
+                    collabHelpStep1Item1: "Buka Google Sheet yang sudah ada atau buat yang baru. Ini akan menjadi tempat semua data tim Anda disimpan.",
+                    collabHelpStep1Item2: "Klik menu <strong>Extensions</strong> &gt; <strong>Apps Script</strong>. Ini akan membuka editor skrip di tab baru.",
+                    collabHelpStep2Title: "Langkah 2: Salin dan Tempel Kode Skrip",
+                    collabHelpStep2Item1: "Hapus semua kode contoh yang ada di editor Apps Script.",
+                    collabHelpStep2Item2: "Salin seluruh kode di bawah ini dan tempelkan ke dalam editor.",
+                    collabHelpCopyCodeBtn: "Salin Kode",
+                    collabHelpStep3Title: "Langkah 3: Atur Kunci Rahasia (Secret Key)",
+                    collabHelpStep3Item1: 'Di dalam kode yang baru saja Anda tempel, cari baris: <br><code>const SECRET_KEY = "YOUR_SECRET_KEY_HERE";</code>',
+                    collabHelpStep3Item2: 'Ganti <code>YOUR_SECRET_KEY_HERE</code> dengan kata sandi unik Anda sendiri. <strong>Penting:</strong> Kunci ini harus sama persis dengan yang Anda masukkan di aplikasi Scanner Pintar.',
+                    collabHelpStep3Item3: "Simpan proyek skrip dengan mengklik ikon disket.",
+                    collabHelpStep4Title: "Langkah 4: Deploy sebagai Web App",
+                    collabHelpStep4Item1: "Klik tombol biru <strong>Deploy</strong> di kanan atas, lalu pilih <strong>New deployment</strong>.",
+                    collabHelpStep4Item2: 'Di sebelah "Select type", klik ikon roda gigi dan pilih <strong>Web app</strong>.',
+                    collabHelpStep4Item3: 'Pada bagian "Configuration":',
+                    collabHelpStep4Item3a: '<strong>Description:</strong> (Opsional) Beri nama, contohnya "Scanner Pintar Kolaborasi".',
+                    collabHelpStep4Item3b: '<strong>Execute as:</strong> Pilih <strong>Me</strong>.',
+                    collabHelpStep4Item3c: '<strong>Who has access:</strong> Pilih <strong>Anyone</strong>. Ini penting agar aplikasi bisa mengirim data.',
+                    collabHelpStep4Item4: "Klik <strong>Deploy</strong>.",
+                    collabHelpStep5Title: "Langkah 5: Otorisasi dan Salin URL",
+                    collabHelpStep5Item1: "Google akan meminta izin. Klik <strong>Authorize access</strong> dan ikuti petunjuk untuk menyetujui akses skrip ke Google Sheet Anda.",
+                    collabHelpStep5Item2: 'Setelah berhasil, Anda akan melihat jendela "Deployment successful". Salin <strong>Web app URL</strong> yang ditampilkan.',
+                    collabHelpStep5Item3: 'URL inilah yang Anda tempel ke kolom "URL Web App Apps Script" di aplikasi Scanner Pintar.',
+                    collabHelpOutro: "Selesai! Sekarang Anda bisa mengisi ketiga kolom di aplikasi, membuat QR Code, dan membagikannya ke tim Anda.",
+                    collabHelpUnderstandBtn: "Mengerti",
                     joinCollabTitle: "Gabung Sesi Kolaborasi",
                     joinCollabInvite: "Anda diundang ke sesi",
                     joinCollabPrompt: "Masukkan nama Anda:",
@@ -681,6 +709,34 @@ function createJsonResponse(obj) {
                     collabEventNamePlaceholder: "Example: Construction Expo 2025",
                     secretKeyLabel: "Secret Key",
                     secretKeyPlaceholder: "The secret key from your Apps Script",
+                    collabHelpLink: "Need help? Read the full instructions here.",
+                    collabHelpTitle: "Collaboration Mode Setup Instructions",
+                    collabHelpIntro: "Collaboration Mode allows you (as the Host) to collect all scan data from your team into a single Google Sheet. Follow the steps below to set it up.",
+                    collabHelpStep1Title: "Step 1: Prepare Your Google Sheet",
+                    collabHelpStep1Item1: "Open an existing Google Sheet or create a new one. This will be where all your team's data is stored.",
+                    collabHelpStep1Item2: "Click the <strong>Extensions</strong> &gt; <strong>Apps Script</strong> menu. This will open the script editor in a new tab.",
+                    collabHelpStep2Title: "Step 2: Copy and Paste the Script Code",
+                    collabHelpStep2Item1: "Delete any existing sample code in the Apps Script editor.",
+                    collabHelpStep2Item2: "Copy the entire code below and paste it into the editor.",
+                    collabHelpCopyCodeBtn: "Copy Code",
+                    collabHelpStep3Title: "Step 3: Set Your Secret Key",
+                    collabHelpStep3Item1: 'In the code you just pasted, find the line: <br><code>const SECRET_KEY = "YOUR_SECRET_KEY_HERE";</code>',
+                    collabHelpStep3Item2: 'Replace <code>YOUR_SECRET_KEY_HERE</code> with your own unique password. <strong>Important:</strong> This key must be exactly the same as the one you enter in the Scanner Pintar app.',
+                    collabHelpStep3Item3: "Save the script project by clicking the floppy disk icon.",
+                    collabHelpStep4Title: "Step 4: Deploy as a Web App",
+                    collabHelpStep4Item1: "Click the blue <strong>Deploy</strong> button in the top right, then select <strong>New deployment</strong>.",
+                    collabHelpStep4Item2: 'Next to "Select type", click the gear icon and choose <strong>Web app</strong>.',
+                    collabHelpStep4Item3: 'In the "Configuration" section:',
+                    collabHelpStep4Item3a: '<strong>Description:</strong> (Optional) Give it a name, for example "Scanner Pintar Collaboration".',
+                    collabHelpStep4Item3b: '<strong>Execute as:</strong> Select <strong>Me</strong>.',
+                    collabHelpStep4Item3c: '<strong>Who has access:</strong> Select <strong>Anyone</strong>. This is critical for the app to be able to send data.',
+                    collabHelpStep4Item4: "Click <strong>Deploy</strong>.",
+                    collabHelpStep5Title: "Step 5: Authorize and Copy the URL",
+                    collabHelpStep5Item1: "Google will ask for permission. Click <strong>Authorize access</strong> and follow the prompts to approve the script's access to your Google Sheet.",
+                    collabHelpStep5Item2: 'After it succeeds, you will see a "Deployment successful" window. Copy the displayed <strong>Web app URL</strong>.',
+                    collabHelpStep5Item3: 'This is the URL you will paste into the "Apps Script Web App URL" field in the Scanner Pintar app.',
+                    collabHelpOutro: "Done! You can now fill in the three fields in the app, create the QR Code, and share it with your team.",
+                    collabHelpUnderstandBtn: "I Understand",
                     joinCollabTitle: "Join Collaboration Session",
                     joinCollabInvite: "You are invited to the session",
                     joinCollabPrompt: "Enter your name:",
