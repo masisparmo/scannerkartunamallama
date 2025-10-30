@@ -121,14 +121,24 @@
             </div>
 
             <div id="create-session-screen" class="hidden screen p-8 flex flex-col justify-center items-center text-center flex-grow">
-                <h2 class="text-2xl font-bold" data-translate-key="createCollabTitle">Buat Sesi Kolaborasi Baru</h2>
-                <p class="text-gray-500 dark:text-gray-400 mt-2 mb-8" data-translate-key="createCollabSubtitle">Masukkan nama acara untuk membuat sesi yang dapat dibagikan.</p>
-                <div class="w-full max-w-sm">
-                     <label for="collab-session-name-input" class="text-sm font-medium text-gray-600 dark:text-gray-400 text-left block" data-translate-key="collabSessionNameLabel">Nama Acara / Sesi</label>
-                     <input type="text" id="collab-session-name-input" data-translate-key-placeholder="collabSessionNamePlaceholder" placeholder="Contoh: Pameran Konstruksi 2025" class="w-full mt-1 p-3 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500">
-                     <div class="flex gap-4 mt-6">
+                <h2 class="text-2xl font-bold" data-translate-key="createCollabTitleV2">Mode Kolaborasi (Host)</h2>
+                <p class="text-gray-500 dark:text-gray-400 mt-2 mb-8" data-translate-key="createCollabSubtitleV2">Isi detail di bawah ini untuk membuat QR Code bagi tim Anda.</p>
+                <div class="w-full max-w-sm text-left space-y-4">
+                    <div>
+                        <label for="collab-apps-script-url" class="text-sm font-medium text-gray-600 dark:text-gray-400" data-translate-key="appsScriptUrlLabel">URL Web App Apps Script</label>
+                        <input type="url" id="collab-apps-script-url" data-translate-key-placeholder="appsScriptUrlPlaceholder" placeholder="Salin & tempel URL dari Google Apps Script" class="w-full mt-1 p-3 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg">
+                    </div>
+                    <div>
+                        <label for="collab-event-name" class="text-sm font-medium text-gray-600 dark:text-gray-400" data-translate-key="collabEventNameLabel">Nama Acara / Event</label>
+                        <input type="text" id="collab-event-name" data-translate-key-placeholder="collabEventNamePlaceholder" placeholder="Contoh: Pameran Konstruksi 2025" class="w-full mt-1 p-3 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg">
+                    </div>
+                    <div>
+                        <label for="collab-secret-key" class="text-sm font-medium text-gray-600 dark:text-gray-400" data-translate-key="secretKeyLabel">Secret Key</label>
+                        <input type="password" id="collab-secret-key" data-translate-key-placeholder="secretKeyPlaceholder" placeholder="Kunci rahasia dari Apps Script" class="w-full mt-1 p-3 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg">
+                    </div>
+                     <div class="flex gap-4 pt-2">
                         <button id="cancel-create-session-btn" class="w-full bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 font-semibold py-3 px-4 rounded-full" data-translate-key="cancelBtn">BATAL</button>
-                        <button id="generate-session-qr-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-full uppercase" data-translate-key="createQrBtn">Buat QR Code</button>
+                        <button id="generate-qr-code-v2-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-full uppercase" data-translate-key="createQrBtn">Buat QR Code</button>
                      </div>
                 </div>
             </div>
@@ -342,6 +352,15 @@
                     collabSessionNameLabel: "Nama Acara / Sesi",
                     collabSessionNamePlaceholder: "Contoh: Pameran Konstruksi 2025",
                     createQrBtn: "Buat QR Code",
+                    // Kolaborasi v2 (Apps Script)
+                    createCollabTitleV2: "Mode Kolaborasi (Host)",
+                    createCollabSubtitleV2: "Isi detail di bawah ini untuk membuat QR Code bagi tim Anda.",
+                    appsScriptUrlLabel: "URL Web App Apps Script",
+                    appsScriptUrlPlaceholder: "Salin & tempel URL dari Google Apps Script",
+                    collabEventNameLabel: "Nama Acara / Event",
+                    collabEventNamePlaceholder: "Contoh: Pameran Konstruksi 2025",
+                    secretKeyLabel: "Secret Key",
+                    secretKeyPlaceholder: "Kunci rahasia dari Apps Script",
                     joinCollabTitle: "Gabung Sesi Kolaborasi",
                     joinCollabInvite: "Anda diundang ke sesi",
                     joinCollabPrompt: "Masukkan nama Anda:",
@@ -486,6 +505,15 @@
                     collabSessionNameLabel: "Event / Session Name",
                     collabSessionNamePlaceholder: "Example: Construction Expo 2025",
                     createQrBtn: "Create QR Code",
+                    // Collaboration v2 (Apps Script)
+                    createCollabTitleV2: "Collaboration Mode (Host)",
+                    createCollabSubtitleV2: "Fill in the details below to create a QR Code for your team.",
+                    appsScriptUrlLabel: "Apps Script Web App URL",
+                    appsScriptUrlPlaceholder: "Copy & paste the URL from Google Apps Script",
+                    collabEventNameLabel: "Event Name",
+                    collabEventNamePlaceholder: "Example: Construction Expo 2025",
+                    secretKeyLabel: "Secret Key",
+                    secretKeyPlaceholder: "The secret key from your Apps Script",
                     joinCollabTitle: "Join Collaboration Session",
                     joinCollabInvite: "You are invited to the session",
                     joinCollabPrompt: "Enter your name:",
@@ -643,14 +671,14 @@
             const EMAIL_GENERATOR_URL = `${BACKEND_API_URL}/generateFollowUpEmail`;
             const WA_GENERATOR_URL = `${BACKEND_API_URL}/generateFollowUpWa`;
 
-            let collaborationSession = { isActive: false, sessionId: null, sessionAcara: null, marketingName: null };
+            let collaborationSession = { isActive: false, appsScriptUrl: null, eventName: null, secretKey: null, teamMember: null };
             let errorLogs = [];
 
             // --- Google API Integration ---
             const CLIENT_ID = "328921559379-s3mmi3dlpj39qtkgl4itt5q2ukl1nmid.apps.googleusercontent.com";
             const SCOPES = "https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/spreadsheets";
             let tokenClient;
-            let codeClient; // For collaboration flow
+            // let codeClient; // No longer needed for Apps Script collaboration
             let gapiInited = false;
             let gisInited = false;
             // --- End Google API Integration ---
@@ -676,8 +704,9 @@
 
             const createSessionBtn = document.getElementById('create-session-btn');
             const cancelCreateSessionBtn = document.getElementById('cancel-create-session-btn');
-            const generateSessionQRBtn = document.getElementById('generate-session-qr-btn');
-            const collabSessionNameInput = document.getElementById('collab-session-name-input');
+            // const generateSessionQRBtn = document.getElementById('generate-session-qr-btn'); // OLD
+            const generateQrCodeV2Btn = document.getElementById('generate-qr-code-v2-btn');
+            // const collabSessionNameInput = document.getElementById('collab-session-name-input'); // OLD
             const showSessionQRModal = document.getElementById('show-session-qr-modal');
             const qrCodeContainer = document.getElementById('qr-code-container');
             const closeQrModalBtn = document.getElementById('close-qr-modal-btn');
@@ -1485,22 +1514,27 @@ END:VCALENDAR`;
                     tags: tagify.value.map(tag => tag.value)
                 };
 
-                if (isNewContact) {
-                    await dbLogic.addContact(contactData);
-                    showToast(getTranslation('toastContactSaved'));
-                } else {
-                    contactData.id = parseInt(idValue);
-                    await dbLogic.updateContact(contactData);
-                    showToast(getTranslation('toastContactUpdated'));
-                }
-
                 if (collaborationSession.isActive) {
-                    showToast('Sending data to Google Sheet...');
-                    await sendCollaborativeData({ ...contactData, marketingName: collaborationSession.marketingName });
+                    // In collab mode, we don't save to local IndexedDB.
+                    // We directly send the data to the host's Google Sheet.
+                    await sendCollaborativeData(contactData);
+                    // After sending, we don't close the modal but go back to the initial screen
+                    // so the team member can scan the next card.
+                    showScreen('initial');
+                    closeEditModal();
+                } else {
+                    // Normal mode: save to local IndexedDB.
+                    if (isNewContact) {
+                        await dbLogic.addContact(contactData);
+                        showToast(getTranslation('toastContactSaved'));
+                    } else {
+                        contactData.id = parseInt(idValue);
+                        await dbLogic.updateContact(contactData);
+                        showToast(getTranslation('toastContactUpdated'));
+                    }
+                    showScreen('results');
+                    closeEditModal();
                 }
-
-                showScreen('results');
-                closeEditModal();
             }
 
             async function handleDeleteContact() {
@@ -1536,21 +1570,22 @@ END:VCALENDAR`;
                 createSessionBtn.classList.add('hidden');
 
                 collaborationModeIndicator.classList.remove('hidden');
-                collabSessionName.textContent = collaborationSession.sessionAcara;
-                collabUserName.textContent = collaborationSession.marketingName;
+                collabSessionName.textContent = collaborationSession.eventName;
+                collabUserName.textContent = collaborationSession.teamMember;
 
-                otherSelectors.sessionAcaraInput.value = collaborationSession.sessionAcara;
+                otherSelectors.sessionAcaraInput.value = collaborationSession.eventName;
                 otherSelectors.sessionTanggalInput.value = getLocalDateString();
             }
 
             function exitCollaborationMode() {
                 showConfirmModal(getTranslation('confirmExitCollab'), () => {
                     localStorage.removeItem('collaborationSession');
-                    collaborationSession = { isActive: false, sessionId: null, sessionAcara: null, marketingName: null };
+                    collaborationSession = { isActive: false, appsScriptUrl: null, eventName: null, secretKey: null, teamMember: null };
 
                     const url = new URL(window.location);
-                    url.searchParams.delete('sesi');
-                    url.searchParams.delete('acara');
+                    url.searchParams.delete('collabUrl');
+                    url.searchParams.delete('eventName');
+                    url.searchParams.delete('key');
                     window.history.pushState({}, '', url);
 
                     collaborationModeIndicator.classList.add('hidden');
@@ -1560,19 +1595,41 @@ END:VCALENDAR`;
                 });
             }
 
-            async function sendCollaborativeData(contact) {
+            async function sendCollaborativeData(cardData) {
+                const saveBtn = document.getElementById('save-edit-btn');
+                const originalHTML = saveBtn.innerHTML;
+                saveBtn.disabled = true;
+                saveBtn.innerHTML = `<div class="loader btn-loader"></div>`;
+
                 try {
-                    const response = await fetch(`${BACKEND_API_URL}/simpan-gsheet`, {
+                    const payload = {
+                        key: collaborationSession.secretKey,
+                        eventName: collaborationSession.eventName,
+                        teamMember: collaborationSession.teamMember,
+                        cardData: cardData
+                    };
+
+                    const response = await fetch(collaborationSession.appsScriptUrl, {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ contact: contact })
+                        mode: 'no-cors', // Important for Apps Script web apps to avoid CORS issues
+                        cache: 'no-cache',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(payload),
+                        redirect: 'follow'
                     });
-                    const result = await response.json();
-                    if (!response.ok || !result.success) throw new Error(result.error || 'Failed to send data.');
-                    showToast(getTranslation('toastDataSentToGSheet', contact.nama));
+
+                    // Since it's a no-cors request, we can't read the response.
+                    // We'll optimistically assume it succeeded.
+                    showToast(getTranslation('toastDataSentToGSheet', cardData.nama));
+
                 } catch (error) {
                     logError("Failed to send collaborative data", error);
-                    showToast(getTranslation('toastFailSendGSheet', contact.nama));
+                    showToast(getTranslation('toastFailSendGSheet', cardData.nama));
+                } finally {
+                    saveBtn.disabled = false;
+                    saveBtn.innerHTML = originalHTML;
                 }
             }
 
@@ -1931,7 +1988,6 @@ END:VCALENDAR`;
 
                 otherSelectors.sessionTanggalInput.value = localStorage.getItem('sessionTanggal') || getLocalDateString();
 
-
                 tagify = new Tagify(editTagsInput);
 
                 try {
@@ -1945,19 +2001,20 @@ END:VCALENDAR`;
                     setLanguage(preferredLang);
 
                     const urlParams = new URLSearchParams(window.location.search);
-                    const sessionIdFromUrl = urlParams.get('sesi');
-                    const sessionAcaraFromUrl = urlParams.get('acara');
+                    const collabUrl = urlParams.get('collabUrl');
+                    const eventName = urlParams.get('eventName');
+                    const secretKey = urlParams.get('key');
                     const savedSession = JSON.parse(localStorage.getItem('collaborationSession'));
 
-                    if (sessionIdFromUrl && sessionAcaraFromUrl) {
-                        if (savedSession && savedSession.sessionId === sessionIdFromUrl && savedSession.marketingName) {
+                    if (collabUrl && eventName && secretKey) {
+                        if (savedSession && savedSession.appsScriptUrl === collabUrl && savedSession.teamMember) {
                             collaborationSession = savedSession;
                             setupCollaborationModeUI();
                         } else {
-                            joinSessionName.textContent = sessionAcaraFromUrl;
+                            joinSessionName.textContent = eventName;
                             joinSessionModal.classList.remove('hidden');
                         }
-                    } else if (savedSession) {
+                    } else if (savedSession && savedSession.isActive) {
                         collaborationSession = savedSession;
                         setupCollaborationModeUI();
                     }
@@ -2002,21 +2059,7 @@ END:VCALENDAR`;
                     },
                 });
 
-                // GIS Code Client (for collaboration session to get auth code)
-                codeClient = google.accounts.oauth2.initCodeClient({
-                    client_id: CLIENT_ID,
-                    scope: SCOPES,
-                    ux_mode: 'popup',
-                    callback: (response) => {
-                        if (response.code) {
-                            handleCollabSessionCreation(response.code);
-                        } else {
-                            logError("Google Code Client Error", response);
-                            showToast("Gagal mendapatkan kode otorisasi dari Google.");
-                        }
-                    },
-                });
-
+                // GIS Code Client is no longer needed for the Apps Script-based collaboration.
                 gisInited = true;
             }
 
@@ -2032,76 +2075,55 @@ END:VCALENDAR`;
             [otherSelectors.langToggleInitial, otherSelectors.langToggleResults].forEach(btn => btn.addEventListener('click', toggleLanguage));
             createSessionBtn.addEventListener('click', () => showScreen('createSession'));
             cancelCreateSessionBtn.addEventListener('click', () => showScreen('initial'));
-            async function handleCollabSessionCreation(authCode) {
-                const acara = collabSessionNameInput.value.trim();
-                if (!acara) {
-                    showToast(getTranslation('toastEmptyEventName'));
+
+            // OLD COLLAB LOGIC REMOVED
+
+            generateQrCodeV2Btn.addEventListener('click', () => {
+                const appsScriptUrl = document.getElementById('collab-apps-script-url').value.trim();
+                const eventName = document.getElementById('collab-event-name').value.trim();
+                const secretKey = document.getElementById('collab-secret-key').value.trim();
+
+                if (!appsScriptUrl || !eventName || !secretKey) {
+                    showToast("Harap isi semua field.");
                     return;
                 }
-                const btn = generateSessionQRBtn;
-                const originalHTML = btn.innerHTML;
-                btn.disabled = true;
-                btn.innerHTML = `<div class="loader btn-loader"></div>`;
 
                 try {
-                    const response = await fetch(`${BACKEND_API_URL}/initiate-collab-session`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ authCode, acara })
-                    });
-
-                    const result = await response.json();
-                    if (!response.ok || !result.success) {
-                        throw new Error(result.error || 'Gagal memulai sesi kolaborasi di server.');
-                    }
-
-                    const { sessionId } = result;
-                    const baseUrl = window.location.origin + window.location.pathname;
-                    const collabUrl = `${baseUrl}?sesi=${sessionId}&acara=${encodeURIComponent(acara)}`;
-
-                    qrCodeContainer.innerHTML = '';
-                    new QRCode(qrCodeContainer, { text: collabUrl, width: 256, height: 256 });
-                    showSessionQRModal.classList.remove('hidden');
-
-                } catch (error) {
-                    logError("Error initiating collaboration session", error);
-                    showToast(`Error: ${error.message}`);
-                } finally {
-                    btn.disabled = false;
-                    btn.innerHTML = originalHTML;
-                }
-            }
-
-            generateSessionQRBtn.addEventListener('click', () => {
-                const acara = collabSessionNameInput.value.trim();
-                if (!acara) {
-                    showToast(getTranslation('toastEmptyEventName'));
+                    new URL(appsScriptUrl); // Validate URL format
+                } catch (_) {
+                    showToast("Format URL Apps Script tidak valid.");
                     return;
                 }
-                if (!codeClient) {
-                    showToast("Google Client belum siap. Mohon tunggu sebentar.");
-                    return;
-                }
-                codeClient.requestCode();
+
+                const baseUrl = window.location.origin + window.location.pathname;
+                const collabUrl = `${baseUrl}?collabUrl=${encodeURIComponent(appsScriptUrl)}&eventName=${encodeURIComponent(eventName)}&key=${encodeURIComponent(secretKey)}`;
+
+                qrCodeContainer.innerHTML = '';
+                new QRCode(qrCodeContainer, { text: collabUrl, width: 256, height: 256 });
+                showSessionQRModal.classList.remove('hidden');
             });
+
             closeQrModalBtn.addEventListener('click', () => {
                 showSessionQRModal.classList.add('hidden');
                 showScreen('initial');
             });
+
             confirmJoinBtn.addEventListener('click', () => {
-                const marketingName = marketingNameInput.value.trim();
-                if (!marketingName) { showToast(getTranslation('toastEmptyMarketingName')); return; }
+                const teamMemberName = marketingNameInput.value.trim();
+                if (!teamMemberName) { showToast(getTranslation('toastEmptyMarketingName')); return; }
+
                 const urlParams = new URLSearchParams(window.location.search);
                 collaborationSession = {
                     isActive: true,
-                    sessionId: urlParams.get('sesi'),
-                    sessionAcara: urlParams.get('acara'),
-                    marketingName: marketingName
+                    appsScriptUrl: urlParams.get('collabUrl'),
+                    eventName: urlParams.get('eventName'),
+                    secretKey: urlParams.get('key'),
+                    teamMember: teamMemberName
                 };
                 localStorage.setItem('collaborationSession', JSON.stringify(collaborationSession));
                 joinSessionModal.classList.add('hidden');
                 setupCollaborationModeUI();
-                showToast(getTranslation('toastWelcome', marketingName));
+                showToast(getTranslation('toastWelcome', teamMemberName));
             });
             cancelJoinBtn.addEventListener('click', () => {
                 joinSessionModal.classList.add('hidden');
