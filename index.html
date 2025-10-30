@@ -2687,20 +2687,30 @@ END:VCALENDAR`;
 
             function generateProfileQRCode() {
                 try {
-                    const profile = JSON.parse(localStorage.getItem('userProfile')) || {};
+                    const rawProfile = JSON.parse(localStorage.getItem('userProfile')) || {};
                     const container = document.getElementById('profile-qrcode-container');
                     container.innerHTML = ''; // Clear previous QR code
 
-                    if (!profile.nama) {
+                    // Defensively build a clean profile object, ensuring all values are strings.
+                    // This prevents TypeErrors in the QR library from non-string data (e.g., null, numbers).
+                    const cleanProfile = {
+                        nama: String(rawProfile.nama || '').trim(),
+                        jabatan: String(rawProfile.jabatan || '').trim(),
+                        perusahaan: String(rawProfile.perusahaan || '').trim(),
+                        deskripsi: String(rawProfile.deskripsi || '').trim(),
+                        whatsapp: String(rawProfile.whatsapp || '').trim(),
+                        email: String(rawProfile.email || '').trim(),
+                        website: String(rawProfile.website || '').trim(),
+                        telp_kantor: String(rawProfile.telp_kantor || '').trim(),
+                        photo: rawProfile.photo // photo is handled separately in createProfileVCard
+                    };
+
+                    if (!cleanProfile.nama) {
                         container.innerHTML = '<p class="text-center text-sm text-gray-500">Silakan lengkapi dan simpan profil Anda terlebih dahulu.</p>';
                         return;
                     }
 
-                    const vCardString = createProfileVCard(profile);
-
-                    if (!vCardString || typeof vCardString !== 'string') {
-                        throw new Error('vCard string is invalid');
-                    }
+                    const vCardString = createProfileVCard(cleanProfile);
 
                     new QRCode(container, {
                         text: vCardString,
@@ -2721,19 +2731,36 @@ END:VCALENDAR`;
 
             function createProfileVCard(profile) {
                 let vCard = `BEGIN:VCARD\nVERSION:3.0\n`;
-                if (profile.nama) vCard += `FN:${profile.nama}\n`;
-                if (profile.perusahaan) vCard += `ORG:${profile.perusahaan}\n`;
-                if (profile.jabatan) vCard += `TITLE:${profile.jabatan}\n`;
-                if (profile.whatsapp) vCard += `TEL;TYPE=CELL,VOICE:${profile.whatsapp}\n`;
-                if (profile.telp_kantor) vCard += `TEL;TYPE=WORK,VOICE:${profile.telp_kantor}\n`;
-                if (profile.email) vCard += `EMAIL:${profile.email}\n`;
-                if (profile.website) vCard += `URL:${profile.website}\n`;
-                if (profile.deskripsi) vCard += `NOTE:${profile.deskripsi.replace(/\n/g, '\\n')}\n`;
-                 // Add photo if available
-                if (profile.photo && profile.photo.startsWith('data:image/jpeg;base64,')) {
+
+                const addField = (field, value) => {
+                    // Ensure value is not null/undefined, convert to string, and trim.
+                    const strValue = value ? String(value).trim() : '';
+                    if (strValue) {
+                        // Special handling for NOTE field to replace newlines
+                        if (field === 'NOTE') {
+                            vCard += `${field}:${strValue.replace(/\n/g, '\\n')}\n`;
+                        } else {
+                            vCard += `${field}:${strValue}\n`;
+                        }
+                    }
+                };
+
+                addField('FN', profile.nama);
+                addField('ORG', profile.perusahaan);
+                addField('TITLE', profile.jabatan);
+                addField('TEL;TYPE=CELL,VOICE', profile.whatsapp);
+                addField('TEL;TYPE=WORK,VOICE', profile.telp_kantor);
+                addField('EMAIL', profile.email);
+                addField('URL', profile.website);
+                addField('NOTE', profile.deskripsi);
+
+                if (profile.photo && typeof profile.photo === 'string' && profile.photo.startsWith('data:image/jpeg;base64,')) {
                     const base64Data = profile.photo.replace('data:image/jpeg;base64,', '');
-                    vCard += `PHOTO;ENCODING=b;TYPE=JPEG:${base64Data}\n`;
+                    if (base64Data) {
+                        vCard += `PHOTO;ENCODING=b;TYPE=JPEG:${base64Data}\n`;
+                    }
                 }
+
                 vCard += `END:VCARD`;
                 return vCard;
             }
