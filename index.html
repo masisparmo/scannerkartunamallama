@@ -1090,7 +1090,7 @@
                 });
 
                 const count = filteredContacts.length;
-                otherSelectors.homeContactCount.textContent = allContacts.length;
+                updateContactCount(); // Use the new centralized function
                 otherSelectors.resultsContactCount.textContent = count;
                 otherSelectors.resultsList.innerHTML = '';
 
@@ -1492,7 +1492,6 @@ END:VCALENDAR`;
                 setTimeout(() => {
                     otherSelectors.editModal.classList.add('hidden');
                     document.querySelector('.app-container').classList.remove('hidden');
-                    showScreen('initial');
                 }, 300);
             }
 
@@ -1523,6 +1522,7 @@ END:VCALENDAR`;
                     await dbLogic.updateContact(contactData);
                     showToast(getTranslation('toastContactUpdated'));
                 }
+                updateContactCount(); // Refresh the count on save
 
                 // If in collaboration mode, also send the data to the host's sheet.
                 if (collaborationSession.isActive) {
@@ -1970,6 +1970,12 @@ END:VCALENDAR`;
                 return `${day}-${month}-${year}`;
             }
 
+            async function updateContactCount() {
+                if (!dbLogic.db) return;
+                const allContacts = await dbLogic.getAllContacts();
+                otherSelectors.homeContactCount.textContent = allContacts.length;
+            }
+
             async function initializeApp() {
                 lucide.createIcons();
                 const savedTheme = localStorage.getItem('theme');
@@ -2021,6 +2027,11 @@ END:VCALENDAR`;
 
                     showScreen('initial');
                     initializeGoogleClients();
+                    updateContactCount(); // Initial count on load
+
+                    // Expose functions for Playwright testing
+                    window.openEditModalForNewContact = openEditModalForNewContact;
+
                     window.appInitialized = true; // Signal that the app is ready
                 } catch (error) {
                     logError("Failed to initialize the app", error);

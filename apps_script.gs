@@ -83,7 +83,7 @@ function doPost(e) {
             case "Jabatan": return cardData.jabatan || "";
             case "Perusahaan": return cardData.perusahaan || "";
             case "Jenis Perusahaan": return cardData.jenis_perusahaan || "";
-            case "Telepon Kantor": return cardData.telepon_kantor || "";
+            case "Telepon Kantor": return cardData.telepon_kantor ? "'" + cardData.telepon_kantor : "";
             case "WhatsApp": return cardData.whatsapp || "";
             case "Email": return cardData.email || "";
             case "Tags": return (cardData.tags || []).join(', ');
