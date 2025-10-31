@@ -2762,6 +2762,16 @@ END:VCALENDAR`;
                     }
                 };
 
+                // iPhone requires the N property for names. FN is often not enough.
+                const fullName = profile.nama ? String(profile.nama).trim() : '';
+                if (fullName) {
+                    const nameParts = fullName.split(' ').filter(n => n);
+                    const lastName = nameParts.length > 1 ? nameParts.pop() : ''; // Get the last part as the last name
+                    const firstName = nameParts.join(' '); // The rest is the first name
+                    // Format is N:LastName;FirstName;MiddleName;Prefix;Suffix
+                    vCard += `N:${lastName};${firstName};;;\n`;
+                }
+
                 addField('FN', profile.nama);
                 addField('ORG', profile.perusahaan);
                 addField('TITLE', profile.jabatan);
