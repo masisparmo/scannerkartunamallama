@@ -1,4 +1,4 @@
-# 🚀 Scanner Pintar - AI-Powered Business Card & QR Code Scanner
+# Scanner Pintar - AI-Powered Business Card & QR Code Scanner
 
 [![Meta AI](https://img.shields.io/badge/Meta-Llama_4_Maverick-0467DF?style=for-the-badge&logo=meta&logoColor=white)](https://llama.com)
 [![Hackathon](https://img.shields.io/badge/Hackathon-Meta_Hacktiv8_2025-FF6B35?style=for-the-badge)](https://hacktiv8.com)
