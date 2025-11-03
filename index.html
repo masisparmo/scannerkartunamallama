@@ -2666,8 +2666,20 @@ END:VCALENDAR`;
                 const collabUrl = `${baseUrl}?collabUrl=${encodeURIComponent(appsScriptUrl)}&eventName=${encodeURIComponent(eventName)}&key=${encodeURIComponent(secretKey)}`;
 
                 qrCodeContainer.innerHTML = '';
-                new QRCode(qrCodeContainer, { text: collabUrl, width: 256, height: 256 });
                 showSessionQRModal.classList.remove('hidden');
+
+                requestAnimationFrame(() => {
+                    new QRCode(qrCodeContainer, {
+                        text: collabUrl,
+                        width: 256,
+                        height: 256,
+                        correctLevel: QRCode.CorrectLevel.L
+                    });
+                    const qrCanvas = qrCodeContainer.querySelector('canvas');
+                    if (qrCanvas) {
+                        qrCanvas.style.display = 'block';
+                    }
+                });
             });
 
             closeQrModalBtn.addEventListener('click', () => {
