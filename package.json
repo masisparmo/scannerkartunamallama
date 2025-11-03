@@ -1,5 +1,24 @@
 {
   "dependencies": {
     "@playwright/test": "^1.56.1"
-  }
+  },
+  "name": "app",
+  "version": "1.0.0",
+  "description": "[![Meta AI](https://img.shields.io/badge/Meta-Llama_4_Maverick-0467DF?style=for-the-badge&logo=meta&logoColor=white)](https://llama.com) [![Hackathon](https://img.shields.io/badge/Hackathon-Meta_Hacktiv8_2025-FF6B35?style=for-the-badge)](https://hacktiv8.com) [![Live Demo](https://img.shields.io/badge/Live-Demo-success?style=for-the-badge&logo=google-chrome&logoColor=white)](https://scankartunama.isparmo.com/) [![GitHub Pages](https://img.shields.io/badge/Frontend-GitHub_Pages-222222?style=for-the-badge&logo=github&logoColor=white)](https://pages.github.com/) [![Google Cloud](https://img.shields.io/badge/Backend-GCP-4285F4?style=for-the-badge&logo=google-cloud&logoColor=white)](https://cloud.google.com/)",
+  "main": "sw.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/masisparmo/scannerkartunamallama.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/masisparmo/scannerkartunamallama/issues"
+  },
+  "homepage": "https://github.com/masisparmo/scannerkartunamallama#readme"
 }
