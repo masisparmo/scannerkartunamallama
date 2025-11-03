@@ -1185,12 +1185,6 @@ function createJsonResponse(obj) {
                 showToast("Fitur ini tidak dapat memproses file audio yang direkam secara langsung.");
             }
 
-                if (digits.startsWith('0')) {
-                    digits = '62' + digits.substring(1);
-                }
-                return digits;
-            }
-
             function logError(message, errorObject = null) {
                 console.error(message, errorObject);
                 const timestamp = new Date().toLocaleTimeString();
