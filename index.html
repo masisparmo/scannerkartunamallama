@@ -498,6 +498,23 @@ function createJsonResponse(obj) {
     </div>
     <hr class="border-gray-200 dark:border-gray-600 !my-4">
     <div><label for="edit-catatan" class="text-sm font-medium text-gray-600 dark:text-gray-400" data-translate-key="notesLabel">Catatan</label><input type="text" id="edit-catatan" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"></div>
+
+    <!-- Voice Note UI Container -->
+    <div id="voice-note-container" class="mt-2 p-3 bg-gray-100 dark:bg-gray-700/50 rounded-lg">
+        <div class="flex items-center gap-3">
+            <button type="button" id="record-btn" class="p-2 text-red-500 hover:bg-red-100 dark:hover:bg-red-900/50 rounded-full"><i data-lucide="mic" class="w-5 h-5"></i></button>
+            <button type="button" id="stop-btn" class="hidden p-2 text-red-500 hover:bg-red-100 dark:hover:bg-red-900/50 rounded-full"><i data-lucide="square" class="w-5 h-5"></i></button>
+            <button type="button" id="play-btn" class="hidden p-2 text-blue-500 hover:bg-blue-100 dark:hover:bg-blue-900/50 rounded-full"><i data-lucide="play" class="w-5 h-5"></i></button>
+            <button type="button" id="pause-btn" class="hidden p-2 text-blue-500 hover:bg-blue-100 dark:hover:bg-blue-900/50 rounded-full"><i data-lucide="pause" class="w-5 h-5"></i></button>
+            <div id="duration" class="text-sm font-mono text-gray-600 dark:text-gray-400">00:00</div>
+            <div id="audio-playback" class="hidden w-full h-8 bg-gray-200 dark:bg-gray-600 rounded"></div>
+        </div>
+        <button type="button" id="convert-to-text-btn" class="hidden w-full mt-3 text-sm bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-2 px-3 rounded-lg flex items-center justify-center gap-2">
+            <i data-lucide="file-text" class="w-4 h-4"></i>
+            <span>Ubah ke Teks</span>
+        </button>
+    </div>
+
     <div class="grid grid-cols-2 gap-3">
         <div><label for="edit-tanggal" class="text-sm font-medium text-gray-600 dark:text-gray-400" data-translate-key="dateLabel">Tanggal</label><input type="text" id="edit-tanggal" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"></div>
         <div><label for="edit-acara" class="text-sm font-medium text-gray-600 dark:text-gray-400" data-translate-key="eventLabel">Acara</label><input type="text" id="edit-acara" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"></div>
@@ -1052,6 +1069,8 @@ function createJsonResponse(obj) {
             }
 
             let stream, qrScanInterval, confirmCallback = null;
+            let mediaRecorder, audioChunks = [], timerInterval, audioBlob = null, currentRecordingName = null;
+            let isRecording = false;
 
             function formatKantor(phone) {
                 if (!phone) return '';
@@ -1065,6 +1084,107 @@ function createJsonResponse(obj) {
             function formatWA(phone) {
                 if (!phone) return '';
                 let digits = phone.replace(/\D/g, '');
+                if (digits.startsWith('0')) {
+                    digits = '62' + digits.substring(1);
+                }
+                return digits;
+            }
+
+            // --- Voice Note Functions ---
+
+            function updateTimer() {
+                let seconds = Math.floor((Date.now() - recordingStartTime) / 1000);
+                const minutes = Math.floor(seconds / 60).toString().padStart(2, '0');
+                seconds = (seconds % 60).toString().padStart(2, '0');
+                document.getElementById('duration').textContent = `${minutes}:${seconds}`;
+            }
+
+            async function startRecording() {
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+
+                    // Safari/iOS specific mimeType
+                    const mimeType = MediaRecorder.isTypeSupported('audio/mp4')
+                        ? 'audio/mp4'
+                        : 'audio/webm';
+
+                    mediaRecorder = new MediaRecorder(stream, { mimeType });
+                    audioChunks = [];
+
+                    mediaRecorder.addEventListener("dataavailable", event => {
+                        audioChunks.push(event.data);
+                    });
+
+                    mediaRecorder.addEventListener("stop", () => {
+                        audioBlob = new Blob(audioChunks, { type: mimeType });
+                        const contactName = document.getElementById('edit-nama').value.trim().replace(/\s+/g, '_') || 'unknown';
+                        const fileExtension = mimeType.split('/')[1];
+                        currentRecordingName = `voicenote-${contactName}.${fileExtension}`;
+
+                        document.getElementById('play-btn').classList.remove('hidden');
+                        document.getElementById('convert-to-text-btn').classList.remove('hidden');
+                        stream.getTracks().forEach(track => track.stop());
+                    });
+
+                    recordingStartTime = Date.now();
+                    timerInterval = setInterval(updateTimer, 1000);
+                    mediaRecorder.start();
+
+                    isRecording = true;
+                    document.getElementById('record-btn').classList.add('hidden');
+                    document.getElementById('stop-btn').classList.remove('hidden');
+                    document.getElementById('play-btn').classList.add('hidden');
+                    document.getElementById('pause-btn').classList.add('hidden');
+
+                } catch (err) {
+                    logError("Error starting recording:", err);
+                    showToast("Tidak bisa mengakses mikrofon. Mohon berikan izin.");
+                }
+            }
+
+            function stopRecording() {
+                if (mediaRecorder && mediaRecorder.state !== "inactive") {
+                    mediaRecorder.stop();
+                    clearInterval(timerInterval);
+                    isRecording = false;
+                    document.getElementById('record-btn').classList.remove('hidden');
+                    document.getElementById('stop-btn').classList.add('hidden');
+                }
+            }
+
+            let currentAudio = null;
+            function playRecording() {
+                if (audioBlob) {
+                    if (currentAudio && !currentAudio.paused) { // If audio is already playing, do nothing
+                        return;
+                    }
+                    currentAudio = new Audio(URL.createObjectURL(audioBlob));
+                    currentAudio.onended = () => {
+                        document.getElementById('play-btn').classList.remove('hidden');
+                        document.getElementById('pause-btn').classList.add('hidden');
+                    };
+                    currentAudio.play();
+                    document.getElementById('play-btn').classList.add('hidden');
+                    document.getElementById('pause-btn').classList.remove('hidden');
+                }
+            }
+
+            function pauseRecording() {
+                if (currentAudio && !currentAudio.paused) {
+                    currentAudio.pause();
+                    document.getElementById('play-btn').classList.remove('hidden');
+                    document.getElementById('pause-btn').classList.add('hidden');
+                }
+            }
+
+            function convertAudioToText() {
+                // This function is currently not implemented due to Web Speech API limitations.
+                // The API does not support transcribing audio files/blobs directly on the client-side.
+                // It is designed for live microphone input.
+                // The button is disabled via the feature detection logic at the bottom of the script.
+                showToast("Fitur ini tidak dapat memproses file audio yang direkam secara langsung.");
+            }
+
                 if (digits.startsWith('0')) {
                     digits = '62' + digits.substring(1);
                 }
@@ -1793,12 +1913,37 @@ END:VCALENDAR`;
                 setTimeout(() => {
                     otherSelectors.editModal.classList.remove('opacity-0');
                     otherSelectors.editModalContent.classList.remove('scale-95', 'opacity-0');
+                    lucide.createIcons();
                 }, 10);
             }
 
             async function openEditModal(id) {
                 const contact = await dbLogic.getContact(id);
                 if (!contact) return;
+
+                // Reset voice note state
+                audioBlob = null;
+                currentRecordingName = null;
+                document.getElementById('record-btn').classList.remove('hidden');
+                document.getElementById('stop-btn').classList.add('hidden');
+                document.getElementById('play-btn').classList.add('hidden');
+                document.getElementById('pause-btn').classList.add('hidden');
+                document.getElementById('convert-to-text-btn').classList.add('hidden');
+                document.getElementById('duration').textContent = '00:00';
+
+                if (contact.voiceNoteBlob) {
+                    audioBlob = contact.voiceNoteBlob;
+                    currentRecordingName = contact.voiceNoteName;
+                    document.getElementById('play-btn').classList.remove('hidden');
+                    document.getElementById('convert-to-text-btn').classList.remove('hidden');
+                     // Get duration from the blob
+                    const audio = new Audio(URL.createObjectURL(audioBlob));
+                    audio.onloadedmetadata = () => {
+                        const minutes = Math.floor(audio.duration / 60).toString().padStart(2, '0');
+                        const seconds = Math.floor(audio.duration % 60).toString().padStart(2, '0');
+                        document.getElementById('duration').textContent = `${minutes}:${seconds}`;
+                    };
+                }
 
                 document.querySelector('.app-container').classList.add('hidden');
 
@@ -1817,7 +1962,11 @@ END:VCALENDAR`;
                 document.getElementById('edit-tanggal').value = contact.tanggal || '';
                 document.getElementById('edit-catatan').value = contact.catatan || '';
                 otherSelectors.editModal.classList.remove('hidden');
-                setTimeout(() => { otherSelectors.editModal.classList.remove('opacity-0'); otherSelectors.editModalContent.classList.remove('scale-95', 'opacity-0'); }, 10);
+                setTimeout(() => {
+                    otherSelectors.editModal.classList.remove('opacity-0');
+                    otherSelectors.editModalContent.classList.remove('scale-95', 'opacity-0');
+                    lucide.createIcons();
+                }, 10);
             }
 
             function closeEditModal() {
@@ -1844,7 +1993,9 @@ END:VCALENDAR`;
                     acara: document.getElementById('edit-acara').value,
                     tanggal: document.getElementById('edit-tanggal').value,
                     catatan: document.getElementById('edit-catatan').value,
-                    tags: document.getElementById('edit-tags').value.split(',').map(tag => tag.trim()).filter(Boolean)
+                    tags: document.getElementById('edit-tags').value.split(',').map(tag => tag.trim()).filter(Boolean),
+                    voiceNoteBlob: audioBlob,
+                    voiceNoteName: currentRecordingName
                 };
 
                 // Always save to local IndexedDB first, regardless of the mode.
@@ -3073,6 +3224,14 @@ END:VCALENDAR`;
                 }
             });
 
+            // Voice Note Button Listeners
+            document.getElementById('record-btn').addEventListener('click', startRecording);
+            document.getElementById('stop-btn').addEventListener('click', stopRecording);
+            document.getElementById('play-btn').addEventListener('click', playRecording);
+            document.getElementById('pause-btn').addEventListener('click', pauseRecording);
+            document.getElementById('convert-to-text-btn').addEventListener('click', convertAudioToText);
+
+
             function waitForGoogleApisAndInitialize() {
                 if (typeof gapi !== 'undefined' && typeof google !== 'undefined') {
                     console.log("Google API clients are ready.");
@@ -3080,6 +3239,31 @@ END:VCALENDAR`;
                 } else {
                     console.log("Waiting for Google API clients to load...");
                     setTimeout(waitForGoogleApisAndInitialize, 100);
+                }
+            }
+
+            // --- Feature Detection & UI Disabling ---
+            const convertBtn = document.getElementById('convert-to-text-btn');
+            if (convertBtn) {
+                const isSpeechRecognitionSupported = 'SpeechRecognition' in window || 'webkitSpeechRecognition' in window;
+                // Also disabling because client-side blob transcription is not supported by the API.
+                const isFeatureEnabled = false; // Set to false to reflect the limitation
+
+                if (!isSpeechRecognitionSupported || !isFeatureEnabled) {
+                    convertBtn.disabled = true;
+                    convertBtn.style.cursor = 'not-allowed';
+                    convertBtn.style.opacity = '0.6';
+
+                    let title = 'Fitur ini tidak didukung di browser Anda.';
+                    if (isSpeechRecognitionSupported && !isFeatureEnabled) {
+                        title = 'Konversi dari file audio yang direkam saat ini tidak didukung.';
+                    }
+                    convertBtn.title = title;
+
+                    const span = convertBtn.querySelector('span');
+                    if (span) {
+                        span.textContent = 'Ubah ke Teks (Tidak Tersedia)';
+                    }
                 }
             }
 
