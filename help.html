@@ -10,7 +10,7 @@
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         :root {
             --bg-primary: #ffffff;
             --bg-secondary: #f9fafb;
@@ -21,7 +21,7 @@
             --shadow: rgba(0,0,0,0.05);
             --link-color: #667eea;
         }
-        
+
         body.dark-theme {
             --bg-primary: #1f2937;
             --bg-secondary: #111827;
@@ -32,7 +32,7 @@
             --shadow: rgba(0,0,0,0.3);
             --link-color: #818cf8;
         }
-        
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             line-height: 1.6;
@@ -40,7 +40,7 @@
             background-color: var(--bg-secondary);
             transition: background-color 0.3s ease, color 0.3s ease;
         }
-        
+
         header {
             background-color: var(--bg-primary);
             border-bottom: 1px solid var(--border-color);
@@ -50,7 +50,7 @@
             z-index: 100;
             transition: background-color 0.3s ease;
         }
-        
+
         .header-content {
             max-width: 900px;
             margin: 0 auto;
@@ -60,13 +60,13 @@
             justify-content: space-between;
             gap: 24px;
         }
-        
+
         .header-left {
             display: flex;
             align-items: center;
             gap: 16px;
         }
-        
+
         .logo {
             width: 56px;
             height: 56px;
@@ -78,33 +78,33 @@
             font-size: 28px;
             flex-shrink: 0;
         }
-        
+
         .header-title-group {
             display: flex;
             flex-direction: column;
             gap: 2px;
         }
-        
+
         .header-title {
             font-size: 1.75em;
             font-weight: 700;
             color: var(--text-primary);
             line-height: 1.1;
         }
-        
+
         .header-subtitle {
             font-size: 1em;
             color: var(--text-secondary);
             line-height: 1.2;
             font-weight: 400;
         }
-        
+
         .header-right {
             display: flex;
             align-items: center;
             gap: 12px;
         }
-        
+
         .btn {
             padding: 11px 22px;
             border: none;
@@ -119,7 +119,7 @@
             font-weight: 500;
             white-space: nowrap;
         }
-        
+
         .btn-lang {
             background-color: #4b5563;
             color: white;
@@ -128,21 +128,21 @@
             padding: 11px 18px;
             font-weight: 600;
         }
-        
+
         .btn-lang:hover {
             background-color: #374151;
         }
-        
+
         .btn-primary {
             background-color: #667eea;
             color: white;
             font-weight: 500;
         }
-        
+
         .btn-primary:hover {
             background-color: #5568d3;
         }
-        
+
         .btn-icon {
             width: 46px;
             height: 46px;
@@ -156,30 +156,30 @@
             font-size: 22px;
             flex-shrink: 0;
         }
-        
+
         .btn-icon:hover {
             background-color: var(--border-color);
         }
-        
+
         .content-wrapper {
             max-width: 900px;
             margin: 0 auto;
             padding: 56px 32px 80px;
             background-color: var(--bg-secondary);
         }
-        
+
         .content-inner {
             width: 100%;
         }
-        
+
         .content-section {
             display: none;
         }
-        
+
         .content-section.active {
             display: block;
         }
-        
+
         h2 {
             color: var(--text-primary);
             margin-top: 36px;
@@ -187,11 +187,11 @@
             font-size: 1.5em;
             font-weight: 700;
         }
-        
+
         h2:first-child {
             margin-top: 0;
         }
-        
+
         h3 {
             color: var(--text-primary);
             margin-top: 32px;
@@ -199,40 +199,40 @@
             font-size: 1.2em;
             font-weight: 600;
         }
-        
+
         p {
             margin-bottom: 18px;
             color: var(--text-primary);
             line-height: 1.8;
             font-size: 1.05em;
         }
-        
-        ul {
+
+        ul, ol {
             margin-left: 26px;
             margin-bottom: 18px;
         }
-        
+
         li {
             margin-bottom: 14px;
             color: var(--text-primary);
             line-height: 1.8;
             font-size: 1.05em;
         }
-        
+
         strong {
             color: var(--text-primary);
             font-weight: 600;
         }
-        
+
         a {
             color: var(--link-color);
             text-decoration: none;
         }
-        
+
         a:hover {
             text-decoration: underline;
         }
-        
+
         footer {
             background-color: var(--bg-primary);
             border-top: 1px solid var(--border-color);
@@ -240,13 +240,13 @@
             margin-top: auto;
             transition: background-color 0.3s ease;
         }
-        
+
         .footer-content {
             max-width: 900px;
             margin: 0 auto;
             padding: 0 32px;
         }
-        
+
         .footer-links {
             display: flex;
             justify-content: center;
@@ -255,7 +255,7 @@
             margin-bottom: 20px;
             align-items: center;
         }
-        
+
         .footer-links a {
             color: var(--text-secondary);
             text-decoration: none;
@@ -263,88 +263,88 @@
             transition: color 0.2s ease;
             padding: 0 14px;
         }
-        
+
         .footer-links a:hover {
             color: var(--text-primary);
             text-decoration: none;
         }
-        
+
         .footer-links .separator {
             color: var(--border-color);
             user-select: none;
         }
-        
+
         .footer-copyright {
             text-align: center;
             color: var(--text-secondary);
             font-size: 0.9em;
         }
-        
+
         .footer-copyright a {
             color: var(--link-color);
             font-weight: 500;
         }
-        
+
         @media (max-width: 768px) {
             .header-content {
                 padding: 0 16px;
                 flex-wrap: wrap;
             }
-            
+
             .header-title {
                 font-size: 1.4em;
             }
-            
+
             .header-subtitle {
                 font-size: 0.9em;
             }
-            
+
             .logo {
                 width: 48px;
                 height: 48px;
                 font-size: 24px;
                 border-radius: 12px;
             }
-            
+
             .header-right {
                 width: 100%;
                 justify-content: flex-end;
             }
-            
+
             .btn-primary {
                 flex: 1;
                 max-width: 220px;
             }
-            
+
             .content-wrapper {
                 padding: 32px 20px 60px;
             }
-            
+
             h2 {
                 font-size: 1.3em;
             }
-            
+
             h3 {
                 font-size: 1.1em;
             }
-            
+
             p, li {
                 font-size: 1em;
             }
-            
+
             .footer-content {
                 padding: 0 20px;
             }
-            
+
             .footer-links {
                 flex-direction: column;
                 gap: 10px;
             }
-            
+
             .footer-links .separator {
                 display: none;
             }
-            
+
             .footer-links a {
                 padding: 6px 0;
             }
@@ -372,13 +372,13 @@
             </div>
         </div>
     </header>
-    
+
     <div class="content-wrapper">
         <div class="content-inner">
             <!-- INDONESIAN VERSION -->
             <div id="content-id" class="content-section active">
                 <h2>Cara Menggunakan Scanner Pintar</h2>
-                
+
                 <h3>1. Persiapan Awal</h3>
                 <ul>
                     <li><strong>Isi Profil Anda (Untuk Follow-up AI):</strong> Sebelum memulai, klik tombol <strong>PROFIL</strong> di pojok kanan atas halaman utama. Isi nama, jabatan, dan perusahaan Anda. Informasi ini akan digunakan oleh AI untuk membuat draf email dan pesan WhatsApp yang personal dan profesional.</li>
@@ -390,7 +390,7 @@
                     <li><strong>Pilih Metode Pindai:</strong> Klik <strong>SCAN KARTU NAMA</strong> untuk membuka kamera, atau <strong>UPLOAD DARI GALERI</strong> untuk memilih gambar yang sudah ada di perangkat Anda.</li>
                     <li><strong>Ambil Gambar:</strong> Posisikan kartu nama atau QR Code di dalam frame. Pastikan pencahayaan cukup dan gambar fokus. Klik tombol Pindai. AI akan otomatis menganalisis dan mengekstrak informasinya.</li>
                 </ul>
-                
+
                 <h3>3. Mengelola dan Mengekspor Hasil</h3>
                 <ul>
                     <li><strong>Lihat Hasil Scan:</strong> Klik <strong>Lihat Hasil Scan</strong> di halaman utama untuk melihat semua kontak yang tersimpan di perangkat Anda. Kontak diurutkan dari yang terbaru.</li>
@@ -398,6 +398,31 @@
                     <li><strong>Gunakan Asisten Follow-Up AI:</strong> Klik pada kartu kontak (bukan tombol edit) untuk membuka menu tindakan. Pilih <strong>Draf Pesan WA</strong> atau <strong>Draf Email</strong> (memerlukan profil sudah terisi).</li>
                     <li><strong>Ekspor Data:</strong> Di bagian bawah halaman hasil, pilih format ekspor yang diinginkan: <strong>CSV</strong> (untuk Excel/Sheets), <strong>VCF</strong> (untuk kontak HP), <strong>ZIP</strong> (kumpulan file VCF), atau <strong>SIMPAN KE GOOGLE SHEET</strong> (untuk menyimpan semua data lokal ke G-Sheet pribadi).</li>
                 </ul>
+
+                <h3>4. Menggunakan Mode Kolaborasi (Untuk Tim)</h3>
+                <p>Fitur ini memungkinkan tim untuk mengumpulkan data pindaian kartu nama ke dalam satu Google Sheet secara bersamaan. Ada dua peran: <strong>Host</strong> (pembuat sesi) dan <strong>Anggota Tim</strong> (pemindai).</p>
+                <h4>Untuk Host (Pembuat Sesi Kolaborasi):</h4>
+                <ol>
+                    <li>Buka aplikasi dan klik tombol <strong>MODE KOLABORASI</strong>.</li>
+                    <li>Masuk ke akun Google Anda jika diminta.</li>
+                    <li>Isi formulir:
+                        <ul>
+                            <li><strong>URL Google Apps Script:</strong> Masukkan URL Web App dari Google Apps Script yang telah Anda deploy.</li>
+                            <li><strong>Kunci Rahasia:</strong> Masukkan secret key yang Anda atur di dalam script.</li>
+                            <li><strong>Nama Acara:</strong> Beri nama sesi kolaborasi ini (misal: "Pameran Tech 2025"). Nama ini akan menjadi nama tab baru di Google Sheet Anda.</li>
+                        </ul>
+                    </li>
+                    <li>Klik <strong>BUAT QR CODE</strong>. Sebuah QR Code akan muncul.</li>
+                    <li>Biarkan halaman QR Code ini tetap terbuka di perangkat Anda. Minta anggota tim Anda untuk memindai QR Code ini untuk bergabung.</li>
+                </ol>
+                <h4>Untuk Anggota Tim (Pemindai):</h4>
+                <ol>
+                    <li>Buka aplikasi dan klik tombol <strong>MODE KOLABORASI</strong>.</li>
+                    <li>Klik tombol <strong>SCAN QR KOLABORASI</strong>.</li>
+                    <li>Pindai QR Code yang ditampilkan di perangkat Host.</li>
+                    <li>Setelah berhasil, Anda akan masuk ke mode pemindaian. Masukkan nama Anda (untuk identifikasi data).</li>
+                    <li>Mulai pindai kartu nama seperti biasa. Setiap hasil pindaian akan otomatis dikirim ke Google Sheet milik Host.</li>
+                </ol>
 
                 <h2>Frequently Asked Questions (F.A.Q.)</h2>
                 <ul>
@@ -411,15 +436,15 @@
                     <li><strong>AI gagal mengekstrak informasi dengan benar. Apa yang harus saya lakukan?</strong> Pastikan gambar jelas, fokus, dan pencahayaan cukup. Anda juga dapat mengedit hasil ekstraksi secara manual.</li>
                     <li><strong>Bisakah saya menggunakan aplikasi ini secara offline?</strong> Fitur scan memerlukan koneksi internet untuk mengakses AI. Namun, data yang sudah tersimpan dapat diakses secara offline.</li>
                 </ul>
-                
+
                 <h3>Kontak & Dukungan</h3>
                 <p>Untuk pertanyaan, masukan, atau laporan bug, silakan kirim email ke tim dukungan kami: <a href="mailto:support@isparmo.com">support@isparmo.com</a></p>
             </div>
-            
+
             <!-- ENGLISH VERSION -->
             <div id="content-en" class="content-section">
                 <h2>How to Use Scanner Pintar</h2>
-                
+
                 <h3>1. Initial Setup</h3>
                 <ul>
                     <li><strong>Fill in Your Profile (For AI Follow-up):</strong> Before starting, click the <strong>PROFILE</strong> button in the top right corner of the main page. Fill in your name, title, and company. This information will be used by AI to create personalized and professional email drafts and WhatsApp messages.</li>
@@ -431,7 +456,7 @@
                     <li><strong>Choose Scan Method:</strong> Click <strong>SCAN BUSINESS CARD</strong> to open the camera, or <strong>UPLOAD FROM GALLERY</strong> to select an existing image from your device.</li>
                     <li><strong>Take a Picture:</strong> Position the business card or QR Code within the frame. Ensure adequate lighting and focus. Click the Scan button. AI will automatically analyze and extract the information.</li>
                 </ul>
-                
+
                 <h3>3. Managing and Exporting Results</h3>
                 <ul>
                     <li><strong>View Scan Results:</strong> Click <strong>View Scan Results</strong> on the main page to see all contacts stored on your device. Contacts are sorted from newest to oldest.</li>
@@ -439,6 +464,31 @@
                     <li><strong>Use AI Follow-Up Assistant:</strong> Click on a contact card (not the edit button) to open the action menu. Select <strong>Draft WA Message</strong> or <strong>Draft Email</strong> (requires profile to be filled).</li>
                     <li><strong>Export Data:</strong> At the bottom of the results page, choose your desired export format: <strong>CSV</strong> (for Excel/Sheets), <strong>VCF</strong> (for phone contacts), <strong>ZIP</strong> (collection of VCF files), or <strong>SAVE TO GOOGLE SHEET</strong> (to save all local data to your personal G-Sheet).</li>
                 </ul>
+
+                <h3>4. Using Collaboration Mode (For Teams)</h3>
+                <p>This feature allows teams to collect scanned business card data into a single Google Sheet simultaneously. There are two roles: <strong>Host</strong> (session creator) and <strong>Team Member</strong> (scanner).</p>
+                <h4>For the Host (Collaboration Session Creator):</h4>
+                <ol>
+                    <li>Open the application and click the <strong>COLLABORATION MODE</strong> button.</li>
+                    <li>Sign in to your Google account if prompted.</li>
+                    <li>Fill out the form:
+                        <ul>
+                            <li><strong>Google Apps Script URL:</strong> Enter the Web App URL from the Google Apps Script you have deployed.</li>
+                            <li><strong>Secret Key:</strong> Enter the secret key you set within the script.</li>
+                            <li><strong>Event Name:</strong> Name this collaboration session (e.g., "Tech Expo 2025"). This name will become a new tab name in your Google Sheet.</li>
+                        </ul>
+                    </li>
+                    <li>Click <strong>CREATE QR CODE</strong>. A QR Code will appear.</li>
+                    <li>Keep this QR Code page open on your device. Ask your team members to scan this QR Code to join.</li>
+                </ol>
+                <h4>For Team Members (Scanners):</h4>
+                <ol>
+                    <li>Open the application and click the <strong>COLLABORATION MODE</strong> button.</li>
+                    <li>Click the <strong>SCAN COLLABORATION QR</strong> button.</li>
+                    <li>Scan the QR Code displayed on the Host's device.</li>
+                    <li>Once successful, you will enter scanning mode. Enter your name (for data identification).</li>
+                    <li>Start scanning business cards as usual. Each scan result will be automatically sent to the Host's Google Sheet.</li>
+                </ol>
 
                 <h2>Frequently Asked Questions (F.A.Q.)</h2>
                 <ul>
@@ -452,13 +502,13 @@
                     <li><strong>AI failed to extract information correctly. What should I do?</strong> Ensure the image is clear, focused, and well-lit. You can also manually edit the extraction results.</li>
                     <li><strong>Can I use this application offline?</strong> The scan feature requires an internet connection to access AI. However, already stored data can be accessed offline.</li>
                 </ul>
-                
+
                 <h3>Contact & Support</h3>
                 <p>For questions, feedback, or bug reports, please email our support team: <a href="mailto:support@isparmo.com">support@isparmo.com</a></p>
             </div>
         </div>
     </div>
-    
+
     <footer>
         <div class="footer-content">
             <div class="footer-links">
@@ -477,10 +527,10 @@
             </div>
         </div>
     </footer>
-    
+
     <script>
         let currentLang = 'id';
-        
+
         // Language text mappings
         const langTexts = {
             id: {
@@ -492,13 +542,13 @@
                 backBtn: 'Back to Application'
             }
         };
-        
+
         // Update header text based on language
         function updateHeaderText(lang) {
             document.getElementById('header-subtitle').textContent = langTexts[lang].subtitle;
             document.getElementById('back-text').textContent = langTexts[lang].backBtn;
         }
-        
+
         // Load saved theme on page load
         (function() {
             const savedTheme = localStorage.getItem('theme');
@@ -507,7 +557,7 @@
                 document.getElementById('theme-toggle').textContent = '☀️';
             }
         })();
-        
+
         // Load saved language on page load
         (function() {
             const savedLang = localStorage.getItem('language');
@@ -519,12 +569,12 @@
                 updateHeaderText('en');
             }
         })();
-        
+
         // Theme Toggle Function
         function toggleTheme() {
             const body = document.body;
             const themeToggle = document.getElementById('theme-toggle');
-            
+
             if (body.classList.contains('dark-theme')) {
                 body.classList.remove('dark-theme');
                 themeToggle.textContent = '🌙';
@@ -535,11 +585,11 @@
                 localStorage.setItem('theme', 'dark');
             }
         }
-        
+
         // Language Toggle Function
         function switchLanguage() {
             const langToggle = document.getElementById('lang-toggle');
-            
+
             if (currentLang === 'id') {
                 // Switch to English
                 currentLang = 'en';
@@ -561,5 +611,3 @@
     </script>
 </body>
 </html>
-
-
