@@ -497,7 +497,10 @@ function createJsonResponse(obj) {
         <input type="text" id="edit-tags" name="edit-tags" placeholder="Pisahkan dengan koma" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg">
     </div>
     <hr class="border-gray-200 dark:border-gray-600 !my-4">
-    <div><label for="edit-catatan" class="text-sm font-medium text-gray-600 dark:text-gray-400" data-translate-key="notesLabel">Catatan</label><input type="text" id="edit-catatan" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"></div>
+    <div>
+        <label for="edit-catatan" class="text-sm font-medium text-gray-600 dark:text-gray-400" data-translate-key="notesLabel">Catatan</label>
+        <textarea id="edit-catatan" rows="3" class="w-full mt-1 p-2 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg"></textarea>
+    </div>
 
     <!-- Voice Note UI Container -->
     <div id="voice-note-container" class="mt-2 p-3 bg-gray-100 dark:bg-gray-700/50 rounded-lg">
@@ -1194,12 +1197,56 @@ function createJsonResponse(obj) {
                 }
             }
 
-            function convertAudioToText() {
-                // This function is currently not implemented due to Web Speech API limitations.
-                // The API does not support transcribing audio files/blobs directly on the client-side.
-                // It is designed for live microphone input.
-                // The button is disabled via the feature detection logic at the bottom of the script.
-                showToast("Fitur ini tidak dapat memproses file audio yang direkam secara langsung.");
+            async function convertAudioToText() {
+                if (!audioBlob) {
+                    showToast("Tidak ada rekaman suara untuk diubah.");
+                    return;
+                }
+
+                const convertBtn = document.getElementById('convert-to-text-btn');
+                const originalBtnHTML = convertBtn.innerHTML;
+                convertBtn.disabled = true;
+                convertBtn.innerHTML = `<div class="loader btn-loader"></div><span class="ml-2">Memproses...</span>`;
+
+                try {
+                    const formData = new FormData();
+                    formData.append('audio', audioBlob, currentRecordingName || 'voicenote.webm');
+
+                    const response = await fetch(`${BACKEND_API_URL}/speech-to-text`, {
+                        method: 'POST',
+                        body: formData,
+                    });
+
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+                    }
+
+                    const result = await response.json();
+
+                    if (result.success && result.data && result.data.transcription) {
+                        const catatanInput = document.getElementById('edit-catatan');
+                        const existingNotes = catatanInput.value.trim();
+                        const newText = result.data.transcription;
+
+                        if (existingNotes) {
+                            catatanInput.value = existingNotes + '\n' + newText;
+                        } else {
+                            catatanInput.value = newText;
+                        }
+                        showToast("Voice note berhasil diubah ke teks.");
+                    } else {
+                        throw new Error('Gagal mendapatkan transkripsi dari server.');
+                    }
+
+                } catch (error) {
+                    logError("Error converting speech to text:", error);
+                    showToast(`Terjadi kesalahan: ${error.message}`);
+                } finally {
+                    convertBtn.disabled = false;
+                    convertBtn.innerHTML = originalBtnHTML;
+                    lucide.createIcons();
+                }
             }
 
             function logError(message, errorObject = null) {
@@ -2538,6 +2585,8 @@ END:VCALENDAR`;
 
                     // Expose functions for Playwright testing
                     window.openEditModalForNewContact = openEditModalForNewContact;
+                    window.openEditModal = openEditModal;
+                    window.dbLogic = dbLogic;
 
                     window.appInitialized = true; // Signal that the app is ready
                 } catch (error) {
@@ -2674,9 +2723,12 @@ END:VCALENDAR`;
                 const isNewContact = !idValue;
 
                 if (isNewContact) {
+                    // Ini adalah kontak baru hasil scan. Kembali ke menu utama.
                     closeEditModal();
+                    showScreen('initial');
                     showToast(getTranslation('toastScanCancelled'));
                 } else {
+                    // Ini adalah kontak yang sudah ada. Kembali ke daftar hasil.
                     closeEditModal();
                 }
             });
@@ -3255,30 +3307,7 @@ END:VCALENDAR`;
                 }
             }
 
-            // --- Feature Detection & UI Disabling ---
-            const convertBtn = document.getElementById('convert-to-text-btn');
-            if (convertBtn) {
-                const isSpeechRecognitionSupported = 'SpeechRecognition' in window || 'webkitSpeechRecognition' in window;
-                // Also disabling because client-side blob transcription is not supported by the API.
-                const isFeatureEnabled = false; // Set to false to reflect the limitation
-
-                if (!isSpeechRecognitionSupported || !isFeatureEnabled) {
-                    convertBtn.disabled = true;
-                    convertBtn.style.cursor = 'not-allowed';
-                    convertBtn.style.opacity = '0.6';
-
-                    let title = 'Fitur ini tidak didukung di browser Anda.';
-                    if (isSpeechRecognitionSupported && !isFeatureEnabled) {
-                        title = 'Konversi dari file audio yang direkam saat ini tidak didukung.';
-                    }
-                    convertBtn.title = title;
-
-                    const span = convertBtn.querySelector('span');
-                    if (span) {
-                        span.textContent = 'Ubah ke Teks (Tidak Tersedia)';
-                    }
-                }
-            }
+            // No longer needed as the button is now fully functional with the backend API.
 
             waitForGoogleApisAndInitialize();
         });
