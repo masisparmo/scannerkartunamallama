@@ -1153,15 +1153,32 @@ function createJsonResponse(obj) {
             }
 
             let currentAudio = null;
+            let playbackTimerInterval = null;
+
+            function formatTime(seconds) {
+                const minutes = Math.floor(seconds / 60).toString().padStart(2, '0');
+                const secs = Math.floor(seconds % 60).toString().padStart(2, '0');
+                return `${minutes}:${secs}`;
+            }
+
             function playRecording() {
                 if (audioBlob) {
-                    if (currentAudio && !currentAudio.paused) { // If audio is already playing, do nothing
+                    if (currentAudio && !currentAudio.paused) {
                         return;
                     }
                     currentAudio = new Audio(URL.createObjectURL(audioBlob));
+
+                    currentAudio.ontimeupdate = () => {
+                        document.getElementById('duration').textContent = formatTime(currentAudio.currentTime);
+                    };
+
                     currentAudio.onended = () => {
                         document.getElementById('play-btn').classList.remove('hidden');
                         document.getElementById('pause-btn').classList.add('hidden');
+                        // Saat selesai, tampilkan durasi penuh jika valid
+                        if (isFinite(currentAudio.duration)) {
+                            document.getElementById('duration').textContent = formatTime(currentAudio.duration);
+                        }
                     };
                     currentAudio.play();
                     document.getElementById('play-btn').classList.add('hidden');
@@ -1933,9 +1950,11 @@ END:VCALENDAR`;
                      // Get duration from the blob
                     const audio = new Audio(URL.createObjectURL(audioBlob));
                     audio.onloadedmetadata = () => {
-                        const minutes = Math.floor(audio.duration / 60).toString().padStart(2, '0');
-                        const seconds = Math.floor(audio.duration % 60).toString().padStart(2, '0');
-                        document.getElementById('duration').textContent = `${minutes}:${seconds}`;
+                        if (isFinite(audio.duration)) {
+                            const minutes = Math.floor(audio.duration / 60).toString().padStart(2, '0');
+                            const seconds = Math.floor(audio.duration % 60).toString().padStart(2, '0');
+                            document.getElementById('duration').textContent = `${minutes}:${seconds}`;
+                        }
                     };
                 }
 
